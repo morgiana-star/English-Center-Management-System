@@ -1,0 +1,42 @@
+## =========================================================================
+## .gitignore cho dự án C# / .NET 10 / WinForms & JetBrains Rider
+## Ngăn chặn đẩy file rác, file build tạm (bin, obj, cache) lên GitHub
+## =========================================================================
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio & Rider temporary files
+.vs/
+.idea/
+*.DotSettings.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# SQLite local databases with personal testing data (tùy chọn)
+# *.db-shm
+# *.db-wal
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# JetBrains Rider
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usageView.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Dotnet publishing & profiling
+*.publishsettings
+*.pubxml
+*.nupkg
