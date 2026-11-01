@@ -76,7 +76,18 @@ public class TeacherPortalView : UserControl
             CornerRadius = 6,
             Anchor = AnchorStyles.Top | AnchorStyles.Right
         };
-        btnTakeAttendance.Click += (s, e) => MessageBox.Show("Sổ điểm danh buổi học hôm nay: Tích chọn Có mặt/Vắng/Muộn và lưu kết quả. Dữ liệu sẽ tự động đồng bộ sang Cổng học viên và Cổng phụ huynh.", "Điểm danh buổi học", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        btnTakeAttendance.Click += (s, e) =>
+        {
+            int scheduleId = 1;
+            string className = "Lớp đang chọn";
+            if (dgvTeachingSchedule.CurrentRow?.Cells["Mã lớp"]?.Value is string code)
+                className = code;
+            // TODO: lấy ScheduleId thực từ dòng được chọn
+
+            // Mở AttendanceSheetView trong MainForm
+            var mainForm = FindForm() as ECMS.UI.Forms.MainForm;
+            mainForm?.ShowUserControl(new AttendanceSheetView(scheduleId, className));
+        };
 
         dgvTeachingSchedule = new DataGridView
         {
