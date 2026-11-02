@@ -42,6 +42,18 @@ public class ModernTextBox : UserControl
         set => _innerBox.UseSystemPasswordChar = value;
     }
 
+    public bool ReadOnly
+    {
+        get => _innerBox.ReadOnly;
+        set
+        {
+            _innerBox.ReadOnly = value;
+            BoxBackColor = value ? Color.FromArgb(241, 245, 249) : Color.White;
+            _innerBox.BackColor = BoxBackColor;
+            Invalidate();
+        }
+    }
+
     public ModernTextBox()
     {
         DoubleBuffered = true;

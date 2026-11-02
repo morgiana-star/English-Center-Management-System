@@ -182,15 +182,23 @@ sequenceDiagram
 
 ---
 
-# 5. PHÂN CHIA VÙNG FILE LÀM VIỆC CHO NHÓM 3 NGƯỜI
+# 5. PHÂN CHIA CHI TIẾT THEO 8 VAI TRÒ CHO NHÓM 3 NGƯỜI
 
-Để tránh xung đột code (Merge Conflict) khi làm việc đồng thời, nhóm được phân chia ranh giới file phụ trách rõ ràng như sau:
+Phân chia theo **8 vai trò người dùng (Roles)** là phương án **chuẩn xác và tối ưu nhất** khi làm đồ án nhóm:
+* **Khi bảo vệ / vấn đáp với Giảng viên:** Thầy gọi vai trò nào, bạn phụ trách vai trò đó trực tiếp đăng nhập tài khoản của mình (`admin`, `counselor`, `accountant`...) lên máy chiếu để thuyết minh từ luồng giao diện đến code backend.
+* **Tính độc lập cao:** Mỗi thành viên toàn quyền quyết định và chịu trách nhiệm cho các màn hình và nghiệp vụ của vai trò mình nắm giữ, hạn chế tối đa việc dẫm chân lên code của nhau.
 
-| Thành viên | Phân hệ nghiệp vụ phụ trách | Các file mã nguồn chính cần làm việc |
-|:---|:---|:---|
-| **Thành viên 1<br>(Trưởng nhóm)** | **Tuyển sinh & Học viên**<br>• Quản trị Leads & Tư vấn<br>• Hồ sơ học viên & Phụ huynh<br>• Phân quyền & Quản trị User | • `ECMS.Business/Services/StudentService.cs`<br>• `ECMS.Business/Services/AuthService.cs`<br>• `ECMS.UI/UserControls/AdmissionsDashboardView.cs`<br>• `ECMS.UI/UserControls/StudentListView.cs`<br>• `ECMS.UI/UserControls/AdminDashboardView.cs` |
-| **Thành viên 2** | **Kế toán & Tài chính**<br>• Lập khoản phải thu (Invoices)<br>• Phiếu thu tiền & In biên lai A5<br>• Quản lý công nợ & Sổ quỹ | • `ECMS.Business/Services/FinanceService.cs`<br>• `ECMS.Core/Entities/FinanceEntities.cs`<br>• `ECMS.UI/UserControls/FinanceDashboardView.cs` |
-| **Thành viên 3** | **Giáo vụ & Đào tạo**<br>• Khóa học, Lớp học, Phòng học<br>• Thời khóa biểu chống trùng lịch<br>• Sổ điểm danh & Nhập điểm thi | • `ECMS.Business/Services/ScheduleService.cs`<br>• `ECMS.Business/Services/AttendanceService.cs`<br>• `ECMS.UI/UserControls/AcademicDashboardView.cs`<br>• `ECMS.UI/UserControls/TeacherPortalView.cs`<br>• `ECMS.UI/UserControls/StudentPortalView.cs`<br>• `ECMS.UI/UserControls/ParentPortalView.cs` |
+Dưới đây là ma trận phân bổ 8 vai trò cân đối khối lượng công việc (mỗi người ~33%):
+
+| Thành viên | Các vai trò phụ trách (Role Code) | Tài khoản Test | Nghiệp vụ cốt lõi | Màn hình UI & File đảm nhiệm |
+|:---|:---|:---|:---|:---|
+| **Thành viên 1<br>(Trưởng nhóm)** | **1. Quản trị hệ thống** (`Admin`)<br>**2. Tư vấn Tuyển sinh** (`Counselor`) | • `admin` / `Admin@123`<br>• `counselor` / `Counselor@123` | • Quản trị tài khoản, bảo mật BCrypt, mở khóa brute-force<br>• Tiếp nhận khách hàng tiềm năng (Leads), xếp lịch test đầu vào<br>• Đăng ký hồ sơ học viên & phụ huynh, sinh mã `HV-yyyy-xxxx` | • `AdminDashboardView.cs`<br>• `AdmissionsDashboardView.cs`<br>• `StudentListView.cs`<br>• `LoginForm.cs`<br>• `AuthService.cs`, `StudentService.cs` |
+| **Thành viên 2** | **3. Kế toán & Thu ngân** (`Accountant`)<br>**4. Giám đốc điều hành** (`Manager`) | • `accountant` / `Accountant@123`<br>• `manager` / `Manager@123` | • Quản lý học phí, chính sách miễn giảm, học bổng<br>• Lập phiếu thu tiền, in biên lai A5, sinh mã `PT-yyyyMMdd-xxxx`<br>• Quản trị công nợ tồn đọng & Sổ quỹ tiền mặt<br>• Dashboard báo cáo doanh thu, biểu đồ tài chính, KPI cho Giám đốc | • `FinanceDashboardView.cs`<br>• `DashboardView.cs` (Màn hình Giám đốc)<br>• `ModernGlassDemoView.cs` (Biểu đồ doanh thu)<br>• `FinanceService.cs`<br>• `FinanceEntities.cs` |
+| **Thành viên 3** | **5. Giáo vụ Đào tạo** (`Academic`)<br>**6. Giảng viên** (`Teacher`)<br>**7. Học viên** (`Student`)<br>**8. Phụ huynh** (`Parent`) | • `academic` / `Academic@123`<br>• `teacher` / `Teacher@123`<br>• `student` / `Student@123`<br>• `parent` / `Parent@123` | • Quản lý danh mục Khóa học, Lớp học, Phòng học<br>• Thuật toán xếp thời khóa biểu chống trùng lịch giáo viên & phòng<br>• Sổ điểm danh, cảnh báo vắng >= 3 buổi, nhập điểm thi<br>• Cổng tra cứu lịch học, xem điểm, giờ đón con cho Học viên/Phụ huynh | • `AcademicDashboardView.cs`<br>• `TeacherPortalView.cs`<br>• `StudentPortalView.cs`<br>• `ParentPortalView.cs`<br>• `ScheduleService.cs`, `AttendanceService.cs`<br>• `AcademicEntities.cs` |
+
+> [!TIP]
+> **Tại sao Thành viên 3 phụ trách 4 vai trò mà vẫn công bằng?**  
+> Mặc dù nhận 4 vai trò, nhưng 3 vai trò Giảng viên (`Teacher`), Học viên (`Student`) và Phụ huynh (`Parent`) là các **Cổng thông tin (Portal)** chủ yếu phục vụ tra cứu (View/Read-heavy) và dùng chung dữ liệu với phân hệ Giáo vụ (`Academic`). Do đó khối lượng code tương đương với phân hệ Kế toán của Thành viên 2 và phân hệ Quản trị/Tuyển sinh của Thành viên 1.
 
 ---
 
