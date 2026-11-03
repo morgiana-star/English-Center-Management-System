@@ -201,10 +201,26 @@ public class MainForm : Form
             Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
             ForeColor = Color.FromArgb(79, 70, 229),
             BackColor = Color.FromArgb(238, 242, 255),
-            Location = new Point(cardHeader.Width - 240, 13),
+            Location = new Point(cardHeader.Width - 365, 13),
             Padding = new Padding(10, 5, 10, 5),
             AutoSize = true,
             Anchor = AnchorStyles.Top | AnchorStyles.Right
+        };
+
+        var btnChangePassword = new CustomButton
+        {
+            Text = "Đổi mật khẩu",
+            NormalColor = ThemeColors.Primary,
+            HoverColor = ThemeColors.PrimaryHover,
+            Size = new Size(115, 34),
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Location = new Point(cardHeader.Width - 232, 11),
+            CornerRadius = 8
+        };
+        btnChangePassword.Click += (s, e) =>
+        {
+            using var dlg = new ChangePasswordDialog();
+            dlg.ShowDialog();
         };
 
         var btnLogout = new CustomButton
@@ -212,9 +228,9 @@ public class MainForm : Form
             Text = "Đăng xuất",
             NormalColor = Color.FromArgb(239, 68, 68),
             HoverColor = Color.FromArgb(220, 38, 38),
-            Size = new Size(100, 34),
+            Size = new Size(95, 34),
             Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Location = new Point(cardHeader.Width - 118, 11),
+            Location = new Point(cardHeader.Width - 108, 11),
             CornerRadius = 8
         };
         btnLogout.Click += (s, e) => HandleLogout();
@@ -222,6 +238,7 @@ public class MainForm : Form
         cardHeader.Controls.Add(txtSearchGlobal);
         cardHeader.Controls.Add(lblUserGreeting);
         cardHeader.Controls.Add(lblRoleBadge);
+        cardHeader.Controls.Add(btnChangePassword);
         cardHeader.Controls.Add(btnLogout);
 
         // 4. Floating Main Content Container (Trong suốt, nạp UserControl)
