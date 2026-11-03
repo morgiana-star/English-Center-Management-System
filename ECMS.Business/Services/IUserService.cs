@@ -13,5 +13,7 @@ public interface IUserService
     Task<(bool Success, string Message, int UserId)> CreateUserAsync(CreateUserDto dto);
     Task<(bool Success, string Message)> UpdateUserAsync(UpdateUserDto dto);
     Task<(bool Success, string Message)> ToggleUserActiveAsync(int userId);
+    Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu");
+    Task<(bool Success, string Message)> ChangePasswordSelfAsync(int userId, string oldPassword, string newPassword, string confirmPassword);
     Task<AdminTelemetryDto> GetTelemetryAsync();
 }

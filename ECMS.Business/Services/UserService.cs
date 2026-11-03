@@ -216,6 +216,85 @@ public class UserService : IUserService
         return (true, msg);
     }
 
+    public async Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu")
+    {
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            return (false, "Mật khẩu mới không được để trống.");
+        }
+
+        if (newPassword.Length < 6)
+        {
+            return (false, "Mật khẩu mới phải có tối thiểu 6 ký tự để đảm bảo an toàn.");
+        }
+
+        var targetUser = await _userRepo.GetUserEntityByIdAsync(targetUserId);
+        if (targetUser == null)
+        {
+            return (false, "Không tìm thấy tài khoản cần đặt lại mật khẩu.");
+        }
+
+        string hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
+
+        bool ok = await _userRepo.ResetPasswordAsync(targetUserId, hash, currentAdminId, reason);
+        if (!ok)
+        {
+            return (false, "Đặt lại mật khẩu thất bại.");
+        }
+
+        return (true, $"Đã đặt lại mật khẩu thành công cho tài khoản '{targetUser.Username}'.");
+    }
+
+    public async Task<(bool Success, string Message)> ChangePasswordSelfAsync(int userId, string oldPassword, string newPassword, string confirmPassword)
+    {
+        if (string.IsNullOrWhiteSpace(oldPassword))
+        {
+            return (false, "Vui lòng nhập mật khẩu hiện tại.");
+        }
+
+        if (string.IsNullOrWhiteSpace(newPassword))
+        {
+            return (false, "Vui lòng nhập mật khẩu mới.");
+        }
+
+        if (newPassword.Length < 6)
+        {
+            return (false, "Mật khẩu mới phải có tối thiểu 6 ký tự.");
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            return (false, "Xác nhận mật khẩu mới không trùng khớp.");
+        }
+
+        if (oldPassword == newPassword)
+        {
+            return (false, "Mật khẩu mới không được trùng với mật khẩu cũ.");
+        }
+
+        var user = await _userRepo.GetUserEntityByIdAsync(userId);
+        if (user == null)
+        {
+            return (false, "Tài khoản không tồn tại trên hệ thống.");
+        }
+
+        bool isValid = BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash);
+        if (!isValid)
+        {
+            return (false, "Mật khẩu hiện tại không chính xác.");
+        }
+
+        string newHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        bool ok = await _userRepo.ChangePasswordAsync(userId, newHash);
+        if (!ok)
+        {
+            return (false, "Đổi mật khẩu thất bại.");
+        }
+
+        return (true, "Đổi mật khẩu thành công. Vui lòng ghi nhớ mật khẩu mới cho các lần đăng nhập sau.");
+    }
+
     public async Task<AdminTelemetryDto> GetTelemetryAsync()
     {
         return await _userRepo.GetTelemetryAsync();

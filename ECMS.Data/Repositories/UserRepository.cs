@@ -412,6 +412,104 @@ public class UserRepository : BaseRepository, IUserRepository
         }
     }
 
+    public async Task<User?> GetUserEntityByIdAsync(int userId)
+    {
+        using var conn = CreateConnection();
+        return await conn.QuerySingleOrDefaultAsync<User>(
+            "SELECT * FROM Users WHERE UserId = @UserId;", 
+            new { UserId = userId });
+    }
+
+    public async Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = targetUserId },
+                transaction: trans);
+
+            if (user == null) return false;
+
+            await conn.ExecuteAsync(@"
+                UPDATE Users 
+                SET PasswordHash = @PasswordHash, 
+                    FailedLoginAttempts = 0, 
+                    LockoutEnd = NULL, 
+                    UpdatedAt = CURRENT_TIMESTAMP 
+                WHERE UserId = @UserId;",
+                new { PasswordHash = newPasswordHash, UserId = targetUserId },
+                transaction: trans);
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                VALUES (@AdminId, 'RESET_PASSWORD', 'Users', @RecordId, @NewValues);",
+                new
+                {
+                    AdminId = currentAdminId,
+                    RecordId = targetUserId.ToString(),
+                    NewValues = $"Admin {currentAdminId} đã reset mật khẩu tài khoản {targetUserId} ({user.Username}). Lý do: {reason}"
+                },
+                transaction: trans);
+
+            trans.Commit();
+            return true;
+        }
+        catch
+        {
+            trans.Rollback();
+            throw;
+        }
+    }
+
+    public async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = userId },
+                transaction: trans);
+
+            if (user == null) return false;
+
+            await conn.ExecuteAsync(@"
+                UPDATE Users 
+                SET PasswordHash = @PasswordHash, 
+                    FailedLoginAttempts = 0, 
+                    LockoutEnd = NULL, 
+                    UpdatedAt = CURRENT_TIMESTAMP 
+                WHERE UserId = @UserId;",
+                new { PasswordHash = newPasswordHash, UserId = userId },
+                transaction: trans);
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                VALUES (@UserId, 'CHANGE_PASSWORD', 'Users', @RecordId, @NewValues);",
+                new
+                {
+                    UserId = userId,
+                    RecordId = userId.ToString(),
+                    NewValues = $"Người dùng {user.Username} đã tự đổi mật khẩu thành công"
+                },
+                transaction: trans);
+
+            trans.Commit();
+            return true;
+        }
+        catch
+        {
+            trans.Rollback();
+            throw;
+        }
+    }
+
     public async Task<AdminTelemetryDto> GetTelemetryAsync()
     {
         using var conn = CreateConnection();

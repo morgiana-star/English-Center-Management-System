@@ -140,18 +140,8 @@ public class AuthService : IAuthService
 
     public async Task<bool> ChangePasswordAsync(int userId, string oldPassword, string newPassword)
     {
-        using var conn = DatabaseConfig.CreateOpenConnection();
-        var user = await conn.QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE UserId = @Id;", new { Id = userId });
-        if (user == null || !BCrypt.Net.BCrypt.Verify(oldPassword, user.PasswordHash))
-        {
-            return false;
-        }
-
-        string newHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-        int rows = await conn.ExecuteAsync(
-            "UPDATE Users SET PasswordHash = @Hash, UpdatedAt = CURRENT_TIMESTAMP WHERE UserId = @Id;",
-            new { Hash = newHash, Id = userId });
-
-        return rows > 0;
+        var userService = new UserService();
+        var (success, _) = await userService.ChangePasswordSelfAsync(userId, oldPassword, newPassword, newPassword);
+        return success;
     }
 }
