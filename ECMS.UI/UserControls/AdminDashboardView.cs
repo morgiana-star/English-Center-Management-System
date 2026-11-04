@@ -29,6 +29,7 @@ public class AdminDashboardView : UserControl
     private CustomButton btnEditUser = null!;
     private CustomButton btnToggleActive = null!;
     private CustomButton btnResetPassword = null!;
+    private CustomButton btnUnlockUser = null!;
 
     public AdminDashboardView(IUserService? userService = null)
     {
@@ -72,6 +73,12 @@ public class AdminDashboardView : UserControl
         var cardAudit = CreateStatCard("NHẬT KÝ AUDIT LOGS", "Đang tải...", ThemeColors.WarningBg, ThemeColors.WarningText, new Point(565, 85), out lblAuditCount);
         var cardSec = CreateStatCard("BẢO MẬT BRUTE-FORCE", "0 bị khóa", Color.FromArgb(241, 245, 249), ThemeColors.TextPrimary, new Point(835, 85), out lblLockedCount);
 
+        // Click on Brute-Force KPI card to open security monitor dialog
+        cardSec.Cursor = Cursors.Hand;
+        cardSec.Click += async (s, e) => await OpenBruteForceMonitorDialogAsync();
+        lblLockedCount.Cursor = Cursors.Hand;
+        lblLockedCount.Click += async (s, e) => await OpenBruteForceMonitorDialogAsync();
+
         // 3. Search & Action Toolbar (GlassCard)
         var cardToolbar = new GlassCard
         {
@@ -87,7 +94,7 @@ public class AdminDashboardView : UserControl
         {
             Placeholder = "Tìm theo username, họ tên, SĐT, email...",
             Location = new Point(12, 14),
-            Size = new Size(230, 38),
+            Size = new Size(210, 38),
             CornerRadius = 6
         };
         txtSearch.KeyDown += async (s, e) =>
@@ -105,8 +112,8 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(248, 18),
-            Size = new Size(135, 32)
+            Location = new Point(228, 18),
+            Size = new Size(130, 32)
         };
         cboRoleFilter.SelectedIndexChanged += async (s, e) => await FilterUsersAsync();
 
@@ -116,10 +123,10 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(389, 18),
-            Size = new Size(130, 32)
+            Location = new Point(364, 18),
+            Size = new Size(145, 32)
         };
-        cboStatusFilter.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang hoạt động", "Đã vô hiệu hóa" });
+        cboStatusFilter.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang hoạt động", "Đã vô hiệu hóa", "Tạm khóa (Brute-force)" });
         cboStatusFilter.SelectedIndex = 0;
         cboStatusFilter.SelectedIndexChanged += async (s, e) => await FilterUsersAsync();
 
@@ -128,8 +135,8 @@ public class AdminDashboardView : UserControl
             Text = "TÌM KIẾM",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(526, 14),
-            Size = new Size(85, 38),
+            Location = new Point(515, 14),
+            Size = new Size(80, 38),
             CornerRadius = 6
         };
         btnSearch.Click += async (s, e) => await FilterUsersAsync();
@@ -139,8 +146,8 @@ public class AdminDashboardView : UserControl
             Text = "+ THÊM MỚI",
             NormalColor = ThemeColors.SuccessText,
             HoverColor = Color.FromArgb(16, 185, 129),
-            Location = new Point(617, 14),
-            Size = new Size(100, 38),
+            Location = new Point(601, 14),
+            Size = new Size(95, 38),
             CornerRadius = 6
         };
         btnAddUser.Click += async (s, e) => await OpenCreateUserDialogAsync();
@@ -150,8 +157,8 @@ public class AdminDashboardView : UserControl
             Text = "CHỈNH SỬA",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(723, 14),
-            Size = new Size(95, 38),
+            Location = new Point(702, 14),
+            Size = new Size(85, 38),
             CornerRadius = 6
         };
         btnEditUser.Click += async (s, e) => await OpenEditUserDialogAsync();
@@ -161,8 +168,8 @@ public class AdminDashboardView : UserControl
             Text = "KHÓA / MỞ",
             NormalColor = Color.FromArgb(225, 29, 72), // Rose 600
             HoverColor = Color.FromArgb(190, 18, 60),
-            Location = new Point(824, 14),
-            Size = new Size(95, 38),
+            Location = new Point(793, 14),
+            Size = new Size(85, 38),
             CornerRadius = 6
         };
         btnToggleActive.Click += async (s, e) => await ToggleActiveSelectedUserAsync();
@@ -172,11 +179,22 @@ public class AdminDashboardView : UserControl
             Text = "RESET MK",
             NormalColor = Color.FromArgb(217, 119, 6), // Amber 600
             HoverColor = Color.FromArgb(180, 83, 9),
-            Location = new Point(925, 14),
-            Size = new Size(95, 38),
+            Location = new Point(884, 14),
+            Size = new Size(85, 38),
             CornerRadius = 6
         };
         btnResetPassword.Click += async (s, e) => await OpenResetPasswordDialogAsync();
+
+        btnUnlockUser = new CustomButton
+        {
+            Text = "MỞ KHÓA",
+            NormalColor = Color.FromArgb(13, 148, 136), // Teal 600
+            HoverColor = Color.FromArgb(15, 118, 110),
+            Location = new Point(975, 14),
+            Size = new Size(85, 38),
+            CornerRadius = 6
+        };
+        btnUnlockUser.Click += async (s, e) => await UnlockSelectedUserAsync();
 
         cardToolbar.Controls.Add(txtSearch);
         cardToolbar.Controls.Add(cboRoleFilter);
@@ -186,6 +204,7 @@ public class AdminDashboardView : UserControl
         cardToolbar.Controls.Add(btnEditUser);
         cardToolbar.Controls.Add(btnToggleActive);
         cardToolbar.Controls.Add(btnResetPassword);
+        cardToolbar.Controls.Add(btnUnlockUser);
 
         // 4. DataGridView Setup
         dgvUsers = new DataGridView
@@ -290,8 +309,7 @@ public class AdminDashboardView : UserControl
         var row = dgvUsers.Rows[e.RowIndex];
         if (row.DataBoundItem is UserListItemDto user)
         {
-            // Format status column (Index 6)
-            if (e.ColumnIndex == 6)
+            if (e.ColumnIndex == 6) // StatusText column
             {
                 if (!user.IsActive)
                 {
@@ -300,12 +318,30 @@ public class AdminDashboardView : UserControl
                 }
                 else if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
                 {
-                    e.CellStyle!.ForeColor = ThemeColors.WarningText;
+                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
+                    e.CellStyle.Font = ThemeColors.FontBodyBold;
+                }
+                else if (user.FailedLoginAttempts >= 5)
+                {
+                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
                     e.CellStyle.Font = ThemeColors.FontBodyBold;
                 }
                 else
                 {
                     e.CellStyle!.ForeColor = ThemeColors.SuccessText;
+                    e.CellStyle.Font = ThemeColors.FontBodyBold;
+                }
+            }
+            else if (e.ColumnIndex == 7) // FailedLoginAttempts column
+            {
+                if (user.FailedLoginAttempts >= 5)
+                {
+                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
+                    e.CellStyle.Font = ThemeColors.FontBodyBold;
+                }
+                else if (user.FailedLoginAttempts > 0)
+                {
+                    e.CellStyle!.ForeColor = ThemeColors.WarningText;
                     e.CellStyle.Font = ThemeColors.FontBodyBold;
                 }
             }
@@ -397,6 +433,7 @@ public class AdminDashboardView : UserControl
             int selectedRoleId = (int)(cboRoleFilter.SelectedValue ?? 0);
             int? roleId = selectedRoleId > 0 ? selectedRoleId : null;
 
+            bool onlyLocked = cboStatusFilter.SelectedIndex == 3;
             bool? isActive = cboStatusFilter.SelectedIndex switch
             {
                 1 => true,
@@ -404,7 +441,7 @@ public class AdminDashboardView : UserControl
                 _ => null
             };
 
-            var users = await _userService.GetUsersAsync(keyword, roleId, isActive);
+            var users = await _userService.GetUsersAsync(keyword, roleId, isActive, onlyLocked);
             dgvUsers.DataSource = users.ToList();
         }
         catch (Exception ex)
@@ -482,5 +519,41 @@ public class AdminDashboardView : UserControl
         {
             MessageBox.Show("Vui lòng chọn một người dùng trên bảng để đặt lại mật khẩu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+    }
+
+    private async Task UnlockSelectedUserAsync()
+    {
+        if (dgvUsers.CurrentRow?.DataBoundItem is UserListItemDto selectedUser)
+        {
+            var confirm = MessageBox.Show(
+                $"Xác nhận mở khóa khẩn cấp cho tài khoản '{selectedUser.Username}' ({selectedUser.FullName})?\n\nSố lần nhập sai hiện tại: {selectedUser.FailedLoginAttempts}\nThao tác này sẽ xóa bộ đếm lỗi và kích hoạt lại tài khoản ngay lập tức.",
+                "Xác nhận mở khóa khẩn cấp",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                var (success, message) = await _userService.UnlockUserAsync(selectedUser.UserId);
+                if (!success)
+                {
+                    MessageBox.Show(message, "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                MessageBox.Show(message, "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await LoadAdminDataAsync();
+            }
+        }
+        else
+        {
+            MessageBox.Show("Vui lòng chọn một người dùng trên bảng để mở khóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
+
+    private async Task OpenBruteForceMonitorDialogAsync()
+    {
+        using var dialog = new BruteForceMonitorDialog(_userService);
+        dialog.ShowDialog();
+        await LoadAdminDataAsync();
     }
 }
