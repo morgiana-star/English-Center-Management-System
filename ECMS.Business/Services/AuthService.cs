@@ -38,14 +38,15 @@ public class AuthService : IAuthService
         // 2. Check if account is active
         if (!user.IsActive)
         {
-            return (false, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Quản trị viên.", null);
+            return (false, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Quản trị viên để mở khóa.", null);
         }
 
         // 3. Check lockout
         if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
         {
-            var remaining = (user.LockoutEnd.Value - DateTime.Now).Minutes + 1;
-            return (false, $"Tài khoản đang bị tạm khóa do nhập sai quá nhiều lần. Vui lòng thử lại sau {remaining} phút.", null);
+            var remaining = (int)Math.Ceiling((user.LockoutEnd.Value - DateTime.Now).TotalMinutes);
+            if (remaining <= 0) remaining = 1;
+            return (false, $"Tài khoản đang bị tạm khóa an toàn do nhập sai quá 5 lần. Vui lòng thử lại sau {remaining} phút hoặc liên hệ Admin.", null);
         }
 
         // 4. Verify password with BCrypt
@@ -67,10 +68,15 @@ public class AuthService : IAuthService
 
             if (failedAttempts >= 5)
             {
-                return (false, "Bạn đã nhập sai mật khẩu 5 lần. Tài khoản bị tạm khóa 15 phút.", null);
+                await conn.ExecuteAsync(@"
+                    INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                    VALUES (@UserId, 'BRUTE_FORCE_LOCKOUT', 'Users', @RecordId, 'Tài khoản bị tạm khóa 15 phút do nhập sai mật khẩu 5 lần');",
+                    new { UserId = user.UserId, RecordId = user.UserId.ToString() });
+
+                return (false, "Bạn đã nhập sai mật khẩu 5 lần liên tiếp. Tài khoản bị tạm khóa 15 phút để bảo vệ an toàn.", null);
             }
 
-            return (false, $"Mật khẩu không chính xác. Bạn còn {5 - failedAttempts} lần thử.", null);
+            return (false, $"Mật khẩu không chính xác. Bạn còn {5 - failedAttempts} lần thử trước khi tài khoản bị khóa tạm thời.", null);
         }
 
         // 5. Login success: Reset failed attempts

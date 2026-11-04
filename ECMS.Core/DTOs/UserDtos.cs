@@ -17,12 +17,19 @@ public class UserListItemDto
     public DateTime? LockoutEnd { get; set; }
     public DateTime CreatedAt { get; set; }
 
+    public bool IsLocked => !IsActive || (LockoutEnd.HasValue && LockoutEnd.Value > DateTime.Now) || FailedLoginAttempts >= 5;
+
     public string StatusText
     {
         get
         {
             if (!IsActive) return "Đã vô hiệu hóa";
-            if (LockoutEnd.HasValue && LockoutEnd.Value > DateTime.Now) return "Tạm khóa 15p";
+            if (LockoutEnd.HasValue && LockoutEnd.Value > DateTime.Now)
+            {
+                var remainingMinutes = (int)Math.Ceiling((LockoutEnd.Value - DateTime.Now).TotalMinutes);
+                return remainingMinutes > 0 ? $"Tạm khóa ({remainingMinutes}p)" : "Tạm khóa 15p";
+            }
+            if (FailedLoginAttempts >= 5) return "Tạm khóa (5 lần sai)";
             return "Hoạt động";
         }
     }

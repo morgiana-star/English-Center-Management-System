@@ -19,9 +19,9 @@ public class UserService : IUserService
         _userRepo = userRepo ?? new UserRepository();
     }
 
-    public async Task<IEnumerable<UserListItemDto>> GetUsersAsync(string? keyword = null, int? roleId = null, bool? isActive = null)
+    public async Task<IEnumerable<UserListItemDto>> GetUsersAsync(string? keyword = null, int? roleId = null, bool? isActive = null, bool onlyLocked = false)
     {
-        return await _userRepo.GetUsersAsync(keyword, roleId, isActive);
+        return await _userRepo.GetUsersAsync(keyword, roleId, isActive, onlyLocked);
     }
 
     public async Task<UserListItemDto?> GetUserByIdAsync(int userId)
@@ -214,6 +214,30 @@ public class UserService : IUserService
             : $"Đã vô hiệu hóa tài khoản '{existing.Username}'.";
 
         return (true, msg);
+    }
+
+    public async Task<(bool Success, string Message)> UnlockUserAsync(int targetUserId)
+    {
+        var targetUser = await _userRepo.GetUserEntityByIdAsync(targetUserId);
+        if (targetUser == null)
+        {
+            return (false, "Không tìm thấy tài khoản cần mở khóa.");
+        }
+
+        int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
+
+        bool ok = await _userRepo.UnlockUserAsync(targetUserId, currentAdminId);
+        if (!ok)
+        {
+            return (false, "Mở khóa tài khoản thất bại.");
+        }
+
+        return (true, $"Đã mở khóa khẩn cấp thành công cho tài khoản '{targetUser.Username}'. Số lần nhập sai đã được reset về 0 và tài khoản đã được kích hoạt lại.");
+    }
+
+    public async Task<IEnumerable<UserListItemDto>> GetLockedUsersAsync()
+    {
+        return await _userRepo.GetLockedUsersAsync();
     }
 
     public async Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu")

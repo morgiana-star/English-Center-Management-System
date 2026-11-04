@@ -11,7 +11,7 @@ namespace ECMS.Data.Repositories;
 
 public class UserRepository : BaseRepository, IUserRepository
 {
-    public async Task<IEnumerable<UserListItemDto>> GetUsersAsync(string? keyword = null, int? roleId = null, bool? isActive = null)
+    public async Task<IEnumerable<UserListItemDto>> GetUsersAsync(string? keyword = null, int? roleId = null, bool? isActive = null, bool onlyLocked = false)
     {
         using var conn = CreateConnection();
 
@@ -56,7 +56,15 @@ public class UserRepository : BaseRepository, IUserRepository
             param.Add("RoleId", roleId.Value);
         }
 
-        if (isActive.HasValue)
+        if (onlyLocked)
+        {
+            sb.Append(@" AND (
+                u.IsActive = 0 
+                OR u.FailedLoginAttempts >= 5 
+                OR (u.LockoutEnd IS NOT NULL AND (u.LockoutEnd > datetime('now', 'localtime') OR u.LockoutEnd > CURRENT_TIMESTAMP))
+            ) ");
+        }
+        else if (isActive.HasValue)
         {
             sb.Append(" AND u.IsActive = @IsActive ");
             param.Add("IsActive", isActive.Value ? 1 : 0);
@@ -134,7 +142,6 @@ public class UserRepository : BaseRepository, IUserRepository
 
             if (role != null && role.RoleCode == "ROLE_TEA")
             {
-                // Create Teacher profile
                 int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
                 string teacherCode = $"GV-{(teacherCount + 1):D4}";
 
@@ -154,7 +161,6 @@ public class UserRepository : BaseRepository, IUserRepository
             }
             else
             {
-                // Create Employee profile for internal staff
                 int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
                 string empCode = $"NV-{(empCount + 1):D4}";
 
@@ -242,7 +248,6 @@ public class UserRepository : BaseRepository, IUserRepository
 
             if (user == null) return false;
 
-            // 1. Update Profile (Employee or Teacher)
             if (user.EmployeeId.HasValue)
             {
                 await conn.ExecuteAsync(@"
@@ -284,7 +289,6 @@ public class UserRepository : BaseRepository, IUserRepository
                     transaction: trans);
             }
 
-            // 2. Update User table
             if (!string.IsNullOrWhiteSpace(newPasswordHash))
             {
                 await conn.ExecuteAsync(@"
@@ -316,7 +320,6 @@ public class UserRepository : BaseRepository, IUserRepository
                     transaction: trans);
             }
 
-            // 3. Update UserRoles
             await conn.ExecuteAsync("DELETE FROM UserRoles WHERE UserId = @UserId;", new { dto.UserId }, transaction: trans);
             await conn.ExecuteAsync(@"
                 INSERT INTO UserRoles (UserId, RoleId, AssignedDate)
@@ -324,7 +327,6 @@ public class UserRepository : BaseRepository, IUserRepository
                 new { dto.UserId, dto.RoleId },
                 transaction: trans);
 
-            // 4. Record Audit Log
             await conn.ExecuteAsync(@"
                 INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
                 VALUES (@AdminId, 'UPDATE_USER', 'Users', @RecordId, @NewValues);",
@@ -410,6 +412,71 @@ public class UserRepository : BaseRepository, IUserRepository
             trans.Rollback();
             throw;
         }
+    }
+
+    public async Task<bool> UnlockUserAsync(int targetUserId, int currentAdminId)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = targetUserId },
+                transaction: trans);
+
+            if (user == null) return false;
+
+            await conn.ExecuteAsync(@"
+                UPDATE Users 
+                SET FailedLoginAttempts = 0, 
+                    LockoutEnd = NULL, 
+                    IsActive = 1, 
+                    UpdatedAt = CURRENT_TIMESTAMP 
+                WHERE UserId = @UserId;",
+                new { UserId = targetUserId },
+                transaction: trans);
+
+            if (user.EmployeeId.HasValue)
+            {
+                await conn.ExecuteAsync(
+                    "UPDATE Employees SET IsActive = 1, UpdatedAt = CURRENT_TIMESTAMP WHERE EmployeeId = @Id;",
+                    new { Id = user.EmployeeId.Value },
+                    transaction: trans);
+            }
+            else if (user.TeacherId.HasValue)
+            {
+                await conn.ExecuteAsync(
+                    "UPDATE Teachers SET IsActive = 1, UpdatedAt = CURRENT_TIMESTAMP WHERE TeacherId = @Id;",
+                    new { Id = user.TeacherId.Value },
+                    transaction: trans);
+            }
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                VALUES (@AdminId, 'UNLOCK_USER', 'Users', @RecordId, @NewValues);",
+                new
+                {
+                    AdminId = currentAdminId,
+                    RecordId = targetUserId.ToString(),
+                    NewValues = $"Admin {currentAdminId} đã mở khóa khẩn cấp tài khoản '{user.Username}' (Xóa lockout, reset 0 lần sai, kích hoạt lại tài khoản)"
+                },
+                transaction: trans);
+
+            trans.Commit();
+            return true;
+        }
+        catch
+        {
+            trans.Rollback();
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<UserListItemDto>> GetLockedUsersAsync()
+    {
+        return await GetUsersAsync(keyword: null, roleId: null, isActive: null, onlyLocked: true);
     }
 
     public async Task<User?> GetUserEntityByIdAsync(int userId)
@@ -516,8 +583,11 @@ public class UserRepository : BaseRepository, IUserRepository
 
         int totalUsers = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users;");
         int activeUsers = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users WHERE IsActive = 1;");
-        int lockedUsers = await conn.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM Users WHERE IsActive = 0 OR (LockoutEnd IS NOT NULL AND LockoutEnd > CURRENT_TIMESTAMP);");
+        int lockedUsers = await conn.ExecuteScalarAsync<int>(@"
+            SELECT COUNT(*) FROM Users 
+            WHERE IsActive = 0 
+               OR FailedLoginAttempts >= 5 
+               OR (LockoutEnd IS NOT NULL AND (LockoutEnd > datetime('now', 'localtime') OR LockoutEnd > CURRENT_TIMESTAMP));");
         int auditCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM AuditLogs;");
 
         return new AdminTelemetryDto
