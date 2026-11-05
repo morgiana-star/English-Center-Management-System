@@ -567,5 +567,138 @@ public static class DatabaseInitializer
                 conn.Execute("INSERT INTO SystemConfigs (ConfigKey, ConfigValue, Description) VALUES (@Key, @Val, @Desc);", c);
             }
         }
+
+        // 6. Seed RBAC Permissions Catalog & Default Mappings
+        SeedPermissionsAndDefaults(conn);
+    }
+
+    public static void SeedPermissionsAndDefaults(SqliteConnection conn)
+    {
+        var permissions = new[]
+        {
+            // 1. Quản trị Người dùng & Bảo mật
+            new { Code = "USER_VIEW", Name = "Xem danh sách người dùng", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Xem danh sách tài khoản nội bộ và phân quyền vai trò" },
+            new { Code = "USER_CREATE", Name = "Tạo tài khoản mới", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Khởi tạo tài khoản nhân sự và phân bổ quyền hạn" },
+            new { Code = "USER_EDIT", Name = "Chỉnh sửa tài khoản", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Cập nhật thông tin nhân sự và gán lại vai trò" },
+            new { Code = "USER_LOCK", Name = "Khóa / Mở tài khoản", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Vô hiệu hóa hoặc kích hoạt lại trạng thái hoạt động" },
+            new { Code = "USER_RESET_PWD", Name = "Reset mật khẩu", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Đặt lại mật khẩu cho tài khoản người dùng" },
+            new { Code = "USER_UNLOCK", Name = "Mở khóa Brute-force", Module = "Quản trị Tài khoản & Bảo mật", Desc = "Mở khóa khẩn cấp tài khoản nhập sai mật khẩu quá 5 lần" },
+
+            // 2. Phân quyền RBAC
+            new { Code = "RBAC_VIEW", Name = "Xem ma trận phân quyền", Module = "Phân quyền RBAC", Desc = "Xem danh mục quyền hạn của từng vai trò hệ thống" },
+            new { Code = "RBAC_MANAGE", Name = "Cấu hình phân quyền động", Module = "Phân quyền RBAC", Desc = "Bật/tắt quyền hạn theo từng vai trò trên các phân hệ" },
+
+            // 3. Khách hàng tiềm năng (Leads)
+            new { Code = "LEAD_VIEW", Name = "Xem danh sách Leads", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Tra cứu thông tin khách hàng tiềm năng" },
+            new { Code = "LEAD_CREATE", Name = "Tiếp nhận Lead mới", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Thêm mới khách hàng từ các kênh tuyển sinh" },
+            new { Code = "LEAD_EDIT", Name = "Cập nhật Lead", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Cập nhật thông tin và trạng thái chăm sóc" },
+            new { Code = "LEAD_CONSULT", Name = "Ghi nhật ký tư vấn", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Lưu nội dung cuộc gọi và nguyện vọng học tập" },
+            new { Code = "LEAD_TEST", Name = "Đặt lịch Placement Test", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Lập lịch hẹn kiểm tra trình độ đầu vào" },
+            new { Code = "LEAD_CONVERT", Name = "Chuyển đổi thành Học viên", Module = "Khách hàng Tiềm năng (Leads)", Desc = "Chuyển Lead thành hồ sơ học viên chính thức" },
+
+            // 4. Hồ sơ Học viên & Phụ huynh
+            new { Code = "STUDENT_VIEW", Name = "Xem hồ sơ học viên", Module = "Học viên & Phụ huynh", Desc = "Tra cứu thông tin chi tiết học viên và phụ huynh" },
+            new { Code = "STUDENT_CREATE", Name = "Tạo hồ sơ học viên", Module = "Học viên & Phụ huynh", Desc = "Khởi tạo học viên mới và sinh mã chuẩn HV-yyyy-xxxx" },
+            new { Code = "STUDENT_EDIT", Name = "Chỉnh sửa học viên", Module = "Học viên & Phụ huynh", Desc = "Cập nhật thông tin cá nhân và liên hệ phụ huynh" },
+            new { Code = "STUDENT_STATUS", Name = "Quản lý trạng thái học tập", Module = "Học viên & Phụ huynh", Desc = "Chuyển trạng thái bảo lưu, thôi học, tốt nghiệp" },
+
+            // 5. Khóa học & Phòng học
+            new { Code = "COURSE_VIEW", Name = "Xem danh mục khóa học", Module = "Khóa học & Phòng học", Desc = "Xem chương trình đào tạo và học phí chuẩn" },
+            new { Code = "COURSE_MANAGE", Name = "Quản lý khóa học", Module = "Khóa học & Phòng học", Desc = "Thêm mới và cập nhật nội dung khóa học" },
+            new { Code = "ROOM_VIEW", Name = "Xem danh mục phòng học", Module = "Khóa học & Phòng học", Desc = "Tra cứu danh sách phòng và trang thiết bị" },
+            new { Code = "ROOM_MANAGE", Name = "Quản lý phòng học", Module = "Khóa học & Phòng học", Desc = "Thêm mới và chỉnh sửa thông tin phòng học" },
+
+            // 6. Lớp học & Xếp lịch
+            new { Code = "CLASS_VIEW", Name = "Xem danh sách lớp học", Module = "Lớp học & Đào tạo", Desc = "Tra cứu lớp học và sĩ số hiện tại" },
+            new { Code = "CLASS_MANAGE", Name = "Mở và quản lý lớp học", Module = "Lớp học & Đào tạo", Desc = "Khởi tạo lớp mới và cập nhật trạng thái lớp" },
+            new { Code = "CLASS_SCHEDULE", Name = "Xếp thời khóa biểu", Module = "Lớp học & Đào tạo", Desc = "Xếp lịch học chống trùng giáo viên và phòng học" },
+            new { Code = "CLASS_ENROLL", Name = "Ghi danh học viên", Module = "Lớp học & Đào tạo", Desc = "Đăng ký học viên vào lớp học" },
+
+            // 7. Chuyên cần & Điểm thi
+            new { Code = "ATTENDANCE_VIEW", Name = "Xem sổ điểm danh", Module = "Chuyên cần & Điểm số", Desc = "Tra cứu lịch sử chuyên cần của lớp học" },
+            new { Code = "ATTENDANCE_TAKE", Name = "Điểm danh buổi học", Module = "Chuyên cần & Điểm số", Desc = "Ghi nhận chuyên cần và cảnh báo vắng học" },
+            new { Code = "EXAM_VIEW", Name = "Xem kỳ thi & bảng điểm", Module = "Chuyên cần & Điểm số", Desc = "Tra cứu điểm số các kỳ thi của lớp" },
+            new { Code = "EXAM_MANAGE", Name = "Nhập & sửa điểm thi", Module = "Chuyên cần & Điểm số", Desc = "Nhập điểm 4 kỹ năng và nhận xét tiến độ" },
+
+            // 8. Tài chính & Thu phí
+            new { Code = "INVOICE_VIEW", Name = "Xem hóa đơn học phí", Module = "Tài chính & Thu phí", Desc = "Tra cứu khoản phải thu và công nợ học viên" },
+            new { Code = "PAYMENT_CREATE", Name = "Lập phiếu thu tiền", Module = "Tài chính & Thu phí", Desc = "Thu học phí và in biên lai thanh toán" },
+            new { Code = "DISCOUNT_MANAGE", Name = "Quản lý giảm giá học bổng", Module = "Tài chính & Thu phí", Desc = "Áp dụng chính sách ưu đãi học phí theo thẩm quyền" },
+            new { Code = "FINANCE_APPROVE", Name = "Phê duyệt tài chính cấp cao", Module = "Tài chính & Thu phí", Desc = "Phê duyệt miễn giảm đặc biệt hoặc hoàn phí" },
+
+            // 9. Báo cáo & Thống kê
+            new { Code = "REPORT_VIEW", Name = "Xem báo cáo thống kê", Module = "Báo cáo & Thống kê", Desc = "Xem biểu đồ doanh thu, tuyển sinh và đào tạo" },
+            new { Code = "REPORT_EXPORT", Name = "Xuất báo cáo Excel", Module = "Báo cáo & Thống kê", Desc = "Xuất dữ liệu báo cáo chuẩn ra tệp Excel" },
+
+            // 10. Hạ tầng Hệ thống & Kiểm toán
+            new { Code = "AUDIT_VIEW", Name = "Xem nhật ký kiểm toán", Module = "Hạ tầng Hệ thống & Kiểm toán", Desc = "Tra cứu lịch sử thao tác hệ thống (Audit Logs)" },
+            new { Code = "SYSTEM_BACKUP", Name = "Sao lưu CSDL SQLite", Module = "Hạ tầng Hệ thống & Kiểm toán", Desc = "Tạo tệp sao lưu .bak an toàn" },
+            new { Code = "SYSTEM_RESTORE", Name = "Phục hồi CSDL SQLite", Module = "Hạ tầng Hệ thống & Kiểm toán", Desc = "Khôi phục dữ liệu từ tệp sao lưu" },
+            new { Code = "SYSTEM_CONFIG", Name = "Cấu hình trung tâm", Module = "Hạ tầng Hệ thống & Kiểm toán", Desc = "Cập nhật thông tin trung tâm và hình nền Lively" }
+        };
+
+        foreach (var p in permissions)
+        {
+            conn.Execute(@"
+                INSERT INTO Permissions (PermissionCode, PermissionName, ModuleName, Description)
+                VALUES (@Code, @Name, @Module, @Desc)
+                ON CONFLICT(PermissionCode) DO UPDATE SET 
+                    PermissionName = excluded.PermissionName,
+                    ModuleName = excluded.ModuleName,
+                    Description = excluded.Description;", p);
+        }
+
+        // Seed Default RolePermissions if empty
+        int rolePermCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM RolePermissions;");
+        if (rolePermCount == 0)
+        {
+            // 1. ROLE_ADMIN gets ALL permissions
+            conn.Execute(@"
+                INSERT OR IGNORE INTO RolePermissions (RoleId, PermissionId)
+                SELECT r.RoleId, p.PermissionId 
+                FROM Roles r, Permissions p
+                WHERE r.RoleCode = 'ROLE_ADMIN';");
+
+            // 2. ROLE_MGR
+            var mgrPerms = new[] { "REPORT_VIEW", "REPORT_EXPORT", "FINANCE_APPROVE", "USER_VIEW", "STUDENT_VIEW", "CLASS_VIEW", "COURSE_VIEW", "AUDIT_VIEW" };
+            AssignRolePerms(conn, "ROLE_MGR", mgrPerms);
+
+            // 3. ROLE_EC (Counselor)
+            var ecPerms = new[] { "LEAD_VIEW", "LEAD_CREATE", "LEAD_EDIT", "LEAD_CONSULT", "LEAD_TEST", "LEAD_CONVERT", "STUDENT_VIEW", "STUDENT_CREATE", "STUDENT_EDIT", "CLASS_VIEW", "CLASS_ENROLL", "COURSE_VIEW", "ROOM_VIEW", "REPORT_VIEW" };
+            AssignRolePerms(conn, "ROLE_EC", ecPerms);
+
+            // 4. ROLE_ACC (Accountant)
+            var accPerms = new[] { "INVOICE_VIEW", "PAYMENT_CREATE", "DISCOUNT_MANAGE", "STUDENT_VIEW", "CLASS_VIEW", "REPORT_VIEW", "REPORT_EXPORT" };
+            AssignRolePerms(conn, "ROLE_ACC", accPerms);
+
+            // 5. ROLE_AA (Academic Affairs)
+            var aaPerms = new[] { "COURSE_VIEW", "COURSE_MANAGE", "ROOM_VIEW", "ROOM_MANAGE", "CLASS_VIEW", "CLASS_MANAGE", "CLASS_SCHEDULE", "CLASS_ENROLL", "ATTENDANCE_VIEW", "EXAM_VIEW", "EXAM_MANAGE", "STUDENT_VIEW", "REPORT_VIEW" };
+            AssignRolePerms(conn, "ROLE_AA", aaPerms);
+
+            // 6. ROLE_TEA (Teacher)
+            var teaPerms = new[] { "CLASS_VIEW", "ATTENDANCE_VIEW", "ATTENDANCE_TAKE", "EXAM_VIEW", "EXAM_MANAGE", "STUDENT_VIEW" };
+            AssignRolePerms(conn, "ROLE_TEA", teaPerms);
+
+            // 7. ROLE_STU (Student)
+            var stuPerms = new[] { "CLASS_VIEW", "ATTENDANCE_VIEW", "EXAM_VIEW", "INVOICE_VIEW" };
+            AssignRolePerms(conn, "ROLE_STU", stuPerms);
+
+            // 8. ROLE_PAR (Parent)
+            var parPerms = new[] { "CLASS_VIEW", "ATTENDANCE_VIEW", "EXAM_VIEW", "INVOICE_VIEW", "STUDENT_VIEW" };
+            AssignRolePerms(conn, "ROLE_PAR", parPerms);
+        }
+    }
+
+    public static void AssignRolePerms(SqliteConnection conn, string roleCode, string[] permissionCodes)
+    {
+        foreach (var code in permissionCodes)
+        {
+            conn.Execute(@"
+                INSERT OR IGNORE INTO RolePermissions (RoleId, PermissionId)
+                SELECT r.RoleId, p.PermissionId 
+                FROM Roles r, Permissions p
+                WHERE r.RoleCode = @RoleCode AND p.PermissionCode = @Code;",
+                new { RoleCode = roleCode, Code = code });
+        }
     }
 }
