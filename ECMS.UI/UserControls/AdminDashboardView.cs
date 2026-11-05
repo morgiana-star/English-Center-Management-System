@@ -30,6 +30,7 @@ public class AdminDashboardView : UserControl
     private CustomButton btnToggleActive = null!;
     private CustomButton btnResetPassword = null!;
     private CustomButton btnUnlockUser = null!;
+    private CustomButton btnRbacConfig = null!;
 
     public AdminDashboardView(IUserService? userService = null)
     {
@@ -93,8 +94,8 @@ public class AdminDashboardView : UserControl
         txtSearch = new ModernTextBox
         {
             Placeholder = "Tìm theo username, họ tên, SĐT, email...",
-            Location = new Point(12, 14),
-            Size = new Size(210, 38),
+            Location = new Point(10, 14),
+            Size = new Size(185, 38),
             CornerRadius = 6
         };
         txtSearch.KeyDown += async (s, e) =>
@@ -112,8 +113,8 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(228, 18),
-            Size = new Size(130, 32)
+            Location = new Point(200, 18),
+            Size = new Size(120, 32)
         };
         cboRoleFilter.SelectedIndexChanged += async (s, e) => await FilterUsersAsync();
 
@@ -123,8 +124,8 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(364, 18),
-            Size = new Size(145, 32)
+            Location = new Point(325, 18),
+            Size = new Size(130, 32)
         };
         cboStatusFilter.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang hoạt động", "Đã vô hiệu hóa", "Tạm khóa (Brute-force)" });
         cboStatusFilter.SelectedIndex = 0;
@@ -132,33 +133,33 @@ public class AdminDashboardView : UserControl
 
         var btnSearch = new CustomButton
         {
-            Text = "TÌM KIẾM",
+            Text = "TÌM",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(515, 14),
-            Size = new Size(80, 38),
+            Location = new Point(460, 14),
+            Size = new Size(60, 38),
             CornerRadius = 6
         };
         btnSearch.Click += async (s, e) => await FilterUsersAsync();
 
         btnAddUser = new CustomButton
         {
-            Text = "+ THÊM MỚI",
+            Text = "+ THÊM",
             NormalColor = ThemeColors.SuccessText,
             HoverColor = Color.FromArgb(16, 185, 129),
-            Location = new Point(601, 14),
-            Size = new Size(95, 38),
+            Location = new Point(525, 14),
+            Size = new Size(80, 38),
             CornerRadius = 6
         };
         btnAddUser.Click += async (s, e) => await OpenCreateUserDialogAsync();
 
         btnEditUser = new CustomButton
         {
-            Text = "CHỈNH SỬA",
+            Text = "SỬA",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(702, 14),
-            Size = new Size(85, 38),
+            Location = new Point(610, 14),
+            Size = new Size(70, 38),
             CornerRadius = 6
         };
         btnEditUser.Click += async (s, e) => await OpenEditUserDialogAsync();
@@ -168,8 +169,8 @@ public class AdminDashboardView : UserControl
             Text = "KHÓA / MỞ",
             NormalColor = Color.FromArgb(225, 29, 72), // Rose 600
             HoverColor = Color.FromArgb(190, 18, 60),
-            Location = new Point(793, 14),
-            Size = new Size(85, 38),
+            Location = new Point(685, 14),
+            Size = new Size(95, 38),
             CornerRadius = 6
         };
         btnToggleActive.Click += async (s, e) => await ToggleActiveSelectedUserAsync();
@@ -179,7 +180,7 @@ public class AdminDashboardView : UserControl
             Text = "RESET MK",
             NormalColor = Color.FromArgb(217, 119, 6), // Amber 600
             HoverColor = Color.FromArgb(180, 83, 9),
-            Location = new Point(884, 14),
+            Location = new Point(785, 14),
             Size = new Size(85, 38),
             CornerRadius = 6
         };
@@ -190,11 +191,22 @@ public class AdminDashboardView : UserControl
             Text = "MỞ KHÓA",
             NormalColor = Color.FromArgb(13, 148, 136), // Teal 600
             HoverColor = Color.FromArgb(15, 118, 110),
-            Location = new Point(975, 14),
+            Location = new Point(875, 14),
             Size = new Size(85, 38),
             CornerRadius = 6
         };
         btnUnlockUser.Click += async (s, e) => await UnlockSelectedUserAsync();
+
+        btnRbacConfig = new CustomButton
+        {
+            Text = "RBAC",
+            NormalColor = Color.FromArgb(79, 70, 229), // Indigo 600
+            HoverColor = Color.FromArgb(67, 56, 202),
+            Location = new Point(965, 14),
+            Size = new Size(85, 38),
+            CornerRadius = 6
+        };
+        btnRbacConfig.Click += (s, e) => OpenRbacMatrixDialog();
 
         cardToolbar.Controls.Add(txtSearch);
         cardToolbar.Controls.Add(cboRoleFilter);
@@ -205,6 +217,7 @@ public class AdminDashboardView : UserControl
         cardToolbar.Controls.Add(btnToggleActive);
         cardToolbar.Controls.Add(btnResetPassword);
         cardToolbar.Controls.Add(btnUnlockUser);
+        cardToolbar.Controls.Add(btnRbacConfig);
 
         // 4. DataGridView Setup
         dgvUsers = new DataGridView
@@ -555,5 +568,11 @@ public class AdminDashboardView : UserControl
         using var dialog = new BruteForceMonitorDialog(_userService);
         dialog.ShowDialog();
         await LoadAdminDataAsync();
+    }
+
+    private void OpenRbacMatrixDialog()
+    {
+        using var dialog = new RbacMatrixDialog();
+        dialog.ShowDialog();
     }
 }
