@@ -31,6 +31,7 @@ public class AdminDashboardView : UserControl
     private CustomButton btnResetPassword = null!;
     private CustomButton btnUnlockUser = null!;
     private CustomButton btnRbacConfig = null!;
+    private CustomButton btnAuditLogs = null!;
 
     public AdminDashboardView(IUserService? userService = null)
     {
@@ -80,6 +81,12 @@ public class AdminDashboardView : UserControl
         lblLockedCount.Cursor = Cursors.Hand;
         lblLockedCount.Click += async (s, e) => await OpenBruteForceMonitorDialogAsync();
 
+        // Click on Audit KPI card to open audit log viewer dialog
+        cardAudit.Cursor = Cursors.Hand;
+        cardAudit.Click += async (s, e) => await OpenAuditLogViewerDialogAsync();
+        lblAuditCount.Cursor = Cursors.Hand;
+        lblAuditCount.Click += async (s, e) => await OpenAuditLogViewerDialogAsync();
+
         // 3. Search & Action Toolbar (GlassCard)
         var cardToolbar = new GlassCard
         {
@@ -93,9 +100,9 @@ public class AdminDashboardView : UserControl
 
         txtSearch = new ModernTextBox
         {
-            Placeholder = "Tìm theo username, họ tên, SĐT, email...",
+            Placeholder = "Tìm theo username, họ tên, email...",
             Location = new Point(10, 14),
-            Size = new Size(185, 38),
+            Size = new Size(170, 38),
             CornerRadius = 6
         };
         txtSearch.KeyDown += async (s, e) =>
@@ -113,8 +120,8 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(200, 18),
-            Size = new Size(120, 32)
+            Location = new Point(185, 18),
+            Size = new Size(115, 32)
         };
         cboRoleFilter.SelectedIndexChanged += async (s, e) => await FilterUsersAsync();
 
@@ -124,8 +131,8 @@ public class AdminDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(325, 18),
-            Size = new Size(130, 32)
+            Location = new Point(305, 18),
+            Size = new Size(120, 32)
         };
         cboStatusFilter.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang hoạt động", "Đã vô hiệu hóa", "Tạm khóa (Brute-force)" });
         cboStatusFilter.SelectedIndex = 0;
@@ -136,8 +143,8 @@ public class AdminDashboardView : UserControl
             Text = "TÌM",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(460, 14),
-            Size = new Size(60, 38),
+            Location = new Point(430, 14),
+            Size = new Size(45, 38),
             CornerRadius = 6
         };
         btnSearch.Click += async (s, e) => await FilterUsersAsync();
@@ -147,8 +154,8 @@ public class AdminDashboardView : UserControl
             Text = "+ THÊM",
             NormalColor = ThemeColors.SuccessText,
             HoverColor = Color.FromArgb(16, 185, 129),
-            Location = new Point(525, 14),
-            Size = new Size(80, 38),
+            Location = new Point(480, 14),
+            Size = new Size(75, 38),
             CornerRadius = 6
         };
         btnAddUser.Click += async (s, e) => await OpenCreateUserDialogAsync();
@@ -158,8 +165,8 @@ public class AdminDashboardView : UserControl
             Text = "SỬA",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(610, 14),
-            Size = new Size(70, 38),
+            Location = new Point(560, 14),
+            Size = new Size(60, 38),
             CornerRadius = 6
         };
         btnEditUser.Click += async (s, e) => await OpenEditUserDialogAsync();
@@ -169,8 +176,8 @@ public class AdminDashboardView : UserControl
             Text = "KHÓA / MỞ",
             NormalColor = Color.FromArgb(225, 29, 72), // Rose 600
             HoverColor = Color.FromArgb(190, 18, 60),
-            Location = new Point(685, 14),
-            Size = new Size(95, 38),
+            Location = new Point(625, 14),
+            Size = new Size(85, 38),
             CornerRadius = 6
         };
         btnToggleActive.Click += async (s, e) => await ToggleActiveSelectedUserAsync();
@@ -180,8 +187,8 @@ public class AdminDashboardView : UserControl
             Text = "RESET MK",
             NormalColor = Color.FromArgb(217, 119, 6), // Amber 600
             HoverColor = Color.FromArgb(180, 83, 9),
-            Location = new Point(785, 14),
-            Size = new Size(85, 38),
+            Location = new Point(715, 14),
+            Size = new Size(80, 38),
             CornerRadius = 6
         };
         btnResetPassword.Click += async (s, e) => await OpenResetPasswordDialogAsync();
@@ -191,8 +198,8 @@ public class AdminDashboardView : UserControl
             Text = "MỞ KHÓA",
             NormalColor = Color.FromArgb(13, 148, 136), // Teal 600
             HoverColor = Color.FromArgb(15, 118, 110),
-            Location = new Point(875, 14),
-            Size = new Size(85, 38),
+            Location = new Point(800, 14),
+            Size = new Size(75, 38),
             CornerRadius = 6
         };
         btnUnlockUser.Click += async (s, e) => await UnlockSelectedUserAsync();
@@ -202,11 +209,22 @@ public class AdminDashboardView : UserControl
             Text = "RBAC",
             NormalColor = Color.FromArgb(79, 70, 229), // Indigo 600
             HoverColor = Color.FromArgb(67, 56, 202),
-            Location = new Point(965, 14),
-            Size = new Size(85, 38),
+            Location = new Point(880, 14),
+            Size = new Size(75, 38),
             CornerRadius = 6
         };
         btnRbacConfig.Click += (s, e) => OpenRbacMatrixDialog();
+
+        btnAuditLogs = new CustomButton
+        {
+            Text = "AUDIT LOG",
+            NormalColor = Color.FromArgb(14, 116, 144), // Cyan 700
+            HoverColor = Color.FromArgb(8, 145, 178),
+            Location = new Point(960, 14),
+            Size = new Size(90, 38),
+            CornerRadius = 6
+        };
+        btnAuditLogs.Click += async (s, e) => await OpenAuditLogViewerDialogAsync();
 
         cardToolbar.Controls.Add(txtSearch);
         cardToolbar.Controls.Add(cboRoleFilter);
@@ -218,6 +236,7 @@ public class AdminDashboardView : UserControl
         cardToolbar.Controls.Add(btnResetPassword);
         cardToolbar.Controls.Add(btnUnlockUser);
         cardToolbar.Controls.Add(btnRbacConfig);
+        cardToolbar.Controls.Add(btnAuditLogs);
 
         // 4. DataGridView Setup
         dgvUsers = new DataGridView
@@ -250,68 +269,79 @@ public class AdminDashboardView : UserControl
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.UserId),
+            Name = "ColUserId",
             HeaderText = "ID",
-            Width = 55,
-            DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
+            DataPropertyName = "UserId",
+            Width = 60,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.Username),
-            HeaderText = "Tên đăng nhập",
+            Name = "ColUsername",
+            HeaderText = "TÊN ĐĂNG NHẬP",
+            DataPropertyName = "Username",
             Width = 140
         });
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.FullName),
-            HeaderText = "Họ và tên nhân sự",
-            Width = 190
-        });
-
-        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(UserListItemDto.RoleName),
-            HeaderText = "Vai trò hệ thống",
-            Width = 150
-        });
-
-        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(UserListItemDto.Email),
-            HeaderText = "Email liên hệ",
+            Name = "ColFullName",
+            HeaderText = "HỌ VÀ TÊN",
+            DataPropertyName = "FullName",
             Width = 180
         });
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.Phone),
-            HeaderText = "Số điện thoại",
-            Width = 110
+            Name = "ColEmail",
+            HeaderText = "EMAIL LIÊN HỆ",
+            DataPropertyName = "Email",
+            Width = 190
         });
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.StatusText),
-            HeaderText = "Trạng thái",
-            Width = 130
+            Name = "ColRoleName",
+            HeaderText = "VAI TRÒ CHÍNH",
+            DataPropertyName = "PrimaryRoleName",
+            Width = 150
         });
 
         dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
         {
-            DataPropertyName = nameof(UserListItemDto.FailedLoginAttempts),
-            HeaderText = "Lần sai",
-            Width = 75,
-            DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleCenter }
-        });
-
-        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = nameof(UserListItemDto.CreatedAt),
-            HeaderText = "Ngày tạo",
+            Name = "ColStatus",
+            HeaderText = "TRẠNG THÁI",
+            DataPropertyName = "StatusText",
             Width = 130,
-            DefaultCellStyle = { Format = "dd/MM/yyyy HH:mm" }
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "ColFailedAttempts",
+            HeaderText = "SAI MK",
+            DataPropertyName = "FailedAttemptsDisplay",
+            Width = 80,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "ColLockoutRemaining",
+            HeaderText = "KHÓA TẠM",
+            DataPropertyName = "LockoutRemainingDisplay",
+            Width = 100,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvUsers.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "ColCreatedAt",
+            HeaderText = "NGÀY TẠO",
+            DataPropertyName = "FormattedCreatedAt",
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
     }
 
@@ -319,44 +349,30 @@ public class AdminDashboardView : UserControl
     {
         if (e.RowIndex < 0 || e.RowIndex >= dgvUsers.Rows.Count) return;
 
-        var row = dgvUsers.Rows[e.RowIndex];
-        if (row.DataBoundItem is UserListItemDto user)
+        if (dgvUsers.Columns[e.ColumnIndex].Name == "ColStatus" && e.Value != null)
         {
-            if (e.ColumnIndex == 6) // StatusText column
+            string status = e.Value.ToString() ?? "";
+            e.CellStyle!.Font = new Font("Segoe UI", 8.5f, FontStyle.Bold);
+
+            if (status == "Đang hoạt động")
             {
-                if (!user.IsActive)
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
-                else if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
-                else if (user.FailedLoginAttempts >= 5)
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
-                else
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.SuccessText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
+                e.CellStyle.BackColor = ThemeColors.SuccessBg;
+                e.CellStyle.ForeColor = ThemeColors.SuccessText;
             }
-            else if (e.ColumnIndex == 7) // FailedLoginAttempts column
+            else
             {
-                if (user.FailedLoginAttempts >= 5)
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.DangerText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
-                else if (user.FailedLoginAttempts > 0)
-                {
-                    e.CellStyle!.ForeColor = ThemeColors.WarningText;
-                    e.CellStyle.Font = ThemeColors.FontBodyBold;
-                }
+                e.CellStyle.BackColor = ThemeColors.DangerBg;
+                e.CellStyle.ForeColor = ThemeColors.DangerText;
+            }
+        }
+        else if (dgvUsers.Columns[e.ColumnIndex].Name == "ColLockoutRemaining" && e.Value != null)
+        {
+            string text = e.Value.ToString() ?? "";
+            if (text != "Không" && !string.IsNullOrWhiteSpace(text))
+            {
+                e.CellStyle!.Font = new Font("Segoe UI", 8.5f, FontStyle.Bold);
+                e.CellStyle.BackColor = Color.FromArgb(254, 226, 226); // Light red
+                e.CellStyle.ForeColor = Color.FromArgb(185, 28, 28);   // Dark red
             }
         }
     }
@@ -574,5 +590,12 @@ public class AdminDashboardView : UserControl
     {
         using var dialog = new RbacMatrixDialog();
         dialog.ShowDialog();
+    }
+
+    private async Task OpenAuditLogViewerDialogAsync()
+    {
+        using var dialog = new AuditLogViewerDialog();
+        dialog.ShowDialog();
+        await LoadAdminDataAsync();
     }
 }
