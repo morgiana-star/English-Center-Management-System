@@ -371,6 +371,7 @@ public class MainForm : Form
                 AddCategoryHeader("BÀN LÀM VIỆC GIÁO VIÊN", ref top);
                 AddNavButton("Dashboard Giảng dạy", () => ShowUserControl(new TeacherPortalView()), ref top, false);
                 AddNavButton("Thời khóa biểu của tôi", () => ShowUserControl(new TeacherPortalView()), ref top, false);
+                AddNavButton("Sổ điểm danh", () => ShowUserControl(new AttendanceScheduleView()), ref top, false);
                 AddNavButton("Lớp học của tôi", () => ShowUserControl(new TeacherPortalView()), ref top, false);
                 break;
 
@@ -475,3 +476,4 @@ public class MainForm : Form
         }
     }
 }
+
