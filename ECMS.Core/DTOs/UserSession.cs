@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ECMS.Core.DTOs;
 
-public class UserSession
+public class xUserSession
 {
     public int UserId { get; set; }
     public string Username { get; set; } = string.Empty;
