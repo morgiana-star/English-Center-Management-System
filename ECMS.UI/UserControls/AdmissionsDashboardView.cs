@@ -29,11 +29,19 @@ public class AdmissionsDashboardView : UserControl
     private CustomButton btnAddLead = null!;
     private CustomButton btnEditLead = null!;
     private CustomButton btnChangeStatus = null!;
+    private CustomButton btnEnroll = null!;
 
     // Grid & Preview
     private DataGridView dgvLeads = null!;
     private Label lblPreviewTitle = null!;
     private TextBox txtPreviewNotes = null!;
+
+    /// <summary>
+    /// Parameterless constructor required for Visual Studio Designer support
+    /// </summary>
+    public AdmissionsDashboardView() : this(null)
+    {
+    }
 
     public AdmissionsDashboardView(ILeadService? leadService = null)
     {
@@ -91,9 +99,9 @@ public class AdmissionsDashboardView : UserControl
 
         txtSearch = new ModernTextBox
         {
-            Placeholder = "Tìm theo tên, SĐT, email, ghi chú...",
-            Location = new Point(12, 14),
-            Size = new Size(210, 38),
+            Placeholder = "Tìm theo tên, SĐT, email...",
+            Location = new Point(10, 14),
+            Size = new Size(185, 38),
             CornerRadius = 6
         };
         txtSearch.KeyDown += async (s, e) =>
@@ -111,8 +119,8 @@ public class AdmissionsDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(230, 18),
-            Size = new Size(150, 32)
+            Location = new Point(200, 18),
+            Size = new Size(130, 32)
         };
         cboStatusFilter.Items.AddRange(new object[]
         {
@@ -132,8 +140,8 @@ public class AdmissionsDashboardView : UserControl
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(388, 18),
-            Size = new Size(130, 32)
+            Location = new Point(335, 18),
+            Size = new Size(120, 32)
         };
         cboSourceFilter.Items.Add("Tất cả nguồn");
         cboSourceFilter.SelectedIndex = 0;
@@ -144,8 +152,8 @@ public class AdmissionsDashboardView : UserControl
             Text = "TÌM",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(526, 14),
-            Size = new Size(55, 38),
+            Location = new Point(460, 14),
+            Size = new Size(45, 38),
             CornerRadius = 6
         };
         btnSearch.Click += async (s, e) => await LoadLeadsAsync();
@@ -155,8 +163,8 @@ public class AdmissionsDashboardView : UserControl
             Text = "LÀM MỚI",
             NormalColor = Color.FromArgb(100, 116, 139), // Slate 500
             HoverColor = Color.FromArgb(71, 85, 105),
-            Location = new Point(589, 14),
-            Size = new Size(80, 38),
+            Location = new Point(510, 14),
+            Size = new Size(75, 38),
             CornerRadius = 6
         };
         btnRefresh.Click += async (s, e) =>
@@ -170,11 +178,11 @@ public class AdmissionsDashboardView : UserControl
 
         btnAddLead = new CustomButton
         {
-            Text = "+ THÊM KHÁCH",
+            Text = "+ THÊM",
             NormalColor = ThemeColors.SuccessText,
             HoverColor = Color.FromArgb(16, 185, 129),
-            Location = new Point(677, 14),
-            Size = new Size(115, 38),
+            Location = new Point(590, 14),
+            Size = new Size(80, 38),
             CornerRadius = 6
         };
         btnAddLead.Click += async (s, e) => await OpenCreateLeadDialogAsync();
@@ -184,22 +192,33 @@ public class AdmissionsDashboardView : UserControl
             Text = "SỬA",
             NormalColor = ThemeColors.Primary,
             HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(800, 14),
-            Size = new Size(65, 38),
+            Location = new Point(675, 14),
+            Size = new Size(55, 38),
             CornerRadius = 6
         };
         btnEditLead.Click += async (s, e) => await OpenEditLeadDialogAsync();
 
         btnChangeStatus = new CustomButton
         {
-            Text = "ĐỔI TRẠNG THÁI",
+            Text = "ĐỔI STATUS",
             NormalColor = Color.FromArgb(126, 34, 206), // Purple 700
             HoverColor = Color.FromArgb(107, 33, 168),
-            Location = new Point(873, 14),
-            Size = new Size(125, 38),
+            Location = new Point(735, 14),
+            Size = new Size(105, 38),
             CornerRadius = 6
         };
         btnChangeStatus.Click += async (s, e) => await QuickChangeStatusAsync();
+
+        btnEnroll = new CustomButton
+        {
+            Text = "🎓 ĐĂNG KÝ XẾP LỚP",
+            NormalColor = Color.FromArgb(16, 185, 129), // Emerald 600
+            HoverColor = Color.FromArgb(5, 150, 105),
+            Location = new Point(845, 14),
+            Size = new Size(195, 38),
+            CornerRadius = 6
+        };
+        btnEnroll.Click += async (s, e) => await OpenEnrollmentDialogAsync();
 
         cardToolbar.Controls.Add(txtSearch);
         cardToolbar.Controls.Add(cboStatusFilter);
@@ -209,6 +228,7 @@ public class AdmissionsDashboardView : UserControl
         cardToolbar.Controls.Add(btnAddLead);
         cardToolbar.Controls.Add(btnEditLead);
         cardToolbar.Controls.Add(btnChangeStatus);
+        cardToolbar.Controls.Add(btnEnroll);
 
         // 4. DataGridView Setup
         dgvLeads = new DataGridView
@@ -544,6 +564,17 @@ public class AdmissionsDashboardView : UserControl
         else
         {
             MessageBox.Show("Vui lòng chọn một khách hàng trên danh sách để chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+    }
+
+    private async Task OpenEnrollmentDialogAsync()
+    {
+        LeadListItemDto? selectedLead = dgvLeads.CurrentRow?.DataBoundItem as LeadListItemDto;
+        using var dialog = new StudentEnrollmentDialog(selectedLead);
+        if (dialog.ShowDialog() == DialogResult.OK)
+        {
+            await LoadSummaryAsync();
+            await LoadLeadsAsync();
         }
     }
 

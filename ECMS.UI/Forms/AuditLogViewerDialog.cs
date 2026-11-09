@@ -667,4 +667,18 @@ public class AuditLogViewerDialog : Form
             MessageBox.Show("Lỗi xuất file Excel: " + ex.Message, "Thông báo lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+        // 
+        // AuditLogViewerDialog
+        // 
+        ClientSize = new System.Drawing.Size(962, 742);
+        ResumeLayout(false);
+    }
 }

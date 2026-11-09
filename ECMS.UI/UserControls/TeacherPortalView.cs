@@ -232,4 +232,14 @@ public class TeacherPortalView : UserControl
             MessageBox.Show("Lỗi nạp dữ liệu giáo viên: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+        SuspendLayout();
+        ResumeLayout(false);
+    }
 }
