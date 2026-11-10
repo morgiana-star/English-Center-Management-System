@@ -25,6 +25,40 @@ public class ClassLookupDto
     public string DisplayText => $"{ClassName} ({CourseName}) - Sĩ số: {CapacityDisplay} - Học phí: {FormattedTuitionFee}" + (IsFull ? " [HẾT CHỖ]" : "");
 }
 
+public class FeeDiscountDto
+{
+    public int DiscountId { get; set; }
+    public string DiscountName { get; set; } = string.Empty;
+    public double Percentage { get; set; }
+    public decimal FixedAmount { get; set; }
+    public string? Description { get; set; }
+    public bool RequiresApproval { get; set; }
+
+    public string DisplayText
+    {
+        get
+        {
+            if (DiscountId == 0) return "Không áp dụng ưu đãi (0%)";
+            if (Percentage > 0 && FixedAmount > 0)
+                return $"{DiscountName} (Giảm {Percentage}% + {FixedAmount:N0}đ)";
+            if (Percentage > 0)
+                return $"{DiscountName} (Giảm {Percentage}%)";
+            if (FixedAmount > 0)
+                return $"{DiscountName} (Giảm {FixedAmount:N0} VNĐ)";
+            return DiscountName;
+        }
+    }
+
+    public decimal CalculateDiscount(decimal originalAmount)
+    {
+        if (originalAmount <= 0 || DiscountId <= 0) return 0;
+
+        decimal percentDiscount = originalAmount * (decimal)Percentage / 100m;
+        decimal totalDiscount = percentDiscount + FixedAmount;
+        return Math.Min(originalAmount, Math.Round(totalDiscount, 0));
+    }
+}
+
 public class StudentEnrollmentDto
 {
     public int StudentId { get; set; } = 0; // 0 nếu là học viên mới
@@ -37,6 +71,12 @@ public class StudentEnrollmentDto
     public string? Email { get; set; }
     public string? Address { get; set; }
     public int ClassId { get; set; }
+
+    // Thông tin Ưu đãi & Hóa đơn (Ngày 8)
+    public int? DiscountId { get; set; }
+    public decimal OriginalAmount { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal FinalAmount { get; set; }
     public string? Notes { get; set; }
 }
 
@@ -50,28 +90,35 @@ public class EnrollmentListItemDto
     public int ClassId { get; set; }
     public string ClassName { get; set; } = string.Empty;
     public string CourseName { get; set; } = string.Empty;
-    public decimal FinalFee { get; set; }
-    public string EnrollmentDate { get; set; } = string.Empty;
-    public string Status { get; set; } = "Enrolled";
+    public string EnrollDate { get; set; } = string.Empty;
+    public string Status { get; set; } = "PendingPayment";
 
-    public string FormattedEnrollmentDate
+    public string InvoiceCode { get; set; } = string.Empty;
+    public decimal OriginalAmount { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal FinalAmount { get; set; }
+    public string InvoiceStatus { get; set; } = "Unpaid";
+
+    public string FormattedEnrollDate
     {
         get
         {
-            if (DateTime.TryParse(EnrollmentDate, out var dt))
+            if (DateTime.TryParse(EnrollDate, out var dt))
             {
                 return dt.ToLocalTime().ToString("dd/MM/yyyy HH:mm");
             }
-            return EnrollmentDate;
+            return EnrollDate;
         }
     }
 
     public string StatusText => Status switch
     {
-        "Enrolled" => "Đã xếp lớp",
+        "PendingPayment" => "Chờ nộp học phí",
         "Active" => "Đang theo học",
         "Completed" => "Đã hoàn thành",
         "Dropped" => "Bảo lưu / Thôi học",
+        "Transferred" => "Đã chuyển lớp",
+        "Reserved" => "Đang bảo lưu",
         _ => Status
     };
 }
