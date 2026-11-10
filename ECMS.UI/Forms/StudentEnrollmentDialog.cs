@@ -16,6 +16,7 @@ public class StudentEnrollmentDialog : Form
     private readonly LeadListItemDto? _lead;
 
     private List<ClassLookupDto> _availableClasses = new();
+    private List<FeeDiscountDto> _availableDiscounts = new();
 
     // Controls
     private ModernTextBox txtFullName = null!;
@@ -24,15 +25,22 @@ public class StudentEnrollmentDialog : Form
     private ModernTextBox txtPhone = null!;
     private ModernTextBox txtEmail = null!;
     private ModernTextBox txtAddress = null!;
+    private Label lblOldStudentBadge = null!;
 
     private ComboBox cboClasses = null!;
     private Label lblClassDetails = null!;
     private Label lblCapacityStatus = null!;
+
+    private ComboBox cboDiscounts = null!;
+    private Label lblOriginalFee = null!;
+    private Label lblDiscountAmount = null!;
+    private Label lblFinalFee = null!;
+
     private CustomButton btnConfirm = null!;
     private CustomButton btnCancel = null!;
 
     /// <summary>
-    /// Parameterless constructor required for Visual Studio Designer support
+    /// Parameterless constructor required for Visual Studio / Rider Designer support
     /// </summary>
     public StudentEnrollmentDialog() : this(null, null)
     {
@@ -47,7 +55,8 @@ public class StudentEnrollmentDialog : Form
         Load += async (s, e) =>
         {
             await LoadOpenClassesAsync();
-            PrefillLeadData();
+            await LoadDiscountsAsync();
+            await PrefillLeadDataAsync();
         };
     }
 
@@ -59,34 +68,34 @@ public class StudentEnrollmentDialog : Form
         MaximizeBox = false;
         MinimizeBox = false;
         ShowInTaskbar = false;
-        ClientSize = new Size(680, 680);
+        ClientSize = new Size(700, 785);
         BackColor = ThemeColors.AppBackground;
 
         var card = new GlassCard
         {
-            Location = new Point(16, 16),
-            Size = new Size(648, 648),
+            Location = new Point(14, 14),
+            Size = new Size(672, 757),
             CornerRadius = 14,
             EnableShadow = true,
-            Padding = new Padding(20)
+            Padding = new Padding(18)
         };
 
         // Header Title
         var lblTitle = new Label
         {
-            Text = _lead != null ? "CHUYỂN ĐỔI LEAD & ĐĂNG KÝ VÀO LỚP HỌC" : "TIẾP NHẬN HỌC VIÊN MỚI & ĐĂNG KÝ LỚP",
+            Text = _lead != null ? "CHUYỂN ĐỔI LEAD, ÁP DỤNG ƯU ĐÃI & XUẤT HÓA ĐƠN" : "TIẾP NHẬN HỌC VIÊN, ÁP DỤNG ƯU ĐÃI & XUẤT HÓA ĐƠN",
             Font = ThemeColors.FontSubHeader,
             ForeColor = ThemeColors.Primary,
-            Location = new Point(20, 15),
+            Location = new Point(20, 14),
             AutoSize = true
         };
 
         var lblSubtitle = new Label
         {
-            Text = "Khởi tạo hồ sơ học viên, cấp mã HV-yyyy-xxxx và xếp vào lớp học còn chỗ trống",
+            Text = "Cấp mã HV-yyyy-xxxx, xếp lớp còn chỗ, tính ưu đãi (10% HV cũ / Nhóm) và phát hành Hóa đơn Unpaid",
             Font = ThemeColors.FontCaption,
             ForeColor = ThemeColors.TextSecondary,
-            Location = new Point(20, 42),
+            Location = new Point(20, 40),
             AutoSize = true
         };
 
@@ -96,14 +105,14 @@ public class StudentEnrollmentDialog : Form
             Text = "1. THÔNG TIN HỌC VIÊN",
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
             ForeColor = ThemeColors.Primary,
-            Location = new Point(20, 75),
+            Location = new Point(20, 68),
             AutoSize = true
         };
 
-        int currentY = 105;
+        int currentY = 95;
         int labelWidth = 120;
-        int inputWidth = 470;
-        int rowSpacing = 46;
+        int inputWidth = 490;
+        int rowSpacing = 42;
 
         // Họ và tên
         var lblName = new Label
@@ -138,7 +147,7 @@ public class StudentEnrollmentDialog : Form
             Font = new Font("Segoe UI", 9.5f),
             Value = DateTime.Today.AddYears(-18),
             Location = new Point(145, currentY + 3),
-            Size = new Size(160, 28)
+            Size = new Size(165, 28)
         };
 
         var lblGender = new Label
@@ -146,7 +155,7 @@ public class StudentEnrollmentDialog : Form
             Text = "Giới tính:",
             Font = ThemeColors.FontBadge,
             ForeColor = ThemeColors.TextPrimary,
-            Location = new Point(330, currentY + 6),
+            Location = new Point(335, currentY + 6),
             Size = new Size(70, 24)
         };
         cboGender = new ComboBox
@@ -154,8 +163,8 @@ public class StudentEnrollmentDialog : Form
             DropDownStyle = ComboBoxStyle.DropDownList,
             Font = new Font("Segoe UI", 9.5f),
             ForeColor = ThemeColors.TextPrimary,
-            Location = new Point(410, currentY + 3),
-            Size = new Size(205, 28)
+            Location = new Point(415, currentY + 3),
+            Size = new Size(220, 28)
         };
         cboGender.Items.AddRange(new object[] { "Nam", "Nữ", "Khác" });
         cboGender.SelectedIndex = 0;
@@ -174,26 +183,37 @@ public class StudentEnrollmentDialog : Form
         {
             Placeholder = "Ví dụ: 0912345678",
             Location = new Point(145, currentY),
-            Size = new Size(160, 34)
+            Size = new Size(165, 34)
         };
+        txtPhone.Leave += async (s, e) => await CheckExistingStudentAsync();
 
         var lblEmail = new Label
         {
             Text = "Email:",
             Font = ThemeColors.FontBadge,
             ForeColor = ThemeColors.TextPrimary,
-            Location = new Point(330, currentY + 6),
+            Location = new Point(335, currentY + 6),
             Size = new Size(70, 24)
         };
         txtEmail = new ModernTextBox
         {
             Placeholder = "hocvien@gmail.com",
-            Location = new Point(410, currentY),
-            Size = new Size(205, 34)
+            Location = new Point(415, currentY),
+            Size = new Size(220, 34)
+        };
+
+        currentY += 36;
+        lblOldStudentBadge = new Label
+        {
+            Text = "",
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(21, 128, 61),
+            Location = new Point(145, currentY),
+            AutoSize = true
         };
 
         // Địa chỉ
-        currentY += rowSpacing;
+        currentY += 22;
         var lblAddress = new Label
         {
             Text = "Địa chỉ cư trú:",
@@ -210,7 +230,7 @@ public class StudentEnrollmentDialog : Form
         };
 
         // Section 2: Chọn lớp học
-        currentY += 52;
+        currentY += 46;
         var lblSec2 = new Label
         {
             Text = "2. CHỌN LỚP HỌC & KIỂM TRA SĨ SỐ",
@@ -220,7 +240,7 @@ public class StudentEnrollmentDialog : Form
             AutoSize = true
         };
 
-        currentY += 30;
+        currentY += 26;
         var lblClassSelect = new Label
         {
             Text = "Lớp học mở: *",
@@ -238,14 +258,14 @@ public class StudentEnrollmentDialog : Form
             Location = new Point(145, currentY + 3),
             Size = new Size(inputWidth, 28)
         };
-        cboClasses.SelectedIndexChanged += CboClasses_SelectedIndexChanged;
+        cboClasses.SelectedIndexChanged += (s, e) => UpdateClassAndFeeSummary();
 
         // Panel chi tiết lớp học & Sĩ số
-        currentY += 42;
+        currentY += 36;
         var pnlClassInfo = new RoundedPanel
         {
             Location = new Point(145, currentY),
-            Size = new Size(inputWidth, 120),
+            Size = new Size(inputWidth, 88),
             CornerRadius = 8,
             BackColor = Color.FromArgb(248, 250, 252),
             BorderColor = Color.FromArgb(226, 232, 240),
@@ -254,34 +274,93 @@ public class StudentEnrollmentDialog : Form
 
         lblClassDetails = new Label
         {
-            Text = "Vui lòng chọn một lớp học ở trên để xem chi tiết giảng dạy và sĩ số.",
+            Text = "Vui lòng chọn một lớp học ở trên để xem chi tiết.",
             Font = new Font("Segoe UI", 9f),
             ForeColor = Color.FromArgb(71, 85, 105),
-            Location = new Point(12, 10),
-            Size = new Size(445, 65)
+            Location = new Point(12, 8),
+            Size = new Size(465, 42)
         };
 
         lblCapacityStatus = new Label
         {
             Text = "Trạng thái chỗ trống: Chưa chọn lớp",
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             ForeColor = Color.FromArgb(100, 116, 139),
-            Location = new Point(12, 85),
+            Location = new Point(12, 56),
             AutoSize = true
         };
 
         pnlClassInfo.Controls.Add(lblClassDetails);
         pnlClassInfo.Controls.Add(lblCapacityStatus);
 
+        // Section 3: Chính sách Ưu đãi & Tính học phí (Ngày 8)
+        currentY += 102;
+        var lblSec3 = new Label
+        {
+            Text = "3. CHÍNH SÁCH ƯU ĐÃI & TỔNG HỢP HỌC PHÍ (SINH HÓA ĐƠN TỰ ĐỘNG)",
+            Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(180, 83, 9), // Amber-700
+            Location = new Point(20, currentY),
+            AutoSize = true
+        };
+
+        currentY += 26;
+        var lblDiscountTitle = new Label
+        {
+            Text = "Áp dụng ưu đãi:",
+            Font = ThemeColors.FontBadge,
+            ForeColor = ThemeColors.TextPrimary,
+            Location = new Point(20, currentY + 6),
+            Size = new Size(labelWidth, 24)
+        };
+
+        cboDiscounts = new ComboBox
+        {
+            DropDownStyle = ComboBoxStyle.DropDownList,
+            Font = new Font("Segoe UI", 9.5f),
+            ForeColor = ThemeColors.TextPrimary,
+            Location = new Point(145, currentY + 3),
+            Size = new Size(inputWidth, 28)
+        };
+        cboDiscounts.SelectedIndexChanged += (s, e) => UpdateClassAndFeeSummary();
+
+        // Panel Tổng kết tiền học phí
+        currentY += 36;
+        var pnlFeeSummary = new RoundedPanel
+        {
+            Location = new Point(145, currentY),
+            Size = new Size(inputWidth, 95),
+            CornerRadius = 8,
+            BackColor = Color.FromArgb(255, 251, 235), // Amber-50
+            BorderColor = Color.FromArgb(253, 230, 138),
+            BorderWidth = 1
+        };
+
+        var lblOrigTitle = new Label { Text = "Học phí gốc của Khóa học:", Font = ThemeColors.FontBody, ForeColor = ThemeColors.TextSecondary, Location = new Point(14, 10), AutoSize = true };
+        lblOriginalFee = new Label { Text = "0 VNĐ", Font = ThemeColors.FontBodyBold, ForeColor = ThemeColors.TextPrimary, Location = new Point(310, 10), Size = new Size(165, 20), TextAlign = ContentAlignment.MiddleRight };
+
+        var lblDiscTitle = new Label { Text = "Giảm giá theo chính sách ưu đãi:", Font = ThemeColors.FontBody, ForeColor = Color.FromArgb(21, 128, 61), Location = new Point(14, 34), AutoSize = true };
+        lblDiscountAmount = new Label { Text = "-0 VNĐ", Font = ThemeColors.FontBodyBold, ForeColor = Color.FromArgb(21, 128, 61), Location = new Point(310, 34), Size = new Size(165, 20), TextAlign = ContentAlignment.MiddleRight };
+
+        var lblFinalTitle = new Label { Text = "TỔNG TIỀN CẦN THANH TOÁN:", Font = new Font("Segoe UI", 10f, FontStyle.Bold), ForeColor = Color.FromArgb(185, 28, 28), Location = new Point(14, 62), AutoSize = true };
+        lblFinalFee = new Label { Text = "0 VNĐ", Font = new Font("Segoe UI", 12.5f, FontStyle.Bold), ForeColor = Color.FromArgb(185, 28, 28), Location = new Point(275, 58), Size = new Size(200, 26), TextAlign = ContentAlignment.MiddleRight };
+
+        pnlFeeSummary.Controls.Add(lblOrigTitle);
+        pnlFeeSummary.Controls.Add(lblOriginalFee);
+        pnlFeeSummary.Controls.Add(lblDiscTitle);
+        pnlFeeSummary.Controls.Add(lblDiscountAmount);
+        pnlFeeSummary.Controls.Add(lblFinalTitle);
+        pnlFeeSummary.Controls.Add(lblFinalFee);
+
         // Buttons
-        currentY += 140;
+        currentY += 110;
         btnConfirm = new CustomButton
         {
-            Text = "XÁC NHẬN ĐĂNG KÝ LỚP",
+            Text = "XÁC NHẬN XẾP LỚP & XUẤT HÓA ĐƠN",
             NormalColor = Color.FromArgb(16, 185, 129), // Emerald 600
             HoverColor = Color.FromArgb(5, 150, 105),
             Location = new Point(145, currentY),
-            Size = new Size(220, 42),
+            Size = new Size(280, 42),
             CornerRadius = 8
         };
         btnConfirm.Click += async (s, e) => await ConfirmEnrollmentAsync();
@@ -291,7 +370,7 @@ public class StudentEnrollmentDialog : Form
             Text = "HỦY BỎ",
             NormalColor = Color.FromArgb(148, 163, 184), // Slate 400
             HoverColor = Color.FromArgb(100, 116, 139),
-            Location = new Point(380, currentY),
+            Location = new Point(440, currentY),
             Size = new Size(110, 42),
             CornerRadius = 8
         };
@@ -310,25 +389,68 @@ public class StudentEnrollmentDialog : Form
         card.Controls.Add(txtPhone);
         card.Controls.Add(lblEmail);
         card.Controls.Add(txtEmail);
+        card.Controls.Add(lblOldStudentBadge);
         card.Controls.Add(lblAddress);
         card.Controls.Add(txtAddress);
         card.Controls.Add(lblSec2);
         card.Controls.Add(lblClassSelect);
         card.Controls.Add(cboClasses);
         card.Controls.Add(pnlClassInfo);
+        card.Controls.Add(lblSec3);
+        card.Controls.Add(lblDiscountTitle);
+        card.Controls.Add(cboDiscounts);
+        card.Controls.Add(pnlFeeSummary);
         card.Controls.Add(btnConfirm);
         card.Controls.Add(btnCancel);
 
         Controls.Add(card);
     }
 
-    private void PrefillLeadData()
+    private async Task PrefillLeadDataAsync()
     {
         if (_lead == null) return;
 
         txtFullName.Text = _lead.FullName;
         txtPhone.Text = _lead.Phone;
         txtEmail.Text = _lead.Email ?? string.Empty;
+        await CheckExistingStudentAsync();
+    }
+
+    private async Task CheckExistingStudentAsync()
+    {
+        string phone = txtPhone.Text.Trim();
+        if (string.IsNullOrWhiteSpace(phone))
+        {
+            lblOldStudentBadge.Text = "";
+            return;
+        }
+
+        try
+        {
+            bool isOldStudent = await _enrollmentService.IsExistingStudentByPhoneAsync(phone);
+            if (isOldStudent)
+            {
+                lblOldStudentBadge.Text = "✓ Nhận diện: HỌC VIÊN CŨ của trung tâm (Tự động chọn ưu đãi Giảm 10%)";
+                // Auto-select 10% old student discount if available
+                for (int i = 0; i < _availableDiscounts.Count; i++)
+                {
+                    if (_availableDiscounts[i].Percentage == 10 || _availableDiscounts[i].DiscountName.Contains("cũ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        cboDiscounts.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                lblOldStudentBadge.Text = "ℹ Học viên mới lần đầu đăng ký tại ECMS";
+                lblOldStudentBadge.ForeColor = ThemeColors.InfoText;
+            }
+        }
+        catch
+        {
+            // Ignore non-critical check
+        }
     }
 
     private async Task LoadOpenClassesAsync()
@@ -358,7 +480,32 @@ public class StudentEnrollmentDialog : Form
         }
     }
 
-    private void CboClasses_SelectedIndexChanged(object? sender, EventArgs e)
+    private async Task LoadDiscountsAsync()
+    {
+        try
+        {
+            var dbDiscounts = (await _enrollmentService.GetActiveDiscountsAsync()).ToList();
+            _availableDiscounts = new List<FeeDiscountDto>
+            {
+                new FeeDiscountDto { DiscountId = 0, DiscountName = "Không áp dụng ưu đãi (0%)" }
+            };
+            _availableDiscounts.AddRange(dbDiscounts);
+
+            cboDiscounts.Items.Clear();
+            foreach (var d in _availableDiscounts)
+            {
+                cboDiscounts.Items.Add(d.DisplayText);
+            }
+            cboDiscounts.SelectedIndex = 0;
+            UpdateClassAndFeeSummary();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải danh mục ưu đãi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void UpdateClassAndFeeSummary()
     {
         if (cboClasses.SelectedIndex < 0 || cboClasses.SelectedIndex >= _availableClasses.Count)
         {
@@ -369,9 +516,8 @@ public class StudentEnrollmentDialog : Form
         }
 
         var selectedClass = _availableClasses[cboClasses.SelectedIndex];
-        lblClassDetails.Text = $"Khóa học: {selectedClass.CourseName}\n" +
-                               $"Giáo viên: {selectedClass.TeacherName} | Phòng học: {selectedClass.RoomName}\n" +
-                               $"Học phí chuẩn: {selectedClass.FormattedTuitionFee}";
+        lblClassDetails.Text = $"Khóa học: {selectedClass.CourseName}  |  Phòng học: {selectedClass.RoomName}\n" +
+                               $"Giáo viên phụ trách: {selectedClass.TeacherName}";
 
         if (selectedClass.IsFull)
         {
@@ -386,6 +532,22 @@ public class StudentEnrollmentDialog : Form
             lblCapacityStatus.ForeColor = Color.FromArgb(21, 128, 61); // Green
             btnConfirm.Enabled = true;
         }
+
+        // Calculate tuition fee & discount
+        decimal originalAmount = selectedClass.TuitionFee;
+        decimal discountAmount = 0;
+
+        if (cboDiscounts.SelectedIndex >= 0 && cboDiscounts.SelectedIndex < _availableDiscounts.Count)
+        {
+            var selectedDiscount = _availableDiscounts[cboDiscounts.SelectedIndex];
+            discountAmount = selectedDiscount.CalculateDiscount(originalAmount);
+        }
+
+        decimal finalAmount = Math.Max(0, originalAmount - discountAmount);
+
+        lblOriginalFee.Text = $"{originalAmount:N0} VNĐ";
+        lblDiscountAmount.Text = discountAmount > 0 ? $"-{discountAmount:N0} VNĐ" : "0 VNĐ";
+        lblFinalFee.Text = $"{finalAmount:N0} VNĐ";
     }
 
     private async Task ConfirmEnrollmentAsync()
@@ -401,6 +563,12 @@ public class StudentEnrollmentDialog : Form
         {
             MessageBox.Show($"Lớp học '{selectedClass.ClassName}' đã đầy sĩ số! Vui lòng chọn lớp học khác.", "Cảnh báo sĩ số", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
+        }
+
+        int? discountId = null;
+        if (cboDiscounts.SelectedIndex > 0 && cboDiscounts.SelectedIndex < _availableDiscounts.Count)
+        {
+            discountId = _availableDiscounts[cboDiscounts.SelectedIndex].DiscountId;
         }
 
         string fullName = txtFullName.Text.Trim();
@@ -419,7 +587,8 @@ public class StudentEnrollmentDialog : Form
             Phone = phone,
             Email = string.IsNullOrWhiteSpace(email) ? null : email,
             Address = string.IsNullOrWhiteSpace(address) ? null : address,
-            ClassId = selectedClass.ClassId
+            ClassId = selectedClass.ClassId,
+            DiscountId = discountId
         };
 
         try
@@ -427,7 +596,9 @@ public class StudentEnrollmentDialog : Form
             btnConfirm.Enabled = false;
             Cursor = Cursors.WaitCursor;
 
-            var (success, message, studentId, studentCode, enrollmentId) = await _enrollmentService.EnrollStudentAsync(dto);
+            var (success, message, studentId, studentCode, enrollmentId, invoiceCode, finalAmount) =
+                await _enrollmentService.EnrollStudentAsync(dto);
+
             Cursor = Cursors.Default;
 
             if (!success)
@@ -438,13 +609,14 @@ public class StudentEnrollmentDialog : Form
             }
 
             MessageBox.Show(
-                $"Xếp lớp thành công!\n\n" +
+                $"Đăng ký lớp & Phát hành hóa đơn thành công!\n\n" +
                 $"• Mã học viên: {studentCode}\n" +
                 $"• Học viên: {fullName}\n" +
                 $"• Lớp xếp vào: {selectedClass.ClassName} ({selectedClass.CourseName})\n" +
-                $"• Sĩ số mới của lớp: {selectedClass.CurrentStudents + 1}/{selectedClass.MaxStudents}\n\n" +
-                $"Hệ thống đã tự động chuyển thông tin sang phân hệ Thu ngân / Kế toán để đối soát học phí.",
-                "Đăng Ký Xếp Lớp Thành Công",
+                $"• Mã Hóa Đơn (Invoices): {invoiceCode}\n" +
+                $"• Số tiền phải thanh toán: {finalAmount:N0} VNĐ (Chờ thu tiền)\n\n" +
+                $"👉 Hóa đơn đã được đẩy sang màn hình Kế toán / Thu ngân để thu học phí & in biên lai.",
+                "Thành Công",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
 
