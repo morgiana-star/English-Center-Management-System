@@ -72,7 +72,7 @@ public class ModernTextBox : UserControl
 
         _innerBox.GotFocus += (s, e) => { _isFocused = true; Invalidate(); };
         _innerBox.LostFocus += (s, e) => { _isFocused = false; Invalidate(); };
-        _innerBox.TextChanged += (s, e) => Invalidate();
+        _innerBox.TextChanged += (s, e) => { Invalidate(); OnTextChanged(e); };
 
         Controls.Add(_innerBox);
     }

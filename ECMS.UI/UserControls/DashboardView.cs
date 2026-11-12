@@ -2,9 +2,8 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Dapper;
 using ECMS.Business.Services;
-using ECMS.Data.Database;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.UserControls;
@@ -15,9 +14,10 @@ public class DashboardView : UserControl
     private readonly IAttendanceService _attendanceService = new AttendanceService();
 
     private Label lblRevenue = null!;
-    private Label lblAlertCount = null!;
+    private Label lblTotalDebt = null!;
     private Label lblActiveClassCount = null!;
     private Label lblActiveStudentCount = null!;
+    private DataGridView dgvTodayPayments = null!;
     private DataGridView dgvAlerts = null!;
 
     public DashboardView()
@@ -43,25 +43,25 @@ public class DashboardView : UserControl
 
         var lblSubtitle = new Label
         {
-            Text = "Theo dõi doanh thu thực thu, chất lượng đào tạo và cảnh báo học thuật thời gian thực",
+            Text = "Theo dõi doanh thu thực thu, kiểm soát công nợ, sĩ số và nhật ký giao dịch trong ngày",
             Font = ThemeColors.FontBody,
             ForeColor = ThemeColors.TextSecondary,
             Location = new Point(25, 52),
             AutoSize = true
         };
 
-        // 4 KPI Cards
+        // 4 KPI Cards chuẩn Giám đốc
         var cardRevenue = CreateStatCard("DOANH THU THỰC THU THÁNG", "Đang tải...", Color.FromArgb(238, 242, 255), ThemeColors.Primary, new Point(25, 85), out lblRevenue);
-        var cardAlert = CreateStatCard("HỌC VIÊN VẮNG >= 3 BUỔI", "Đang tải...", ThemeColors.DangerBg, ThemeColors.DangerText, new Point(295, 85), out lblAlertCount);
-        var cardClasses = CreateStatCard("LỚP HỌC ĐANG HOẠT ĐỘNG", "Đang tải...", ThemeColors.SuccessBg, ThemeColors.SuccessText, new Point(565, 85), out lblActiveClassCount);
-        var cardStudents = CreateStatCard("TỔNG HỌC VIÊN ĐANG HỌC", "Đang tải...", ThemeColors.WarningBg, ThemeColors.WarningText, new Point(835, 85), out lblActiveStudentCount);
+        var cardDebt = CreateStatCard("TỔNG CÔNG NỢ TRUNG TÂM", "Đang tải...", ThemeColors.DangerBg, ThemeColors.DangerText, new Point(295, 85), out lblTotalDebt);
+        var cardStudents = CreateStatCard("HỌC VIÊN ĐANG THEO HỌC", "Đang tải...", ThemeColors.WarningBg, ThemeColors.WarningText, new Point(565, 85), out lblActiveStudentCount);
+        var cardClasses = CreateStatCard("LỚP ĐANG HOẠT ĐỘNG", "Đang tải...", ThemeColors.SuccessBg, ThemeColors.SuccessText, new Point(835, 85), out lblActiveClassCount);
 
-        // Section Action Bar
-        var lblSectionAlerts = new Label
+        // Section 1: Nhật ký thu tiền hôm nay
+        var lblSecPayments = new Label
         {
-            Text = "DANH SÁCH HỌC VIÊN NGUY CƠ (VẮNG >= 3 BUỔI CẦN PHỐI HỢP PHỤ HUYNH)",
+            Text = "NHẬT KÝ GIAO DỊCH THU TIỀN HÔM NAY",
             Font = ThemeColors.FontSubHeader,
-            ForeColor = ThemeColors.DangerText,
+            ForeColor = ThemeColors.TextPrimary,
             Location = new Point(25, 235),
             AutoSize = true
         };
@@ -78,22 +78,57 @@ public class DashboardView : UserControl
         };
         btnRefresh.Click += async (s, e) => await LoadDashboardDataAsync();
 
-        dgvAlerts = new DataGridView
+        dgvTodayPayments = new DataGridView
         {
             Location = new Point(25, 270),
-            Size = new Size(1060, 360),
-            Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right
+            Size = new Size(1060, 200),
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            ReadOnly = true,
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+            AllowUserToAddRows = false,
+            AutoGenerateColumns = false
+        };
+        ModernGridHelper.ApplyStyle(dgvTodayPayments);
+
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PaymentCode", HeaderText = "Mã phiếu thu", Width = 140 });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "InvoiceCode", HeaderText = "Mã hóa đơn", Width = 120 });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "StudentName", HeaderText = "Học viên", Width = 180 });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ClassName", HeaderText = "Lớp học", Width = 150 });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PaidAmount", HeaderText = "Số tiền thu (VNĐ)", Width = 140, DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" } });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PaymentMethod", HeaderText = "Phương thức", Width = 120 });
+        dgvTodayPayments.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PaymentTime", HeaderText = "Thời gian thu", Width = 160 });
+
+        // Section 2: Cảnh báo học viên vắng >= 3 buổi
+        var lblSecAlerts = new Label
+        {
+            Text = "CẢNH BÁO CHUYÊN CẦN NGUY CƠ (VẮNG >= 3 BUỔI CẦN PHỐI HỢP)",
+            Font = ThemeColors.FontSubHeader,
+            ForeColor = ThemeColors.DangerText,
+            Location = new Point(25, 490),
+            AutoSize = true
+        };
+
+        dgvAlerts = new DataGridView
+        {
+            Location = new Point(25, 525),
+            Size = new Size(1060, 180),
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            ReadOnly = true,
+            SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+            AllowUserToAddRows = false
         };
         ModernGridHelper.ApplyStyle(dgvAlerts);
 
         Controls.Add(lblTitle);
         Controls.Add(lblSubtitle);
         Controls.Add(cardRevenue);
-        Controls.Add(cardAlert);
-        Controls.Add(cardClasses);
+        Controls.Add(cardDebt);
         Controls.Add(cardStudents);
-        Controls.Add(lblSectionAlerts);
+        Controls.Add(cardClasses);
+        Controls.Add(lblSecPayments);
         Controls.Add(btnRefresh);
+        Controls.Add(dgvTodayPayments);
+        Controls.Add(lblSecAlerts);
         Controls.Add(dgvAlerts);
     }
 
@@ -137,20 +172,18 @@ public class DashboardView : UserControl
     {
         try
         {
-            decimal revenue = await _financeService.GetTotalRevenueThisMonthAsync();
-            lblRevenue.Text = $"{revenue:N0} đ";
+            // Gọi tầng Business, hoàn toàn không có câu lệnh SQL nào trong Form
+            var summary = await _financeService.GetDirectorDashboardSummaryAsync();
+            lblRevenue.Text = $"{summary.TotalRevenueThisMonth:N0} đ";
+            lblTotalDebt.Text = $"{summary.TotalOutstandingDebt:N0} đ";
+            lblActiveStudentCount.Text = $"{summary.TotalActiveStudents} Học viên";
+            lblActiveClassCount.Text = $"{summary.TotalActiveClasses} Lớp học";
+
+            var todayPayments = await _financeService.GetTodayTransactionsAsync();
+            dgvTodayPayments.DataSource = System.Linq.Enumerable.ToList(todayPayments);
 
             var alerts = await _attendanceService.GetAbsenceAlertListAsync();
-            var alertList = System.Linq.Enumerable.ToList(alerts);
-            lblAlertCount.Text = $"{alertList.Count} học viên";
-            dgvAlerts.DataSource = alertList;
-
-            using var conn = DatabaseConfig.GetConnection();
-            int activeClasses = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Classes WHERE Status = 'InProgress';");
-            lblActiveClassCount.Text = $"{activeClasses} Lớp học";
-
-            int activeStudents = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students WHERE Status = 'Active';");
-            lblActiveStudentCount.Text = $"{activeStudents} Học viên";
+            dgvAlerts.DataSource = System.Linq.Enumerable.ToList(alerts);
         }
         catch (Exception ex)
         {
