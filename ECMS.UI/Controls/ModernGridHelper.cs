@@ -50,4 +50,21 @@ public static class ModernGridHelper
         dgv.AlternatingRowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(238, 242, 255);
         dgv.AlternatingRowsDefaultCellStyle.SelectionForeColor = Color.FromArgb(49, 46, 129);
     }
+    public static class DataGridViewHelper
+    {
+        public static void AddTextColumn(
+            DataGridView dgv,
+            string name,
+            string header,
+            bool readOnly = true)
+        {
+            dgv.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = name,
+                HeaderText = header,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+                ReadOnly = readOnly
+            });
+        }
+    }
 }

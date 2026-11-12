@@ -93,10 +93,13 @@ public class TeacherPortalView : UserControl
         {
             Location = new Point(25, 270),
             Size = new Size(1060, 190),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            ScrollBars = ScrollBars.Both,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells
         };
         ModernGridHelper.ApplyStyle(dgvTeachingSchedule);
-
+        dgvTeachingSchedule.ScrollBars = ScrollBars.Both;
+        dgvTeachingSchedule.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         // Section 2: Danh sách học viên & Đánh giá
         var lblSec2 = new Label
         {

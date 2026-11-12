@@ -18,7 +18,7 @@ namespace ECMS.UI.UserControls;
 /// </summary>
 public partial class AttendanceSheetView : UserControl
 {
-    // ── Ánh xạ tiếng Việt ↔ enum ────────────────────────────
+    // ── Ánh xạ tiếng Việt ↔ enum 
     private static readonly Dictionary<string, AttendanceStatus> StatusMap = new()
     {
         { "Có mặt",        AttendanceStatus.Present },
@@ -79,29 +79,34 @@ public partial class AttendanceSheetView : UserControl
         {
             Location = new Point(20, 118),
             Size = new Size(960, 380),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            ScrollBars = ScrollBars.Both,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells
         };
         ModernGridHelper.ApplyStyle(dgv);
+        dgv.ReadOnly = false;
+        dgv.ScrollBars = ScrollBars.Both;
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         dgv.Columns.Add(new DataGridViewTextBoxColumn
             { Name = "StudentId", Visible = false }); // ẩn, dùng khi lưu
         dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "StudentCode", HeaderText = "Mã HV", Width = 105, ReadOnly = true });
+            { Name = "StudentCode", HeaderText = "Mã HV", ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells });
         dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "FullName", HeaderText = "Họ và tên", Width = 230, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewComboBoxColumn
+            { Name = "FullName", HeaderText = "Họ và tên", ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells });
+        dgv.Columns.Add(new DataGridViewCheckBoxColumn
         {
-            Name = "Status", HeaderText = "Trạng thái", Width = 150,
-            DataSource = StatusMap.Keys.ToArray(),
-            FlatStyle = FlatStyle.Flat
+            Name = "Present", HeaderText = "Hiện diện",
+            ThreeState = false,
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells
         });
         dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "Note", HeaderText = "Ghi chú", Width = 450 });
+            { Name = "Note", HeaderText = "Ghi chú", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, MinimumWidth = 200 });
         Controls.Add(dgv);
         
         // ── Thanh nút + thông báo kết quả ───────────────────
         var btnMarkAll = new CustomButton
         {
-            Text = "✓ Điểm danh tất cả Có mặt",
+            Text = "✓ Đánh dấu tất cả Hiện diện",
             Location = new Point(20, 510), Size = new Size(230, 34),
             NormalColor = ThemeColors.SuccessText,
             HoverColor  = Color.FromArgb(16, 185, 129),
@@ -166,19 +171,25 @@ public partial class AttendanceSheetView : UserControl
             dgv.Rows.Clear();
             foreach (var s in students)
             {
-                int    sid   = (int)s.StudentId;
-                string displayStatus = "Có mặt";
-                string note  = "";
+                int  sid = (int)s.StudentId;
+                bool isPresent = false; // mặc định ban đầu là vắng 
+                string note = "";
 
                 if (existingDict.TryGetValue(sid, out var prev))
                 {
-                    if (Enum.TryParse<AttendanceStatus>(prev.Status, out var parsed)
-                        && StatusMapReverse.TryGetValue(parsed, out var vn))
-                        displayStatus = vn;
+                    if (Enum.TryParse<AttendanceStatus>(prev.Status, out var parsed))
+                    {
+                        // Hiện diện nếu Present hoặc Late, vắng nếu Absent hoặc Excused
+                        isPresent = parsed == AttendanceStatus.Present || parsed == AttendanceStatus.Late;
+                    }
+                    else
+                    {
+                        isPresent = prev.Status == "Present" || prev.Status == "Late" || prev.Status == "Có mặt";
+                    }
                     note = prev.Note ?? "";
                 }
 
-                dgv.Rows.Add(sid, s.StudentCode, s.FullName, displayStatus, note);
+                dgv.Rows.Add(sid, s.StudentCode, s.FullName, isPresent, note);
             }
 
             int count = dgv.Rows.Count;
@@ -193,12 +204,12 @@ public partial class AttendanceSheetView : UserControl
         }
     }
 
-    // ── 2. Tick tất cả "Có mặt" ─────────────────────────────
+    // ── 2. Tick tất cả "Hiện diện" ───────────────────────────
     private void MarkAllPresent()
     {
         foreach (DataGridViewRow row in dgv.Rows)
             if (!row.IsNewRow)
-                row.Cells["Status"].Value = "Có mặt";
+                row.Cells["Present"].Value = true;
     }
 
     // ── 3. Lưu toàn bộ bảng vào DB (upsert) ─────────────────
@@ -215,12 +226,11 @@ public partial class AttendanceSheetView : UserControl
             {
                 if (row.IsNewRow) continue;
 
-                int    studentId = Convert.ToInt32(row.Cells["StudentId"].Value);
-                string statusVn  = row.Cells["Status"].Value?.ToString() ?? "Có mặt";
-                string? note     = row.Cells["Note"].Value?.ToString();
+                int studentId = Convert.ToInt32(row.Cells["StudentId"].Value);
+                bool isPresent = Convert.ToBoolean(row.Cells["Present"].Value ?? true);
+                string? note   = row.Cells["Note"].Value?.ToString();
 
-                AttendanceStatus status = StatusMap.TryGetValue(statusVn, out var s)
-                    ? s : AttendanceStatus.Present;
+                AttendanceStatus status = isPresent ? AttendanceStatus.Present : AttendanceStatus.Absent;
 
                 records.Add((studentId, status, note));
             }

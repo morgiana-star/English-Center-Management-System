@@ -6,6 +6,7 @@ using Dapper;
 using ECMS.Business.Session;
 using ECMS.Data.Database;
 using ECMS.UI.Controls;
+using ECMS.UI.Helper;
 
 namespace ECMS.UI.UserControls;
 
@@ -46,26 +47,24 @@ public partial class AttendanceScheduleView : UserControl
         {
             Location = new Point(20, 80),
             Size = new Size(1020, 500),
-            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+            ScrollBars = ScrollBars.Both,
+            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells
         };
         ModernGridHelper.ApplyStyle(dgv);
-
+        dgv.ScrollBars = ScrollBars.Both;
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+        
         dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "ScheduleId", Visible = false }); // ẩn, dùng khi mở AttendanceSheetView
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "SessionNum", HeaderText = "Buổi", Width = 60, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "ClassCode", HeaderText = "Mã lớp", Width = 130, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "Date", HeaderText = "Ngày dạy", Width = 110, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "TimeSlot", HeaderText = "Khung giờ", Width = 130, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "Room", HeaderText = "Phòng học", Width = 110, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "Topic", HeaderText = "Chủ đề bài giảng", Width = 220, ReadOnly = true });
-        dgv.Columns.Add(new DataGridViewTextBoxColumn
-            { Name = "AttendState", HeaderText = "Trạng thái", Width = 155, ReadOnly = true });
+            { Name = "ScheduleId", Visible = false }); // Cột ẩn chứa ID buổi học để mở điểm danh
+        Method.DataGridViewHelper.AddTextColumn(dgv, "SessionNum", "Buổi");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "ClassCode", "Mã lớp");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "Date", "Ngày dạy");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "TimeSlot", "Khung giờ");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "Room", "Phòng học");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "Topic", "Chủ đề bài giảng");
+        Method.DataGridViewHelper.AddTextColumn(dgv, "AttendState", "Trạng thái");
+        
         dgv.Columns.Add(new DataGridViewButtonColumn
         {
             Name = "BtnAttend",
