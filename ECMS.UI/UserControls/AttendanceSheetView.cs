@@ -18,17 +18,6 @@ namespace ECMS.UI.UserControls;
 /// </summary>
 public partial class AttendanceSheetView : UserControl
 {
-    // ── Ánh xạ tiếng Việt ↔ enum 
-    private static readonly Dictionary<string, AttendanceStatus> StatusMap = new()
-    {
-        { "Có mặt",        AttendanceStatus.Present },
-        { "Vắng",          AttendanceStatus.Absent  },
-        { "Vắng có phép",  AttendanceStatus.Excused },
-        { "Muộn",          AttendanceStatus.Late    }
-    };
-    private static readonly Dictionary<AttendanceStatus, string> StatusMapReverse =
-        StatusMap.ToDictionary(kv => kv.Value, kv => kv.Key);
-
     private readonly int _scheduleId;
     private readonly IAttendanceService _attendanceService = new AttendanceService();
     private DataGridView dgv = null!;
@@ -172,20 +161,13 @@ public partial class AttendanceSheetView : UserControl
             foreach (var s in students)
             {
                 int  sid = (int)s.StudentId;
-                bool isPresent = false; // mặc định ban đầu là vắng 
+                bool isPresent = false;
                 string note = "";
 
                 if (existingDict.TryGetValue(sid, out var prev))
                 {
-                    if (Enum.TryParse<AttendanceStatus>(prev.Status, out var parsed))
-                    {
-                        // Hiện diện nếu Present hoặc Late, vắng nếu Absent hoặc Excused
-                        isPresent = parsed == AttendanceStatus.Present || parsed == AttendanceStatus.Late;
-                    }
-                    else
-                    {
-                        isPresent = prev.Status == "Present" || prev.Status == "Late" || prev.Status == "Có mặt";
-                    }
+                    // Đọc từ DB: nếu là Present thì tích Hiện diện (true), ngược lại là false
+                    isPresent = prev.Status == "Present" || prev.Status == nameof(AttendanceStatus.Present);
                     note = prev.Note ?? "";
                 }
 
