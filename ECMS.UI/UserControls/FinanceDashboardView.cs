@@ -2,9 +2,8 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Dapper;
 using ECMS.Business.Services;
-using ECMS.Data.Database;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.UserControls;
@@ -73,7 +72,7 @@ public class FinanceDashboardView : UserControl
         // 4. Ô tìm kiếm học viên / mã hóa đơn
         txtSearch = new ModernTextBox
         {
-            Placeholder = "🔍 Tìm theo tên học viên, mã hóa đơn...",
+            Placeholder = "🔍 Tìm theo tên học viên, mã hóa đơn, SĐT...",
             Location = new Point(25, 270),
             Size = new Size(320, 36),
             CornerRadius = 6
@@ -121,7 +120,36 @@ public class FinanceDashboardView : UserControl
             CornerRadius = 6,
             Anchor = AnchorStyles.Top | AnchorStyles.Right
         };
-        btnNewPayment.Click += (s, e) => MessageBox.Show("Sẵn sàng mở hộp thoại Thu học phí & in biên lai A5 (Nhiệm vụ 2)!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        btnNewPayment.Click += async (s, e) =>
+        {
+            if (dgvInvoices.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn một dòng hóa đơn trên bảng để thu học phí!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var selectedItem = dgvInvoices.SelectedRows[0].DataBoundItem as InvoiceListItemDto;
+            if (selectedItem == null) return;
+
+            if (selectedItem.BalanceDue <= 0)
+            {
+                MessageBox.Show("Hóa đơn này đã được thanh toán đủ 100%, không còn công nợ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            using var dialog = new Forms.PaymentReceiptDialog(
+                selectedItem.InvoiceId, 
+                selectedItem.InvoiceCode, 
+                selectedItem.StudentName, 
+                selectedItem.ClassName, 
+                selectedItem.FinalAmount, 
+                selectedItem.BalanceDue);
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                await LoadFinanceDataAsync(); // Nạp lại bảng dữ liệu sau khi thu tiền
+            }
+        };
 
         // 7. Bảng hiển thị danh sách hóa đơn
         dgvInvoices = new DataGridView
@@ -131,29 +159,45 @@ public class FinanceDashboardView : UserControl
             Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right,
             ReadOnly = true,
             SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-            AllowUserToAddRows = false
+            AllowUserToAddRows = false,
+            AutoGenerateColumns = false
         };
         ModernGridHelper.ApplyStyle(dgvInvoices);
+
+        // Cấu hình các cột hiển thị đẹp mắt
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "InvoiceCode", HeaderText = "Mã hóa đơn", Width = 110 });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "StudentName", HeaderText = "Học viên", Width = 160 });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "StudentPhone", HeaderText = "Số điện thoại", Width = 110 });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ClassName", HeaderText = "Lớp học", Width = 130 });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FinalAmount", HeaderText = "Phải nộp (VNĐ)", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" } });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PaidAmount", HeaderText = "Đã đóng (VNĐ)", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" } });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "BalanceDue", HeaderText = "Còn nợ (VNĐ)", Width = 120, DefaultCellStyle = new DataGridViewCellStyle { Format = "N0" } });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "DueDate", HeaderText = "Hạn nộp", Width = 100 });
+        dgvInvoices.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Status", HeaderText = "Trạng thái", Width = 120 });
 
         // Định dạng màu sắc cột trạng thái
         dgvInvoices.CellFormatting += (s, e) =>
         {
-            if (dgvInvoices.Columns[e.ColumnIndex].Name == "Trạng thái nộp phí" && e.Value != null)
+            if (e.RowIndex >= 0 && dgvInvoices.Columns[e.ColumnIndex].DataPropertyName == "Status" && e.Value != null)
             {
                 string status = e.Value.ToString()!;
-                if (status.Contains("Chưa thanh toán"))
+                if (status == "Unpaid")
                 {
+                    e.Value = "Chưa thanh toán";
                     e.CellStyle.ForeColor = Color.FromArgb(220, 38, 38);
                     e.CellStyle.Font = new Font(dgvInvoices.Font, FontStyle.Bold);
                 }
-                else if (status.Contains("Còn nợ") || status.Contains("một phần"))
+                else if (status == "Partial")
                 {
+                    e.Value = "Đóng một phần";
                     e.CellStyle.ForeColor = Color.FromArgb(217, 119, 6);
                     e.CellStyle.Font = new Font(dgvInvoices.Font, FontStyle.Bold);
                 }
-                else if (status.Contains("Đã thanh toán đủ"))
+                else if (status == "Paid")
                 {
+                    e.Value = "Đã thu đủ 100%";
                     e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129);
+                    e.CellStyle.Font = new Font(dgvInvoices.Font, FontStyle.Bold);
                 }
             }
         };
@@ -213,19 +257,12 @@ public class FinanceDashboardView : UserControl
     {
         try
         {
-            decimal rev = await _financeService.GetTotalRevenueThisMonthAsync();
-            lblRevenue.Text = $"{rev:N0} đ";
-
-            using var conn = DatabaseConfig.GetConnection();
-
-            decimal totalDebt = await conn.ExecuteScalarAsync<decimal>("SELECT COALESCE(SUM(BalanceDue), 0) FROM Invoices WHERE Status != 'Cancelled';");
-            lblTotalDebt.Text = $"{totalDebt:N0} đ";
-
-            int paidInvoices = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Invoices WHERE Status = 'Paid';");
-            lblPaidCount.Text = $"{paidInvoices} Hóa đơn";
-
-            int paymentCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Payments WHERE Status = 'Valid';");
-            lblPaymentCount.Text = $"{paymentCount} Phiếu thu";
+            // Gọi tầng Business, không viết SQL trực tiếp trong Form
+            var summary = await _financeService.GetDirectorDashboardSummaryAsync();
+            lblRevenue.Text = $"{summary.TotalRevenueThisMonth:N0} đ";
+            lblTotalDebt.Text = $"{summary.TotalOutstandingDebt:N0} đ";
+            lblPaidCount.Text = $"{summary.TotalPaidInvoicesCount} Hóa đơn";
+            lblPaymentCount.Text = $"{summary.TotalPaymentsCount} Phiếu thu";
 
             await LoadInvoiceGridAsync();
         }
@@ -235,48 +272,19 @@ public class FinanceDashboardView : UserControl
         }
     }
 
-    // Hàm lọc dữ liệu theo Tìm kiếm và Trạng thái công nợ
+    // Hàm lọc dữ liệu theo Tìm kiếm và Trạng thái công nợ qua Service
     private async Task LoadInvoiceGridAsync()
     {
         try
         {
-            using var conn = DatabaseConfig.GetConnection();
-
             string keyword = txtSearch.Text.Trim();
-            string statusClause = "";
+            string? filter = null;
 
-            if (cboStatusFilter.SelectedIndex == 1) // Chưa thanh toán
-                statusClause = "AND i.Status = 'Unpaid'";
-            else if (cboStatusFilter.SelectedIndex == 2) // Đóng một phần
-                statusClause = "AND i.Status = 'PartiallyPaid'";
-            else if (cboStatusFilter.SelectedIndex == 3) // Đã thanh toán đủ
-                statusClause = "AND i.Status = 'Paid'";
+            if (cboStatusFilter.SelectedIndex == 1) filter = "Unpaid";
+            else if (cboStatusFilter.SelectedIndex == 2) filter = "Partial";
+            else if (cboStatusFilter.SelectedIndex == 3) filter = "Paid";
 
-            string query = $@"
-                SELECT i.InvoiceCode AS [Mã hóa đơn],
-                       s.FullName AS [Học viên],
-                       c.ClassCode AS [Lớp học],
-                       i.OriginalAmount AS [Học phí gốc],
-                       i.DiscountAmount AS [Giảm giá],
-                       i.FinalAmount AS [Phải nộp],
-                       i.BalanceDue AS [Còn nợ],
-                       i.DueDate AS [Hạn nộp],
-                       CASE 
-                           WHEN i.Status = 'Paid' THEN 'Đã thanh toán đủ'
-                           WHEN i.Status = 'PartiallyPaid' THEN 'Đóng một phần (Còn nợ)'
-                           WHEN i.Status = 'Unpaid' THEN 'Chưa thanh toán'
-                           ELSE i.Status 
-                       END AS [Trạng thái nộp phí]
-                FROM Invoices i
-                JOIN Enrollments e ON i.EnrollmentId = e.EnrollmentId
-                JOIN Students s ON e.StudentId = s.StudentId
-                JOIN Classes c ON e.ClassId = c.ClassId
-                WHERE i.Status != 'Cancelled'
-                  {statusClause}
-                  AND (s.FullName LIKE @Keyword OR i.InvoiceCode LIKE @Keyword)
-                ORDER BY i.InvoiceId DESC;";
-
-            var invoices = await conn.QueryAsync<dynamic>(query, new { Keyword = $"%{keyword}%" });
+            var invoices = await _financeService.GetInvoicesAsync(filter, keyword);
             dgvInvoices.DataSource = System.Linq.Enumerable.ToList(invoices);
         }
         catch (Exception ex)
