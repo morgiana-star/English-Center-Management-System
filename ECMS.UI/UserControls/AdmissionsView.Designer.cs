@@ -15,14 +15,20 @@ partial class AdmissionsView
 
     #region Component Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnImport = new ECMS.UI.Controls.AppButton();
         btnAddLeadTop = new ECMS.UI.Controls.AppButton();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
-        lblBreadcrumb = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardStat4 = new ECMS.UI.Controls.AppCard();
         lblStat4Value = new System.Windows.Forms.Label();
@@ -37,7 +43,6 @@ partial class AdmissionsView
         lblStat1Value = new System.Windows.Forms.Label();
         lblStat1Title = new System.Windows.Forms.Label();
         cardLeadsTable = new ECMS.UI.Controls.AppCard();
-        bannerLeadsNote = new ECMS.UI.Controls.AppBanner();
         lblPagingNav = new System.Windows.Forms.Label();
         lblPagingInfo = new System.Windows.Forms.Label();
         dgvLeads = new ECMS.UI.Controls.AppDataGrid();
@@ -60,9 +65,7 @@ partial class AdmissionsView
         pnlHeader.BackColor = System.Drawing.Color.White;
         pnlHeader.Controls.Add(btnImport);
         pnlHeader.Controls.Add(btnAddLeadTop);
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
-        pnlHeader.Controls.Add(lblBreadcrumb);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
@@ -72,70 +75,50 @@ partial class AdmissionsView
         // 
         // btnImport
         // 
-        btnImport.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnImport.BackColor = System.Drawing.Color.White;
         btnImport.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnImport.CornerRadius = 6;
         btnImport.Cursor = System.Windows.Forms.Cursors.Hand;
         btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnImport.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnImport.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        btnImport.Location = new System.Drawing.Point(860, 20);
+        btnImport.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnImport.Location = new System.Drawing.Point(845, 21);
         btnImport.Name = "btnImport";
         btnImport.Size = new System.Drawing.Size(115, 36);
         btnImport.TabIndex = 4;
         btnImport.Text = "Nhập từ tệp";
         btnImport.UseVisualStyleBackColor = false;
+        btnImport.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnAddLeadTop
         // 
-        btnAddLeadTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnAddLeadTop.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnAddLeadTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnAddLeadTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnAddLeadTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnAddLeadTop.CornerRadius = 6;
         btnAddLeadTop.Cursor = System.Windows.Forms.Cursors.Hand;
         btnAddLeadTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnAddLeadTop.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnAddLeadTop.ForeColor = System.Drawing.Color.White;
-        btnAddLeadTop.Location = new System.Drawing.Point(985, 20);
+        btnAddLeadTop.Location = new System.Drawing.Point(966, 20);
         btnAddLeadTop.Name = "btnAddLeadTop";
-        btnAddLeadTop.Size = new System.Drawing.Size(150, 36);
+        btnAddLeadTop.Size = new System.Drawing.Size(169, 36);
         btnAddLeadTop.TabIndex = 3;
         btnAddLeadTop.Text = "+ Thêm tiềm năng";
         btnAddLeadTop.UseVisualStyleBackColor = false;
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 48);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(430, 20);
-        lblSubtitle.TabIndex = 2;
-        lblSubtitle.Text = "Ảnh chụp quy trình ngày 02/10/2026 · Nhân viên phụ trách: Phạm Ngọc Mai";
+        btnAddLeadTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblTitle.Location = new System.Drawing.Point(22, 14);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblTitle.Location = new System.Drawing.Point(20, 19);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(255, 37);
+        lblTitle.Size = new System.Drawing.Size(248, 37);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Tuyển sinh & tư vấn";
-        // 
-        // lblBreadcrumb
-        // 
-        lblBreadcrumb.AutoSize = true;
-        lblBreadcrumb.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblBreadcrumb.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblBreadcrumb.Location = new System.Drawing.Point(24, 0);
-        lblBreadcrumb.Name = "lblBreadcrumb";
-        lblBreadcrumb.Size = new System.Drawing.Size(262, 19);
-        lblBreadcrumb.TabIndex = 0;
-        lblBreadcrumb.Text = "ECMS / Tuyển sinh & Tư vấn / Tuyển sinh & tư vấn";
         // 
         // pnlBody
         // 
@@ -155,7 +138,7 @@ partial class AdmissionsView
         // cardStat4
         // 
         cardStat4.BackColor = System.Drawing.Color.White;
-        cardStat4.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStat4.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStat4.BorderWidth = 1;
         cardStat4.Controls.Add(lblStat4Value);
         cardStat4.Controls.Add(lblStat4Title);
@@ -170,7 +153,7 @@ partial class AdmissionsView
         // 
         lblStat4Value.AutoSize = true;
         lblStat4Value.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStat4Value.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblStat4Value.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStat4Value.Location = new System.Drawing.Point(14, 30);
         lblStat4Value.Name = "lblStat4Value";
         lblStat4Value.Size = new System.Drawing.Size(64, 50);
@@ -181,17 +164,17 @@ partial class AdmissionsView
         // 
         lblStat4Title.AutoSize = true;
         lblStat4Title.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStat4Title.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblStat4Title.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblStat4Title.Location = new System.Drawing.Point(16, 10);
         lblStat4Title.Name = "lblStat4Title";
-        lblStat4Title.Size = new System.Drawing.Size(86, 20);
+        lblStat4Title.Size = new System.Drawing.Size(90, 20);
         lblStat4Title.TabIndex = 0;
         lblStat4Title.Text = "Đã ghi danh";
         // 
         // cardStat3
         // 
         cardStat3.BackColor = System.Drawing.Color.White;
-        cardStat3.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStat3.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStat3.BorderWidth = 1;
         cardStat3.Controls.Add(lblStat3Value);
         cardStat3.Controls.Add(lblStat3Title);
@@ -206,10 +189,10 @@ partial class AdmissionsView
         // 
         lblStat3Value.AutoSize = true;
         lblStat3Value.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStat3Value.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblStat3Value.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStat3Value.Location = new System.Drawing.Point(14, 30);
         lblStat3Value.Name = "lblStat3Value";
-        lblStat3Value.Size = new System.Drawing.Size(42, 50);
+        lblStat3Value.Size = new System.Drawing.Size(43, 50);
         lblStat3Value.TabIndex = 1;
         lblStat3Value.Text = "8";
         // 
@@ -217,17 +200,17 @@ partial class AdmissionsView
         // 
         lblStat3Title.AutoSize = true;
         lblStat3Title.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStat3Title.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblStat3Title.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblStat3Title.Location = new System.Drawing.Point(16, 10);
         lblStat3Title.Name = "lblStat3Title";
-        lblStat3Title.Size = new System.Drawing.Size(147, 20);
+        lblStat3Title.Size = new System.Drawing.Size(143, 20);
         lblStat3Title.TabIndex = 0;
         lblStat3Title.Text = "Đã kiểm tra đầu vào";
         // 
         // cardStat2
         // 
         cardStat2.BackColor = System.Drawing.Color.White;
-        cardStat2.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStat2.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStat2.BorderWidth = 1;
         cardStat2.Controls.Add(lblStat2Value);
         cardStat2.Controls.Add(lblStat2Title);
@@ -242,7 +225,7 @@ partial class AdmissionsView
         // 
         lblStat2Value.AutoSize = true;
         lblStat2Value.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStat2Value.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblStat2Value.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStat2Value.Location = new System.Drawing.Point(14, 30);
         lblStat2Value.Name = "lblStat2Value";
         lblStat2Value.Size = new System.Drawing.Size(64, 50);
@@ -253,17 +236,17 @@ partial class AdmissionsView
         // 
         lblStat2Title.AutoSize = true;
         lblStat2Title.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStat2Title.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblStat2Title.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblStat2Title.Location = new System.Drawing.Point(16, 10);
         lblStat2Title.Name = "lblStat2Title";
-        lblStat2Title.Size = new System.Drawing.Size(84, 20);
+        lblStat2Title.Size = new System.Drawing.Size(80, 20);
         lblStat2Title.TabIndex = 0;
         lblStat2Title.Text = "Chờ tư vấn";
         // 
         // cardStat1
         // 
         cardStat1.BackColor = System.Drawing.Color.White;
-        cardStat1.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStat1.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStat1.BorderWidth = 1;
         cardStat1.Controls.Add(lblStat1Value);
         cardStat1.Controls.Add(lblStat1Title);
@@ -278,7 +261,7 @@ partial class AdmissionsView
         // 
         lblStat1Value.AutoSize = true;
         lblStat1Value.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStat1Value.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblStat1Value.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStat1Value.Location = new System.Drawing.Point(14, 30);
         lblStat1Value.Name = "lblStat1Value";
         lblStat1Value.Size = new System.Drawing.Size(64, 50);
@@ -289,20 +272,19 @@ partial class AdmissionsView
         // 
         lblStat1Title.AutoSize = true;
         lblStat1Title.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStat1Title.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblStat1Title.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblStat1Title.Location = new System.Drawing.Point(16, 10);
         lblStat1Title.Name = "lblStat1Title";
-        lblStat1Title.Size = new System.Drawing.Size(146, 20);
+        lblStat1Title.Size = new System.Drawing.Size(141, 20);
         lblStat1Title.TabIndex = 0;
         lblStat1Title.Text = "Tiềm năng tháng 10";
         // 
         // cardLeadsTable
         // 
-        cardLeadsTable.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cardLeadsTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardLeadsTable.BackColor = System.Drawing.Color.White;
-        cardLeadsTable.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardLeadsTable.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardLeadsTable.BorderWidth = 1;
-        cardLeadsTable.Controls.Add(bannerLeadsNote);
         cardLeadsTable.Controls.Add(lblPagingNav);
         cardLeadsTable.Controls.Add(lblPagingInfo);
         cardLeadsTable.Controls.Add(dgvLeads);
@@ -314,70 +296,122 @@ partial class AdmissionsView
         cardLeadsTable.Location = new System.Drawing.Point(20, 120);
         cardLeadsTable.Name = "cardLeadsTable";
         cardLeadsTable.Padding = new System.Windows.Forms.Padding(16);
-        cardLeadsTable.Size = new System.Drawing.Size(1115, 570);
+        cardLeadsTable.Size = new System.Drawing.Size(1115, 564);
         cardLeadsTable.TabIndex = 0;
-        // 
-        // bannerLeadsNote
-        // 
-        bannerLeadsNote.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        bannerLeadsNote.BannerType = ECMS.UI.Controls.BannerType.Info;
-        bannerLeadsNote.Location = new System.Drawing.Point(20, 515);
-        bannerLeadsNote.Message = "Chọn một hồ sơ để xem lịch sử và tiếp tục tư vấn. Ghi danh sẽ tạo hồ sơ học viên, không yêu cầu nhập lại thông tin.";
-        bannerLeadsNote.Name = "bannerLeadsNote";
-        bannerLeadsNote.Size = new System.Drawing.Size(1075, 38);
-        bannerLeadsNote.TabIndex = 7;
-        bannerLeadsNote.Title = "Hướng dẫn:";
-        bannerLeadsNote.Variant = ECMS.UI.Controls.BannerVariant.Info;
         // 
         // lblPagingNav
         // 
-        lblPagingNav.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        lblPagingNav.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         lblPagingNav.AutoSize = true;
         lblPagingNav.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPagingNav.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        lblPagingNav.Location = new System.Drawing.Point(930, 480);
+        lblPagingNav.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblPagingNav.Location = new System.Drawing.Point(930, 522);
         lblPagingNav.Name = "lblPagingNav";
-        lblPagingNav.Size = new System.Drawing.Size(164, 20);
+        lblPagingNav.Size = new System.Drawing.Size(150, 20);
         lblPagingNav.TabIndex = 6;
         lblPagingNav.Text = "‹ Trước   [1]   2   Sau ›";
         // 
         // lblPagingInfo
         // 
-        lblPagingInfo.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+        lblPagingInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
         lblPagingInfo.AutoSize = true;
         lblPagingInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPagingInfo.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblPagingInfo.Location = new System.Drawing.Point(20, 480);
+        lblPagingInfo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblPagingInfo.Location = new System.Drawing.Point(20, 522);
         lblPagingInfo.Name = "lblPagingInfo";
-        lblPagingInfo.Size = new System.Drawing.Size(207, 20);
+        lblPagingInfo.Size = new System.Drawing.Size(213, 20);
         lblPagingInfo.TabIndex = 5;
         lblPagingInfo.Text = "1–5 / 42 khách hàng tiềm năng";
         // 
         // dgvLeads
         // 
-        dgvLeads.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        dgvLeads.AllowUserToAddRows = false;
+        dgvLeads.AllowUserToDeleteRows = false;
+        dgvLeads.AllowUserToResizeColumns = false;
+        dgvLeads.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvLeads.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvLeads.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        dgvLeads.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvLeads.BackgroundColor = System.Drawing.Color.White;
+        dgvLeads.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvLeads.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvLeads.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvLeads.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvLeads.ColumnHeadersHeight = 36;
+        dgvLeads.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvLeads.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvLeads.EnableHeadersVisualStyles = false;
+        dgvLeads.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvLeads.Location = new System.Drawing.Point(20, 95);
+        dgvLeads.MultiSelect = false;
         dgvLeads.Name = "dgvLeads";
-        dgvLeads.Size = new System.Drawing.Size(1075, 375);
+        dgvLeads.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvLeads.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvLeads.RowHeadersVisible = false;
+        dgvLeads.RowHeadersWidth = 51;
+        dgvLeads.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvLeads.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvLeads.Size = new System.Drawing.Size(1075, 424);
         dgvLeads.TabIndex = 4;
         // 
         // cboStatusFilter
         // 
         cboStatusFilter.BackColor = System.Drawing.Color.White;
+        cboStatusFilter.CornerRadius = 5;
+        cboStatusFilter.DataSource = null;
+        cboStatusFilter.DisplayMember = "";
         cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboStatusFilter.Location = new System.Drawing.Point(490, 50);
+        cboStatusFilter.Location = new System.Drawing.Point(581, 50);
         cboStatusFilter.Name = "cboStatusFilter";
+        cboStatusFilter.SelectedIndex = -1;
+        cboStatusFilter.SelectedItem = null;
+        cboStatusFilter.SelectedValue = null;
         cboStatusFilter.Size = new System.Drawing.Size(160, 32);
         cboStatusFilter.TabIndex = 3;
+        cboStatusFilter.ValueMember = "";
         // 
         // cboSourceFilter
         // 
         cboSourceFilter.BackColor = System.Drawing.Color.White;
+        cboSourceFilter.CornerRadius = 5;
+        cboSourceFilter.DataSource = null;
+        cboSourceFilter.DisplayMember = "";
         cboSourceFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboSourceFilter.Location = new System.Drawing.Point(315, 50);
+        cboSourceFilter.Location = new System.Drawing.Point(406, 50);
         cboSourceFilter.Name = "cboSourceFilter";
+        cboSourceFilter.SelectedIndex = -1;
+        cboSourceFilter.SelectedItem = null;
+        cboSourceFilter.SelectedValue = null;
         cboSourceFilter.Size = new System.Drawing.Size(160, 32);
         cboSourceFilter.TabIndex = 2;
+        cboSourceFilter.ValueMember = "";
         // 
         // txtSearchLeads
         // 
@@ -390,7 +424,7 @@ partial class AdmissionsView
         txtSearchLeads.Name = "txtSearchLeads";
         txtSearchLeads.Placeholder = "🔍  Tìm tên, điện thoại, mã tiềm năng...";
         txtSearchLeads.ReadOnly = false;
-        txtSearchLeads.Size = new System.Drawing.Size(280, 32);
+        txtSearchLeads.Size = new System.Drawing.Size(368, 32);
         txtSearchLeads.TabIndex = 1;
         txtSearchLeads.UseSystemPasswordChar = false;
         // 
@@ -398,10 +432,10 @@ partial class AdmissionsView
         // 
         lblLeadsTableTitle.AutoSize = true;
         lblLeadsTableTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblLeadsTableTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblLeadsTableTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblLeadsTableTitle.Location = new System.Drawing.Point(20, 16);
         lblLeadsTableTitle.Name = "lblLeadsTableTitle";
-        lblLeadsTableTitle.Size = new System.Drawing.Size(182, 28);
+        lblLeadsTableTitle.Size = new System.Drawing.Size(177, 28);
         lblLeadsTableTitle.TabIndex = 0;
         lblLeadsTableTitle.Text = "Danh sách tư vấn";
         // 
@@ -409,11 +443,10 @@ partial class AdmissionsView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        Name = "AdmissionsView";
         Size = new System.Drawing.Size(1160, 800);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
@@ -435,9 +468,7 @@ partial class AdmissionsView
     #endregion
 
     private System.Windows.Forms.Panel pnlHeader;
-    private System.Windows.Forms.Label lblBreadcrumb;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private ECMS.UI.Controls.AppButton btnImport;
     private ECMS.UI.Controls.AppButton btnAddLeadTop;
     private System.Windows.Forms.Panel pnlBody;
@@ -463,5 +494,4 @@ partial class AdmissionsView
     private ECMS.UI.Controls.AppDataGrid dgvLeads;
     private System.Windows.Forms.Label lblPagingInfo;
     private System.Windows.Forms.Label lblPagingNav;
-    private ECMS.UI.Controls.AppBanner bannerLeadsNote;
 }

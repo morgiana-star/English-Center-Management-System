@@ -15,12 +15,14 @@ partial class AddStudentDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         pnlTop = new System.Windows.Forms.Panel();
-        lblAddStudentSub = new System.Windows.Forms.Label();
         lblAddStudentHeader = new System.Windows.Forms.Label();
-        lblBreadcrumb = new System.Windows.Forms.Label();
         cardStudentInfo = new ECMS.UI.Controls.AppCard();
         bannerCheckPhone = new ECMS.UI.Controls.AppBanner();
         btnSaveStudent = new ECMS.UI.Controls.AppButton();
@@ -46,8 +48,6 @@ partial class AddStudentDialog
         lblInfoTitle = new System.Windows.Forms.Label();
         cardRules = new ECMS.UI.Controls.AppCard();
         btnFindAdmission = new ECMS.UI.Controls.AppButton();
-        bannerRuleLead = new ECMS.UI.Controls.AppBanner();
-        lblRuleDesc = new System.Windows.Forms.Label();
         lblRuleCourse = new System.Windows.Forms.Label();
         lblRuleCode = new System.Windows.Forms.Label();
         lblRuleState = new System.Windows.Forms.Label();
@@ -61,54 +61,30 @@ partial class AddStudentDialog
         // pnlTop
         // 
         pnlTop.BackColor = System.Drawing.Color.White;
-        pnlTop.Controls.Add(lblAddStudentSub);
         pnlTop.Controls.Add(lblAddStudentHeader);
-        pnlTop.Controls.Add(lblBreadcrumb);
         pnlTop.Dock = System.Windows.Forms.DockStyle.Top;
         pnlTop.Location = new System.Drawing.Point(0, 0);
         pnlTop.Name = "pnlTop";
         pnlTop.Padding = new System.Windows.Forms.Padding(24, 12, 24, 12);
-        pnlTop.Size = new System.Drawing.Size(1100, 75);
+        pnlTop.Size = new System.Drawing.Size(1200, 75);
         pnlTop.TabIndex = 0;
-        // 
-        // lblAddStudentSub
-        // 
-        lblAddStudentSub.AutoSize = true;
-        lblAddStudentSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblAddStudentSub.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblAddStudentSub.Location = new System.Drawing.Point(24, 48);
-        lblAddStudentSub.Name = "lblAddStudentSub";
-        lblAddStudentSub.Size = new System.Drawing.Size(437, 20);
-        lblAddStudentSub.TabIndex = 2;
-        lblAddStudentSub.Text = "Nhập trực tiếp hoặc nhận dữ liệu từ hồ sơ tuyển sinh · Chưa tạo mã học viên";
         // 
         // lblAddStudentHeader
         // 
         lblAddStudentHeader.AutoSize = true;
         lblAddStudentHeader.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
-        lblAddStudentHeader.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblAddStudentHeader.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblAddStudentHeader.Location = new System.Drawing.Point(22, 14);
         lblAddStudentHeader.Name = "lblAddStudentHeader";
-        lblAddStudentHeader.Size = new System.Drawing.Size(191, 35);
+        lblAddStudentHeader.Size = new System.Drawing.Size(188, 35);
         lblAddStudentHeader.TabIndex = 1;
         lblAddStudentHeader.Text = "Thêm học viên";
         // 
-        // lblBreadcrumb
-        // 
-        lblBreadcrumb.AutoSize = true;
-        lblBreadcrumb.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblBreadcrumb.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblBreadcrumb.Location = new System.Drawing.Point(24, 0);
-        lblBreadcrumb.Name = "lblBreadcrumb";
-        lblBreadcrumb.Size = new System.Drawing.Size(199, 19);
-        lblBreadcrumb.TabIndex = 0;
-        lblBreadcrumb.Text = "ECMS / Học viên / Thêm học viên";
-        // 
         // cardStudentInfo
         // 
-        cardStudentInfo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cardStudentInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardStudentInfo.BackColor = System.Drawing.Color.White;
-        cardStudentInfo.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStudentInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStudentInfo.BorderWidth = 1;
         cardStudentInfo.Controls.Add(bannerCheckPhone);
         cardStudentInfo.Controls.Add(btnSaveStudent);
@@ -136,54 +112,58 @@ partial class AddStudentDialog
         cardStudentInfo.Location = new System.Drawing.Point(24, 95);
         cardStudentInfo.Name = "cardStudentInfo";
         cardStudentInfo.Padding = new System.Windows.Forms.Padding(16);
-        cardStudentInfo.Size = new System.Drawing.Size(670, 545);
+        cardStudentInfo.Size = new System.Drawing.Size(670, 571);
         cardStudentInfo.TabIndex = 1;
         // 
         // bannerCheckPhone
         // 
-        bannerCheckPhone.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        bannerCheckPhone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        bannerCheckPhone.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
         bannerCheckPhone.BannerType = ECMS.UI.Controls.BannerType.Success;
-        bannerCheckPhone.Location = new System.Drawing.Point(20, 485);
-        bannerCheckPhone.Message = "Số điện thoại chưa trùng hồ sơ hiện có. Khi lưu, sinh mã mới và mở chi tiết học viên.";
+        bannerCheckPhone.Location = new System.Drawing.Point(20, 492);
+        bannerCheckPhone.Message = ("Số điện thoại chưa trùng hồ sơ hiện có. Khi lưu, sinh mã mới và mở chi tiết học v" + "iên.");
         bannerCheckPhone.Name = "bannerCheckPhone";
-        bannerCheckPhone.Size = new System.Drawing.Size(630, 42);
+        bannerCheckPhone.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
+        bannerCheckPhone.Size = new System.Drawing.Size(630, 60);
         bannerCheckPhone.TabIndex = 21;
         bannerCheckPhone.Title = "✓ Hợp lệ:";
         bannerCheckPhone.Variant = ECMS.UI.Controls.BannerVariant.Success;
         // 
         // btnSaveStudent
         // 
-        btnSaveStudent.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        btnSaveStudent.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnSaveStudent.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnSaveStudent.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnSaveStudent.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnSaveStudent.CornerRadius = 6;
         btnSaveStudent.Cursor = System.Windows.Forms.Cursors.Hand;
         btnSaveStudent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSaveStudent.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSaveStudent.ForeColor = System.Drawing.Color.White;
-        btnSaveStudent.Location = new System.Drawing.Point(520, 435);
+        btnSaveStudent.Location = new System.Drawing.Point(515, 430);
         btnSaveStudent.Name = "btnSaveStudent";
         btnSaveStudent.Size = new System.Drawing.Size(130, 36);
         btnSaveStudent.TabIndex = 20;
         btnSaveStudent.Text = "Lưu học viên";
         btnSaveStudent.UseVisualStyleBackColor = false;
+        btnSaveStudent.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // btnCancelAdd
         // 
-        btnCancelAdd.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        btnCancelAdd.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         btnCancelAdd.BackColor = System.Drawing.Color.White;
         btnCancelAdd.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancelAdd.CornerRadius = 6;
         btnCancelAdd.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancelAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancelAdd.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnCancelAdd.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        btnCancelAdd.Location = new System.Drawing.Point(425, 435);
+        btnCancelAdd.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        btnCancelAdd.Location = new System.Drawing.Point(420, 430);
         btnCancelAdd.Name = "btnCancelAdd";
         btnCancelAdd.Size = new System.Drawing.Size(85, 36);
         btnCancelAdd.TabIndex = 19;
         btnCancelAdd.Text = "Hủy";
         btnCancelAdd.UseVisualStyleBackColor = false;
+        btnCancelAdd.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // txtNotes
         // 
@@ -204,10 +184,10 @@ partial class AddStudentDialog
         // 
         lblNotes.AutoSize = true;
         lblNotes.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblNotes.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblNotes.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblNotes.Location = new System.Drawing.Point(20, 342);
         lblNotes.Name = "lblNotes";
-        lblNotes.Size = new System.Drawing.Size(60, 19);
+        lblNotes.Size = new System.Drawing.Size(62, 20);
         lblNotes.TabIndex = 17;
         lblNotes.Text = "Ghi chú";
         // 
@@ -230,10 +210,10 @@ partial class AddStudentDialog
         // 
         lblParentPhone.AutoSize = true;
         lblParentPhone.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblParentPhone.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblParentPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblParentPhone.Location = new System.Drawing.Point(345, 272);
         lblParentPhone.Name = "lblParentPhone";
-        lblParentPhone.Size = new System.Drawing.Size(161, 19);
+        lblParentPhone.Size = new System.Drawing.Size(160, 20);
         lblParentPhone.TabIndex = 15;
         lblParentPhone.Text = "Điện thoại phụ huynh";
         // 
@@ -256,10 +236,10 @@ partial class AddStudentDialog
         // 
         lblParentName.AutoSize = true;
         lblParentName.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblParentName.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblParentName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblParentName.Location = new System.Drawing.Point(20, 272);
         lblParentName.Name = "lblParentName";
-        lblParentName.Size = new System.Drawing.Size(188, 19);
+        lblParentName.Size = new System.Drawing.Size(201, 20);
         lblParentName.TabIndex = 13;
         lblParentName.Text = "Phụ huynh / người giám hộ";
         // 
@@ -282,10 +262,10 @@ partial class AddStudentDialog
         // 
         lblEmail.AutoSize = true;
         lblEmail.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblEmail.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblEmail.Location = new System.Drawing.Point(345, 202);
         lblEmail.Name = "lblEmail";
-        lblEmail.Size = new System.Drawing.Size(100, 19);
+        lblEmail.Size = new System.Drawing.Size(97, 20);
         lblEmail.TabIndex = 11;
         lblEmail.Text = "Email liên hệ";
         // 
@@ -308,30 +288,37 @@ partial class AddStudentDialog
         // 
         lblAddress.AutoSize = true;
         lblAddress.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblAddress.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblAddress.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblAddress.Location = new System.Drawing.Point(20, 202);
         lblAddress.Name = "lblAddress";
-        lblAddress.Size = new System.Drawing.Size(65, 19);
+        lblAddress.Size = new System.Drawing.Size(67, 20);
         lblAddress.TabIndex = 9;
         lblAddress.Text = "Địa chỉ *";
         // 
         // cboGender
         // 
         cboGender.BackColor = System.Drawing.Color.White;
+        cboGender.CornerRadius = 5;
+        cboGender.DataSource = null;
+        cboGender.DisplayMember = "";
         cboGender.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboGender.Location = new System.Drawing.Point(345, 155);
         cboGender.Name = "cboGender";
+        cboGender.SelectedIndex = -1;
+        cboGender.SelectedItem = null;
+        cboGender.SelectedValue = null;
         cboGender.Size = new System.Drawing.Size(305, 32);
         cboGender.TabIndex = 8;
+        cboGender.ValueMember = "";
         // 
         // lblGender
         // 
         lblGender.AutoSize = true;
         lblGender.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblGender.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblGender.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblGender.Location = new System.Drawing.Point(345, 132);
         lblGender.Name = "lblGender";
-        lblGender.Size = new System.Drawing.Size(69, 19);
+        lblGender.Size = new System.Drawing.Size(69, 20);
         lblGender.TabIndex = 7;
         lblGender.Text = "Giới tính";
         // 
@@ -354,10 +341,10 @@ partial class AddStudentDialog
         // 
         lblPhone.AutoSize = true;
         lblPhone.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblPhone.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblPhone.Location = new System.Drawing.Point(20, 132);
         lblPhone.Name = "lblPhone";
-        lblPhone.Size = new System.Drawing.Size(92, 19);
+        lblPhone.Size = new System.Drawing.Size(92, 20);
         lblPhone.TabIndex = 5;
         lblPhone.Text = "Điện thoại *";
         // 
@@ -376,10 +363,10 @@ partial class AddStudentDialog
         // 
         lblDob.AutoSize = true;
         lblDob.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblDob.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblDob.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblDob.Location = new System.Drawing.Point(345, 62);
         lblDob.Name = "lblDob";
-        lblDob.Size = new System.Drawing.Size(89, 19);
+        lblDob.Size = new System.Drawing.Size(90, 20);
         lblDob.TabIndex = 3;
         lblDob.Text = "Ngày sinh *";
         // 
@@ -402,10 +389,10 @@ partial class AddStudentDialog
         // 
         lblFullName.AutoSize = true;
         lblFullName.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblFullName.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblFullName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblFullName.Location = new System.Drawing.Point(20, 62);
         lblFullName.Name = "lblFullName";
-        lblFullName.Size = new System.Drawing.Size(86, 19);
+        lblFullName.Size = new System.Drawing.Size(87, 20);
         lblFullName.TabIndex = 1;
         lblFullName.Text = "Họ và tên *";
         // 
@@ -413,22 +400,20 @@ partial class AddStudentDialog
         // 
         lblInfoTitle.AutoSize = true;
         lblInfoTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblInfoTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblInfoTitle.Location = new System.Drawing.Point(20, 16);
         lblInfoTitle.Name = "lblInfoTitle";
-        lblInfoTitle.Size = new System.Drawing.Size(193, 28);
+        lblInfoTitle.Size = new System.Drawing.Size(190, 28);
         lblInfoTitle.TabIndex = 0;
         lblInfoTitle.Text = "Thông tin học viên";
         // 
         // cardRules
         // 
-        cardRules.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardRules.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cardRules.BackColor = System.Drawing.Color.White;
-        cardRules.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardRules.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardRules.BorderWidth = 1;
         cardRules.Controls.Add(btnFindAdmission);
-        cardRules.Controls.Add(bannerRuleLead);
-        cardRules.Controls.Add(lblRuleDesc);
         cardRules.Controls.Add(lblRuleCourse);
         cardRules.Controls.Add(lblRuleCode);
         cardRules.Controls.Add(lblRuleState);
@@ -438,56 +423,35 @@ partial class AddStudentDialog
         cardRules.Location = new System.Drawing.Point(715, 95);
         cardRules.Name = "cardRules";
         cardRules.Padding = new System.Windows.Forms.Padding(16);
-        cardRules.Size = new System.Drawing.Size(360, 545);
+        cardRules.Size = new System.Drawing.Size(360, 571);
         cardRules.TabIndex = 2;
         // 
         // btnFindAdmission
         // 
-        btnFindAdmission.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        btnFindAdmission.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         btnFindAdmission.BackColor = System.Drawing.Color.White;
         btnFindAdmission.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnFindAdmission.CornerRadius = 6;
         btnFindAdmission.Cursor = System.Windows.Forms.Cursors.Hand;
         btnFindAdmission.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnFindAdmission.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnFindAdmission.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        btnFindAdmission.Location = new System.Drawing.Point(20, 485);
+        btnFindAdmission.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        btnFindAdmission.Location = new System.Drawing.Point(20, 511);
         btnFindAdmission.Name = "btnFindAdmission";
         btnFindAdmission.Size = new System.Drawing.Size(320, 38);
         btnFindAdmission.TabIndex = 7;
         btnFindAdmission.Text = "Tìm hồ sơ tuyển sinh liên quan";
         btnFindAdmission.UseVisualStyleBackColor = false;
-        // 
-        // bannerRuleLead
-        // 
-        bannerRuleLead.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        bannerRuleLead.BannerType = ECMS.UI.Controls.BannerType.Warning;
-        bannerRuleLead.Location = new System.Drawing.Point(20, 395);
-        bannerRuleLead.Message = "Nếu nhập từ TN-0112, mở hồ sơ tư vấn để chuyển đổi thay vì tạo một học viên trùng.";
-        bannerRuleLead.Name = "bannerRuleLead";
-        bannerRuleLead.Size = new System.Drawing.Size(320, 75);
-        bannerRuleLead.TabIndex = 6;
-        bannerRuleLead.Title = "Lưu ý chuyển đổi:";
-        bannerRuleLead.Variant = ECMS.UI.Controls.BannerVariant.Warning;
-        // 
-        // lblRuleDesc
-        // 
-        lblRuleDesc.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblRuleDesc.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblRuleDesc.Location = new System.Drawing.Point(20, 240);
-        lblRuleDesc.Name = "lblRuleDesc";
-        lblRuleDesc.Size = new System.Drawing.Size(320, 80);
-        lblRuleDesc.TabIndex = 5;
-        lblRuleDesc.Text = "Không tự tạo tài khoản, phiếu thu hoặc lớp học. Chọn Ghi danh trong hồ sơ khi đã có đủ tư vấn và đánh giá đầu vào.";
+        btnFindAdmission.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblRuleCourse
         // 
         lblRuleCourse.AutoSize = true;
         lblRuleCourse.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblRuleCourse.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRuleCourse.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRuleCourse.Location = new System.Drawing.Point(20, 185);
         lblRuleCourse.Name = "lblRuleCourse";
-        lblRuleCourse.Size = new System.Drawing.Size(189, 21);
+        lblRuleCourse.Size = new System.Drawing.Size(209, 21);
         lblRuleCourse.TabIndex = 4;
         lblRuleCourse.Text = "Khóa quan tâm:  TOEIC 650+";
         // 
@@ -495,10 +459,10 @@ partial class AddStudentDialog
         // 
         lblRuleCode.AutoSize = true;
         lblRuleCode.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblRuleCode.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRuleCode.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRuleCode.Location = new System.Drawing.Point(20, 145);
         lblRuleCode.Name = "lblRuleCode";
-        lblRuleCode.Size = new System.Drawing.Size(262, 21);
+        lblRuleCode.Size = new System.Drawing.Size(275, 21);
         lblRuleCode.TabIndex = 3;
         lblRuleCode.Text = "Mã dự kiến:  HV-0242 · cấp sau khi lưu";
         // 
@@ -506,10 +470,10 @@ partial class AddStudentDialog
         // 
         lblRuleState.AutoSize = true;
         lblRuleState.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblRuleState.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRuleState.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRuleState.Location = new System.Drawing.Point(20, 105);
         lblRuleState.Name = "lblRuleState";
-        lblRuleState.Size = new System.Drawing.Size(201, 21);
+        lblRuleState.Size = new System.Drawing.Size(214, 21);
         lblRuleState.TabIndex = 2;
         lblRuleState.Text = "Trạng thái ban đầu:  Chưa xếp";
         // 
@@ -517,10 +481,10 @@ partial class AddStudentDialog
         // 
         lblRuleSource.AutoSize = true;
         lblRuleSource.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblRuleSource.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRuleSource.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRuleSource.Location = new System.Drawing.Point(20, 65);
         lblRuleSource.Name = "lblRuleSource";
-        lblRuleSource.Size = new System.Drawing.Size(264, 21);
+        lblRuleSource.Size = new System.Drawing.Size(290, 21);
         lblRuleSource.TabIndex = 1;
         lblRuleSource.Text = "Nguồn tiếp nhận:  Nhập trực tiếp · 30/10";
         // 
@@ -528,10 +492,10 @@ partial class AddStudentDialog
         // 
         lblRulesTitle.AutoSize = true;
         lblRulesTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblRulesTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblRulesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblRulesTitle.Location = new System.Drawing.Point(20, 16);
         lblRulesTitle.Name = "lblRulesTitle";
-        lblRulesTitle.Size = new System.Drawing.Size(168, 28);
+        lblRulesTitle.Size = new System.Drawing.Size(180, 28);
         lblRulesTitle.TabIndex = 0;
         lblRulesTitle.Text = "Quy tắc tạo hồ sơ";
         // 
@@ -539,7 +503,7 @@ partial class AddStudentDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(1200, 750);
         Controls.Add(cardRules);
         Controls.Add(cardStudentInfo);
@@ -548,7 +512,6 @@ partial class AddStudentDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "AddStudentDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thêm học viên — ECMS";
@@ -564,9 +527,7 @@ partial class AddStudentDialog
     #endregion
 
     private System.Windows.Forms.Panel pnlTop;
-    private System.Windows.Forms.Label lblBreadcrumb;
     private System.Windows.Forms.Label lblAddStudentHeader;
-    private System.Windows.Forms.Label lblAddStudentSub;
 
     private ECMS.UI.Controls.AppCard cardStudentInfo;
     private System.Windows.Forms.Label lblInfoTitle;
@@ -598,7 +559,5 @@ partial class AddStudentDialog
     private System.Windows.Forms.Label lblRuleState;
     private System.Windows.Forms.Label lblRuleCode;
     private System.Windows.Forms.Label lblRuleCourse;
-    private System.Windows.Forms.Label lblRuleDesc;
-    private ECMS.UI.Controls.AppBanner bannerRuleLead;
     private ECMS.UI.Controls.AppButton btnFindAdmission;
 }

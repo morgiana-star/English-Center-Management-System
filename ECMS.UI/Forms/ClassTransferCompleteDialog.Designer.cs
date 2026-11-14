@@ -15,12 +15,18 @@ partial class ClassTransferCompleteDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
-        lblBreadcrumb = new System.Windows.Forms.Label();
         pnlStepper = new System.Windows.Forms.Panel();
         lblStep4 = new System.Windows.Forms.Label();
         lblStep3 = new System.Windows.Forms.Label();
@@ -48,7 +54,6 @@ partial class ClassTransferCompleteDialog
         lblStudentNameKey = new System.Windows.Forms.Label();
         lblReceiptTitle = new System.Windows.Forms.Label();
         cardPreCheck = new ECMS.UI.Controls.AppCard();
-        lblCheckFooterNote = new System.Windows.Forms.Label();
         dgvChecklist = new ECMS.UI.Controls.AppDataGrid();
         lblPreCheckTitle = new System.Windows.Forms.Label();
         cardStatDestStatus = new ECMS.UI.Controls.AppCard();
@@ -80,9 +85,7 @@ partial class ClassTransferCompleteDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
-        pnlHeader.Controls.Add(lblBreadcrumb);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
@@ -90,38 +93,16 @@ partial class ClassTransferCompleteDialog
         pnlHeader.Size = new System.Drawing.Size(1220, 75);
         pnlHeader.TabIndex = 0;
         // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblSubtitle.Location = new System.Drawing.Point(24, 48);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(325, 15);
-        lblSubtitle.TabIndex = 2;
-        lblSubtitle.Text = "Trạng thái tiếp nối ngày 02/11/2026 · Sau bước lập lịch 04.3";
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 18);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(306, 30);
+        lblTitle.Size = new System.Drawing.Size(378, 37);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Mở lớp & hoàn tất chuyển lớp";
-        // 
-        // lblBreadcrumb
-        // 
-        lblBreadcrumb.AutoSize = true;
-        lblBreadcrumb.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-        lblBreadcrumb.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblBreadcrumb.Location = new System.Drawing.Point(24, 5);
-        lblBreadcrumb.Name = "lblBreadcrumb";
-        lblBreadcrumb.Size = new System.Drawing.Size(232, 13);
-        lblBreadcrumb.TabIndex = 0;
-        lblBreadcrumb.Text = "ECMS / Lớp học / Mở lớp & hoàn tất chuyển lớp";
         // 
         // pnlStepper
         // 
@@ -141,7 +122,7 @@ partial class ClassTransferCompleteDialog
         // 
         lblStep4.Dock = System.Windows.Forms.DockStyle.Left;
         lblStep4.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblStep4.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        lblStep4.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         lblStep4.Location = new System.Drawing.Point(444, 0);
         lblStep4.Name = "lblStep4";
         lblStep4.Size = new System.Drawing.Size(150, 40);
@@ -153,7 +134,7 @@ partial class ClassTransferCompleteDialog
         // 
         lblStep3.Dock = System.Windows.Forms.DockStyle.Left;
         lblStep3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblStep3.ForeColor = System.Drawing.Color.FromArgb(40, 167, 69);
+        lblStep3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)40)), ((int)((byte)167)), ((int)((byte)69)));
         lblStep3.Location = new System.Drawing.Point(304, 0);
         lblStep3.Name = "lblStep3";
         lblStep3.Size = new System.Drawing.Size(140, 40);
@@ -165,7 +146,7 @@ partial class ClassTransferCompleteDialog
         // 
         lblStep2.Dock = System.Windows.Forms.DockStyle.Left;
         lblStep2.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblStep2.ForeColor = System.Drawing.Color.FromArgb(40, 167, 69);
+        lblStep2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)40)), ((int)((byte)167)), ((int)((byte)69)));
         lblStep2.Location = new System.Drawing.Point(144, 0);
         lblStep2.Name = "lblStep2";
         lblStep2.Size = new System.Drawing.Size(160, 40);
@@ -177,7 +158,7 @@ partial class ClassTransferCompleteDialog
         // 
         lblStep1.Dock = System.Windows.Forms.DockStyle.Left;
         lblStep1.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblStep1.ForeColor = System.Drawing.Color.FromArgb(40, 167, 69);
+        lblStep1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)40)), ((int)((byte)167)), ((int)((byte)69)));
         lblStep1.Location = new System.Drawing.Point(24, 0);
         lblStep1.Name = "lblStep1";
         lblStep1.Size = new System.Drawing.Size(120, 40);
@@ -203,7 +184,7 @@ partial class ClassTransferCompleteDialog
         // 
         // pnlTwoCards
         // 
-        pnlTwoCards.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        pnlTwoCards.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         pnlTwoCards.Controls.Add(cardReceipt);
         pnlTwoCards.Controls.Add(cardPreCheck);
         pnlTwoCards.Location = new System.Drawing.Point(24, 185);
@@ -213,8 +194,10 @@ partial class ClassTransferCompleteDialog
         // 
         // cardReceipt
         // 
-        cardReceipt.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardReceipt.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cardReceipt.BackColor = System.Drawing.Color.White;
+        cardReceipt.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardReceipt.BorderWidth = 1;
         cardReceipt.Controls.Add(lblDoneTransferNote);
         cardReceipt.Controls.Add(btnViewStudentHistory);
         cardReceipt.Controls.Add(btnOpenClassF04);
@@ -233,6 +216,7 @@ partial class ClassTransferCompleteDialog
         cardReceipt.Controls.Add(lblStudentNameVal);
         cardReceipt.Controls.Add(lblStudentNameKey);
         cardReceipt.Controls.Add(lblReceiptTitle);
+        cardReceipt.CornerRadius = 6;
         cardReceipt.Location = new System.Drawing.Point(600, 0);
         cardReceipt.Name = "cardReceipt";
         cardReceipt.Padding = new System.Windows.Forms.Padding(20);
@@ -243,32 +227,39 @@ partial class ClassTransferCompleteDialog
         // 
         lblDoneTransferNote.AutoSize = true;
         lblDoneTransferNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDoneTransferNote.ForeColor = System.Drawing.Color.FromArgb(40, 167, 69);
+        lblDoneTransferNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)40)), ((int)((byte)167)), ((int)((byte)69)));
         lblDoneTransferNote.Location = new System.Drawing.Point(20, 368);
         lblDoneTransferNote.Name = "lblDoneTransferNote";
-        lblDoneTransferNote.Size = new System.Drawing.Size(134, 15);
+        lblDoneTransferNote.Size = new System.Drawing.Size(166, 20);
         lblDoneTransferNote.TabIndex = 17;
         lblDoneTransferNote.Text = "✓ Hoàn tất chuyển lớp";
         // 
         // btnViewStudentHistory
         // 
-        btnViewStudentHistory.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        btnViewStudentHistory.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         btnViewStudentHistory.BackColor = System.Drawing.Color.White;
-        btnViewStudentHistory.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnViewStudentHistory.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnViewStudentHistory.CornerRadius = 5;
+        btnViewStudentHistory.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnViewStudentHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnViewStudentHistory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnViewStudentHistory.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnViewStudentHistory.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnViewStudentHistory.Location = new System.Drawing.Point(395, 355);
         btnViewStudentHistory.Name = "btnViewStudentHistory";
         btnViewStudentHistory.Size = new System.Drawing.Size(155, 36);
         btnViewStudentHistory.TabIndex = 16;
         btnViewStudentHistory.Text = "Xem lịch sử học viên";
         btnViewStudentHistory.UseVisualStyleBackColor = false;
+        btnViewStudentHistory.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnOpenClassF04
         // 
-        btnOpenClassF04.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        btnOpenClassF04.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
-        btnOpenClassF04.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        btnOpenClassF04.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnOpenClassF04.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
+        btnOpenClassF04.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnOpenClassF04.CornerRadius = 5;
+        btnOpenClassF04.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnOpenClassF04.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnOpenClassF04.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnOpenClassF04.ForeColor = System.Drawing.Color.White;
         btnOpenClassF04.Location = new System.Drawing.Point(235, 355);
@@ -277,11 +268,12 @@ partial class ClassTransferCompleteDialog
         btnOpenClassF04.TabIndex = 15;
         btnOpenClassF04.Text = "Mở lớp IELTS-F04";
         btnOpenClassF04.UseVisualStyleBackColor = false;
+        btnOpenClassF04.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // lblConfirmedByVal
         // 
         lblConfirmedByVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblConfirmedByVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblConfirmedByVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblConfirmedByVal.Location = new System.Drawing.Point(180, 290);
         lblConfirmedByVal.Name = "lblConfirmedByVal";
         lblConfirmedByVal.Size = new System.Drawing.Size(370, 20);
@@ -293,17 +285,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblConfirmedByKey.AutoSize = true;
         lblConfirmedByKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblConfirmedByKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblConfirmedByKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblConfirmedByKey.Location = new System.Drawing.Point(20, 292);
         lblConfirmedByKey.Name = "lblConfirmedByKey";
-        lblConfirmedByKey.Size = new System.Drawing.Size(91, 15);
+        lblConfirmedByKey.Size = new System.Drawing.Size(113, 20);
         lblConfirmedByKey.TabIndex = 13;
         lblConfirmedByKey.Text = "Người xác nhận";
         // 
         // lblFinanceVal
         // 
         lblFinanceVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblFinanceVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblFinanceVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblFinanceVal.Location = new System.Drawing.Point(180, 250);
         lblFinanceVal.Name = "lblFinanceVal";
         lblFinanceVal.Size = new System.Drawing.Size(370, 20);
@@ -315,17 +307,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblFinanceKey.AutoSize = true;
         lblFinanceKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblFinanceKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblFinanceKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblFinanceKey.Location = new System.Drawing.Point(20, 252);
         lblFinanceKey.Name = "lblFinanceKey";
-        lblFinanceKey.Size = new System.Drawing.Size(53, 15);
+        lblFinanceKey.Size = new System.Drawing.Size(66, 20);
         lblFinanceKey.TabIndex = 11;
         lblFinanceKey.Text = "Tài chính";
         // 
         // lblOldHistoryVal
         // 
         lblOldHistoryVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblOldHistoryVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblOldHistoryVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblOldHistoryVal.Location = new System.Drawing.Point(180, 210);
         lblOldHistoryVal.Name = "lblOldHistoryVal";
         lblOldHistoryVal.Size = new System.Drawing.Size(370, 20);
@@ -337,17 +329,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblOldHistoryKey.AutoSize = true;
         lblOldHistoryKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblOldHistoryKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblOldHistoryKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblOldHistoryKey.Location = new System.Drawing.Point(20, 212);
         lblOldHistoryKey.Name = "lblOldHistoryKey";
-        lblOldHistoryKey.Size = new System.Drawing.Size(126, 15);
+        lblOldHistoryKey.Size = new System.Drawing.Size(151, 20);
         lblOldHistoryKey.TabIndex = 9;
         lblOldHistoryKey.Text = "Điểm / chuyên cần cũ";
         // 
         // lblEffectiveDateVal
         // 
         lblEffectiveDateVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblEffectiveDateVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblEffectiveDateVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblEffectiveDateVal.Location = new System.Drawing.Point(180, 170);
         lblEffectiveDateVal.Name = "lblEffectiveDateVal";
         lblEffectiveDateVal.Size = new System.Drawing.Size(370, 20);
@@ -359,17 +351,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblEffectiveDateKey.AutoSize = true;
         lblEffectiveDateKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblEffectiveDateKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblEffectiveDateKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblEffectiveDateKey.Location = new System.Drawing.Point(20, 172);
         lblEffectiveDateKey.Name = "lblEffectiveDateKey";
-        lblEffectiveDateKey.Size = new System.Drawing.Size(81, 15);
+        lblEffectiveDateKey.Size = new System.Drawing.Size(100, 20);
         lblEffectiveDateKey.TabIndex = 7;
         lblEffectiveDateKey.Text = "Ngày hiệu lực";
         // 
         // lblClassPairVal
         // 
         lblClassPairVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblClassPairVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblClassPairVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblClassPairVal.Location = new System.Drawing.Point(180, 130);
         lblClassPairVal.Name = "lblClassPairVal";
         lblClassPairVal.Size = new System.Drawing.Size(370, 20);
@@ -381,17 +373,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblClassPairKey.AutoSize = true;
         lblClassPairKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblClassPairKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblClassPairKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblClassPairKey.Location = new System.Drawing.Point(20, 132);
         lblClassPairKey.Name = "lblClassPairKey";
-        lblClassPairKey.Size = new System.Drawing.Size(107, 15);
+        lblClassPairKey.Size = new System.Drawing.Size(131, 20);
         lblClassPairKey.TabIndex = 5;
         lblClassPairKey.Text = "Lớp nguồn ➔ đích";
         // 
         // lblReasonVal
         // 
         lblReasonVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblReasonVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblReasonVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblReasonVal.Location = new System.Drawing.Point(180, 90);
         lblReasonVal.Name = "lblReasonVal";
         lblReasonVal.Size = new System.Drawing.Size(370, 20);
@@ -403,17 +395,17 @@ partial class ClassTransferCompleteDialog
         // 
         lblReasonKey.AutoSize = true;
         lblReasonKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblReasonKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblReasonKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblReasonKey.Location = new System.Drawing.Point(20, 92);
         lblReasonKey.Name = "lblReasonKey";
-        lblReasonKey.Size = new System.Drawing.Size(36, 15);
+        lblReasonKey.Size = new System.Drawing.Size(44, 20);
         lblReasonKey.TabIndex = 3;
         lblReasonKey.Text = "Lý do";
         // 
         // lblStudentNameVal
         // 
         lblStudentNameVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblStudentNameVal.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        lblStudentNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         lblStudentNameVal.Location = new System.Drawing.Point(180, 50);
         lblStudentNameVal.Name = "lblStudentNameVal";
         lblStudentNameVal.Size = new System.Drawing.Size(370, 20);
@@ -425,10 +417,10 @@ partial class ClassTransferCompleteDialog
         // 
         lblStudentNameKey.AutoSize = true;
         lblStudentNameKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStudentNameKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStudentNameKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStudentNameKey.Location = new System.Drawing.Point(20, 52);
         lblStudentNameKey.Name = "lblStudentNameKey";
-        lblStudentNameKey.Size = new System.Drawing.Size(55, 15);
+        lblStudentNameKey.Size = new System.Drawing.Size(67, 20);
         lblStudentNameKey.TabIndex = 1;
         lblStudentNameKey.Text = "Học viên";
         // 
@@ -436,43 +428,81 @@ partial class ClassTransferCompleteDialog
         // 
         lblReceiptTitle.AutoSize = true;
         lblReceiptTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblReceiptTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblReceiptTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblReceiptTitle.Location = new System.Drawing.Point(20, 16);
         lblReceiptTitle.Name = "lblReceiptTitle";
-        lblReceiptTitle.Size = new System.Drawing.Size(175, 21);
+        lblReceiptTitle.Size = new System.Drawing.Size(218, 28);
         lblReceiptTitle.TabIndex = 0;
         lblReceiptTitle.Text = "Biên nhận chuyển lớp";
         // 
         // cardPreCheck
         // 
         cardPreCheck.BackColor = System.Drawing.Color.White;
-        cardPreCheck.Controls.Add(lblCheckFooterNote);
+        cardPreCheck.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardPreCheck.BorderWidth = 1;
         cardPreCheck.Controls.Add(dgvChecklist);
         cardPreCheck.Controls.Add(lblPreCheckTitle);
+        cardPreCheck.CornerRadius = 6;
         cardPreCheck.Location = new System.Drawing.Point(0, 0);
         cardPreCheck.Name = "cardPreCheck";
         cardPreCheck.Padding = new System.Windows.Forms.Padding(20);
         cardPreCheck.Size = new System.Drawing.Size(572, 410);
         cardPreCheck.TabIndex = 0;
         // 
-        // lblCheckFooterNote
-        // 
-        lblCheckFooterNote.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
-        lblCheckFooterNote.AutoSize = true;
-        lblCheckFooterNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblCheckFooterNote.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblCheckFooterNote.Location = new System.Drawing.Point(20, 368);
-        lblCheckFooterNote.Name = "lblCheckFooterNote";
-        lblCheckFooterNote.Size = new System.Drawing.Size(434, 15);
-        lblCheckFooterNote.TabIndex = 2;
-        lblCheckFooterNote.Text = "Đã xác nhận mở lớp lúc 09:05. Không yêu cầu sĩ số tối thiểu trong dữ liệu mẫu.";
-        // 
         // dgvChecklist
         // 
-        dgvChecklist.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        dgvChecklist.AllowUserToAddRows = false;
+        dgvChecklist.AllowUserToDeleteRows = false;
+        dgvChecklist.AllowUserToResizeColumns = false;
+        dgvChecklist.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvChecklist.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvChecklist.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        dgvChecklist.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvChecklist.BackgroundColor = System.Drawing.Color.White;
+        dgvChecklist.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvChecklist.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvChecklist.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvChecklist.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvChecklist.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvChecklist.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvChecklist.EnableHeadersVisualStyles = false;
+        dgvChecklist.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvChecklist.Location = new System.Drawing.Point(20, 50);
+        dgvChecklist.MultiSelect = false;
         dgvChecklist.Name = "dgvChecklist";
+        dgvChecklist.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvChecklist.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvChecklist.RowHeadersVisible = false;
+        dgvChecklist.RowHeadersWidth = 51;
+        dgvChecklist.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvChecklist.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvChecklist.Size = new System.Drawing.Size(532, 300);
         dgvChecklist.TabIndex = 1;
         // 
@@ -480,18 +510,21 @@ partial class ClassTransferCompleteDialog
         // 
         lblPreCheckTitle.AutoSize = true;
         lblPreCheckTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblPreCheckTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblPreCheckTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblPreCheckTitle.Location = new System.Drawing.Point(20, 16);
         lblPreCheckTitle.Name = "lblPreCheckTitle";
-        lblPreCheckTitle.Size = new System.Drawing.Size(200, 21);
+        lblPreCheckTitle.Size = new System.Drawing.Size(260, 28);
         lblPreCheckTitle.TabIndex = 0;
         lblPreCheckTitle.Text = "Kiểm tra trước khi mở lớp";
         // 
         // cardStatDestStatus
         // 
         cardStatDestStatus.BackColor = System.Drawing.Color.White;
+        cardStatDestStatus.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatDestStatus.BorderWidth = 1;
         cardStatDestStatus.Controls.Add(lblStatDestStatusVal);
         cardStatDestStatus.Controls.Add(lblStatDestStatusTitle);
+        cardStatDestStatus.CornerRadius = 6;
         cardStatDestStatus.Location = new System.Drawing.Point(909, 80);
         cardStatDestStatus.Name = "cardStatDestStatus";
         cardStatDestStatus.Padding = new System.Windows.Forms.Padding(16);
@@ -502,10 +535,10 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatDestStatusVal.AutoSize = true;
         lblStatDestStatusVal.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatDestStatusVal.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        lblStatDestStatusVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         lblStatDestStatusVal.Location = new System.Drawing.Point(16, 38);
         lblStatDestStatusVal.Name = "lblStatDestStatusVal";
-        lblStatDestStatusVal.Size = new System.Drawing.Size(124, 32);
+        lblStatDestStatusVal.Size = new System.Drawing.Size(151, 41);
         lblStatDestStatusVal.TabIndex = 1;
         lblStatDestStatusVal.Text = "Đang học";
         // 
@@ -513,18 +546,21 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatDestStatusTitle.AutoSize = true;
         lblStatDestStatusTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatDestStatusTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatDestStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatDestStatusTitle.Location = new System.Drawing.Point(16, 16);
         lblStatDestStatusTitle.Name = "lblStatDestStatusTitle";
-        lblStatDestStatusTitle.Size = new System.Drawing.Size(107, 15);
+        lblStatDestStatusTitle.Size = new System.Drawing.Size(133, 20);
         lblStatDestStatusTitle.TabIndex = 0;
         lblStatDestStatusTitle.Text = "Trạng thái lớp đích";
         // 
         // cardStatCreatedSessions
         // 
         cardStatCreatedSessions.BackColor = System.Drawing.Color.White;
+        cardStatCreatedSessions.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatCreatedSessions.BorderWidth = 1;
         cardStatCreatedSessions.Controls.Add(lblStatCreatedSessionsVal);
         cardStatCreatedSessions.Controls.Add(lblStatCreatedSessionsTitle);
+        cardStatCreatedSessions.CornerRadius = 6;
         cardStatCreatedSessions.Location = new System.Drawing.Point(614, 80);
         cardStatCreatedSessions.Name = "cardStatCreatedSessions";
         cardStatCreatedSessions.Padding = new System.Windows.Forms.Padding(16);
@@ -535,10 +571,10 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatCreatedSessionsVal.AutoSize = true;
         lblStatCreatedSessionsVal.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatCreatedSessionsVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatCreatedSessionsVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatCreatedSessionsVal.Location = new System.Drawing.Point(16, 38);
         lblStatCreatedSessionsVal.Name = "lblStatCreatedSessionsVal";
-        lblStatCreatedSessionsVal.Size = new System.Drawing.Size(100, 32);
+        lblStatCreatedSessionsVal.Size = new System.Drawing.Size(124, 41);
         lblStatCreatedSessionsVal.TabIndex = 1;
         lblStatCreatedSessionsVal.Text = "24 buổi";
         // 
@@ -546,18 +582,21 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatCreatedSessionsTitle.AutoSize = true;
         lblStatCreatedSessionsTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatCreatedSessionsTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatCreatedSessionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatCreatedSessionsTitle.Location = new System.Drawing.Point(16, 16);
         lblStatCreatedSessionsTitle.Name = "lblStatCreatedSessionsTitle";
-        lblStatCreatedSessionsTitle.Size = new System.Drawing.Size(95, 15);
+        lblStatCreatedSessionsTitle.Size = new System.Drawing.Size(109, 20);
         lblStatCreatedSessionsTitle.TabIndex = 0;
         lblStatCreatedSessionsTitle.Text = "Lịch F04 đã tạo";
         // 
         // cardStatDestClass
         // 
         cardStatDestClass.BackColor = System.Drawing.Color.White;
+        cardStatDestClass.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatDestClass.BorderWidth = 1;
         cardStatDestClass.Controls.Add(lblStatDestClassVal);
         cardStatDestClass.Controls.Add(lblStatDestClassTitle);
+        cardStatDestClass.CornerRadius = 6;
         cardStatDestClass.Location = new System.Drawing.Point(319, 80);
         cardStatDestClass.Name = "cardStatDestClass";
         cardStatDestClass.Padding = new System.Windows.Forms.Padding(16);
@@ -568,10 +607,10 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatDestClassVal.AutoSize = true;
         lblStatDestClassVal.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatDestClassVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatDestClassVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatDestClassVal.Location = new System.Drawing.Point(16, 38);
         lblStatDestClassVal.Name = "lblStatDestClassVal";
-        lblStatDestClassVal.Size = new System.Drawing.Size(80, 32);
+        lblStatDestClassVal.Size = new System.Drawing.Size(98, 41);
         lblStatDestClassVal.TabIndex = 1;
         lblStatDestClassVal.Text = "1 / 20";
         // 
@@ -579,18 +618,21 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatDestClassTitle.AutoSize = true;
         lblStatDestClassTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatDestClassTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatDestClassTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatDestClassTitle.Location = new System.Drawing.Point(16, 16);
         lblStatDestClassTitle.Name = "lblStatDestClassTitle";
-        lblStatDestClassTitle.Size = new System.Drawing.Size(107, 15);
+        lblStatDestClassTitle.Size = new System.Drawing.Size(133, 20);
         lblStatDestClassTitle.TabIndex = 0;
         lblStatDestClassTitle.Text = "Lớp đích IELTS-F04";
         // 
         // cardStatSourceClass
         // 
         cardStatSourceClass.BackColor = System.Drawing.Color.White;
+        cardStatSourceClass.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatSourceClass.BorderWidth = 1;
         cardStatSourceClass.Controls.Add(lblStatSourceClassVal);
         cardStatSourceClass.Controls.Add(lblStatSourceClassTitle);
+        cardStatSourceClass.CornerRadius = 6;
         cardStatSourceClass.Location = new System.Drawing.Point(24, 80);
         cardStatSourceClass.Name = "cardStatSourceClass";
         cardStatSourceClass.Padding = new System.Windows.Forms.Padding(16);
@@ -601,10 +643,10 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatSourceClassVal.AutoSize = true;
         lblStatSourceClassVal.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatSourceClassVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatSourceClassVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatSourceClassVal.Location = new System.Drawing.Point(16, 38);
         lblStatSourceClassVal.Name = "lblStatSourceClassVal";
-        lblStatSourceClassVal.Size = new System.Drawing.Size(94, 32);
+        lblStatSourceClassVal.Size = new System.Drawing.Size(115, 41);
         lblStatSourceClassVal.TabIndex = 1;
         lblStatSourceClassVal.Text = "17 / 20";
         // 
@@ -612,38 +654,42 @@ partial class ClassTransferCompleteDialog
         // 
         lblStatSourceClassTitle.AutoSize = true;
         lblStatSourceClassTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatSourceClassTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatSourceClassTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatSourceClassTitle.Location = new System.Drawing.Point(16, 16);
         lblStatSourceClassTitle.Name = "lblStatSourceClassTitle";
-        lblStatSourceClassTitle.Size = new System.Drawing.Size(117, 15);
+        lblStatSourceClassTitle.Size = new System.Drawing.Size(147, 20);
         lblStatSourceClassTitle.TabIndex = 0;
         lblStatSourceClassTitle.Text = "Lớp nguồn IELTS-F01";
         // 
         // bannerSuccess
         // 
-        bannerSuccess.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        bannerSuccess.Variant = ECMS.UI.Controls.BannerVariant.Success;
+        bannerSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        bannerSuccess.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
+        bannerSuccess.BannerType = ECMS.UI.Controls.BannerType.Success;
         bannerSuccess.Font = new System.Drawing.Font("Segoe UI", 9F);
         bannerSuccess.Location = new System.Drawing.Point(24, 16);
-        bannerSuccess.Message = "✓  IELTS-F04 đã được mở sau xác nhận. Đã chuyển Lê Hoàng Nam từ IELTS-F01 sang IELTS-F04, hiệu lực 02/11/2026.";
+        bannerSuccess.Message = ("✓  IELTS-F04 đã được mở sau xác nhận. Đã chuyển Lê Hoàng Nam từ IELTS-F01 sang IE" + "LTS-F04, hiệu lực 02/11/2026.");
         bannerSuccess.Name = "bannerSuccess";
-        bannerSuccess.Size = new System.Drawing.Size(1172, 45);
+        bannerSuccess.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
+        bannerSuccess.Size = new System.Drawing.Size(1172, 58);
         bannerSuccess.TabIndex = 0;
+        bannerSuccess.Title = "Thông báo nghiệp vụ";
+        bannerSuccess.Variant = ECMS.UI.Controls.BannerVariant.Success;
         // 
         // ClassTransferCompleteDialog
         // 
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         ClientSize = new System.Drawing.Size(1220, 760);
         Controls.Add(pnlBody);
         Controls.Add(pnlStepper);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "ClassTransferCompleteDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Mở lớp & hoàn tất chuyển lớp";
         pnlHeader.ResumeLayout(false);
@@ -670,9 +716,7 @@ partial class ClassTransferCompleteDialog
     #endregion
 
     private System.Windows.Forms.Panel pnlHeader;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblBreadcrumb;
     private System.Windows.Forms.Panel pnlStepper;
     private System.Windows.Forms.Label lblStep1;
     private System.Windows.Forms.Label lblStep2;
@@ -696,7 +740,6 @@ partial class ClassTransferCompleteDialog
     private ECMS.UI.Controls.AppCard cardPreCheck;
     private System.Windows.Forms.Label lblPreCheckTitle;
     private ECMS.UI.Controls.AppDataGrid dgvChecklist;
-    private System.Windows.Forms.Label lblCheckFooterNote;
     private ECMS.UI.Controls.AppCard cardReceipt;
     private System.Windows.Forms.Label lblReceiptTitle;
     private System.Windows.Forms.Label lblStudentNameKey;

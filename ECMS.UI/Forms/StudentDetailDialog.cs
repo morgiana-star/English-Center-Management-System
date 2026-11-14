@@ -59,10 +59,18 @@ public partial class StudentDetailDialog : Form
             AppDialog.ShowSuccess(this, "Học phí & Thanh toán", "Chuyển tiếp đến lập phiếu thu công nợ 1.900.000đ cho học viên HV-0241.");
         };
 
-        // 4. Xem chi tiết học tập
+        // 4. Xem chi tiết học tập -> Mở Sổ điểm học viên (Không gian học viên)
         btnViewAcademicDetail.Click += (s, e) =>
         {
-            AppDialog.ShowSuccess(this, "Chi tiết học tập", "Mở sổ điểm chi tiết và lịch sử điểm danh của học viên HV-0241.");
+            using var dlg = new Form
+            {
+                Text = "Sổ điểm · Trần Gia Bảo (Không gian học viên)",
+                Size = new System.Drawing.Size(1200, 780),
+                StartPosition = FormStartPosition.CenterParent
+            };
+            var view = new UserControls.StudentGradeReportView { Dock = DockStyle.Fill };
+            dlg.Controls.Add(view);
+            dlg.ShowDialog(this);
         };
     }
 }

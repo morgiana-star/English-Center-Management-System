@@ -24,14 +24,7 @@ public partial class MainForm : Form
                 ShowHelpDialog();
             }
         };
-
-        // Gắn sự kiện cho Header & Footer
-        lblF1Help.Click += (s, e) => ShowHelpDialog();
-        lblUser.Click += (s, e) => ShowUserProfile();
-        lblAvatar.Click += (s, e) => ShowUserProfile();
-        pnlAvatar.Click += (s, e) => ShowUserProfile();
-        lblNotification.Click += (s, e) => ShowNotifications();
-        btnLogoutTop.Click += (s, e) => HandleLogout();
+        
 
         // Gắn sự kiện điều hướng cho 17 mục Sidebar
         WireUpNavigationEvents();
@@ -57,21 +50,21 @@ public partial class MainForm : Form
         btnNavCourse.Click += (s, e) => NavigateToCourse();
         btnNavClass.Click += (s, e) => NavigateToClasses();
         btnNavSchedule.Click += (s, e) => NavigateToSchedule();
-        btnNavAttendance.Click += (s, e) => NavigateToFeature(btnNavAttendance, "B · Đào tạo", "Điểm danh", "Từng buổi · tổng hợp · liên hệ");
-        btnNavGrades.Click += (s, e) => NavigateToFeature(btnNavGrades, "B · Đào tạo", "Kiểm tra & Điểm số", "Bài kiểm tra · trọng số · xếp loại");
-        btnNavMaterials.Click += (s, e) => NavigateToFeature(btnNavMaterials, "B · Đào tạo", "Tài liệu học tập", "Tệp cục bộ · phiên bản · khóa học");
-        btnNavCertificates.Click += (s, e) => NavigateToFeature(btnNavCertificates, "B · Đào tạo", "Chứng chỉ", "Điều kiện · duyệt cấp · số cấp");
+        btnNavAttendance.Click += (s, e) => NavigateToAttendance();
+        btnNavGrades.Click += (s, e) => NavigateToGrades();
+        btnNavMaterials.Click += (s, e) => NavigateToMaterials();
+        btnNavCertificates.Click += (s, e) => NavigateToCertificates();
 
         // Phân hệ C · TUYỂN SINH & TÀI CHÍNH
         btnNavAdmissions.Click += (s, e) => NavigateToAdmissions();
-        btnNavTuition.Click += (s, e) => NavigateToFeature(btnNavTuition, "C · Tuyển sinh & Tài chính", "Học phí & Thanh toán", "Học phí gốc → ưu đãi → thu tiền → phiếu thu → dư nợ. Ghi nhận chuyển khoản thủ công.");
+        btnNavTuition.Click += (s, e) => NavigateToTuition();
 
         // Phân hệ D · NHÂN SỰ & HỆ THỐNG
-        btnNavStaff.Click += (s, e) => NavigateToFeature(btnNavStaff, "D · Nhân sự & Hệ thống", "Nhân viên", "Danh bạ · thêm / sửa · trạng thái");
-        btnNavNotifications.Click += (s, e) => NavigateToFeature(btnNavNotifications, "D · Nhân sự & Hệ thống", "Thông báo", "Soạn · người nhận theo vai trò · đã đọc");
-        btnNavReports.Click += (s, e) => NavigateToFeature(btnNavReports, "D · Nhân sự & Hệ thống", "Báo cáo & Thống kê", "Học tập · chuyên cần · tài chính · tệp cục bộ");
+        btnNavStaff.Click += (s, e) => NavigateToStaff();
+        btnNavNotifications.Click += (s, e) => NavigateToNotifications();
+        btnNavReports.Click += (s, e) => NavigateToReports();
         btnNavAccounts.Click += (s, e) => NavigateToAccounts();
-        btnNavSettings.Click += (s, e) => NavigateToFeature(btnNavSettings, "D · Nhân sự & Hệ thống", "Cấu hình", "Trung tâm · dữ liệu · sao lưu · quy tắc");
+        btnNavSettings.Click += (s, e) => NavigateToSettings();
     }
 
     private void NavigateToDashboard()
@@ -122,6 +115,65 @@ public partial class MainForm : Form
     {
         SetActiveButton(btnNavSchedule);
         LoadView(new ScheduleManagementView());
+    }
+
+    private void NavigateToAttendance()
+    {
+        SetActiveButton(btnNavAttendance);
+        LoadView(new TeacherAttendanceCheckView());
+    }
+
+    private void NavigateToGrades()
+    {
+        SetActiveButton(btnNavGrades);
+        LoadView(new TeacherGradeManagementView());
+    }
+
+    private void NavigateToTuition()
+    {
+        SetActiveButton(btnNavTuition);
+        LoadView(new TuitionPaymentView());
+    }
+
+    private void NavigateToCertificates()
+    {
+        SetActiveButton(btnNavCertificates);
+        LoadView(new CertificateManagementView());
+    }
+
+    private void NavigateToReports()
+    {
+        SetActiveButton(btnNavReports);
+        LoadView(new ReportManagementView());
+    }
+
+    private void NavigateToMaterials()
+    {
+        SetActiveButton(btnNavMaterials);
+        LoadView(new StudyMaterialView());
+    }
+
+    private void NavigateToStaff()
+    {
+        SetActiveButton(btnNavStaff);
+        LoadView(new StaffManagementView());
+    }
+
+    private void NavigateToNotifications()
+    {
+        SetActiveButton(btnNavNotifications);
+        LoadView(new InternalNotificationView());
+    }
+
+    private void NavigateToSettings()
+    {
+        SetActiveButton(btnNavSettings);
+        LoadView(new SystemConfigView());
+    }
+
+    public void NavigateToStudentGradeReport()
+    {
+        LoadView(new StudentGradeReportView());
     }
 
     private void NavigateToFeature(Button button, string group, string title, string scope)

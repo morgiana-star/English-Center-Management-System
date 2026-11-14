@@ -15,67 +15,28 @@ partial class LogoutConfirmDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         lblTitle = new System.Windows.Forms.Label();
-        lblDesc = new System.Windows.Forms.Label();
         btnStay = new ECMS.UI.Controls.AppButton();
         btnLogout = new ECMS.UI.Controls.AppButton();
-        pnlStripe = new System.Windows.Forms.Panel();
-        pnlBannerNote = new System.Windows.Forms.Panel();
-        lblBannerNote = new System.Windows.Forms.Label();
-        pnlBannerNote.SuspendLayout();
+        label1 = new System.Windows.Forms.Label();
         SuspendLayout();
-        // 
-        // pnlStripe
-        // 
-        pnlStripe.BackColor = System.Drawing.Color.FromArgb(220, 38, 38);
-        pnlStripe.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlStripe.Location = new System.Drawing.Point(0, 0);
-        pnlStripe.Name = "pnlStripe";
-        pnlStripe.Size = new System.Drawing.Size(460, 4);
-        pnlStripe.TabIndex = 0;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblTitle.Location = new System.Drawing.Point(24, 22);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblTitle.Location = new System.Drawing.Point(172, 35);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(227, 30);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Xác nhận đăng xuất?";
-        // 
-        // lblDesc
-        // 
-        lblDesc.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblDesc.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblDesc.Location = new System.Drawing.Point(24, 58);
-        lblDesc.Name = "lblDesc";
-        lblDesc.Size = new System.Drawing.Size(412, 50);
-        lblDesc.TabIndex = 2;
-        lblDesc.Text = "Không còn thay đổi chưa lưu. Phiên làm việc hiện tại sẽ kết thúc, dữ liệu SQLite được giữ nguyên an toàn.";
-        // 
-        // pnlBannerNote
-        // 
-        pnlBannerNote.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
-        pnlBannerNote.Controls.Add(lblBannerNote);
-        pnlBannerNote.Location = new System.Drawing.Point(24, 115);
-        pnlBannerNote.Name = "pnlBannerNote";
-        pnlBannerNote.Size = new System.Drawing.Size(412, 40);
-        pnlBannerNote.TabIndex = 3;
-        // 
-        // lblBannerNote
-        // 
-        lblBannerNote.AutoSize = true;
-        lblBannerNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblBannerNote.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        lblBannerNote.Location = new System.Drawing.Point(12, 10);
-        lblBannerNote.Name = "lblBannerNote";
-        lblBannerNote.Size = new System.Drawing.Size(366, 20);
-        lblBannerNote.TabIndex = 0;
-        lblBannerNote.Text = "Trạng thái sau xác nhận: đã kết thúc phiên → về Đăng nhập.";
         // 
         // btnStay
         // 
@@ -87,10 +48,10 @@ partial class LogoutConfirmDialog
         btnStay.FlatAppearance.BorderSize = 0;
         btnStay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnStay.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnStay.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        btnStay.Location = new System.Drawing.Point(215, 172);
+        btnStay.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnStay.Location = new System.Drawing.Point(69, 144);
         btnStay.Name = "btnStay";
-        btnStay.Size = new System.Drawing.Size(95, 36);
+        btnStay.Size = new System.Drawing.Size(196, 44);
         btnStay.TabIndex = 4;
         btnStay.Text = "Ở lại";
         btnStay.UseVisualStyleBackColor = false;
@@ -98,7 +59,7 @@ partial class LogoutConfirmDialog
         // 
         // btnLogout
         // 
-        btnLogout.BackColor = System.Drawing.Color.FromArgb(220, 38, 38);
+        btnLogout.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
         btnLogout.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Danger;
         btnLogout.CornerRadius = 5;
         btnLogout.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -107,13 +68,24 @@ partial class LogoutConfirmDialog
         btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogout.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnLogout.ForeColor = System.Drawing.Color.White;
-        btnLogout.Location = new System.Drawing.Point(320, 172);
+        btnLogout.Location = new System.Drawing.Point(271, 144);
         btnLogout.Name = "btnLogout";
-        btnLogout.Size = new System.Drawing.Size(116, 36);
+        btnLogout.Size = new System.Drawing.Size(281, 44);
         btnLogout.TabIndex = 5;
         btnLogout.Text = "Đăng xuất";
         btnLogout.UseVisualStyleBackColor = false;
         btnLogout.Variant = ECMS.UI.Controls.ButtonVariant.Danger;
+        // 
+        // label1
+        // 
+        label1.AutoSize = true;
+        label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        label1.ForeColor = System.Drawing.Color.Gray;
+        label1.Location = new System.Drawing.Point(69, 85);
+        label1.Name = "label1";
+        label1.Size = new System.Drawing.Size(449, 23);
+        label1.TabIndex = 6;
+        label1.Text = "Bạn có chắc chắn muốn đăng xuất khỏi hệ thông không?";
         // 
         // LogoutConfirmDialog
         // 
@@ -122,26 +94,23 @@ partial class LogoutConfirmDialog
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.White;
         CancelButton = btnStay;
-        ClientSize = new System.Drawing.Size(460, 226);
+        ClientSize = new System.Drawing.Size(606, 227);
+        Controls.Add(label1);
         Controls.Add(btnLogout);
         Controls.Add(btnStay);
-        Controls.Add(pnlBannerNote);
-        Controls.Add(lblDesc);
         Controls.Add(lblTitle);
-        Controls.Add(pnlStripe);
         Font = new System.Drawing.Font("Segoe UI", 9.5F);
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "LogoutConfirmDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Xác nhận đăng xuất";
-        pnlBannerNote.ResumeLayout(false);
-        pnlBannerNote.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
     }
+
+    private System.Windows.Forms.Label label1;
 
     #endregion
 

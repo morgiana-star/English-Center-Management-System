@@ -115,7 +115,7 @@ public partial class AccountManagementView : UserControl
         btnSave.Click += (s, e) => AppDialog.ShowSuccess(ParentForm, "Cập nhật tài khoản", "Đã lưu thông tin tài khoản vào cơ sở dữ liệu SQLite thành công.");
         btnDoReset.Click += (s, e) =>
         {
-            bannerResetSuccess.Visible = true;
+            // bannerResetSuccess.Visible = true;
             chkEditActive.Checked = true;
             AppDialog.ShowSuccess(ParentForm, "Đặt lại mật khẩu", "Mật khẩu tạm đã được tạo và lưu cục bộ. Tài khoản đã được mở khóa.");
         };

@@ -27,8 +27,8 @@ public partial class CourseDetailDialog : Form
     {
         Text = $"Chi tiết khóa học · {_courseName}";
         lblTitle.Text = _courseName;
-        lblSubtitle.Text = $"{_courseCode} · Phiên bản 1.2 · Đang sử dụng";
-        lblBreadcrumb.Text = $"ECMS / Khóa học / {_courseName} · {_courseCode}";
+        // lblSubtitle.Text = $"{_courseCode} · Phiên bản 1.2 · Đang sử dụng";
+        // lblBreadcrumb.Text = $"ECMS / Khóa học / {_courseName} · {_courseCode}";
     }
 
     private void SetupClassesGrid()

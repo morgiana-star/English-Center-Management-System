@@ -27,8 +27,7 @@ public partial class ClassDetailDialog : Form
     {
         Text = $"Chi tiết lớp học · {_classCode}";
         lblTitle.Text = $"{_classCode} · {_courseName}";
-        lblSubtitle.Text = "06/10–25/12/2026 · T3 / T6 18:00–20:00 · P201 · Giáo viên Nguyễn Hoàng Anh";
-        lblBreadcrumb.Text = $"ECMS / Lớp học / {_classCode} · {_courseName}";
+       
     }
 
     private void SetupStudentsGrid()

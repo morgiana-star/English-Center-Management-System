@@ -49,7 +49,7 @@ partial class LoginForm
         pnlLeft.Dock = System.Windows.Forms.DockStyle.Left;
         pnlLeft.Location = new System.Drawing.Point(0, 0);
         pnlLeft.Name = "pnlLeft";
-        pnlLeft.Size = new System.Drawing.Size(380, 438);
+        pnlLeft.Size = new System.Drawing.Size(482, 447);
         pnlLeft.TabIndex = 0;
         // 
         // lblCenter
@@ -57,7 +57,7 @@ partial class LoginForm
         lblCenter.AutoSize = true;
         lblCenter.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
         lblCenter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblCenter.Location = new System.Drawing.Point(65, 262);
+        lblCenter.Location = new System.Drawing.Point(133, 286);
         lblCenter.Name = "lblCenter";
         lblCenter.Size = new System.Drawing.Size(196, 28);
         lblCenter.TabIndex = 2;
@@ -68,7 +68,7 @@ partial class LoginForm
         lblBrand.AutoSize = true;
         lblBrand.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
         lblBrand.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblBrand.Location = new System.Drawing.Point(122, 204);
+        lblBrand.Location = new System.Drawing.Point(177, 224);
         lblBrand.Name = "lblBrand";
         lblBrand.Size = new System.Drawing.Size(111, 46);
         lblBrand.TabIndex = 1;
@@ -77,9 +77,9 @@ partial class LoginForm
         // picLogo
         // 
         picLogo.Image = ((System.Drawing.Image)resources.GetObject("picLogo.Image"));
-        picLogo.Location = new System.Drawing.Point(133, 88);
+        picLogo.Location = new System.Drawing.Point(169, 97);
         picLogo.Name = "picLogo";
-        picLogo.Size = new System.Drawing.Size(114, 99);
+        picLogo.Size = new System.Drawing.Size(144, 109);
         picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
         picLogo.TabIndex = 0;
         picLogo.TabStop = false;
@@ -96,9 +96,9 @@ partial class LoginForm
         pnlRight.Controls.Add(lblUser);
         pnlRight.Controls.Add(lblTitle);
         pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlRight.Location = new System.Drawing.Point(380, 0);
+        pnlRight.Location = new System.Drawing.Point(482, 0);
         pnlRight.Name = "pnlRight";
-        pnlRight.Size = new System.Drawing.Size(564, 438);
+        pnlRight.Size = new System.Drawing.Size(669, 447);
         pnlRight.TabIndex = 1;
         // 
         // btnLogin
@@ -110,9 +110,9 @@ partial class LoginForm
         btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
         btnLogin.ForeColor = System.Drawing.Color.White;
-        btnLogin.Location = new System.Drawing.Point(57, 327);
+        btnLogin.Location = new System.Drawing.Point(57, 339);
         btnLogin.Name = "btnLogin";
-        btnLogin.Size = new System.Drawing.Size(430, 42);
+        btnLogin.Size = new System.Drawing.Size(559, 46);
         btnLogin.TabIndex = 7;
         btnLogin.Text = "Đăng nhập";
         btnLogin.UseVisualStyleBackColor = false;
@@ -123,9 +123,9 @@ partial class LoginForm
         // 
         lblError.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblError.ForeColor = System.Drawing.Color.Red;
-        lblError.Location = new System.Drawing.Point(57, 295);
+        lblError.Location = new System.Drawing.Point(57, 294);
         lblError.Name = "lblError";
-        lblError.Size = new System.Drawing.Size(430, 26);
+        lblError.Size = new System.Drawing.Size(544, 28);
         lblError.TabIndex = 6;
         lblError.Text = "* Tên đăng nhập hoặc mật khẩu không đúng!";
         lblError.Visible = false;
@@ -136,7 +136,7 @@ partial class LoginForm
         chkShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
         chkShowPass.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         chkShowPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        chkShowPass.Location = new System.Drawing.Point(57, 265);
+        chkShowPass.Location = new System.Drawing.Point(57, 255);
         chkShowPass.Name = "chkShowPass";
         chkShowPass.Size = new System.Drawing.Size(127, 24);
         chkShowPass.TabIndex = 5;
@@ -155,7 +155,7 @@ partial class LoginForm
         txtPassword.Name = "txtPassword";
         txtPassword.Placeholder = "Vui lòng nhập mật khẩu";
         txtPassword.ReadOnly = false;
-        txtPassword.Size = new System.Drawing.Size(430, 36);
+        txtPassword.Size = new System.Drawing.Size(559, 36);
         txtPassword.TabIndex = 4;
         txtPassword.UseSystemPasswordChar = true;
         // 
@@ -164,7 +164,7 @@ partial class LoginForm
         lblPass.AutoSize = true;
         lblPass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblPass.Location = new System.Drawing.Point(57, 190);
+        lblPass.Location = new System.Drawing.Point(57, 186);
         lblPass.Name = "lblPass";
         lblPass.Size = new System.Drawing.Size(75, 20);
         lblPass.TabIndex = 3;
@@ -181,7 +181,7 @@ partial class LoginForm
         txtUsername.Name = "txtUsername";
         txtUsername.Placeholder = "Vui lòng nhập tên đăng nhập";
         txtUsername.ReadOnly = false;
-        txtUsername.Size = new System.Drawing.Size(430, 36);
+        txtUsername.Size = new System.Drawing.Size(559, 36);
         txtUsername.TabIndex = 2;
         txtUsername.UseSystemPasswordChar = false;
         // 
@@ -201,7 +201,7 @@ partial class LoginForm
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblTitle.Location = new System.Drawing.Point(57, 49);
+        lblTitle.Location = new System.Drawing.Point(57, 48);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(307, 41);
         lblTitle.TabIndex = 0;
@@ -213,7 +213,7 @@ partial class LoginForm
         AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.White;
-        ClientSize = new System.Drawing.Size(944, 438);
+        ClientSize = new System.Drawing.Size(1151, 447);
         Controls.Add(pnlRight);
         Controls.Add(pnlLeft);
         Font = new System.Drawing.Font("Segoe UI", 9.5F);

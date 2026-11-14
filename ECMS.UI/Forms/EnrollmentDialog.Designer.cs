@@ -15,13 +15,20 @@ partial class EnrollmentDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlTop = new System.Windows.Forms.Panel();
         lblEnrollSub = new System.Windows.Forms.Label();
         lblEnrollHeader = new System.Windows.Forms.Label();
         cardEnrollSummary = new ECMS.UI.Controls.AppCard();
-        lblTransNext = new System.Windows.Forms.Label();
         lblTransChecked = new System.Windows.Forms.Label();
         lblTransDuration = new System.Windows.Forms.Label();
         lblTransRoom = new System.Windows.Forms.Label();
@@ -35,7 +42,6 @@ partial class EnrollmentDialog
         cardClassSelect = new ECMS.UI.Controls.AppCard();
         btnConfirmEnroll = new ECMS.UI.Controls.AppButton();
         btnBackToConsult = new ECMS.UI.Controls.AppButton();
-        bannerEnrollPlan = new ECMS.UI.Controls.AppBanner();
         txtEnrollDiscount = new ECMS.UI.Controls.AppTextBox();
         lblEnrollDiscount = new System.Windows.Forms.Label();
         txtEnrollOriginalFee = new ECMS.UI.Controls.AppTextBox();
@@ -45,7 +51,6 @@ partial class EnrollmentDialog
         dtpEnrollDate = new System.Windows.Forms.DateTimePicker();
         lblEnrollDate = new System.Windows.Forms.Label();
         dgvClasses = new ECMS.UI.Controls.AppDataGrid();
-        bannerClassFull = new ECMS.UI.Controls.AppBanner();
         lblClassSelectTitle = new System.Windows.Forms.Label();
         pnlTop.SuspendLayout();
         cardEnrollSummary.SuspendLayout();
@@ -62,17 +67,17 @@ partial class EnrollmentDialog
         pnlTop.Location = new System.Drawing.Point(0, 0);
         pnlTop.Name = "pnlTop";
         pnlTop.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-        pnlTop.Size = new System.Drawing.Size(1140, 75);
+        pnlTop.Size = new System.Drawing.Size(1220, 75);
         pnlTop.TabIndex = 0;
         // 
         // lblEnrollSub
         // 
         lblEnrollSub.AutoSize = true;
         lblEnrollSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblEnrollSub.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblEnrollSub.Location = new System.Drawing.Point(24, 45);
+        lblEnrollSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblEnrollSub.Location = new System.Drawing.Point(27, 45);
         lblEnrollSub.Name = "lblEnrollSub";
-        lblEnrollSub.Size = new System.Drawing.Size(434, 20);
+        lblEnrollSub.Size = new System.Drawing.Size(406, 20);
         lblEnrollSub.TabIndex = 1;
         lblEnrollSub.Text = "Nguyễn Minh Anh · TN-0108 · IELTS Foundation · 02/10/2026";
         // 
@@ -80,20 +85,19 @@ partial class EnrollmentDialog
         // 
         lblEnrollHeader.AutoSize = true;
         lblEnrollHeader.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
-        lblEnrollHeader.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblEnrollHeader.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblEnrollHeader.Location = new System.Drawing.Point(22, 10);
         lblEnrollHeader.Name = "lblEnrollHeader";
-        lblEnrollHeader.Size = new System.Drawing.Size(242, 35);
+        lblEnrollHeader.Size = new System.Drawing.Size(224, 35);
         lblEnrollHeader.TabIndex = 0;
         lblEnrollHeader.Text = "Ghi danh & xếp lớp";
         // 
         // cardEnrollSummary
         // 
-        cardEnrollSummary.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardEnrollSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cardEnrollSummary.BackColor = System.Drawing.Color.White;
-        cardEnrollSummary.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardEnrollSummary.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardEnrollSummary.BorderWidth = 1;
-        cardEnrollSummary.Controls.Add(lblTransNext);
         cardEnrollSummary.Controls.Add(lblTransChecked);
         cardEnrollSummary.Controls.Add(lblTransDuration);
         cardEnrollSummary.Controls.Add(lblTransRoom);
@@ -105,30 +109,20 @@ partial class EnrollmentDialog
         cardEnrollSummary.Controls.Add(lblTransName);
         cardEnrollSummary.Controls.Add(lblTransferTitle);
         cardEnrollSummary.CornerRadius = 8;
-        cardEnrollSummary.Location = new System.Drawing.Point(715, 95);
+        cardEnrollSummary.Location = new System.Drawing.Point(797, 95);
         cardEnrollSummary.Name = "cardEnrollSummary";
         cardEnrollSummary.Padding = new System.Windows.Forms.Padding(16);
         cardEnrollSummary.Size = new System.Drawing.Size(400, 560);
         cardEnrollSummary.TabIndex = 2;
         // 
-        // lblTransNext
-        // 
-        lblTransNext.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblTransNext.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblTransNext.Location = new System.Drawing.Point(20, 440);
-        lblTransNext.Name = "lblTransNext";
-        lblTransNext.Size = new System.Drawing.Size(360, 55);
-        lblTransNext.TabIndex = 10;
-        lblTransNext.Text = "Bước kế tiếp: tạo hồ sơ học viên → bàn giao kế toán thu học phí.";
-        // 
         // lblTransChecked
         // 
         lblTransChecked.AutoSize = true;
         lblTransChecked.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblTransChecked.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
+        lblTransChecked.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
         lblTransChecked.Location = new System.Drawing.Point(20, 395);
         lblTransChecked.Name = "lblTransChecked";
-        lblTransChecked.Size = new System.Drawing.Size(217, 23);
+        lblTransChecked.Size = new System.Drawing.Size(222, 23);
         lblTransChecked.TabIndex = 9;
         lblTransChecked.Text = "✓ Đã kiểm tra trùng hồ sơ";
         // 
@@ -136,10 +130,10 @@ partial class EnrollmentDialog
         // 
         lblTransDuration.AutoSize = true;
         lblTransDuration.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransDuration.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransDuration.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransDuration.Location = new System.Drawing.Point(20, 340);
         lblTransDuration.Name = "lblTransDuration";
-        lblTransDuration.Size = new System.Drawing.Size(263, 21);
+        lblTransDuration.Size = new System.Drawing.Size(247, 21);
         lblTransDuration.TabIndex = 8;
         lblTransDuration.Text = "Thời gian lớp:  06/10–25/12/2026";
         // 
@@ -147,10 +141,10 @@ partial class EnrollmentDialog
         // 
         lblTransRoom.AutoSize = true;
         lblTransRoom.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransRoom.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransRoom.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransRoom.Location = new System.Drawing.Point(20, 300);
         lblTransRoom.Name = "lblTransRoom";
-        lblTransRoom.Size = new System.Drawing.Size(248, 21);
+        lblTransRoom.Size = new System.Drawing.Size(236, 21);
         lblTransRoom.TabIndex = 7;
         lblTransRoom.Text = "Phòng / giờ:  P201 · 18:00–20:00";
         // 
@@ -158,10 +152,10 @@ partial class EnrollmentDialog
         // 
         lblTransTeacher.AutoSize = true;
         lblTransTeacher.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransTeacher.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransTeacher.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransTeacher.Location = new System.Drawing.Point(20, 260);
         lblTransTeacher.Name = "lblTransTeacher";
-        lblTransTeacher.Size = new System.Drawing.Size(232, 21);
+        lblTransTeacher.Size = new System.Drawing.Size(223, 21);
         lblTransTeacher.TabIndex = 6;
         lblTransTeacher.Text = "Giáo viên:  Nguyễn Hoàng Anh";
         // 
@@ -169,10 +163,10 @@ partial class EnrollmentDialog
         // 
         lblTransNetFee.AutoSize = true;
         lblTransNetFee.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblTransNetFee.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblTransNetFee.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         lblTransNetFee.Location = new System.Drawing.Point(20, 215);
         lblTransNetFee.Name = "lblTransNetFee";
-        lblTransNetFee.Size = new System.Drawing.Size(237, 25);
+        lblTransNetFee.Size = new System.Drawing.Size(244, 25);
         lblTransNetFee.TabIndex = 5;
         lblTransNetFee.Text = "Học phí ròng:  5.400.000đ";
         // 
@@ -180,10 +174,10 @@ partial class EnrollmentDialog
         // 
         lblTransCourse.AutoSize = true;
         lblTransCourse.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransCourse.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransCourse.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransCourse.Location = new System.Drawing.Point(20, 175);
         lblTransCourse.Name = "lblTransCourse";
-        lblTransCourse.Size = new System.Drawing.Size(209, 21);
+        lblTransCourse.Size = new System.Drawing.Size(204, 21);
         lblTransCourse.TabIndex = 4;
         lblTransCourse.Text = "Khóa học:  IELTS Foundation";
         // 
@@ -191,10 +185,10 @@ partial class EnrollmentDialog
         // 
         lblTransScore.AutoSize = true;
         lblTransScore.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransScore.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransScore.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransScore.Location = new System.Drawing.Point(20, 135);
         lblTransScore.Name = "lblTransScore";
-        lblTransScore.Size = new System.Drawing.Size(176, 21);
+        lblTransScore.Size = new System.Drawing.Size(170, 21);
         lblTransScore.TabIndex = 3;
         lblTransScore.Text = "Điểm đầu vào:  4,0 / 10";
         // 
@@ -202,10 +196,10 @@ partial class EnrollmentDialog
         // 
         lblTransPhone.AutoSize = true;
         lblTransPhone.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblTransPhone.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblTransPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblTransPhone.Location = new System.Drawing.Point(20, 95);
         lblTransPhone.Name = "lblTransPhone";
-        lblTransPhone.Size = new System.Drawing.Size(193, 21);
+        lblTransPhone.Size = new System.Drawing.Size(190, 21);
         lblTransPhone.TabIndex = 2;
         lblTransPhone.Text = "Điện thoại:  0908 123 456";
         // 
@@ -213,10 +207,10 @@ partial class EnrollmentDialog
         // 
         lblTransName.AutoSize = true;
         lblTransName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblTransName.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblTransName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTransName.Location = new System.Drawing.Point(20, 60);
         lblTransName.Name = "lblTransName";
-        lblTransName.Size = new System.Drawing.Size(226, 23);
+        lblTransName.Size = new System.Drawing.Size(247, 23);
         lblTransName.TabIndex = 1;
         lblTransName.Text = "Họ và tên:  Nguyễn Minh Anh";
         // 
@@ -224,22 +218,21 @@ partial class EnrollmentDialog
         // 
         lblTransferTitle.AutoSize = true;
         lblTransferTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblTransferTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblTransferTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTransferTitle.Location = new System.Drawing.Point(20, 16);
         lblTransferTitle.Name = "lblTransferTitle";
-        lblTransferTitle.Size = new System.Drawing.Size(268, 28);
+        lblTransferTitle.Size = new System.Drawing.Size(276, 28);
         lblTransferTitle.TabIndex = 0;
         lblTransferTitle.Text = "Thông tin được chuyển tiếp";
         // 
         // cardClassSelect
         // 
-        cardClassSelect.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cardClassSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardClassSelect.BackColor = System.Drawing.Color.White;
-        cardClassSelect.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardClassSelect.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardClassSelect.BorderWidth = 1;
         cardClassSelect.Controls.Add(btnConfirmEnroll);
         cardClassSelect.Controls.Add(btnBackToConsult);
-        cardClassSelect.Controls.Add(bannerEnrollPlan);
         cardClassSelect.Controls.Add(txtEnrollDiscount);
         cardClassSelect.Controls.Add(lblEnrollDiscount);
         cardClassSelect.Controls.Add(txtEnrollOriginalFee);
@@ -249,60 +242,49 @@ partial class EnrollmentDialog
         cardClassSelect.Controls.Add(dtpEnrollDate);
         cardClassSelect.Controls.Add(lblEnrollDate);
         cardClassSelect.Controls.Add(dgvClasses);
-        cardClassSelect.Controls.Add(bannerClassFull);
         cardClassSelect.Controls.Add(lblClassSelectTitle);
         cardClassSelect.CornerRadius = 8;
         cardClassSelect.Location = new System.Drawing.Point(24, 95);
         cardClassSelect.Name = "cardClassSelect";
         cardClassSelect.Padding = new System.Windows.Forms.Padding(16);
-        cardClassSelect.Size = new System.Drawing.Size(670, 560);
+        cardClassSelect.Size = new System.Drawing.Size(745, 560);
         cardClassSelect.TabIndex = 1;
         // 
         // btnConfirmEnroll
         // 
-        btnConfirmEnroll.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        btnConfirmEnroll.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnConfirmEnroll.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnConfirmEnroll.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnConfirmEnroll.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnConfirmEnroll.CornerRadius = 6;
         btnConfirmEnroll.Cursor = System.Windows.Forms.Cursors.Hand;
         btnConfirmEnroll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnConfirmEnroll.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnConfirmEnroll.ForeColor = System.Drawing.Color.White;
-        btnConfirmEnroll.Location = new System.Drawing.Point(495, 500);
+        btnConfirmEnroll.Location = new System.Drawing.Point(570, 500);
         btnConfirmEnroll.Name = "btnConfirmEnroll";
         btnConfirmEnroll.Size = new System.Drawing.Size(155, 36);
         btnConfirmEnroll.TabIndex = 13;
         btnConfirmEnroll.Text = "Xác nhận ghi danh";
         btnConfirmEnroll.UseVisualStyleBackColor = false;
+        btnConfirmEnroll.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // btnBackToConsult
         // 
-        btnBackToConsult.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        btnBackToConsult.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         btnBackToConsult.BackColor = System.Drawing.Color.White;
         btnBackToConsult.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnBackToConsult.CornerRadius = 6;
         btnBackToConsult.Cursor = System.Windows.Forms.Cursors.Hand;
         btnBackToConsult.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnBackToConsult.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnBackToConsult.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        btnBackToConsult.Location = new System.Drawing.Point(360, 500);
+        btnBackToConsult.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        btnBackToConsult.Location = new System.Drawing.Point(435, 500);
         btnBackToConsult.Name = "btnBackToConsult";
         btnBackToConsult.Size = new System.Drawing.Size(125, 36);
         btnBackToConsult.TabIndex = 12;
         btnBackToConsult.Text = "Quay lại tư vấn";
         btnBackToConsult.UseVisualStyleBackColor = false;
-        // 
-        // bannerEnrollPlan
-        // 
-        bannerEnrollPlan.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        bannerEnrollPlan.BannerType = ECMS.UI.Controls.BannerType.Info;
-        bannerEnrollPlan.Location = new System.Drawing.Point(20, 425);
-        bannerEnrollPlan.Message = "Đã chọn phương án thay thế IELTS-F01. Xác nhận để tạo HV-0241 và tăng sĩ số thành 18/20.";
-        bannerEnrollPlan.Name = "bannerEnrollPlan";
-        bannerEnrollPlan.Size = new System.Drawing.Size(630, 55);
-        bannerEnrollPlan.TabIndex = 11;
-        bannerEnrollPlan.Title = "Thông báo:";
-        bannerEnrollPlan.Variant = ECMS.UI.Controls.BannerVariant.Info;
+        btnBackToConsult.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // txtEnrollDiscount
         // 
@@ -311,7 +293,7 @@ partial class EnrollmentDialog
         txtEnrollDiscount.ErrorMessage = "";
         txtEnrollDiscount.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtEnrollDiscount.HasError = false;
-        txtEnrollDiscount.Location = new System.Drawing.Point(340, 365);
+        txtEnrollDiscount.Location = new System.Drawing.Point(392, 450);
         txtEnrollDiscount.Name = "txtEnrollDiscount";
         txtEnrollDiscount.Placeholder = "600.000đ";
         txtEnrollDiscount.ReadOnly = true;
@@ -323,10 +305,10 @@ partial class EnrollmentDialog
         // 
         lblEnrollDiscount.AutoSize = true;
         lblEnrollDiscount.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblEnrollDiscount.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblEnrollDiscount.Location = new System.Drawing.Point(340, 342);
+        lblEnrollDiscount.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblEnrollDiscount.Location = new System.Drawing.Point(392, 427);
         lblEnrollDiscount.Name = "lblEnrollDiscount";
-        lblEnrollDiscount.Size = new System.Drawing.Size(95, 19);
+        lblEnrollDiscount.Size = new System.Drawing.Size(90, 20);
         lblEnrollDiscount.TabIndex = 9;
         lblEnrollDiscount.Text = "Ưu đãi 10%";
         // 
@@ -337,7 +319,7 @@ partial class EnrollmentDialog
         txtEnrollOriginalFee.ErrorMessage = "";
         txtEnrollOriginalFee.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtEnrollOriginalFee.HasError = false;
-        txtEnrollOriginalFee.Location = new System.Drawing.Point(20, 365);
+        txtEnrollOriginalFee.Location = new System.Drawing.Point(19, 450);
         txtEnrollOriginalFee.Name = "txtEnrollOriginalFee";
         txtEnrollOriginalFee.Placeholder = "6.000.000đ";
         txtEnrollOriginalFee.ReadOnly = true;
@@ -349,30 +331,37 @@ partial class EnrollmentDialog
         // 
         lblEnrollOriginalFee.AutoSize = true;
         lblEnrollOriginalFee.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblEnrollOriginalFee.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblEnrollOriginalFee.Location = new System.Drawing.Point(20, 342);
+        lblEnrollOriginalFee.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblEnrollOriginalFee.Location = new System.Drawing.Point(19, 427);
         lblEnrollOriginalFee.Name = "lblEnrollOriginalFee";
-        lblEnrollOriginalFee.Size = new System.Drawing.Size(92, 19);
+        lblEnrollOriginalFee.Size = new System.Drawing.Size(91, 20);
         lblEnrollOriginalFee.TabIndex = 7;
         lblEnrollOriginalFee.Text = "Học phí gốc";
         // 
         // cboSubstituteClass
         // 
         cboSubstituteClass.BackColor = System.Drawing.Color.White;
+        cboSubstituteClass.CornerRadius = 5;
+        cboSubstituteClass.DataSource = null;
+        cboSubstituteClass.DisplayMember = "";
         cboSubstituteClass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        cboSubstituteClass.Location = new System.Drawing.Point(340, 290);
+        cboSubstituteClass.Location = new System.Drawing.Point(392, 375);
         cboSubstituteClass.Name = "cboSubstituteClass";
+        cboSubstituteClass.SelectedIndex = -1;
+        cboSubstituteClass.SelectedItem = null;
+        cboSubstituteClass.SelectedValue = null;
         cboSubstituteClass.Size = new System.Drawing.Size(305, 32);
         cboSubstituteClass.TabIndex = 6;
+        cboSubstituteClass.ValueMember = "";
         // 
         // lblSubstituteClass
         // 
         lblSubstituteClass.AutoSize = true;
         lblSubstituteClass.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblSubstituteClass.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblSubstituteClass.Location = new System.Drawing.Point(340, 267);
+        lblSubstituteClass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblSubstituteClass.Location = new System.Drawing.Point(392, 352);
         lblSubstituteClass.Name = "lblSubstituteClass";
-        lblSubstituteClass.Size = new System.Drawing.Size(107, 19);
+        lblSubstituteClass.Size = new System.Drawing.Size(108, 20);
         lblSubstituteClass.TabIndex = 5;
         lblSubstituteClass.Text = "Lớp thay thế *";
         // 
@@ -381,7 +370,7 @@ partial class EnrollmentDialog
         dtpEnrollDate.CustomFormat = "dd/MM/yyyy";
         dtpEnrollDate.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         dtpEnrollDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-        dtpEnrollDate.Location = new System.Drawing.Point(20, 290);
+        dtpEnrollDate.Location = new System.Drawing.Point(19, 375);
         dtpEnrollDate.Name = "dtpEnrollDate";
         dtpEnrollDate.Size = new System.Drawing.Size(300, 29);
         dtpEnrollDate.TabIndex = 4;
@@ -390,41 +379,79 @@ partial class EnrollmentDialog
         // 
         lblEnrollDate.AutoSize = true;
         lblEnrollDate.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblEnrollDate.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblEnrollDate.Location = new System.Drawing.Point(20, 267);
+        lblEnrollDate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblEnrollDate.Location = new System.Drawing.Point(19, 352);
         lblEnrollDate.Name = "lblEnrollDate";
-        lblEnrollDate.Size = new System.Drawing.Size(117, 19);
+        lblEnrollDate.Size = new System.Drawing.Size(122, 20);
         lblEnrollDate.TabIndex = 3;
         lblEnrollDate.Text = "Ngày ghi danh *";
         // 
         // dgvClasses
         // 
-        dgvClasses.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        dgvClasses.Location = new System.Drawing.Point(20, 115);
+        dgvClasses.AllowUserToAddRows = false;
+        dgvClasses.AllowUserToDeleteRows = false;
+        dgvClasses.AllowUserToResizeColumns = false;
+        dgvClasses.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvClasses.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvClasses.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        dgvClasses.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvClasses.BackgroundColor = System.Drawing.Color.White;
+        dgvClasses.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvClasses.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvClasses.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvClasses.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvClasses.ColumnHeadersHeight = 36;
+        dgvClasses.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvClasses.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvClasses.EnableHeadersVisualStyles = false;
+        dgvClasses.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        dgvClasses.Location = new System.Drawing.Point(20, 47);
+        dgvClasses.MultiSelect = false;
         dgvClasses.Name = "dgvClasses";
-        dgvClasses.Size = new System.Drawing.Size(630, 135);
+        dgvClasses.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvClasses.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvClasses.RowHeadersVisible = false;
+        dgvClasses.RowHeadersWidth = 51;
+        dgvClasses.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvClasses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvClasses.Size = new System.Drawing.Size(705, 290);
         dgvClasses.TabIndex = 2;
-        // 
-        // bannerClassFull
-        // 
-        bannerClassFull.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
-        bannerClassFull.BannerType = ECMS.UI.Controls.BannerType.Danger;
-        bannerClassFull.Location = new System.Drawing.Point(20, 50);
-        bannerClassFull.Message = "IELTS-F03 đã đủ 20/20 học viên. Không thể ghi danh. Chọn IELTS-F01 còn 3 chỗ.";
-        bannerClassFull.Name = "bannerClassFull";
-        bannerClassFull.Size = new System.Drawing.Size(630, 50);
-        bannerClassFull.TabIndex = 1;
-        bannerClassFull.Title = "✕ Lớp đã đầy:";
-        bannerClassFull.Variant = ECMS.UI.Controls.BannerVariant.Danger;
         // 
         // lblClassSelectTitle
         // 
         lblClassSelectTitle.AutoSize = true;
         lblClassSelectTitle.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold);
-        lblClassSelectTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblClassSelectTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblClassSelectTitle.Location = new System.Drawing.Point(20, 16);
         lblClassSelectTitle.Name = "lblClassSelectTitle";
-        lblClassSelectTitle.Size = new System.Drawing.Size(193, 28);
+        lblClassSelectTitle.Size = new System.Drawing.Size(202, 28);
         lblClassSelectTitle.TabIndex = 0;
         lblClassSelectTitle.Text = "Chọn lớp học cụ thể";
         // 
@@ -432,7 +459,7 @@ partial class EnrollmentDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(1220, 760);
         Controls.Add(cardEnrollSummary);
         Controls.Add(cardClassSelect);
@@ -441,7 +468,6 @@ partial class EnrollmentDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "EnrollmentDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Ghi danh & xếp lớp — ECMS";
@@ -463,7 +489,6 @@ partial class EnrollmentDialog
 
     private ECMS.UI.Controls.AppCard cardClassSelect;
     private System.Windows.Forms.Label lblClassSelectTitle;
-    private ECMS.UI.Controls.AppBanner bannerClassFull;
     private ECMS.UI.Controls.AppDataGrid dgvClasses;
     private System.Windows.Forms.Label lblEnrollDate;
     private System.Windows.Forms.DateTimePicker dtpEnrollDate;
@@ -473,7 +498,6 @@ partial class EnrollmentDialog
     private ECMS.UI.Controls.AppTextBox txtEnrollOriginalFee;
     private System.Windows.Forms.Label lblEnrollDiscount;
     private ECMS.UI.Controls.AppTextBox txtEnrollDiscount;
-    private ECMS.UI.Controls.AppBanner bannerEnrollPlan;
     private ECMS.UI.Controls.AppButton btnBackToConsult;
     private ECMS.UI.Controls.AppButton btnConfirmEnroll;
 
@@ -488,5 +512,4 @@ partial class EnrollmentDialog
     private System.Windows.Forms.Label lblTransRoom;
     private System.Windows.Forms.Label lblTransDuration;
     private System.Windows.Forms.Label lblTransChecked;
-    private System.Windows.Forms.Label lblTransNext;
 }

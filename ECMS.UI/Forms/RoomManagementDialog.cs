@@ -120,7 +120,6 @@ public partial class RoomManagementDialog : Form
             txtRoomCapacity.Text = "24";
             txtRoomNotes.Text = "";
             cboRoomStatus.SelectedIndex = 0;
-            bannerRoomSuccess.Visible = false;
             txtRoomName.Focus();
         };
 
@@ -148,8 +147,6 @@ public partial class RoomManagementDialog : Form
                 return;
             }
 
-            bannerRoomSuccess.Visible = true;
-            bannerRoomSuccess.Message = $"✓  Đã lưu thông tin {txtRoomCode.Text}. Lịch cũ được giữ nguyên.";
             MessageBox.Show($"Đã lưu thông tin phòng {txtRoomCode.Text} ({txtRoomName.Text}) thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         };
     }

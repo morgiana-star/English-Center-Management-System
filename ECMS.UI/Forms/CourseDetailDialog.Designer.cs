@@ -15,14 +15,20 @@ partial class CourseDetailDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnCreateClass = new ECMS.UI.Controls.AppButton();
         btnEditCourse = new ECMS.UI.Controls.AppButton();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
-        lblBreadcrumb = new System.Windows.Forms.Label();
         pnlTabs = new System.Windows.Forms.Panel();
         btnTabRules = new System.Windows.Forms.Button();
         btnTabMaterials = new System.Windows.Forms.Button();
@@ -32,7 +38,6 @@ partial class CourseDetailDialog
         pnlBottomCards = new System.Windows.Forms.Panel();
         cardMaterials = new ECMS.UI.Controls.AppCard();
         btnOpenMaterials = new ECMS.UI.Controls.AppButton();
-        lblMaterialDesc = new System.Windows.Forms.Label();
         lblMaterialFile = new System.Windows.Forms.Label();
         lblMaterialsTitle = new System.Windows.Forms.Label();
         cardGoals = new ECMS.UI.Controls.AppCard();
@@ -77,9 +82,7 @@ partial class CourseDetailDialog
         pnlHeader.BackColor = System.Drawing.Color.White;
         pnlHeader.Controls.Add(btnCreateClass);
         pnlHeader.Controls.Add(btnEditCourse);
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
-        pnlHeader.Controls.Add(lblBreadcrumb);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
@@ -89,9 +92,12 @@ partial class CourseDetailDialog
         // 
         // btnCreateClass
         // 
-        btnCreateClass.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnCreateClass.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
-        btnCreateClass.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        btnCreateClass.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnCreateClass.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
+        btnCreateClass.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnCreateClass.CornerRadius = 5;
+        btnCreateClass.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnCreateClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCreateClass.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnCreateClass.ForeColor = System.Drawing.Color.White;
         btnCreateClass.Location = new System.Drawing.Point(1070, 20);
@@ -100,53 +106,36 @@ partial class CourseDetailDialog
         btnCreateClass.TabIndex = 4;
         btnCreateClass.Text = "+ Tạo lớp học";
         btnCreateClass.UseVisualStyleBackColor = false;
+        btnCreateClass.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // btnEditCourse
         // 
-        btnEditCourse.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnEditCourse.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnEditCourse.BackColor = System.Drawing.Color.White;
-        btnEditCourse.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnEditCourse.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnEditCourse.CornerRadius = 5;
+        btnEditCourse.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnEditCourse.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnEditCourse.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnEditCourse.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnEditCourse.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnEditCourse.Location = new System.Drawing.Point(945, 20);
         btnEditCourse.Name = "btnEditCourse";
         btnEditCourse.Size = new System.Drawing.Size(115, 36);
         btnEditCourse.TabIndex = 3;
         btnEditCourse.Text = "Sửa khóa học";
         btnEditCourse.UseVisualStyleBackColor = false;
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblSubtitle.Location = new System.Drawing.Point(24, 48);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(252, 15);
-        lblSubtitle.TabIndex = 2;
-        lblSubtitle.Text = "CT-IELTS-F · Phiên bản 1.2 · Đang sử dụng";
+        btnEditCourse.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 18);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(188, 30);
+        lblTitle.Size = new System.Drawing.Size(237, 37);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "IELTS Foundation";
-        // 
-        // lblBreadcrumb
-        // 
-        lblBreadcrumb.AutoSize = true;
-        lblBreadcrumb.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-        lblBreadcrumb.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblBreadcrumb.Location = new System.Drawing.Point(24, 5);
-        lblBreadcrumb.Name = "lblBreadcrumb";
-        lblBreadcrumb.Size = new System.Drawing.Size(248, 13);
-        lblBreadcrumb.TabIndex = 0;
-        lblBreadcrumb.Text = "ECMS / Khóa học / IELTS Foundation · CT-IELTS-F";
         // 
         // pnlTabs
         // 
@@ -168,7 +157,7 @@ partial class CourseDetailDialog
         btnTabRules.FlatAppearance.BorderSize = 0;
         btnTabRules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnTabRules.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabRules.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        btnTabRules.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         btnTabRules.Location = new System.Drawing.Point(384, 0);
         btnTabRules.Name = "btnTabRules";
         btnTabRules.Size = new System.Drawing.Size(130, 42);
@@ -182,7 +171,7 @@ partial class CourseDetailDialog
         btnTabMaterials.FlatAppearance.BorderSize = 0;
         btnTabMaterials.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnTabMaterials.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabMaterials.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        btnTabMaterials.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         btnTabMaterials.Location = new System.Drawing.Point(264, 0);
         btnTabMaterials.Name = "btnTabMaterials";
         btnTabMaterials.Size = new System.Drawing.Size(120, 42);
@@ -196,7 +185,7 @@ partial class CourseDetailDialog
         btnTabClasses.FlatAppearance.BorderSize = 0;
         btnTabClasses.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnTabClasses.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabClasses.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        btnTabClasses.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         btnTabClasses.Location = new System.Drawing.Point(144, 0);
         btnTabClasses.Name = "btnTabClasses";
         btnTabClasses.Size = new System.Drawing.Size(120, 42);
@@ -210,7 +199,7 @@ partial class CourseDetailDialog
         btnTabOverview.FlatAppearance.BorderSize = 0;
         btnTabOverview.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnTabOverview.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnTabOverview.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnTabOverview.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnTabOverview.Location = new System.Drawing.Point(24, 0);
         btnTabOverview.Name = "btnTabOverview";
         btnTabOverview.Size = new System.Drawing.Size(120, 42);
@@ -236,60 +225,55 @@ partial class CourseDetailDialog
         // 
         // pnlBottomCards
         // 
-        pnlBottomCards.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        pnlBottomCards.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         pnlBottomCards.Controls.Add(cardMaterials);
         pnlBottomCards.Controls.Add(cardGoals);
-        pnlBottomCards.Location = new System.Drawing.Point(24, 385);
+        pnlBottomCards.Location = new System.Drawing.Point(24, 432);
         pnlBottomCards.Name = "pnlBottomCards";
-        pnlBottomCards.Size = new System.Drawing.Size(1172, 220);
+        pnlBottomCards.Size = new System.Drawing.Size(1172, 173);
         pnlBottomCards.TabIndex = 5;
         // 
         // cardMaterials
         // 
-        cardMaterials.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardMaterials.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cardMaterials.BackColor = System.Drawing.Color.White;
+        cardMaterials.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardMaterials.BorderWidth = 1;
         cardMaterials.Controls.Add(btnOpenMaterials);
-        cardMaterials.Controls.Add(lblMaterialDesc);
         cardMaterials.Controls.Add(lblMaterialFile);
         cardMaterials.Controls.Add(lblMaterialsTitle);
-        cardMaterials.Location = new System.Drawing.Point(600, 0);
+        cardMaterials.CornerRadius = 6;
+        cardMaterials.Location = new System.Drawing.Point(603, 3);
         cardMaterials.Name = "cardMaterials";
         cardMaterials.Padding = new System.Windows.Forms.Padding(20);
-        cardMaterials.Size = new System.Drawing.Size(572, 210);
+        cardMaterials.Size = new System.Drawing.Size(572, 166);
         cardMaterials.TabIndex = 1;
         // 
         // btnOpenMaterials
         // 
         btnOpenMaterials.BackColor = System.Drawing.Color.White;
-        btnOpenMaterials.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnOpenMaterials.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnOpenMaterials.CornerRadius = 5;
+        btnOpenMaterials.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnOpenMaterials.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnOpenMaterials.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnOpenMaterials.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
-        btnOpenMaterials.Location = new System.Drawing.Point(20, 150);
+        btnOpenMaterials.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnOpenMaterials.Location = new System.Drawing.Point(20, 116);
         btnOpenMaterials.Name = "btnOpenMaterials";
         btnOpenMaterials.Size = new System.Drawing.Size(180, 36);
         btnOpenMaterials.TabIndex = 3;
         btnOpenMaterials.Text = "Mở quản lý tài liệu";
         btnOpenMaterials.UseVisualStyleBackColor = false;
-        // 
-        // lblMaterialDesc
-        // 
-        lblMaterialDesc.AutoSize = true;
-        lblMaterialDesc.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblMaterialDesc.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblMaterialDesc.Location = new System.Drawing.Point(20, 95);
-        lblMaterialDesc.Name = "lblMaterialDesc";
-        lblMaterialDesc.Size = new System.Drawing.Size(370, 15);
-        lblMaterialDesc.TabIndex = 2;
-        lblMaterialDesc.Text = "Bộ tài liệu 24 bài học kèm bài tập ngữ pháp và file nghe offline.";
+        btnOpenMaterials.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblMaterialFile
         // 
         lblMaterialFile.AutoSize = true;
         lblMaterialFile.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblMaterialFile.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        lblMaterialFile.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         lblMaterialFile.Location = new System.Drawing.Point(20, 58);
         lblMaterialFile.Name = "lblMaterialFile";
-        lblMaterialFile.Size = new System.Drawing.Size(315, 17);
+        lblMaterialFile.Size = new System.Drawing.Size(402, 21);
         lblMaterialFile.TabIndex = 1;
         lblMaterialFile.Text = "📄  IELTS_Foundation_Complete_V1.2.pdf (14.2 MB)";
         // 
@@ -297,16 +281,18 @@ partial class CourseDetailDialog
         // 
         lblMaterialsTitle.AutoSize = true;
         lblMaterialsTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblMaterialsTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblMaterialsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblMaterialsTitle.Location = new System.Drawing.Point(20, 16);
         lblMaterialsTitle.Name = "lblMaterialsTitle";
-        lblMaterialsTitle.Size = new System.Drawing.Size(143, 21);
+        lblMaterialsTitle.Size = new System.Drawing.Size(163, 28);
         lblMaterialsTitle.TabIndex = 0;
         lblMaterialsTitle.Text = "Tài liệu áp dụng";
         // 
         // cardGoals
         // 
         cardGoals.BackColor = System.Drawing.Color.White;
+        cardGoals.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardGoals.BorderWidth = 1;
         cardGoals.Controls.Add(lblGoalPassVal);
         cardGoals.Controls.Add(lblGoalPassKey);
         cardGoals.Controls.Add(lblGoalOutputVal);
@@ -314,20 +300,21 @@ partial class CourseDetailDialog
         cardGoals.Controls.Add(lblGoalInputVal);
         cardGoals.Controls.Add(lblGoalInputKey);
         cardGoals.Controls.Add(lblGoalsTitle);
-        cardGoals.Location = new System.Drawing.Point(0, 0);
+        cardGoals.CornerRadius = 6;
+        cardGoals.Location = new System.Drawing.Point(3, 3);
         cardGoals.Name = "cardGoals";
         cardGoals.Padding = new System.Windows.Forms.Padding(20);
-        cardGoals.Size = new System.Drawing.Size(572, 210);
+        cardGoals.Size = new System.Drawing.Size(572, 166);
         cardGoals.TabIndex = 0;
         // 
         // lblGoalPassVal
         // 
         lblGoalPassVal.AutoSize = true;
         lblGoalPassVal.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGoalPassVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblGoalPassVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblGoalPassVal.Location = new System.Drawing.Point(140, 125);
         lblGoalPassVal.Name = "lblGoalPassVal";
-        lblGoalPassVal.Size = new System.Drawing.Size(262, 15);
+        lblGoalPassVal.Size = new System.Drawing.Size(308, 20);
         lblGoalPassVal.TabIndex = 6;
         lblGoalPassVal.Text = "Điểm trung bình ≥ 6,5/10 · Chuyên cần ≥ 80%";
         // 
@@ -335,10 +322,10 @@ partial class CourseDetailDialog
         // 
         lblGoalPassKey.AutoSize = true;
         lblGoalPassKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGoalPassKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblGoalPassKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblGoalPassKey.Location = new System.Drawing.Point(20, 125);
         lblGoalPassKey.Name = "lblGoalPassKey";
-        lblGoalPassKey.Size = new System.Drawing.Size(65, 15);
+        lblGoalPassKey.Size = new System.Drawing.Size(76, 20);
         lblGoalPassKey.TabIndex = 5;
         lblGoalPassKey.Text = "Chuẩn đạt";
         // 
@@ -346,10 +333,10 @@ partial class CourseDetailDialog
         // 
         lblGoalOutputVal.AutoSize = true;
         lblGoalOutputVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblGoalOutputVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblGoalOutputVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblGoalOutputVal.Location = new System.Drawing.Point(140, 90);
         lblGoalOutputVal.Name = "lblGoalOutputVal";
-        lblGoalOutputVal.Size = new System.Drawing.Size(161, 15);
+        lblGoalOutputVal.Size = new System.Drawing.Size(171, 20);
         lblGoalOutputVal.TabIndex = 4;
         lblGoalOutputVal.Text = "Nền tảng IELTS 4.0–4.5";
         // 
@@ -357,10 +344,10 @@ partial class CourseDetailDialog
         // 
         lblGoalOutputKey.AutoSize = true;
         lblGoalOutputKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGoalOutputKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblGoalOutputKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblGoalOutputKey.Location = new System.Drawing.Point(20, 90);
         lblGoalOutputKey.Name = "lblGoalOutputKey";
-        lblGoalOutputKey.Size = new System.Drawing.Size(95, 15);
+        lblGoalOutputKey.Size = new System.Drawing.Size(112, 20);
         lblGoalOutputKey.TabIndex = 3;
         lblGoalOutputKey.Text = "Mục tiêu đầu ra";
         // 
@@ -368,10 +355,10 @@ partial class CourseDetailDialog
         // 
         lblGoalInputVal.AutoSize = true;
         lblGoalInputVal.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGoalInputVal.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblGoalInputVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblGoalInputVal.Location = new System.Drawing.Point(140, 55);
         lblGoalInputVal.Name = "lblGoalInputVal";
-        lblGoalInputVal.Size = new System.Drawing.Size(107, 15);
+        lblGoalInputVal.Size = new System.Drawing.Size(124, 20);
         lblGoalInputVal.TabIndex = 2;
         lblGoalInputVal.Text = "Cơ bản · 0–4,5/10";
         // 
@@ -379,10 +366,10 @@ partial class CourseDetailDialog
         // 
         lblGoalInputKey.AutoSize = true;
         lblGoalInputKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGoalInputKey.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblGoalInputKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblGoalInputKey.Location = new System.Drawing.Point(20, 55);
         lblGoalInputKey.Name = "lblGoalInputKey";
-        lblGoalInputKey.Size = new System.Drawing.Size(103, 15);
+        lblGoalInputKey.Size = new System.Drawing.Size(120, 20);
         lblGoalInputKey.TabIndex = 1;
         lblGoalInputKey.Text = "Trình độ đầu vào";
         // 
@@ -390,50 +377,104 @@ partial class CourseDetailDialog
         // 
         lblGoalsTitle.AutoSize = true;
         lblGoalsTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblGoalsTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblGoalsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblGoalsTitle.Location = new System.Drawing.Point(20, 16);
         lblGoalsTitle.Name = "lblGoalsTitle";
-        lblGoalsTitle.Size = new System.Drawing.Size(155, 21);
+        lblGoalsTitle.Size = new System.Drawing.Size(175, 28);
         lblGoalsTitle.TabIndex = 0;
         lblGoalsTitle.Text = "Mục tiêu đào tạo";
         // 
         // cardClassList
         // 
-        cardClassList.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cardClassList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardClassList.BackColor = System.Drawing.Color.White;
+        cardClassList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardClassList.BorderWidth = 1;
         cardClassList.Controls.Add(dgvClasses);
         cardClassList.Controls.Add(lblClassListTitle);
+        cardClassList.CornerRadius = 6;
         cardClassList.Location = new System.Drawing.Point(24, 130);
         cardClassList.Name = "cardClassList";
         cardClassList.Padding = new System.Windows.Forms.Padding(20);
-        cardClassList.Size = new System.Drawing.Size(1172, 235);
+        cardClassList.Size = new System.Drawing.Size(1172, 296);
         cardClassList.TabIndex = 4;
         // 
         // dgvClasses
         // 
-        dgvClasses.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        dgvClasses.AllowUserToAddRows = false;
+        dgvClasses.AllowUserToDeleteRows = false;
+        dgvClasses.AllowUserToResizeColumns = false;
+        dgvClasses.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvClasses.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvClasses.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        dgvClasses.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvClasses.BackgroundColor = System.Drawing.Color.White;
+        dgvClasses.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvClasses.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvClasses.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvClasses.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvClasses.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvClasses.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvClasses.EnableHeadersVisualStyles = false;
+        dgvClasses.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvClasses.Location = new System.Drawing.Point(20, 50);
+        dgvClasses.MultiSelect = false;
         dgvClasses.Name = "dgvClasses";
-        dgvClasses.Size = new System.Drawing.Size(1132, 165);
+        dgvClasses.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvClasses.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvClasses.RowHeadersVisible = false;
+        dgvClasses.RowHeadersWidth = 51;
+        dgvClasses.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvClasses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvClasses.Size = new System.Drawing.Size(1132, 226);
         dgvClasses.TabIndex = 1;
         // 
         // lblClassListTitle
         // 
         lblClassListTitle.AutoSize = true;
         lblClassListTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblClassListTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblClassListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblClassListTitle.Location = new System.Drawing.Point(20, 16);
         lblClassListTitle.Name = "lblClassListTitle";
-        lblClassListTitle.Size = new System.Drawing.Size(225, 21);
+        lblClassListTitle.Size = new System.Drawing.Size(272, 28);
         lblClassListTitle.TabIndex = 0;
         lblClassListTitle.Text = "Các lớp thuộc chương trình";
         // 
         // cardStatClasses
         // 
         cardStatClasses.BackColor = System.Drawing.Color.White;
+        cardStatClasses.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatClasses.BorderWidth = 1;
         cardStatClasses.Controls.Add(lblStatClassesValue);
         cardStatClasses.Controls.Add(lblStatClassesTitle);
+        cardStatClasses.CornerRadius = 6;
         cardStatClasses.Location = new System.Drawing.Point(909, 24);
         cardStatClasses.Name = "cardStatClasses";
         cardStatClasses.Padding = new System.Windows.Forms.Padding(16);
@@ -444,10 +485,10 @@ partial class CourseDetailDialog
         // 
         lblStatClassesValue.AutoSize = true;
         lblStatClassesValue.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatClassesValue.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatClassesValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatClassesValue.Location = new System.Drawing.Point(16, 38);
         lblStatClassesValue.Name = "lblStatClassesValue";
-        lblStatClassesValue.Size = new System.Drawing.Size(76, 32);
+        lblStatClassesValue.Size = new System.Drawing.Size(90, 41);
         lblStatClassesValue.TabIndex = 1;
         lblStatClassesValue.Text = "3 lớp";
         // 
@@ -455,18 +496,21 @@ partial class CourseDetailDialog
         // 
         lblStatClassesTitle.AutoSize = true;
         lblStatClassesTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatClassesTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatClassesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatClassesTitle.Location = new System.Drawing.Point(16, 16);
         lblStatClassesTitle.Name = "lblStatClassesTitle";
-        lblStatClassesTitle.Size = new System.Drawing.Size(77, 15);
+        lblStatClassesTitle.Size = new System.Drawing.Size(99, 20);
         lblStatClassesTitle.TabIndex = 0;
         lblStatClassesTitle.Text = "Lớp liên quan";
         // 
         // cardStatTuition
         // 
         cardStatTuition.BackColor = System.Drawing.Color.White;
+        cardStatTuition.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatTuition.BorderWidth = 1;
         cardStatTuition.Controls.Add(lblStatTuitionValue);
         cardStatTuition.Controls.Add(lblStatTuitionTitle);
+        cardStatTuition.CornerRadius = 6;
         cardStatTuition.Location = new System.Drawing.Point(614, 24);
         cardStatTuition.Name = "cardStatTuition";
         cardStatTuition.Padding = new System.Windows.Forms.Padding(16);
@@ -477,10 +521,10 @@ partial class CourseDetailDialog
         // 
         lblStatTuitionValue.AutoSize = true;
         lblStatTuitionValue.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatTuitionValue.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatTuitionValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatTuitionValue.Location = new System.Drawing.Point(16, 38);
         lblStatTuitionValue.Name = "lblStatTuitionValue";
-        lblStatTuitionValue.Size = new System.Drawing.Size(155, 32);
+        lblStatTuitionValue.Size = new System.Drawing.Size(172, 41);
         lblStatTuitionValue.TabIndex = 1;
         lblStatTuitionValue.Text = "6.000.000đ";
         // 
@@ -488,18 +532,21 @@ partial class CourseDetailDialog
         // 
         lblStatTuitionTitle.AutoSize = true;
         lblStatTuitionTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatTuitionTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatTuitionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatTuitionTitle.Location = new System.Drawing.Point(16, 16);
         lblStatTuitionTitle.Name = "lblStatTuitionTitle";
-        lblStatTuitionTitle.Size = new System.Drawing.Size(72, 15);
+        lblStatTuitionTitle.Size = new System.Drawing.Size(90, 20);
         lblStatTuitionTitle.TabIndex = 0;
         lblStatTuitionTitle.Text = "Học phí gốc";
         // 
         // cardStatHours
         // 
         cardStatHours.BackColor = System.Drawing.Color.White;
+        cardStatHours.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatHours.BorderWidth = 1;
         cardStatHours.Controls.Add(lblStatHoursValue);
         cardStatHours.Controls.Add(lblStatHoursTitle);
+        cardStatHours.CornerRadius = 6;
         cardStatHours.Location = new System.Drawing.Point(319, 24);
         cardStatHours.Name = "cardStatHours";
         cardStatHours.Padding = new System.Windows.Forms.Padding(16);
@@ -510,10 +557,10 @@ partial class CourseDetailDialog
         // 
         lblStatHoursValue.AutoSize = true;
         lblStatHoursValue.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatHoursValue.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatHoursValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatHoursValue.Location = new System.Drawing.Point(16, 38);
         lblStatHoursValue.Name = "lblStatHoursValue";
-        lblStatHoursValue.Size = new System.Drawing.Size(81, 32);
+        lblStatHoursValue.Size = new System.Drawing.Size(107, 41);
         lblStatHoursValue.TabIndex = 1;
         lblStatHoursValue.Text = "48 giờ";
         // 
@@ -521,18 +568,21 @@ partial class CourseDetailDialog
         // 
         lblStatHoursTitle.AutoSize = true;
         lblStatHoursTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatHoursTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatHoursTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatHoursTitle.Location = new System.Drawing.Point(16, 16);
         lblStatHoursTitle.Name = "lblStatHoursTitle";
-        lblStatHoursTitle.Size = new System.Drawing.Size(74, 15);
+        lblStatHoursTitle.Size = new System.Drawing.Size(97, 20);
         lblStatHoursTitle.TabIndex = 0;
         lblStatHoursTitle.Text = "Tổng giờ học";
         // 
         // cardStatSessions
         // 
         cardStatSessions.BackColor = System.Drawing.Color.White;
+        cardStatSessions.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardStatSessions.BorderWidth = 1;
         cardStatSessions.Controls.Add(lblStatSessionsValue);
         cardStatSessions.Controls.Add(lblStatSessionsTitle);
+        cardStatSessions.CornerRadius = 6;
         cardStatSessions.Location = new System.Drawing.Point(24, 24);
         cardStatSessions.Name = "cardStatSessions";
         cardStatSessions.Padding = new System.Windows.Forms.Padding(16);
@@ -543,10 +593,10 @@ partial class CourseDetailDialog
         // 
         lblStatSessionsValue.AutoSize = true;
         lblStatSessionsValue.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatSessionsValue.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblStatSessionsValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatSessionsValue.Location = new System.Drawing.Point(16, 38);
         lblStatSessionsValue.Name = "lblStatSessionsValue";
-        lblStatSessionsValue.Size = new System.Drawing.Size(100, 32);
+        lblStatSessionsValue.Size = new System.Drawing.Size(124, 41);
         lblStatSessionsValue.TabIndex = 1;
         lblStatSessionsValue.Text = "24 buổi";
         // 
@@ -554,27 +604,27 @@ partial class CourseDetailDialog
         // 
         lblStatSessionsTitle.AutoSize = true;
         lblStatSessionsTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatSessionsTitle.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
+        lblStatSessionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
         lblStatSessionsTitle.Location = new System.Drawing.Point(16, 16);
         lblStatSessionsTitle.Name = "lblStatSessionsTitle";
-        lblStatSessionsTitle.Size = new System.Drawing.Size(64, 15);
+        lblStatSessionsTitle.Size = new System.Drawing.Size(81, 20);
         lblStatSessionsTitle.TabIndex = 0;
         lblStatSessionsTitle.Text = "Thời lượng";
         // 
         // CourseDetailDialog
         // 
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         ClientSize = new System.Drawing.Size(1220, 760);
         Controls.Add(pnlBody);
         Controls.Add(pnlTabs);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "CourseDetailDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Chi tiết khóa học · IELTS Foundation";
         pnlHeader.ResumeLayout(false);
@@ -600,12 +650,12 @@ partial class CourseDetailDialog
         ResumeLayout(false);
     }
 
+    private System.Windows.Forms.Label lblMaterialFile;
+
     #endregion
 
     private System.Windows.Forms.Panel pnlHeader;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblBreadcrumb;
     private ECMS.UI.Controls.AppButton btnEditCourse;
     private ECMS.UI.Controls.AppButton btnCreateClass;
     private System.Windows.Forms.Panel pnlTabs;
@@ -640,7 +690,5 @@ partial class CourseDetailDialog
     private System.Windows.Forms.Label lblGoalPassVal;
     private ECMS.UI.Controls.AppCard cardMaterials;
     private System.Windows.Forms.Label lblMaterialsTitle;
-    private System.Windows.Forms.Label lblMaterialFile;
-    private System.Windows.Forms.Label lblMaterialDesc;
     private ECMS.UI.Controls.AppButton btnOpenMaterials;
 }

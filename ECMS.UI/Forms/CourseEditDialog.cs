@@ -45,7 +45,6 @@ public partial class CourseEditDialog : Form
         {
             Text = "Thông tin khóa học · Đang sửa";
             lblTitle.Text = "Thông tin khóa học";
-            lblSubtitle.Text = $"Đang sửa {_courseCode} · Biểu mẫu cập nhật chương trình";
             
             // Populate sample data for edit
             txtCourseCode.Text = _courseCode ?? "CT-IELTS-F";
@@ -57,13 +56,11 @@ public partial class CourseEditDialog : Form
             txtTuitionFee.Text = "6.000.000đ";
             cboStatus.SelectedIndex = 0;
             txtDescription.Text = "Ngữ pháp cơ bản, từ vựng chủ đề, bốn kỹ năng nghe – nói – đọc – viết.";
-            bannerSuccess.Visible = true;
         }
         else
         {
             Text = "Thêm khóa học mới";
             lblTitle.Text = "Thêm khóa học";
-            lblSubtitle.Text = "Tạo mới chương trình đào tạo · Quy định nội dung, học phí và chuẩn đầu ra";
             
             txtCourseCode.Text = "CT-";
             txtCourseName.Text = "";
@@ -72,7 +69,6 @@ public partial class CourseEditDialog : Form
             txtSessionDuration.Text = "120 phút";
             txtTuitionFee.Text = "";
             txtDescription.Text = "";
-            bannerSuccess.Visible = false;
         }
     }
 
@@ -100,8 +96,6 @@ public partial class CourseEditDialog : Form
                 return;
             }
 
-            bannerSuccess.Visible = true;
-            bannerSuccess.Message = "✓  Đã lưu thông tin khóa học thành công vào cơ sở dữ liệu SQLite cục bộ.";
             MessageBox.Show("Đã lưu chương trình đào tạo thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;
             Close();
