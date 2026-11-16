@@ -110,6 +110,7 @@ public partial class ReceiptPrintPreviewDialog : Form
             MessageBoxButtons.OK,
             MessageBoxIcon.Information
         );
+        DialogResult = DialogResult.OK;
         Close();
     }
 }

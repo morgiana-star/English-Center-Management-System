@@ -158,6 +158,30 @@ public class EnrollmentService : IEnrollmentService
             finalAmount);
     }
 
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode, string InvoiceCode, string ReceiptCode)> EnrollStudentWithTuitionAsync(
+        StudentEnrollmentWithTuitionDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.FullName))
+            return (false, "Họ và tên học viên không được để trống.", 0, "", "", "");
+
+        if (string.IsNullOrWhiteSpace(dto.Phone))
+            return (false, "Số điện thoại học viên không được để trống.", 0, "", "", "");
+
+        var result = await _enrollmentRepo.ExecuteEnrollmentAndTuitionTransactionAsync(dto);
+        if (result.Success)
+        {
+            await _auditLogRepo.LogAsync(
+                dto.CashierId,
+                "ENROLL_AND_PAYMENT",
+                "Enrollments",
+                result.StudentId.ToString(),
+                null,
+                $"Đăng ký & Thu phí học viên '{dto.FullName}' ({result.StudentCode}) vào lớp {dto.ClassCode}. Thực thu: {dto.AmountPaidNow:N0}đ | Nợ: {dto.RemainingDebt:N0}đ | Phiếu thu: {result.ReceiptCode}");
+        }
+
+        return result;
+    }
+
     public async Task<IEnumerable<EnrollmentListItemDto>> GetRecentEnrollmentsAsync(int limit = 50)
     {
         return await _enrollmentRepo.GetRecentEnrollmentsAsync(limit);

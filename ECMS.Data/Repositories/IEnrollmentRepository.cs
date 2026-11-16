@@ -19,5 +19,7 @@ public interface IEnrollmentRepository
         StudentEnrollmentDto dto,
         string studentCode,
         string invoiceCode);
+    Task<(bool Success, string Message, int StudentId, string StudentCode, string InvoiceCode, string ReceiptCode)> ExecuteEnrollmentAndTuitionTransactionAsync(
+        StudentEnrollmentWithTuitionDto dto);
     Task<IEnumerable<EnrollmentListItemDto>> GetRecentEnrollmentsAsync(int limit = 50);
 }

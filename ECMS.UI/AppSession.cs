@@ -4,6 +4,7 @@ namespace ECMS.UI;
 
 public static class AppSession
 {
+    public static int UserId { get; set; } = 1;
     public static string Username { get; set; } = "admin";
     public static string FullName { get; set; } = "Trần Minh Quân";
     public static string RoleCode { get; set; } = "ROLE_ADMIN";

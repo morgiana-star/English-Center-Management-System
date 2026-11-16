@@ -32,8 +32,7 @@ partial class CollectTuitionDialog
         rbVietQR = new System.Windows.Forms.RadioButton();
         lblMethodTitle = new System.Windows.Forms.Label();
         lblAmountWords = new System.Windows.Forms.Label();
-        btnPayHalf = new ECMS.UI.Controls.AppButton();
-        btnPayFull = new ECMS.UI.Controls.AppButton();
+        cboInstallmentPlan = new System.Windows.Forms.ComboBox();
         txtAmount = new System.Windows.Forms.TextBox();
         lblAmountTitle = new System.Windows.Forms.Label();
         lblCollector = new System.Windows.Forms.Label();
@@ -133,8 +132,7 @@ partial class CollectTuitionDialog
         cardPaymentDetails.Controls.Add(pnlMethod);
         cardPaymentDetails.Controls.Add(lblMethodTitle);
         cardPaymentDetails.Controls.Add(lblAmountWords);
-        cardPaymentDetails.Controls.Add(btnPayHalf);
-        cardPaymentDetails.Controls.Add(btnPayFull);
+        cardPaymentDetails.Controls.Add(cboInstallmentPlan);
         cardPaymentDetails.Controls.Add(txtAmount);
         cardPaymentDetails.Controls.Add(lblAmountTitle);
         cardPaymentDetails.Controls.Add(lblCollector);
@@ -261,39 +259,15 @@ partial class CollectTuitionDialog
         lblAmountWords.TabIndex = 10;
         lblAmountWords.Text = "Bằng chữ: Ba triệu bốn trăm nghìn đồng chẵn";
         // 
-        // btnPayHalf
+        // cboInstallmentPlan
         // 
-        btnPayHalf.BackColor = System.Drawing.Color.White;
-        btnPayHalf.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnPayHalf.CornerRadius = 4;
-        btnPayHalf.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnPayHalf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnPayHalf.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnPayHalf.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        btnPayHalf.Location = new System.Drawing.Point(620, 116);
-        btnPayHalf.Name = "btnPayHalf";
-        btnPayHalf.Size = new System.Drawing.Size(175, 36);
-        btnPayHalf.TabIndex = 9;
-        btnPayHalf.Text = "½ Đóng 50% (1.700.000đ)";
-        btnPayHalf.UseVisualStyleBackColor = false;
-        btnPayHalf.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // btnPayFull
-        // 
-        btnPayFull.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
-        btnPayFull.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnPayFull.CornerRadius = 4;
-        btnPayFull.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnPayFull.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnPayFull.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        btnPayFull.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        btnPayFull.Location = new System.Drawing.Point(420, 116);
-        btnPayFull.Name = "btnPayFull";
-        btnPayFull.Size = new System.Drawing.Size(190, 36);
-        btnPayFull.TabIndex = 8;
-        btnPayFull.Text = "💯 Đóng hết (3.400.000đ)";
-        btnPayFull.UseVisualStyleBackColor = false;
-        btnPayFull.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        cboInstallmentPlan.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboInstallmentPlan.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboInstallmentPlan.FormattingEnabled = true;
+        cboInstallmentPlan.Location = new System.Drawing.Point(420, 116);
+        cboInstallmentPlan.Name = "cboInstallmentPlan";
+        cboInstallmentPlan.Size = new System.Drawing.Size(375, 34);
+        cboInstallmentPlan.TabIndex = 8;
         // 
         // txtAmount
         // 
@@ -701,8 +675,7 @@ partial class CollectTuitionDialog
     private System.Windows.Forms.Label lblCollector;
     private System.Windows.Forms.Label lblAmountTitle;
     private System.Windows.Forms.TextBox txtAmount;
-    private ECMS.UI.Controls.AppButton btnPayFull;
-    private ECMS.UI.Controls.AppButton btnPayHalf;
+    private System.Windows.Forms.ComboBox cboInstallmentPlan;
     private System.Windows.Forms.Label lblAmountWords;
     private System.Windows.Forms.Label lblMethodTitle;
     private System.Windows.Forms.Panel pnlMethod;

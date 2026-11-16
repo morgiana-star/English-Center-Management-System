@@ -265,6 +265,134 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
         }
     }
 
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode, string InvoiceCode, string ReceiptCode)> ExecuteEnrollmentAndTuitionTransactionAsync(
+        StudentEnrollmentWithTuitionDto dto)
+    {
+        using var conn = CreateConnection();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            // 1. Tự sinh các mã nghiệp vụ chuẩn
+            string studentCode = !string.IsNullOrWhiteSpace(dto.StudentCode) ? dto.StudentCode : await GenerateNextStudentCodeAsync();
+            string invoiceCode = await GenerateNextInvoiceCodeAsync();
+            string receiptCode = !string.IsNullOrWhiteSpace(dto.ReceiptCode) ? dto.ReceiptCode : $"PT-{DateTime.Now:yyMMdd}-{new Random().Next(100, 999)}";
+
+            // 2. Insert bảng Students
+            const string insertStudentSql = @"
+                INSERT INTO Students (StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt)
+                VALUES (@StudentCode, @FullName, @DobStr, @Gender, @Phone, @Email, @Address, 'Active', CURRENT_TIMESTAMP);
+                SELECT last_insert_rowid();";
+
+            int studentId = await conn.ExecuteScalarAsync<int>(insertStudentSql, new
+            {
+                StudentCode = studentCode,
+                dto.FullName,
+                DobStr = dto.DateOfBirth.ToString("yyyy-MM-dd"),
+                dto.Gender,
+                dto.Phone,
+                dto.Email,
+                dto.Address
+            }, tran);
+
+            // 3. Insert bảng Parents & StudentParents (nếu có thông tin)
+            if (!string.IsNullOrWhiteSpace(dto.ParentFullName))
+            {
+                const string insertParentSql = @"
+                    INSERT INTO Parents (ParentCode, FullName, Phone, Email, CreatedAt)
+                    VALUES (@ParentCode, @ParentFullName, @ParentPhone, '', CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();";
+
+                int parentId = await conn.ExecuteScalarAsync<int>(insertParentSql, new
+                {
+                    ParentCode = $"PH-{DateTime.Now.Year}-{new Random().Next(1000, 9999)}",
+                    dto.ParentFullName,
+                    dto.ParentPhone
+                }, tran);
+
+                const string insertStudentParentSql = @"
+                    INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
+                    VALUES (@StudentId, @ParentId, @ParentRelationship, 1);";
+
+                await conn.ExecuteAsync(insertStudentParentSql, new
+                {
+                    StudentId = studentId,
+                    ParentId = parentId,
+                    dto.ParentRelationship
+                }, tran);
+            }
+
+            // 4. Xác định ClassId
+            int classId = dto.ClassId;
+            if (classId <= 0 && !string.IsNullOrWhiteSpace(dto.ClassCode))
+            {
+                int? foundClassId = await conn.ExecuteScalarAsync<int?>(
+                    "SELECT ClassId FROM Classes WHERE ClassCode = @ClassCode LIMIT 1;",
+                    new { dto.ClassCode }, tran);
+                classId = foundClassId ?? 1;
+            }
+            if (classId <= 0) classId = 1;
+
+            // 5. Insert bảng Enrollments
+            const string insertEnrollmentSql = @"
+                INSERT INTO Enrollments (StudentId, ClassId, EnrollDate, Status, AttendanceRate, CreatedAt)
+                VALUES (@StudentId, @ClassId, CURRENT_TIMESTAMP, 'Active', 100.0, CURRENT_TIMESTAMP);
+                SELECT last_insert_rowid();";
+
+            int enrollmentId = await conn.ExecuteScalarAsync<int>(insertEnrollmentSql, new
+            {
+                StudentId = studentId,
+                ClassId = classId
+            }, tran);
+
+            // 6. Insert bảng Invoices
+            string dueDate = dto.RemainingDebt <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
+            string invoiceStatus = dto.RemainingDebt <= 0 ? "Paid" : "PartiallyPaid";
+
+            const string insertInvoiceSql = @"
+                INSERT INTO Invoices (InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status, CreatedAt)
+                VALUES (@InvoiceCode, @EnrollmentId, @OriginalAmount, 0, @FinalAmount, @BalanceDue, @DueDate, @Status, CURRENT_TIMESTAMP);
+                SELECT last_insert_rowid();";
+
+            int invoiceId = await conn.ExecuteScalarAsync<int>(insertInvoiceSql, new
+            {
+                InvoiceCode = invoiceCode,
+                EnrollmentId = enrollmentId,
+                OriginalAmount = dto.TotalTuitionFee,
+                FinalAmount = dto.TotalTuitionFee,
+                BalanceDue = dto.RemainingDebt,
+                DueDate = dueDate,
+                Status = invoiceStatus
+            }, tran);
+
+            // 7. Insert bảng Payments (Phiếu thu đợt 1)
+            if (dto.AmountPaidNow > 0)
+            {
+                const string insertPaymentSql = @"
+                    INSERT INTO Payments (PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note, CreatedAt)
+                    VALUES (@PaymentCode, @InvoiceId, @PaidAmount, CURRENT_TIMESTAMP, @PaymentMethod, @CashierId, 'Completed', @Note, CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();";
+
+                await conn.ExecuteAsync(insertPaymentSql, new
+                {
+                    PaymentCode = receiptCode,
+                    InvoiceId = invoiceId,
+                    PaidAmount = dto.AmountPaidNow,
+                    PaymentMethod = dto.PaymentMethod,
+                    dto.CashierId,
+                    Note = !string.IsNullOrWhiteSpace(dto.PaymentNote) ? dto.PaymentNote : $"Thu học phí đợt 1 - {dto.FullName} ({studentCode})"
+                }, tran);
+            }
+
+            tran.Commit();
+            return (true, "Ghi danh & Lập phiếu thu thành công!", studentId, studentCode, invoiceCode, receiptCode);
+        }
+        catch (Exception ex)
+        {
+            tran.Rollback();
+            return (false, "Lỗi giao dịch ghi danh & thu phí: " + ex.Message, 0, string.Empty, string.Empty, string.Empty);
+        }
+    }
+
     public async Task<IEnumerable<EnrollmentListItemDto>> GetRecentEnrollmentsAsync(int limit = 50)
     {
         using var conn = CreateConnection();

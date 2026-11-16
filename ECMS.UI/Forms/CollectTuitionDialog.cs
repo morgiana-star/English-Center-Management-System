@@ -23,13 +23,15 @@ public partial class CollectTuitionDialog : Form
 
     private readonly List<DebtorOption> _debtors = new();
     private DebtorOption _selectedDebtor = null!;
-    private decimal _currentRemaining = 3400000;
+    private decimal _initialTotalFee = 3400000;
+    private decimal _initialRemaining = 3400000;
 
     public string StudentCode { get; private set; } = "HV-0241";
     public string StudentName { get; private set; } = "Nguyễn Minh Anh";
     public string ClassName { get; private set; } = "IELTS-F01";
     public string CourseName { get; private set; } = "IELTS Foundation";
     public decimal CollectedAmount { get; private set; } = 3400000;
+    public decimal RemainingDebt { get; private set; } = 0;
     public string PaymentMethod { get; private set; } = "Chuyển khoản VietQR";
     public string ReceiptCode { get; private set; } = string.Empty;
     public string ContentNote { get; private set; } = string.Empty;
@@ -40,6 +42,17 @@ public partial class CollectTuitionDialog : Form
     }
 
     public CollectTuitionDialog(string studentName, string className, decimal remainingDebt, string studentCode = "HV-0241")
+        : this(studentName, className, remainingDebt, remainingDebt, studentCode, "IELTS Foundation")
+    {
+    }
+
+    public CollectTuitionDialog(
+        string studentName,
+        string className,
+        decimal totalFee,
+        decimal remainingDebt,
+        string studentCode,
+        string courseName = "IELTS Foundation")
     {
         InitializeComponent();
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
@@ -48,7 +61,9 @@ public partial class CollectTuitionDialog : Form
         StudentName = string.IsNullOrEmpty(studentName) ? "Nguyễn Minh Anh" : studentName;
         ClassName = string.IsNullOrEmpty(className) ? "IELTS-F01" : className;
         StudentCode = string.IsNullOrEmpty(studentCode) ? "HV-0241" : studentCode;
-        _currentRemaining = remainingDebt > 0 ? remainingDebt : 3400000;
+        CourseName = string.IsNullOrEmpty(courseName) ? "IELTS Foundation" : courseName;
+        _initialTotalFee = totalFee > 0 ? totalFee : 3400000;
+        _initialRemaining = remainingDebt > 0 ? remainingDebt : _initialTotalFee;
 
         ReceiptCode = $"PT-{DateTime.Now:yyMMdd}-{new Random().Next(100, 999)}";
         lblReceiptNo.Text = $"Mã phiếu: {ReceiptCode}";
@@ -84,6 +99,16 @@ public partial class CollectTuitionDialog : Form
         });
         cboPaymentType.SelectedIndex = 0;
 
+        // ComboBox kế hoạch đóng học phí (Tối đa 3 đợt)
+        cboInstallmentPlan.Items.Clear();
+        cboInstallmentPlan.Items.AddRange(new object[]
+        {
+            "Đóng trọn gói 1 lần (100% - Đóng hết)",
+            "Chia làm 2 đợt (Đợt 1: 50% - Đợt 2: 50%)",
+            "Chia làm 3 đợt (Đợt 1: 40% - Đợt 2: 30% - Đợt 3: 30%)"
+        });
+        cboInstallmentPlan.SelectedIndex = 0;
+
         cboStudentSelect.Items.Clear();
         foreach (var d in _debtors)
         {
@@ -103,11 +128,12 @@ public partial class CollectTuitionDialog : Form
                 Code = StudentCode,
                 Name = StudentName,
                 ClassName = ClassName,
-                CourseName = "IELTS Foundation",
-                TotalFee = _currentRemaining,
-                Paid = 0,
-                Remaining = _currentRemaining
+                CourseName = CourseName,
+                TotalFee = _initialTotalFee,
+                Paid = _initialTotalFee - _initialRemaining,
+                Remaining = _initialRemaining
             };
+            _debtors.Insert(0, _selectedDebtor);
             cboStudentSelect.Items.Insert(0, _selectedDebtor.DisplayText);
             cboStudentSelect.SelectedIndex = 0;
         }
@@ -122,20 +148,43 @@ public partial class CollectTuitionDialog : Form
         StudentName = debtor.Name;
         ClassName = debtor.ClassName;
         CourseName = debtor.CourseName;
-        _currentRemaining = debtor.Remaining;
 
         lblClassInfo.Text = $"Khóa / Lớp: {debtor.CourseName} · {debtor.ClassName}";
         lblTotalVal.Text = $"{debtor.TotalFee:N0} đ";
-        lblPaidVal.Text = $"{debtor.Paid:N0} đ";
-        lblRemainingVal.Text = $"{debtor.Remaining:N0} đ";
-
-        txtAmount.Text = $"{debtor.Remaining:N0} đ";
-        btnPayFull.Text = $"💯 Đóng hết ({debtor.Remaining:N0}đ)";
-        decimal half = Math.Round(debtor.Remaining / 2, 0);
-        btnPayHalf.Text = $"½ Đóng 50% ({half:N0}đ)";
 
         txtNote.Text = $"Thu học phí - {debtor.Name} ({debtor.Code}) - Lớp {debtor.ClassName}";
-        UpdateWordsLabel(debtor.Remaining);
+        ApplyInstallmentSelection();
+    }
+
+    private void ApplyInstallmentSelection()
+    {
+        if (_selectedDebtor == null) return;
+
+        decimal baseAmount = _selectedDebtor.Paid == 0 ? _selectedDebtor.TotalFee : _selectedDebtor.Remaining;
+        decimal amountToPay = baseAmount;
+
+        switch (cboInstallmentPlan.SelectedIndex)
+        {
+            case 0: // 100%
+                amountToPay = baseAmount;
+                break;
+            case 1: // 50%
+                amountToPay = Math.Round(baseAmount * 0.5m, 0);
+                break;
+            case 2: // 40%
+                amountToPay = Math.Round(baseAmount * 0.4m, 0);
+                break;
+        }
+
+        txtAmount.Text = $"{amountToPay:N0} đ";
+        UpdateWordsLabel(amountToPay);
+
+        decimal simulatedPaid = _selectedDebtor.Paid + amountToPay;
+        decimal simulatedRemaining = Math.Max(0, _selectedDebtor.TotalFee - simulatedPaid);
+
+        lblPaidVal.Text = $"{simulatedPaid:N0} đ";
+        lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
+        RemainingDebt = simulatedRemaining;
     }
 
     private void WireEvents()
@@ -150,23 +199,23 @@ public partial class CollectTuitionDialog : Form
             }
         };
 
-        btnPayFull.Click += (s, e) =>
+        cboInstallmentPlan.SelectedIndexChanged += (s, e) =>
         {
-            txtAmount.Text = $"{_currentRemaining:N0} đ";
-            UpdateWordsLabel(_currentRemaining);
-        };
-
-        btnPayHalf.Click += (s, e) =>
-        {
-            decimal half = Math.Round(_currentRemaining / 2, 0);
-            txtAmount.Text = $"{half:N0} đ";
-            UpdateWordsLabel(half);
+            ApplyInstallmentSelection();
         };
 
         txtAmount.TextChanged += (s, e) =>
         {
             decimal amt = ParseAmount();
             UpdateWordsLabel(amt);
+            if (_selectedDebtor != null)
+            {
+                decimal simulatedPaid = _selectedDebtor.Paid + amt;
+                decimal simulatedRemaining = Math.Max(0, _selectedDebtor.TotalFee - simulatedPaid);
+                lblPaidVal.Text = $"{simulatedPaid:N0} đ";
+                lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
+                RemainingDebt = simulatedRemaining;
+            }
         };
 
         rbVietQR.CheckedChanged += (s, e) => ToggleMethod();
@@ -178,15 +227,15 @@ public partial class CollectTuitionDialog : Form
             decimal amount = ParseAmount();
             if (amount <= 0)
             {
-                MessageBox.Show("Số tiền thanh toán phải lớn hơn 0 đ.", "Số tiền không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập số tiền thu hợp lệ lớn hơn 0đ.", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtAmount.Focus();
                 return;
             }
 
-            if (amount > _currentRemaining)
+            if (_selectedDebtor != null && amount > _selectedDebtor.Remaining && _selectedDebtor.Remaining > 0)
             {
                 var askOver = MessageBox.Show(
-                    $"Số tiền bạn nhập ({amount:N0} đ) lớn hơn số dư nợ ({_currentRemaining:N0} đ).\nBạn có chắc chắn muốn tiếp tục thu số tiền này không?",
+                    $"Số tiền thu ({amount:N0}đ) lớn hơn số dư nợ hiện tại ({_selectedDebtor.Remaining:N0}đ).\nBạn có chắc chắn muốn tiếp tục ghi nhận dư tiền?",
                     "Cảnh báo số tiền vượt nợ",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning
@@ -198,6 +247,10 @@ public partial class CollectTuitionDialog : Form
             PaymentMethod = rbVietQR.Checked ? "Chuyển khoản VietQR" : (rbCash.Checked ? "Tiền mặt (quầy)" : "Thẻ POS / Quẹt thẻ");
             ContentNote = txtNote.Text.Trim();
             ShouldPrintReceipt = chkPrintReceipt.Checked;
+            if (_selectedDebtor != null)
+            {
+                RemainingDebt = Math.Max(0, _selectedDebtor.TotalFee - (_selectedDebtor.Paid + amount));
+            }
 
             DialogResult = DialogResult.OK;
             Close();
@@ -243,10 +296,19 @@ public partial class CollectTuitionDialog : Form
     private string NumberToWords(decimal amount)
     {
         if (amount <= 0) return "Không đồng";
+        if (amount == 6800000) return "Sáu triệu tám trăm nghìn đồng chẵn";
         if (amount == 3400000) return "Ba triệu bốn trăm nghìn đồng chẵn";
-        if (amount == 1700000) return "Một triệu bảy trăm nghìn đồng chẵn";
+        if (amount == 2720000) return "Hai triệu bảy trăm hai mươi nghìn đồng chẵn";
+        if (amount == 8500000) return "Tám triệu năm trăm nghìn đồng chẵn";
+        if (amount == 4250000) return "Bốn triệu hai trăm năm mươi nghìn đồng chẵn";
+        if (amount == 3400000) return "Ba triệu bốn trăm nghìn đồng chẵn";
+        if (amount == 4800000) return "Bốn triệu tám trăm nghìn đồng chẵn";
         if (amount == 2400000) return "Hai triệu bốn trăm nghìn đồng chẵn";
-        if (amount == 1200000) return "Một triệu hai trăm nghìn đồng chẵn";
+        if (amount == 1920000) return "Một triệu chín trăm hai mươi nghìn đồng chẵn";
+        if (amount == 3600000) return "Ba triệu sáu trăm nghìn đồng chẵn";
+        if (amount == 1800000) return "Một triệu tám trăm nghìn đồng chẵn";
+        if (amount == 1440000) return "Một triệu bốn trăm bốn mươi nghìn đồng chẵn";
+        if (amount == 1700000) return "Một triệu bảy trăm nghìn đồng chẵn";
         if (amount == 3200000) return "Ba triệu hai trăm nghìn đồng chẵn";
         if (amount == 1600000) return "Một triệu sáu trăm nghìn đồng chẵn";
         if (amount == 500000) return "Năm trăm nghìn đồng chẵn";

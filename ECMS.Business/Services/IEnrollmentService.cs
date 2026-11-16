@@ -13,5 +13,7 @@ public interface IEnrollmentService
     Task<(bool Success, string Message, int StudentId, string StudentCode, int EnrollmentId, string InvoiceCode, decimal FinalAmount)> EnrollStudentAsync(
         StudentEnrollmentDto dto,
         int? currentUserId = null);
+    Task<(bool Success, string Message, int StudentId, string StudentCode, string InvoiceCode, string ReceiptCode)> EnrollStudentWithTuitionAsync(
+        StudentEnrollmentWithTuitionDto dto);
     Task<IEnumerable<EnrollmentListItemDto>> GetRecentEnrollmentsAsync(int limit = 50);
 }
