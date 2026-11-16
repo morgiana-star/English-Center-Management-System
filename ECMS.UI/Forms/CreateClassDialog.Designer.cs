@@ -24,19 +24,6 @@ partial class CreateClassDialog
         pnlHeader = new System.Windows.Forms.Panel();
         lblTitle = new System.Windows.Forms.Label();
         pnlContent = new System.Windows.Forms.Panel();
-        cardTeacherAvailability = new ECMS.UI.Controls.AppCard();
-        btnViewTeacherProfile = new ECMS.UI.Controls.AppButton();
-        lblCurrentHoursVal = new System.Windows.Forms.Label();
-        lblCurrentHoursKey = new System.Windows.Forms.Label();
-        lblFreeScheduleVal = new System.Windows.Forms.Label();
-        lblFreeScheduleKey = new System.Windows.Forms.Label();
-        lblCurrentTeachingVal = new System.Windows.Forms.Label();
-        lblCurrentTeachingKey = new System.Windows.Forms.Label();
-        lblSpecialtyVal = new System.Windows.Forms.Label();
-        lblSpecialtyKey = new System.Windows.Forms.Label();
-        lblTeacherNameVal = new System.Windows.Forms.Label();
-        lblTeacherNameKey = new System.Windows.Forms.Label();
-        lblTeacherAvailTitle = new System.Windows.Forms.Label();
         cardClassInfo = new ECMS.UI.Controls.AppCard();
         btnSaveDraft = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
@@ -63,7 +50,6 @@ partial class CreateClassDialog
         lblClassInfoTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
-        cardTeacherAvailability.SuspendLayout();
         cardClassInfo.SuspendLayout();
         SuspendLayout();
         // 
@@ -75,7 +61,7 @@ partial class CreateClassDialog
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-        pnlHeader.Size = new System.Drawing.Size(1220, 75);
+        pnlHeader.Size = new System.Drawing.Size(860, 75);
         pnlHeader.TabIndex = 0;
         // 
         // lblTitle
@@ -92,177 +78,15 @@ partial class CreateClassDialog
         // pnlContent
         // 
         pnlContent.AutoScroll = true;
-        pnlContent.Controls.Add(cardTeacherAvailability);
         pnlContent.Controls.Add(cardClassInfo);
         pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlContent.Location = new System.Drawing.Point(0, 75);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new System.Windows.Forms.Padding(24);
-        pnlContent.Size = new System.Drawing.Size(1220, 685);
+        pnlContent.Size = new System.Drawing.Size(860, 605);
         pnlContent.TabIndex = 1;
         // 
-        // cardTeacherAvailability
-        // 
-        cardTeacherAvailability.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        cardTeacherAvailability.BackColor = System.Drawing.Color.White;
-        cardTeacherAvailability.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardTeacherAvailability.BorderWidth = 1;
-        cardTeacherAvailability.Controls.Add(btnViewTeacherProfile);
-        cardTeacherAvailability.Controls.Add(lblCurrentHoursVal);
-        cardTeacherAvailability.Controls.Add(lblCurrentHoursKey);
-        cardTeacherAvailability.Controls.Add(lblFreeScheduleVal);
-        cardTeacherAvailability.Controls.Add(lblFreeScheduleKey);
-        cardTeacherAvailability.Controls.Add(lblCurrentTeachingVal);
-        cardTeacherAvailability.Controls.Add(lblCurrentTeachingKey);
-        cardTeacherAvailability.Controls.Add(lblSpecialtyVal);
-        cardTeacherAvailability.Controls.Add(lblSpecialtyKey);
-        cardTeacherAvailability.Controls.Add(lblTeacherNameVal);
-        cardTeacherAvailability.Controls.Add(lblTeacherNameKey);
-        cardTeacherAvailability.Controls.Add(lblTeacherAvailTitle);
-        cardTeacherAvailability.CornerRadius = 6;
-        cardTeacherAvailability.Location = new System.Drawing.Point(850, 24);
-        cardTeacherAvailability.Name = "cardTeacherAvailability";
-        cardTeacherAvailability.Padding = new System.Windows.Forms.Padding(20);
-        cardTeacherAvailability.Size = new System.Drawing.Size(346, 530);
-        cardTeacherAvailability.TabIndex = 1;
-        // 
-        // btnViewTeacherProfile
-        // 
-        btnViewTeacherProfile.BackColor = System.Drawing.Color.White;
-        btnViewTeacherProfile.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnViewTeacherProfile.CornerRadius = 5;
-        btnViewTeacherProfile.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnViewTeacherProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnViewTeacherProfile.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnViewTeacherProfile.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnViewTeacherProfile.Location = new System.Drawing.Point(23, 465);
-        btnViewTeacherProfile.Name = "btnViewTeacherProfile";
-        btnViewTeacherProfile.Size = new System.Drawing.Size(160, 36);
-        btnViewTeacherProfile.TabIndex = 13;
-        btnViewTeacherProfile.Text = "Xem hồ sơ giáo viên";
-        btnViewTeacherProfile.UseVisualStyleBackColor = false;
-        btnViewTeacherProfile.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // lblCurrentHoursVal
-        // 
-        lblCurrentHoursVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblCurrentHoursVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblCurrentHoursVal.Location = new System.Drawing.Point(140, 222);
-        lblCurrentHoursVal.Name = "lblCurrentHoursVal";
-        lblCurrentHoursVal.Size = new System.Drawing.Size(186, 20);
-        lblCurrentHoursVal.TabIndex = 10;
-        lblCurrentHoursVal.Text = "4 giờ / tuần";
-        lblCurrentHoursVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblCurrentHoursKey
-        // 
-        lblCurrentHoursKey.AutoSize = true;
-        lblCurrentHoursKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblCurrentHoursKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblCurrentHoursKey.Location = new System.Drawing.Point(20, 224);
-        lblCurrentHoursKey.Name = "lblCurrentHoursKey";
-        lblCurrentHoursKey.Size = new System.Drawing.Size(105, 20);
-        lblCurrentHoursKey.TabIndex = 9;
-        lblCurrentHoursKey.Text = "Số tiết hiện tại";
-        // 
-        // lblFreeScheduleVal
-        // 
-        lblFreeScheduleVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblFreeScheduleVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblFreeScheduleVal.Location = new System.Drawing.Point(140, 177);
-        lblFreeScheduleVal.Name = "lblFreeScheduleVal";
-        lblFreeScheduleVal.Size = new System.Drawing.Size(186, 20);
-        lblFreeScheduleVal.TabIndex = 8;
-        lblFreeScheduleVal.Text = "T2 / T5 · 18:00–20:00";
-        lblFreeScheduleVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblFreeScheduleKey
-        // 
-        lblFreeScheduleKey.AutoSize = true;
-        lblFreeScheduleKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblFreeScheduleKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblFreeScheduleKey.Location = new System.Drawing.Point(20, 179);
-        lblFreeScheduleKey.Name = "lblFreeScheduleKey";
-        lblFreeScheduleKey.Size = new System.Drawing.Size(68, 20);
-        lblFreeScheduleKey.TabIndex = 7;
-        lblFreeScheduleKey.Text = "Lịch rảnh";
-        // 
-        // lblCurrentTeachingVal
-        // 
-        lblCurrentTeachingVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblCurrentTeachingVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblCurrentTeachingVal.Location = new System.Drawing.Point(140, 132);
-        lblCurrentTeachingVal.Name = "lblCurrentTeachingVal";
-        lblCurrentTeachingVal.Size = new System.Drawing.Size(186, 20);
-        lblCurrentTeachingVal.TabIndex = 6;
-        lblCurrentTeachingVal.Text = "IELTS-F01 · T3 / T6";
-        lblCurrentTeachingVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblCurrentTeachingKey
-        // 
-        lblCurrentTeachingKey.AutoSize = true;
-        lblCurrentTeachingKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblCurrentTeachingKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblCurrentTeachingKey.Location = new System.Drawing.Point(20, 134);
-        lblCurrentTeachingKey.Name = "lblCurrentTeachingKey";
-        lblCurrentTeachingKey.Size = new System.Drawing.Size(73, 20);
-        lblCurrentTeachingKey.TabIndex = 5;
-        lblCurrentTeachingKey.Text = "Đang dạy";
-        // 
-        // lblSpecialtyVal
-        // 
-        lblSpecialtyVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblSpecialtyVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblSpecialtyVal.Location = new System.Drawing.Point(140, 87);
-        lblSpecialtyVal.Name = "lblSpecialtyVal";
-        lblSpecialtyVal.Size = new System.Drawing.Size(186, 20);
-        lblSpecialtyVal.TabIndex = 4;
-        lblSpecialtyVal.Text = "IELTS · Cơ bản đến 6.5";
-        lblSpecialtyVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblSpecialtyKey
-        // 
-        lblSpecialtyKey.AutoSize = true;
-        lblSpecialtyKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSpecialtyKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblSpecialtyKey.Location = new System.Drawing.Point(20, 89);
-        lblSpecialtyKey.Name = "lblSpecialtyKey";
-        lblSpecialtyKey.Size = new System.Drawing.Size(91, 20);
-        lblSpecialtyKey.TabIndex = 3;
-        lblSpecialtyKey.Text = "Chuyên môn";
-        // 
-        // lblTeacherNameVal
-        // 
-        lblTeacherNameVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblTeacherNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
-        lblTeacherNameVal.Location = new System.Drawing.Point(140, 50);
-        lblTeacherNameVal.Name = "lblTeacherNameVal";
-        lblTeacherNameVal.Size = new System.Drawing.Size(186, 20);
-        lblTeacherNameVal.TabIndex = 2;
-        lblTeacherNameVal.Text = "Nguyễn Hoàng Anh · GV-001";
-        lblTeacherNameVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblTeacherNameKey
-        // 
-        lblTeacherNameKey.AutoSize = true;
-        lblTeacherNameKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblTeacherNameKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblTeacherNameKey.Location = new System.Drawing.Point(20, 52);
-        lblTeacherNameKey.Name = "lblTeacherNameKey";
-        lblTeacherNameKey.Size = new System.Drawing.Size(71, 20);
-        lblTeacherNameKey.TabIndex = 1;
-        lblTeacherNameKey.Text = "Giáo viên";
-        // 
-        // lblTeacherAvailTitle
-        // 
-        lblTeacherAvailTitle.AutoSize = true;
-        lblTeacherAvailTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblTeacherAvailTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblTeacherAvailTitle.Location = new System.Drawing.Point(20, 16);
-        lblTeacherAvailTitle.Name = "lblTeacherAvailTitle";
-        lblTeacherAvailTitle.Size = new System.Drawing.Size(195, 28);
-        lblTeacherAvailTitle.TabIndex = 0;
-        lblTeacherAvailTitle.Text = "Khả dụng giáo viên";
+        // cardClassInfo
         // 
         // cardClassInfo
         // 
@@ -610,7 +434,7 @@ partial class CreateClassDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        ClientSize = new System.Drawing.Size(1220, 760);
+        ClientSize = new System.Drawing.Size(860, 680);
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -623,8 +447,6 @@ partial class CreateClassDialog
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlContent.ResumeLayout(false);
-        cardTeacherAvailability.ResumeLayout(false);
-        cardTeacherAvailability.PerformLayout();
         cardClassInfo.ResumeLayout(false);
         cardClassInfo.PerformLayout();
         ResumeLayout(false);
@@ -659,17 +481,4 @@ partial class CreateClassDialog
     private ECMS.UI.Controls.AppComboBox cboStatus;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnSaveDraft;
-    private ECMS.UI.Controls.AppCard cardTeacherAvailability;
-    private System.Windows.Forms.Label lblTeacherAvailTitle;
-    private System.Windows.Forms.Label lblTeacherNameKey;
-    private System.Windows.Forms.Label lblTeacherNameVal;
-    private System.Windows.Forms.Label lblSpecialtyKey;
-    private System.Windows.Forms.Label lblSpecialtyVal;
-    private System.Windows.Forms.Label lblCurrentTeachingKey;
-    private System.Windows.Forms.Label lblCurrentTeachingVal;
-    private System.Windows.Forms.Label lblFreeScheduleKey;
-    private System.Windows.Forms.Label lblFreeScheduleVal;
-    private System.Windows.Forms.Label lblCurrentHoursKey;
-    private System.Windows.Forms.Label lblCurrentHoursVal;
-    private ECMS.UI.Controls.AppButton btnViewTeacherProfile;
 }

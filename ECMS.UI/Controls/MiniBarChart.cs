@@ -13,6 +13,10 @@ public class BarItem
     public string ValueDisplay { get; set; } = string.Empty;
     public bool IsHighlight { get; set; } = false;
 
+    public BarItem()
+    {
+    }
+
     public BarItem(string label, double value, string? valueDisplay = null, bool isHighlight = false)
     {
         Label = label;
@@ -29,6 +33,8 @@ public class MiniBarChart : Control
 {
     private List<BarItem> _items = new();
 
+    [System.ComponentModel.Browsable(false)]
+    [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
     public List<BarItem> Items
     {
         get => _items;
@@ -55,30 +61,50 @@ public class MiniBarChart : Control
         var g = e.Graphics;
         g.SmoothingMode = SmoothingMode.AntiAlias;
 
-        if (_items == null || _items.Count == 0) return;
+        var items = _items;
+        if ((items == null || items.Count == 0) && (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime))
+        {
+            items = new List<BarItem>
+            {
+                new("T1", 80, "80"),
+                new("T2", 120, "120"),
+                new("T3", 160, "160", isHighlight: true)
+            };
+        }
+
+        if (items == null || items.Count == 0) return;
 
         double maxVal = 0;
-        foreach (var it in _items)
+        foreach (var it in items)
         {
             if (it.Value > maxVal) maxVal = it.Value;
         }
         if (maxVal <= 0) maxVal = 1;
 
-        int count = _items.Count;
-        int barAreaWidth = Width - 20;
-        int barAreaHeight = Height - 45; // top value label + bottom axis label
-        int barWidth = Math.Min(28, (barAreaWidth / count) - 12);
+        int count = items.Count;
+        int paddingLeft = 20;
+        int paddingRight = 20;
+        int paddingTop = 28;
+        int paddingBottom = 26;
+
+        int barAreaWidth = Width - (paddingLeft + paddingRight);
+        int barAreaHeight = Height - (paddingTop + paddingBottom);
+        if (barAreaHeight < 20) barAreaHeight = 20;
+        if (barAreaWidth < 20) barAreaWidth = 20;
+
         int slotWidth = barAreaWidth / count;
+        int barWidth = Math.Clamp(slotWidth - 10, 10, 36);
 
         for (int i = 0; i < count; i++)
         {
-            var item = _items[i];
-            int slotCenterX = 10 + (i * slotWidth) + (slotWidth / 2);
+            var item = items[i];
+            int slotCenterX = paddingLeft + (i * slotWidth) + (slotWidth / 2);
             int barX = slotCenterX - (barWidth / 2);
+            barX = Math.Max(paddingLeft / 2, Math.Min(Width - barWidth - (paddingRight / 2), barX));
 
             int barH = (int)((item.Value / maxVal) * barAreaHeight);
-            if (barH < 4) barH = 4;
-            int barY = 22 + (barAreaHeight - barH);
+            if (barH < 6) barH = 6;
+            int barY = paddingTop + (barAreaHeight - barH);
 
             var barRect = new Rectangle(barX, barY, barWidth, barH);
             Color c = item.IsHighlight ? HighlightBarColor : NormalBarColor;
@@ -88,23 +114,25 @@ public class MiniBarChart : Control
                 g.FillRectangle(brush, barRect);
             }
 
-            // Giá trị trên đầu cột
+            // Giá trị trên đầu cột (đảm bảo không tràn viền trên)
+            var topTextRect = new Rectangle(slotCenterX - 35, Math.Max(4, barY - 18), 70, 16);
             TextRenderer.DrawText(
                 g,
                 item.ValueDisplay,
                 FigmaTheme.FontHelper,
-                new Point(slotCenterX, barY - 14),
-                FigmaTheme.TextSecondary,
-                TextFormatFlags.HorizontalCenter | TextFormatFlags.Bottom);
+                topTextRect,
+                item.IsHighlight ? HighlightBarColor : FigmaTheme.TextSecondary,
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
 
-            // Nhãn trục X dưới đáy cột
+            // Nhãn trục X dưới đáy cột (đảm bảo không tràn viền dưới)
+            var btmTextRect = new Rectangle(slotCenterX - 35, paddingTop + barAreaHeight + 4, 70, 18);
             TextRenderer.DrawText(
                 g,
                 item.Label,
                 FigmaTheme.FontHelper,
-                new Point(slotCenterX, Height - 16),
+                btmTextRect,
                 FigmaTheme.TextSecondary,
-                TextFormatFlags.HorizontalCenter | TextFormatFlags.Top);
+                TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
         }
     }
 }

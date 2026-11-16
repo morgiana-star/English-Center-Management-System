@@ -28,40 +28,18 @@ partial class TeacherAttendanceSummaryView
         pnlHeader = new System.Windows.Forms.Panel();
         btnBackAttendance = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
-        pnlWizard = new System.Windows.Forms.Panel();
-        lblStep4 = new System.Windows.Forms.Label();
-        lblStep3 = new System.Windows.Forms.Label();
-        lblStep2 = new System.Windows.Forms.Label();
-        lblStep1 = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
-        cardAbsenceTracking = new ECMS.UI.Controls.AppCard();
         btnRecordTracking = new ECMS.UI.Controls.AppButton();
-        lblInChargeVal = new System.Windows.Forms.Label();
-        lblInChargeKey = new System.Windows.Forms.Label();
-        lblReasonVal = new System.Windows.Forms.Label();
-        lblReasonKey = new System.Windows.Forms.Label();
-        lblParentVal = new System.Windows.Forms.Label();
-        lblParentKey = new System.Windows.Forms.Label();
-        lblPhoneVal = new System.Windows.Forms.Label();
-        lblPhoneKey = new System.Windows.Forms.Label();
-        lblStudentVal = new System.Windows.Forms.Label();
-        lblStudentKey = new System.Windows.Forms.Label();
-        bannerTrackingWarning = new ECMS.UI.Controls.AppBanner();
-        lblTrackingTitle = new System.Windows.Forms.Label();
         cardSummary = new ECMS.UI.Controls.AppCard();
         btnExportSummary = new ECMS.UI.Controls.AppButton();
         lblFinalCondition = new System.Windows.Forms.Label();
         lblFormula = new System.Windows.Forms.Label();
         lblClassTotal = new System.Windows.Forms.Label();
-        lblPagingNav = new System.Windows.Forms.Label();
-        lblPagingInfo = new System.Windows.Forms.Label();
         dgvSummary = new ECMS.UI.Controls.AppDataGrid();
         lblSummaryTitle = new System.Windows.Forms.Label();
         bannerSuccessSaved = new ECMS.UI.Controls.AppBanner();
         pnlHeader.SuspendLayout();
-        pnlWizard.SuspendLayout();
         pnlBody.SuspendLayout();
-        cardAbsenceTracking.SuspendLayout();
         cardSummary.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSummary).BeginInit();
         SuspendLayout();
@@ -108,106 +86,41 @@ partial class TeacherAttendanceSummaryView
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Tổng hợp chuyên cần · IELTS-F01";
         // 
-        // pnlWizard
-        // 
-        pnlWizard.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        pnlWizard.Controls.Add(lblStep4);
-        pnlWizard.Controls.Add(lblStep3);
-        pnlWizard.Controls.Add(lblStep2);
-        pnlWizard.Controls.Add(lblStep1);
-        pnlWizard.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlWizard.Location = new System.Drawing.Point(0, 75);
-        pnlWizard.Name = "pnlWizard";
-        pnlWizard.Padding = new System.Windows.Forms.Padding(24, 8, 24, 8);
-        pnlWizard.Size = new System.Drawing.Size(1160, 36);
-        pnlWizard.TabIndex = 1;
-        // 
-        // lblStep4
-        // 
-        lblStep4.AutoSize = true;
-        lblStep4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStep4.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep4.Location = new System.Drawing.Point(620, 10);
-        lblStep4.Name = "lblStep4";
-        lblStep4.Size = new System.Drawing.Size(135, 20);
-        lblStep4.TabIndex = 3;
-        lblStep4.Text = "• 4. Lưu & tổng hợp";
-        // 
-        // lblStep3
-        // 
-        lblStep3.AutoSize = true;
-        lblStep3.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep3.Location = new System.Drawing.Point(440, 10);
-        lblStep3.Name = "lblStep3";
-        lblStep3.Size = new System.Drawing.Size(97, 20);
-        lblStep3.TabIndex = 2;
-        lblStep3.Text = "✓ Điểm danh";
-        // 
-        // lblStep2
-        // 
-        lblStep2.AutoSize = true;
-        lblStep2.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep2.Location = new System.Drawing.Point(240, 10);
-        lblStep2.Name = "lblStep2";
-        lblStep2.Size = new System.Drawing.Size(92, 20);
-        lblStep2.TabIndex = 1;
-        lblStep2.Text = "✓ Chọn buổi";
-        // 
-        // lblStep1
-        // 
-        lblStep1.AutoSize = true;
-        lblStep1.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep1.Location = new System.Drawing.Point(40, 10);
-        lblStep1.Name = "lblStep1";
-        lblStep1.Size = new System.Drawing.Size(84, 20);
-        lblStep1.TabIndex = 0;
-        lblStep1.Text = "✓ Chọn lớp";
-        // 
         // pnlBody
         // 
         pnlBody.AutoScroll = true;
-        pnlBody.Controls.Add(cardAbsenceTracking);
         pnlBody.Controls.Add(cardSummary);
         pnlBody.Controls.Add(bannerSuccessSaved);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 111);
+        pnlBody.Location = new System.Drawing.Point(0, 75);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(24);
-        pnlBody.Size = new System.Drawing.Size(1160, 649);
+        pnlBody.Size = new System.Drawing.Size(1160, 685);
         pnlBody.TabIndex = 2;
         // 
-        // cardAbsenceTracking
+        // cardSummary
         // 
-        cardAbsenceTracking.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        cardAbsenceTracking.BackColor = System.Drawing.Color.White;
-        cardAbsenceTracking.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardAbsenceTracking.BorderWidth = 1;
-        cardAbsenceTracking.Controls.Add(btnRecordTracking);
-        cardAbsenceTracking.Controls.Add(lblInChargeVal);
-        cardAbsenceTracking.Controls.Add(lblInChargeKey);
-        cardAbsenceTracking.Controls.Add(lblReasonVal);
-        cardAbsenceTracking.Controls.Add(lblReasonKey);
-        cardAbsenceTracking.Controls.Add(lblParentVal);
-        cardAbsenceTracking.Controls.Add(lblParentKey);
-        cardAbsenceTracking.Controls.Add(lblPhoneVal);
-        cardAbsenceTracking.Controls.Add(lblPhoneKey);
-        cardAbsenceTracking.Controls.Add(lblStudentVal);
-        cardAbsenceTracking.Controls.Add(lblStudentKey);
-        cardAbsenceTracking.Controls.Add(bannerTrackingWarning);
-        cardAbsenceTracking.Controls.Add(lblTrackingTitle);
-        cardAbsenceTracking.CornerRadius = 6;
-        cardAbsenceTracking.Location = new System.Drawing.Point(740, 95);
-        cardAbsenceTracking.Name = "cardAbsenceTracking";
-        cardAbsenceTracking.Padding = new System.Windows.Forms.Padding(20);
-        cardAbsenceTracking.Size = new System.Drawing.Size(396, 450);
-        cardAbsenceTracking.TabIndex = 2;
+        cardSummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        cardSummary.BackColor = System.Drawing.Color.White;
+        cardSummary.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardSummary.BorderWidth = 1;
+        cardSummary.Controls.Add(btnRecordTracking);
+        cardSummary.Controls.Add(btnExportSummary);
+        cardSummary.Controls.Add(lblFinalCondition);
+        cardSummary.Controls.Add(lblFormula);
+        cardSummary.Controls.Add(lblClassTotal);
+        cardSummary.Controls.Add(dgvSummary);
+        cardSummary.Controls.Add(lblSummaryTitle);
+        cardSummary.CornerRadius = 6;
+        cardSummary.Location = new System.Drawing.Point(24, 95);
+        cardSummary.Name = "cardSummary";
+        cardSummary.Padding = new System.Windows.Forms.Padding(20);
+        cardSummary.Size = new System.Drawing.Size(1112, 560);
+        cardSummary.TabIndex = 1;
         // 
         // btnRecordTracking
         // 
-        btnRecordTracking.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        btnRecordTracking.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
         btnRecordTracking.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnRecordTracking.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnRecordTracking.CornerRadius = 5;
@@ -216,169 +129,13 @@ partial class TeacherAttendanceSummaryView
         btnRecordTracking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnRecordTracking.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnRecordTracking.ForeColor = System.Drawing.Color.White;
-        btnRecordTracking.Location = new System.Drawing.Point(20, 350);
+        btnRecordTracking.Location = new System.Drawing.Point(230, 505);
         btnRecordTracking.Name = "btnRecordTracking";
-        btnRecordTracking.Size = new System.Drawing.Size(356, 34);
-        btnRecordTracking.TabIndex = 12;
-        btnRecordTracking.Text = "Ghi nhận yêu cầu theo dõi";
+        btnRecordTracking.Size = new System.Drawing.Size(250, 32);
+        btnRecordTracking.TabIndex = 8;
+        btnRecordTracking.Text = "Ghi nhận theo dõi học viên vắng";
         btnRecordTracking.UseVisualStyleBackColor = false;
         btnRecordTracking.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
-        // 
-        // lblInChargeVal
-        // 
-        lblInChargeVal.AutoSize = true;
-        lblInChargeVal.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblInChargeVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblInChargeVal.Location = new System.Drawing.Point(120, 290);
-        lblInChargeVal.Name = "lblInChargeVal";
-        lblInChargeVal.Size = new System.Drawing.Size(188, 20);
-        lblInChargeVal.TabIndex = 11;
-        lblInChargeVal.Text = "Nguyễn Thị Hạnh · Đào tạo";
-        // 
-        // lblInChargeKey
-        // 
-        lblInChargeKey.AutoSize = true;
-        lblInChargeKey.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblInChargeKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblInChargeKey.Location = new System.Drawing.Point(20, 290);
-        lblInChargeKey.Name = "lblInChargeKey";
-        lblInChargeKey.Size = new System.Drawing.Size(70, 20);
-        lblInChargeKey.TabIndex = 10;
-        lblInChargeKey.Text = "Phụ trách";
-        // 
-        // lblReasonVal
-        // 
-        lblReasonVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        lblReasonVal.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblReasonVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblReasonVal.Location = new System.Drawing.Point(120, 245);
-        lblReasonVal.Name = "lblReasonVal";
-        lblReasonVal.Size = new System.Drawing.Size(256, 35);
-        lblReasonVal.TabIndex = 9;
-        lblReasonVal.Text = "Bận lịch cá nhân; đề nghị chuyển lớp";
-        // 
-        // lblReasonKey
-        // 
-        lblReasonKey.AutoSize = true;
-        lblReasonKey.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblReasonKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblReasonKey.Location = new System.Drawing.Point(20, 245);
-        lblReasonKey.Name = "lblReasonKey";
-        lblReasonKey.Size = new System.Drawing.Size(105, 20);
-        lblReasonKey.TabIndex = 8;
-        lblReasonKey.Text = "Lý do ghi nhận";
-        // 
-        // lblParentVal
-        // 
-        lblParentVal.AutoSize = true;
-        lblParentVal.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblParentVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblParentVal.Location = new System.Drawing.Point(120, 215);
-        lblParentVal.Name = "lblParentVal";
-        lblParentVal.Size = new System.Drawing.Size(203, 20);
-        lblParentVal.TabIndex = 7;
-        lblParentVal.Text = "Lê Thanh Bình - 0909 552 114";
-        // 
-        // lblParentKey
-        // 
-        lblParentKey.AutoSize = true;
-        lblParentKey.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblParentKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblParentKey.Location = new System.Drawing.Point(20, 215);
-        lblParentKey.Name = "lblParentKey";
-        lblParentKey.Size = new System.Drawing.Size(76, 20);
-        lblParentKey.TabIndex = 6;
-        lblParentKey.Text = "Phụ huynh";
-        // 
-        // lblPhoneVal
-        // 
-        lblPhoneVal.AutoSize = true;
-        lblPhoneVal.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblPhoneVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblPhoneVal.Location = new System.Drawing.Point(120, 185);
-        lblPhoneVal.Name = "lblPhoneVal";
-        lblPhoneVal.Size = new System.Drawing.Size(97, 20);
-        lblPhoneVal.TabIndex = 5;
-        lblPhoneVal.Text = "0904 221 678";
-        // 
-        // lblPhoneKey
-        // 
-        lblPhoneKey.AutoSize = true;
-        lblPhoneKey.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblPhoneKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPhoneKey.Location = new System.Drawing.Point(20, 185);
-        lblPhoneKey.Name = "lblPhoneKey";
-        lblPhoneKey.Size = new System.Drawing.Size(78, 20);
-        lblPhoneKey.TabIndex = 4;
-        lblPhoneKey.Text = "Điện thoại";
-        // 
-        // lblStudentVal
-        // 
-        lblStudentVal.AutoSize = true;
-        lblStudentVal.Font = new System.Drawing.Font("Segoe UI", 8.75F, System.Drawing.FontStyle.Bold);
-        lblStudentVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblStudentVal.Location = new System.Drawing.Point(120, 155);
-        lblStudentVal.Name = "lblStudentVal";
-        lblStudentVal.Size = new System.Drawing.Size(188, 20);
-        lblStudentVal.TabIndex = 3;
-        lblStudentVal.Text = "Lê Hoàng Nam · HV-0237";
-        // 
-        // lblStudentKey
-        // 
-        lblStudentKey.AutoSize = true;
-        lblStudentKey.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-        lblStudentKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStudentKey.Location = new System.Drawing.Point(20, 155);
-        lblStudentKey.Name = "lblStudentKey";
-        lblStudentKey.Size = new System.Drawing.Size(67, 20);
-        lblStudentKey.TabIndex = 2;
-        lblStudentKey.Text = "Học viên";
-        // 
-        // bannerTrackingWarning
-        // 
-        bannerTrackingWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        bannerTrackingWarning.BackColor = System.Drawing.Color.FromArgb(((int)((byte)254)), ((int)((byte)243)), ((int)((byte)199)));
-        bannerTrackingWarning.BannerType = ECMS.UI.Controls.BannerType.Warning;
-        bannerTrackingWarning.Location = new System.Drawing.Point(20, 50);
-        bannerTrackingWarning.Message = "Chuyển nhân viên đào tạo liên hệ, không chỉ dựa vào màu cảnh báo.";
-        bannerTrackingWarning.Name = "bannerTrackingWarning";
-        bannerTrackingWarning.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-        bannerTrackingWarning.Size = new System.Drawing.Size(356, 85);
-        bannerTrackingWarning.TabIndex = 1;
-        bannerTrackingWarning.Title = "! Lê Hoàng Nam vắng 4/8 buổi.";
-        bannerTrackingWarning.Variant = ECMS.UI.Controls.BannerVariant.Warning;
-        // 
-        // lblTrackingTitle
-        // 
-        lblTrackingTitle.AutoSize = true;
-        lblTrackingTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblTrackingTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTrackingTitle.Location = new System.Drawing.Point(20, 16);
-        lblTrackingTitle.Name = "lblTrackingTitle";
-        lblTrackingTitle.Size = new System.Drawing.Size(241, 25);
-        lblTrackingTitle.TabIndex = 0;
-        lblTrackingTitle.Text = "Theo dõi vắng hơn 3 buổi";
-        // 
-        // cardSummary
-        // 
-        cardSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        cardSummary.BackColor = System.Drawing.Color.White;
-        cardSummary.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardSummary.BorderWidth = 1;
-        cardSummary.Controls.Add(btnExportSummary);
-        cardSummary.Controls.Add(lblFinalCondition);
-        cardSummary.Controls.Add(lblFormula);
-        cardSummary.Controls.Add(lblClassTotal);
-        cardSummary.Controls.Add(lblPagingNav);
-        cardSummary.Controls.Add(lblPagingInfo);
-        cardSummary.Controls.Add(dgvSummary);
-        cardSummary.Controls.Add(lblSummaryTitle);
-        cardSummary.CornerRadius = 6;
-        cardSummary.Location = new System.Drawing.Point(24, 95);
-        cardSummary.Name = "cardSummary";
-        cardSummary.Padding = new System.Windows.Forms.Padding(20);
-        cardSummary.Size = new System.Drawing.Size(696, 450);
-        cardSummary.TabIndex = 1;
         // 
         // btnExportSummary
         // 
@@ -391,7 +148,7 @@ partial class TeacherAttendanceSummaryView
         btnExportSummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnExportSummary.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnExportSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnExportSummary.Location = new System.Drawing.Point(20, 395);
+        btnExportSummary.Location = new System.Drawing.Point(20, 505);
         btnExportSummary.Name = "btnExportSummary";
         btnExportSummary.Size = new System.Drawing.Size(190, 32);
         btnExportSummary.TabIndex = 7;
@@ -405,7 +162,7 @@ partial class TeacherAttendanceSummaryView
         lblFinalCondition.AutoSize = true;
         lblFinalCondition.Font = new System.Drawing.Font("Segoe UI", 8.25F);
         lblFinalCondition.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblFinalCondition.Location = new System.Drawing.Point(20, 365);
+        lblFinalCondition.Location = new System.Drawing.Point(20, 475);
         lblFinalCondition.Name = "lblFinalCondition";
         lblFinalCondition.Size = new System.Drawing.Size(273, 19);
         lblFinalCondition.TabIndex = 6;
@@ -417,7 +174,7 @@ partial class TeacherAttendanceSummaryView
         lblFormula.AutoSize = true;
         lblFormula.Font = new System.Drawing.Font("Segoe UI", 8.25F);
         lblFormula.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblFormula.Location = new System.Drawing.Point(20, 345);
+        lblFormula.Location = new System.Drawing.Point(20, 455);
         lblFormula.Name = "lblFormula";
         lblFormula.Size = new System.Drawing.Size(305, 19);
         lblFormula.TabIndex = 5;
@@ -429,36 +186,11 @@ partial class TeacherAttendanceSummaryView
         lblClassTotal.AutoSize = true;
         lblClassTotal.Font = new System.Drawing.Font("Segoe UI", 8.75F, System.Drawing.FontStyle.Bold);
         lblClassTotal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblClassTotal.Location = new System.Drawing.Point(20, 320);
+        lblClassTotal.Location = new System.Drawing.Point(20, 430);
         lblClassTotal.Name = "lblClassTotal";
         lblClassTotal.Size = new System.Drawing.Size(299, 20);
         lblClassTotal.TabIndex = 4;
         lblClassTotal.Text = "Toàn lớp: 130 / 144 lượt tham dự · 90,3%";
-        // 
-        // lblPagingNav
-        // 
-        lblPagingNav.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        lblPagingNav.AutoSize = true;
-        lblPagingNav.Cursor = System.Windows.Forms.Cursors.Hand;
-        lblPagingNav.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblPagingNav.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblPagingNav.Location = new System.Drawing.Point(516, 285);
-        lblPagingNav.Name = "lblPagingNav";
-        lblPagingNav.Size = new System.Drawing.Size(160, 20);
-        lblPagingNav.TabIndex = 3;
-        lblPagingNav.Text = "< Trước   [1]   2   Sau >";
-        // 
-        // lblPagingInfo
-        // 
-        lblPagingInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
-        lblPagingInfo.AutoSize = true;
-        lblPagingInfo.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblPagingInfo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPagingInfo.Location = new System.Drawing.Point(20, 285);
-        lblPagingInfo.Name = "lblPagingInfo";
-        lblPagingInfo.Size = new System.Drawing.Size(122, 20);
-        lblPagingInfo.TabIndex = 2;
-        lblPagingInfo.Text = "1–4 / 18 học viên";
         // 
         // dgvSummary
         // 
@@ -471,7 +203,7 @@ partial class TeacherAttendanceSummaryView
         dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dgvSummary.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        dgvSummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         dgvSummary.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvSummary.BackgroundColor = System.Drawing.Color.White;
         dgvSummary.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -512,9 +244,9 @@ partial class TeacherAttendanceSummaryView
         dgvSummary.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvSummary.RowHeadersVisible = false;
         dgvSummary.RowHeadersWidth = 51;
-        dgvSummary.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvSummary.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvSummary.Size = new System.Drawing.Size(656, 225);
+        dgvSummary.Size = new System.Drawing.Size(1072, 360);
         dgvSummary.TabIndex = 1;
         // 
         // lblSummaryTitle
@@ -530,7 +262,7 @@ partial class TeacherAttendanceSummaryView
         // 
         // bannerSuccessSaved
         // 
-        bannerSuccessSaved.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        bannerSuccessSaved.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         bannerSuccessSaved.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
         bannerSuccessSaved.BannerType = ECMS.UI.Controls.BannerType.Success;
         bannerSuccessSaved.Location = new System.Drawing.Point(24, 20);
@@ -548,18 +280,13 @@ partial class TeacherAttendanceSummaryView
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         Controls.Add(pnlBody);
-        Controls.Add(pnlWizard);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         Size = new System.Drawing.Size(1160, 760);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
-        pnlWizard.ResumeLayout(false);
-        pnlWizard.PerformLayout();
         pnlBody.ResumeLayout(false);
-        cardAbsenceTracking.ResumeLayout(false);
-        cardAbsenceTracking.PerformLayout();
         cardSummary.ResumeLayout(false);
         cardSummary.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSummary).EndInit();
@@ -571,34 +298,14 @@ partial class TeacherAttendanceSummaryView
     private System.Windows.Forms.Panel pnlHeader;
     private ECMS.UI.Controls.AppButton btnBackAttendance;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Panel pnlWizard;
-    private System.Windows.Forms.Label lblStep1;
-    private System.Windows.Forms.Label lblStep2;
-    private System.Windows.Forms.Label lblStep3;
-    private System.Windows.Forms.Label lblStep4;
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppBanner bannerSuccessSaved;
     private ECMS.UI.Controls.AppCard cardSummary;
     private System.Windows.Forms.Label lblSummaryTitle;
     private ECMS.UI.Controls.AppDataGrid dgvSummary;
-    private System.Windows.Forms.Label lblPagingInfo;
-    private System.Windows.Forms.Label lblPagingNav;
     private System.Windows.Forms.Label lblClassTotal;
     private System.Windows.Forms.Label lblFormula;
     private System.Windows.Forms.Label lblFinalCondition;
     private ECMS.UI.Controls.AppButton btnExportSummary;
-    private ECMS.UI.Controls.AppCard cardAbsenceTracking;
-    private System.Windows.Forms.Label lblTrackingTitle;
-    private ECMS.UI.Controls.AppBanner bannerTrackingWarning;
-    private System.Windows.Forms.Label lblStudentKey;
-    private System.Windows.Forms.Label lblStudentVal;
-    private System.Windows.Forms.Label lblPhoneKey;
-    private System.Windows.Forms.Label lblPhoneVal;
-    private System.Windows.Forms.Label lblParentKey;
-    private System.Windows.Forms.Label lblParentVal;
-    private System.Windows.Forms.Label lblReasonKey;
-    private System.Windows.Forms.Label lblReasonVal;
-    private System.Windows.Forms.Label lblInChargeKey;
-    private System.Windows.Forms.Label lblInChargeVal;
     private ECMS.UI.Controls.AppButton btnRecordTracking;
 }

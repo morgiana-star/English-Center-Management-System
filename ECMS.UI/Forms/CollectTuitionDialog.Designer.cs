@@ -13,685 +13,708 @@ partial class CollectTuitionDialog
         base.Dispose(disposing);
     }
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
+    #region Windows Form Designer generated code
+
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
+        lblReceiptNo = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
-        pnlStepper = new System.Windows.Forms.Panel();
-        lblStep4 = new System.Windows.Forms.Label();
-        lblStep3 = new System.Windows.Forms.Label();
-        lblStep2 = new System.Windows.Forms.Label();
-        lblStep1 = new System.Windows.Forms.Label();
-        pnlBody = new System.Windows.Forms.TableLayoutPanel();
-        pnlLeftCard = new ECMS.UI.Controls.AppCard();
-        lblLeftCardTitle = new System.Windows.Forms.Label();
-        pnlLeftActions = new System.Windows.Forms.FlowLayoutPanel();
-        btnContinueConfirm = new ECMS.UI.Controls.AppButton();
-        btnCancel = new ECMS.UI.Controls.AppButton();
-        txtNote = new ECMS.UI.Controls.AppTextBox();
-        lblNote = new System.Windows.Forms.Label();
-        txtReference = new ECMS.UI.Controls.AppTextBox();
-        lblReference = new System.Windows.Forms.Label();
-        lblAmountError = new System.Windows.Forms.Label();
-        txtAmount = new ECMS.UI.Controls.AppTextBox();
-        lblAmount = new System.Windows.Forms.Label();
-        cboPaymentMethod = new ECMS.UI.Controls.AppComboBox();
-        lblPaymentMethod = new System.Windows.Forms.Label();
-        cboPaymentType = new ECMS.UI.Controls.AppComboBox();
-        lblPaymentType = new System.Windows.Forms.Label();
-        txtPaymentDate = new ECMS.UI.Controls.AppTextBox();
-        lblPaymentDate = new System.Windows.Forms.Label();
-        txtStudentInfo = new ECMS.UI.Controls.AppTextBox();
-        lblStudentInfo = new System.Windows.Forms.Label();
-        pnlRightCard = new ECMS.UI.Controls.AppCard();
-        lblRightCardTitle = new System.Windows.Forms.Label();
-        btnFillRemaining = new ECMS.UI.Controls.AppButton();
-        lblDueDateVal = new System.Windows.Forms.Label();
-        lblDueDateTitle = new System.Windows.Forms.Label();
+        pnlBody = new System.Windows.Forms.Panel();
+        cardPaymentDetails = new ECMS.UI.Controls.AppCard();
+        txtNote = new System.Windows.Forms.TextBox();
+        lblNoteTitle = new System.Windows.Forms.Label();
+        txtReference = new System.Windows.Forms.TextBox();
+        lblRefTitle = new System.Windows.Forms.Label();
+        pnlMethod = new System.Windows.Forms.Panel();
+        rbPos = new System.Windows.Forms.RadioButton();
+        rbCash = new System.Windows.Forms.RadioButton();
+        rbVietQR = new System.Windows.Forms.RadioButton();
+        lblMethodTitle = new System.Windows.Forms.Label();
+        lblAmountWords = new System.Windows.Forms.Label();
+        btnPayHalf = new ECMS.UI.Controls.AppButton();
+        btnPayFull = new ECMS.UI.Controls.AppButton();
+        txtAmount = new System.Windows.Forms.TextBox();
+        lblAmountTitle = new System.Windows.Forms.Label();
+        lblCollector = new System.Windows.Forms.Label();
+        dtpPaymentDate = new System.Windows.Forms.DateTimePicker();
+        lblPaymentDateTitle = new System.Windows.Forms.Label();
+        cboPaymentType = new System.Windows.Forms.ComboBox();
+        lblPaymentTypeTitle = new System.Windows.Forms.Label();
+        lblSectionDetails = new System.Windows.Forms.Label();
+        cardStudentSummary = new ECMS.UI.Controls.AppCard();
+        pnlStatsRow = new System.Windows.Forms.TableLayoutPanel();
+        cardRemaining = new ECMS.UI.Controls.AppCard();
         lblRemainingVal = new System.Windows.Forms.Label();
         lblRemainingTitle = new System.Windows.Forms.Label();
+        cardPaid = new ECMS.UI.Controls.AppCard();
         lblPaidVal = new System.Windows.Forms.Label();
         lblPaidTitle = new System.Windows.Forms.Label();
-        lblNetTuitionVal = new System.Windows.Forms.Label();
-        lblNetTuitionTitle = new System.Windows.Forms.Label();
-        lblDiscountVal = new System.Windows.Forms.Label();
-        lblDiscountTitle = new System.Windows.Forms.Label();
-        lblBaseTuitionVal = new System.Windows.Forms.Label();
-        lblBaseTuitionTitle = new System.Windows.Forms.Label();
+        cardTotal = new ECMS.UI.Controls.AppCard();
+        lblTotalVal = new System.Windows.Forms.Label();
+        lblTotalTitle = new System.Windows.Forms.Label();
+        lblClassInfo = new System.Windows.Forms.Label();
+        cboStudentSelect = new System.Windows.Forms.ComboBox();
+        lblStudentTitle = new System.Windows.Forms.Label();
+        lblSectionStudent = new System.Windows.Forms.Label();
+        pnlFooter = new System.Windows.Forms.Panel();
+        chkPrintReceipt = new System.Windows.Forms.CheckBox();
+        btnConfirm = new ECMS.UI.Controls.AppButton();
+        btnCancel = new ECMS.UI.Controls.AppButton();
         pnlHeader.SuspendLayout();
-        pnlStepper.SuspendLayout();
         pnlBody.SuspendLayout();
-        pnlLeftCard.SuspendLayout();
-        pnlLeftActions.SuspendLayout();
-        pnlRightCard.SuspendLayout();
+        cardPaymentDetails.SuspendLayout();
+        pnlMethod.SuspendLayout();
+        cardStudentSummary.SuspendLayout();
+        pnlStatsRow.SuspendLayout();
+        cardRemaining.SuspendLayout();
+        cardPaid.SuspendLayout();
+        cardTotal.SuspendLayout();
+        pnlFooter.SuspendLayout();
         SuspendLayout();
         // 
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
+        pnlHeader.Controls.Add(lblReceiptNo);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 12);
-        pnlHeader.Size = new System.Drawing.Size(1200, 76);
+        pnlHeader.Size = new System.Drawing.Size(860, 68);
         pnlHeader.TabIndex = 0;
+        // 
+        // lblReceiptNo
+        // 
+        lblReceiptNo.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        lblReceiptNo.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Bold);
+        lblReceiptNo.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblReceiptNo.Location = new System.Drawing.Point(540, 22);
+        lblReceiptNo.Name = "lblReceiptNo";
+        lblReceiptNo.Size = new System.Drawing.Size(296, 26);
+        lblReceiptNo.TabIndex = 1;
+        lblReceiptNo.Text = "Mã phiếu: PT-261116-015";
+        lblReceiptNo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
-        lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(23, 29);
+        lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.Location = new System.Drawing.Point(20, 18);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(390, 35);
-        lblTitle.TabIndex = 1;
-        lblTitle.Text = "Thu học phí · Nguyễn Minh Anh";
-        // 
-        // pnlStepper
-        // 
-        pnlStepper.BackColor = System.Drawing.Color.White;
-        pnlStepper.Controls.Add(lblStep4);
-        pnlStepper.Controls.Add(lblStep3);
-        pnlStepper.Controls.Add(lblStep2);
-        pnlStepper.Controls.Add(lblStep1);
-        pnlStepper.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlStepper.Location = new System.Drawing.Point(0, 76);
-        pnlStepper.Name = "pnlStepper";
-        pnlStepper.Padding = new System.Windows.Forms.Padding(24, 6, 24, 6);
-        pnlStepper.Size = new System.Drawing.Size(1200, 38);
-        pnlStepper.TabIndex = 1;
-        // 
-        // lblStep4
-        // 
-        lblStep4.AutoSize = true;
-        lblStep4.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep4.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblStep4.Location = new System.Drawing.Point(600, 10);
-        lblStep4.Name = "lblStep4";
-        lblStep4.Size = new System.Drawing.Size(85, 20);
-        lblStep4.TabIndex = 3;
-        lblStep4.Text = "4. Phiếu thu";
-        // 
-        // lblStep3
-        // 
-        lblStep3.AutoSize = true;
-        lblStep3.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblStep3.Location = new System.Drawing.Point(400, 10);
-        lblStep3.Name = "lblStep3";
-        lblStep3.Size = new System.Drawing.Size(146, 20);
-        lblStep3.TabIndex = 2;
-        lblStep3.Text = "3. Kiểm tra & xác nhận";
-        // 
-        // lblStep2
-        // 
-        lblStep2.AutoSize = true;
-        lblStep2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStep2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep2.Location = new System.Drawing.Point(200, 10);
-        lblStep2.Name = "lblStep2";
-        lblStep2.Size = new System.Drawing.Size(149, 20);
-        lblStep2.TabIndex = 1;
-        lblStep2.Text = "• 2. Nhập khoản thu";
-        // 
-        // lblStep1
-        // 
-        lblStep1.AutoSize = true;
-        lblStep1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStep1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep1.Location = new System.Drawing.Point(24, 10);
-        lblStep1.Name = "lblStep1";
-        lblStep1.Size = new System.Drawing.Size(140, 20);
-        lblStep1.TabIndex = 0;
-        lblStep1.Text = "✓ 1. Chọn học viên";
+        lblTitle.Size = new System.Drawing.Size(306, 32);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "💵 Lập phiếu thu học phí";
         // 
         // pnlBody
         // 
-        pnlBody.ColumnCount = 2;
-        pnlBody.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 64F));
-        pnlBody.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36F));
-        pnlBody.Controls.Add(pnlLeftCard, 0, 0);
-        pnlBody.Controls.Add(pnlRightCard, 1, 0);
+        pnlBody.AutoScroll = true;
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        pnlBody.Controls.Add(cardPaymentDetails);
+        pnlBody.Controls.Add(cardStudentSummary);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 114);
+        pnlBody.Location = new System.Drawing.Point(0, 68);
         pnlBody.Name = "pnlBody";
-        pnlBody.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
-        pnlBody.RowCount = 1;
-        pnlBody.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlBody.Size = new System.Drawing.Size(1200, 626);
-        pnlBody.TabIndex = 2;
+        pnlBody.Padding = new System.Windows.Forms.Padding(20, 14, 20, 14);
+        pnlBody.Size = new System.Drawing.Size(860, 526);
+        pnlBody.TabIndex = 1;
         // 
-        // pnlLeftCard
+        // cardPaymentDetails
         // 
-        pnlLeftCard.BackColor = System.Drawing.Color.White;
-        pnlLeftCard.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        pnlLeftCard.BorderWidth = 1;
-        pnlLeftCard.Controls.Add(lblLeftCardTitle);
-        pnlLeftCard.Controls.Add(pnlLeftActions);
-        pnlLeftCard.Controls.Add(txtNote);
-        pnlLeftCard.Controls.Add(lblNote);
-        pnlLeftCard.Controls.Add(txtReference);
-        pnlLeftCard.Controls.Add(lblReference);
-        pnlLeftCard.Controls.Add(lblAmountError);
-        pnlLeftCard.Controls.Add(txtAmount);
-        pnlLeftCard.Controls.Add(lblAmount);
-        pnlLeftCard.Controls.Add(cboPaymentMethod);
-        pnlLeftCard.Controls.Add(lblPaymentMethod);
-        pnlLeftCard.Controls.Add(cboPaymentType);
-        pnlLeftCard.Controls.Add(lblPaymentType);
-        pnlLeftCard.Controls.Add(txtPaymentDate);
-        pnlLeftCard.Controls.Add(lblPaymentDate);
-        pnlLeftCard.Controls.Add(txtStudentInfo);
-        pnlLeftCard.Controls.Add(lblStudentInfo);
-        pnlLeftCard.CornerRadius = 6;
-        pnlLeftCard.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlLeftCard.Location = new System.Drawing.Point(23, 15);
-        pnlLeftCard.Name = "pnlLeftCard";
-        pnlLeftCard.Padding = new System.Windows.Forms.Padding(20);
-        pnlLeftCard.Size = new System.Drawing.Size(736, 592);
-        pnlLeftCard.TabIndex = 0;
+        cardPaymentDetails.BackColor = System.Drawing.Color.White;
+        cardPaymentDetails.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardPaymentDetails.BorderWidth = 1;
+        cardPaymentDetails.Controls.Add(txtNote);
+        cardPaymentDetails.Controls.Add(lblNoteTitle);
+        cardPaymentDetails.Controls.Add(txtReference);
+        cardPaymentDetails.Controls.Add(lblRefTitle);
+        cardPaymentDetails.Controls.Add(pnlMethod);
+        cardPaymentDetails.Controls.Add(lblMethodTitle);
+        cardPaymentDetails.Controls.Add(lblAmountWords);
+        cardPaymentDetails.Controls.Add(btnPayHalf);
+        cardPaymentDetails.Controls.Add(btnPayFull);
+        cardPaymentDetails.Controls.Add(txtAmount);
+        cardPaymentDetails.Controls.Add(lblAmountTitle);
+        cardPaymentDetails.Controls.Add(lblCollector);
+        cardPaymentDetails.Controls.Add(dtpPaymentDate);
+        cardPaymentDetails.Controls.Add(lblPaymentDateTitle);
+        cardPaymentDetails.Controls.Add(cboPaymentType);
+        cardPaymentDetails.Controls.Add(lblPaymentTypeTitle);
+        cardPaymentDetails.Controls.Add(lblSectionDetails);
+        cardPaymentDetails.CornerRadius = 6;
+        cardPaymentDetails.Dock = System.Windows.Forms.DockStyle.Top;
+        cardPaymentDetails.Location = new System.Drawing.Point(20, 184);
+        cardPaymentDetails.Name = "cardPaymentDetails";
+        cardPaymentDetails.Padding = new System.Windows.Forms.Padding(18, 14, 18, 14);
+        cardPaymentDetails.Size = new System.Drawing.Size(820, 328);
+        cardPaymentDetails.TabIndex = 1;
         // 
-        // lblLeftCardTitle
+        // txtNote
         // 
-        lblLeftCardTitle.AutoSize = true;
-        lblLeftCardTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblLeftCardTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblLeftCardTitle.Location = new System.Drawing.Point(20, 16);
-        lblLeftCardTitle.Name = "lblLeftCardTitle";
-        lblLeftCardTitle.Size = new System.Drawing.Size(143, 25);
-        lblLeftCardTitle.TabIndex = 17;
-        lblLeftCardTitle.Text = "Khoản thu mới";
+        txtNote.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtNote.Location = new System.Drawing.Point(145, 282);
+        txtNote.Name = "txtNote";
+        txtNote.Size = new System.Drawing.Size(650, 29);
+        txtNote.TabIndex = 16;
+        txtNote.Text = "Thu học phí đợt 2 - IELTS Foundation";
         // 
-        // pnlLeftActions
+        // lblNoteTitle
         // 
-        pnlLeftActions.Controls.Add(btnContinueConfirm);
-        pnlLeftActions.Controls.Add(btnCancel);
-        pnlLeftActions.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlLeftActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlLeftActions.Location = new System.Drawing.Point(20, 514);
-        pnlLeftActions.Name = "pnlLeftActions";
-        pnlLeftActions.Padding = new System.Windows.Forms.Padding(0, 8, 0, 0);
-        pnlLeftActions.Size = new System.Drawing.Size(696, 58);
-        pnlLeftActions.TabIndex = 16;
+        lblNoteTitle.AutoSize = true;
+        lblNoteTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblNoteTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblNoteTitle.Location = new System.Drawing.Point(18, 286);
+        lblNoteTitle.Name = "lblNoteTitle";
+        lblNoteTitle.Size = new System.Drawing.Size(76, 20);
+        lblNoteTitle.TabIndex = 15;
+        lblNoteTitle.Text = "Diễn giải:";
         // 
-        // btnContinueConfirm
+        // txtReference
         // 
-        btnContinueConfirm.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
-        btnContinueConfirm.CornerRadius = 5;
-        btnContinueConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnContinueConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnContinueConfirm.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnContinueConfirm.Location = new System.Drawing.Point(543, 11);
-        btnContinueConfirm.Name = "btnContinueConfirm";
-        btnContinueConfirm.Size = new System.Drawing.Size(150, 36);
-        btnContinueConfirm.TabIndex = 0;
-        btnContinueConfirm.Text = "Tiếp tục xác nhận";
-        btnContinueConfirm.UseVisualStyleBackColor = true;
-        btnContinueConfirm.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        txtReference.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtReference.Location = new System.Drawing.Point(145, 238);
+        txtReference.Name = "txtReference";
+        txtReference.PlaceholderText = "Nhập mã giao dịch ngân hàng / số biên nhận POS (nếu có)";
+        txtReference.Size = new System.Drawing.Size(650, 29);
+        txtReference.TabIndex = 14;
+        // 
+        // lblRefTitle
+        // 
+        lblRefTitle.AutoSize = true;
+        lblRefTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblRefTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblRefTitle.Location = new System.Drawing.Point(18, 242);
+        lblRefTitle.Name = "lblRefTitle";
+        lblRefTitle.Size = new System.Drawing.Size(107, 20);
+        lblRefTitle.TabIndex = 13;
+        lblRefTitle.Text = "Mã giao dịch:";
+        // 
+        // pnlMethod
+        // 
+        pnlMethod.Controls.Add(rbPos);
+        pnlMethod.Controls.Add(rbCash);
+        pnlMethod.Controls.Add(rbVietQR);
+        pnlMethod.Location = new System.Drawing.Point(145, 194);
+        pnlMethod.Name = "pnlMethod";
+        pnlMethod.Size = new System.Drawing.Size(650, 32);
+        pnlMethod.TabIndex = 12;
+        // 
+        // rbPos
+        // 
+        rbPos.AutoSize = true;
+        rbPos.Cursor = System.Windows.Forms.Cursors.Hand;
+        rbPos.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        rbPos.Location = new System.Drawing.Point(400, 3);
+        rbPos.Name = "rbPos";
+        rbPos.Size = new System.Drawing.Size(161, 25);
+        rbPos.TabIndex = 2;
+        rbPos.Text = "Thẻ POS / Quẹt thẻ";
+        rbPos.UseVisualStyleBackColor = true;
+        // 
+        // rbCash
+        // 
+        rbCash.AutoSize = true;
+        rbCash.Cursor = System.Windows.Forms.Cursors.Hand;
+        rbCash.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        rbCash.Location = new System.Drawing.Point(235, 3);
+        rbCash.Name = "rbCash";
+        rbCash.Size = new System.Drawing.Size(147, 25);
+        rbCash.TabIndex = 1;
+        rbCash.Text = "Tiền mặt (quầy)";
+        rbCash.UseVisualStyleBackColor = true;
+        // 
+        // rbVietQR
+        // 
+        rbVietQR.AutoSize = true;
+        rbVietQR.Checked = true;
+        rbVietQR.Cursor = System.Windows.Forms.Cursors.Hand;
+        rbVietQR.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        rbVietQR.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        rbVietQR.Location = new System.Drawing.Point(3, 3);
+        rbVietQR.Name = "rbVietQR";
+        rbVietQR.Size = new System.Drawing.Size(211, 25);
+        rbVietQR.TabIndex = 0;
+        rbVietQR.TabStop = true;
+        rbVietQR.Text = "Chuyển khoản VietQR";
+        rbVietQR.UseVisualStyleBackColor = true;
+        // 
+        // lblMethodTitle
+        // 
+        lblMethodTitle.AutoSize = true;
+        lblMethodTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblMethodTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblMethodTitle.Location = new System.Drawing.Point(18, 198);
+        lblMethodTitle.Name = "lblMethodTitle";
+        lblMethodTitle.Size = new System.Drawing.Size(104, 20);
+        lblMethodTitle.TabIndex = 11;
+        lblMethodTitle.Text = "Phương thức:";
+        // 
+        // lblAmountWords
+        // 
+        lblAmountWords.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+        lblAmountWords.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblAmountWords.Location = new System.Drawing.Point(145, 160);
+        lblAmountWords.Name = "lblAmountWords";
+        lblAmountWords.Size = new System.Drawing.Size(650, 22);
+        lblAmountWords.TabIndex = 10;
+        lblAmountWords.Text = "Bằng chữ: Ba triệu bốn trăm nghìn đồng chẵn";
+        // 
+        // btnPayHalf
+        // 
+        btnPayHalf.BackColor = System.Drawing.Color.White;
+        btnPayHalf.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnPayHalf.CornerRadius = 4;
+        btnPayHalf.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnPayHalf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnPayHalf.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        btnPayHalf.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        btnPayHalf.Location = new System.Drawing.Point(620, 116);
+        btnPayHalf.Name = "btnPayHalf";
+        btnPayHalf.Size = new System.Drawing.Size(175, 36);
+        btnPayHalf.TabIndex = 9;
+        btnPayHalf.Text = "½ Đóng 50% (1.700.000đ)";
+        btnPayHalf.UseVisualStyleBackColor = false;
+        btnPayHalf.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // btnPayFull
+        // 
+        btnPayFull.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        btnPayFull.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnPayFull.CornerRadius = 4;
+        btnPayFull.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnPayFull.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnPayFull.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
+        btnPayFull.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnPayFull.Location = new System.Drawing.Point(420, 116);
+        btnPayFull.Name = "btnPayFull";
+        btnPayFull.Size = new System.Drawing.Size(190, 36);
+        btnPayFull.TabIndex = 8;
+        btnPayFull.Text = "💯 Đóng hết (3.400.000đ)";
+        btnPayFull.UseVisualStyleBackColor = false;
+        btnPayFull.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // txtAmount
+        // 
+        txtAmount.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        txtAmount.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+        txtAmount.Location = new System.Drawing.Point(145, 116);
+        txtAmount.Name = "txtAmount";
+        txtAmount.Size = new System.Drawing.Size(260, 34);
+        txtAmount.TabIndex = 7;
+        txtAmount.Text = "3.400.000 đ";
+        // 
+        // lblAmountTitle
+        // 
+        lblAmountTitle.AutoSize = true;
+        lblAmountTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblAmountTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblAmountTitle.Location = new System.Drawing.Point(18, 122);
+        lblAmountTitle.Name = "lblAmountTitle";
+        lblAmountTitle.Size = new System.Drawing.Size(117, 20);
+        lblAmountTitle.TabIndex = 6;
+        lblAmountTitle.Text = "Số tiền thu (*):";
+        // 
+        // lblCollector
+        // 
+        lblCollector.AutoSize = true;
+        lblCollector.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblCollector.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblCollector.Location = new System.Drawing.Point(540, 77);
+        lblCollector.Name = "lblCollector";
+        lblCollector.Size = new System.Drawing.Size(248, 20);
+        lblCollector.TabIndex = 5;
+        lblCollector.Text = "Người lập: Trần Minh Quân (Admin)";
+        // 
+        // dtpPaymentDate
+        // 
+        dtpPaymentDate.CustomFormat = "dd/MM/yyyy";
+        dtpPaymentDate.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dtpPaymentDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+        dtpPaymentDate.Location = new System.Drawing.Point(145, 73);
+        dtpPaymentDate.Name = "dtpPaymentDate";
+        dtpPaymentDate.Size = new System.Drawing.Size(150, 29);
+        dtpPaymentDate.TabIndex = 4;
+        // 
+        // lblPaymentDateTitle
+        // 
+        lblPaymentDateTitle.AutoSize = true;
+        lblPaymentDateTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblPaymentDateTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblPaymentDateTitle.Location = new System.Drawing.Point(18, 77);
+        lblPaymentDateTitle.Name = "lblPaymentDateTitle";
+        lblPaymentDateTitle.Size = new System.Drawing.Size(78, 20);
+        lblPaymentDateTitle.TabIndex = 3;
+        lblPaymentDateTitle.Text = "Ngày thu:";
+        // 
+        // cboPaymentType
+        // 
+        cboPaymentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboPaymentType.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboPaymentType.FormattingEnabled = true;
+        cboPaymentType.Location = new System.Drawing.Point(145, 33);
+        cboPaymentType.Name = "cboPaymentType";
+        cboPaymentType.Size = new System.Drawing.Size(650, 29);
+        cboPaymentType.TabIndex = 2;
+        // 
+        // lblPaymentTypeTitle
+        // 
+        lblPaymentTypeTitle.AutoSize = true;
+        lblPaymentTypeTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblPaymentTypeTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblPaymentTypeTitle.Location = new System.Drawing.Point(18, 37);
+        lblPaymentTypeTitle.Name = "lblPaymentTypeTitle";
+        lblPaymentTypeTitle.Size = new System.Drawing.Size(121, 20);
+        lblPaymentTypeTitle.TabIndex = 1;
+        lblPaymentTypeTitle.Text = "Khoản mục thu:";
+        // 
+        // lblSectionDetails
+        // 
+        lblSectionDetails.AutoSize = true;
+        lblSectionDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblSectionDetails.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblSectionDetails.Location = new System.Drawing.Point(4, 5);
+        lblSectionDetails.Name = "lblSectionDetails";
+        lblSectionDetails.Size = new System.Drawing.Size(206, 23);
+        lblSectionDetails.TabIndex = 0;
+        lblSectionDetails.Text = "2. CHI TIẾT THANH TOÁN";
+        // 
+        // cardStudentSummary
+        // 
+        cardStudentSummary.BackColor = System.Drawing.Color.White;
+        cardStudentSummary.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStudentSummary.BorderWidth = 1;
+        cardStudentSummary.Controls.Add(pnlStatsRow);
+        cardStudentSummary.Controls.Add(lblClassInfo);
+        cardStudentSummary.Controls.Add(cboStudentSelect);
+        cardStudentSummary.Controls.Add(lblStudentTitle);
+        cardStudentSummary.Controls.Add(lblSectionStudent);
+        cardStudentSummary.CornerRadius = 6;
+        cardStudentSummary.Dock = System.Windows.Forms.DockStyle.Top;
+        cardStudentSummary.Location = new System.Drawing.Point(20, 14);
+        cardStudentSummary.Name = "cardStudentSummary";
+        cardStudentSummary.Padding = new System.Windows.Forms.Padding(18, 12, 18, 14);
+        cardStudentSummary.Size = new System.Drawing.Size(820, 170);
+        cardStudentSummary.TabIndex = 0;
+        // 
+        // pnlStatsRow
+        // 
+        pnlStatsRow.ColumnCount = 3;
+        pnlStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+        pnlStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+        pnlStatsRow.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+        pnlStatsRow.Controls.Add(cardRemaining, 2, 0);
+        pnlStatsRow.Controls.Add(cardPaid, 1, 0);
+        pnlStatsRow.Controls.Add(cardTotal, 0, 0);
+        pnlStatsRow.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlStatsRow.Location = new System.Drawing.Point(18, 92);
+        pnlStatsRow.Name = "pnlStatsRow";
+        pnlStatsRow.RowCount = 1;
+        pnlStatsRow.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+        pnlStatsRow.Size = new System.Drawing.Size(784, 64);
+        pnlStatsRow.TabIndex = 4;
+        // 
+        // cardRemaining
+        // 
+        cardRemaining.BackColor = System.Drawing.Color.FromArgb(254, 242, 242);
+        cardRemaining.BorderColor = System.Drawing.Color.FromArgb(254, 202, 202);
+        cardRemaining.BorderWidth = 1;
+        cardRemaining.Controls.Add(lblRemainingVal);
+        cardRemaining.Controls.Add(lblRemainingTitle);
+        cardRemaining.CornerRadius = 5;
+        cardRemaining.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardRemaining.Location = new System.Drawing.Point(525, 3);
+        cardRemaining.Name = "cardRemaining";
+        cardRemaining.Padding = new System.Windows.Forms.Padding(10, 6, 10, 6);
+        cardRemaining.Size = new System.Drawing.Size(256, 58);
+        cardRemaining.TabIndex = 2;
+        // 
+        // lblRemainingVal
+        // 
+        lblRemainingVal.Dock = System.Windows.Forms.DockStyle.Bottom;
+        lblRemainingVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+        lblRemainingVal.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+        lblRemainingVal.Location = new System.Drawing.Point(10, 27);
+        lblRemainingVal.Name = "lblRemainingVal";
+        lblRemainingVal.Size = new System.Drawing.Size(236, 25);
+        lblRemainingVal.TabIndex = 1;
+        lblRemainingVal.Text = "3.400.000 đ";
+        lblRemainingVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        // 
+        // lblRemainingTitle
+        // 
+        lblRemainingTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblRemainingTitle.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+        lblRemainingTitle.ForeColor = System.Drawing.Color.FromArgb(185, 28, 28);
+        lblRemainingTitle.Location = new System.Drawing.Point(10, 6);
+        lblRemainingTitle.Name = "lblRemainingTitle";
+        lblRemainingTitle.Size = new System.Drawing.Size(236, 20);
+        lblRemainingTitle.TabIndex = 0;
+        lblRemainingTitle.Text = "SỐ TIỀN CÒN NỢ";
+        // 
+        // cardPaid
+        // 
+        cardPaid.BackColor = System.Drawing.Color.FromArgb(240, 253, 244);
+        cardPaid.BorderColor = System.Drawing.Color.FromArgb(187, 247, 208);
+        cardPaid.BorderWidth = 1;
+        cardPaid.Controls.Add(lblPaidVal);
+        cardPaid.Controls.Add(lblPaidTitle);
+        cardPaid.CornerRadius = 5;
+        cardPaid.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardPaid.Location = new System.Drawing.Point(264, 3);
+        cardPaid.Name = "cardPaid";
+        cardPaid.Padding = new System.Windows.Forms.Padding(10, 6, 10, 6);
+        cardPaid.Size = new System.Drawing.Size(255, 58);
+        cardPaid.TabIndex = 1;
+        // 
+        // lblPaidVal
+        // 
+        lblPaidVal.Dock = System.Windows.Forms.DockStyle.Bottom;
+        lblPaidVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+        lblPaidVal.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
+        lblPaidVal.Location = new System.Drawing.Point(10, 27);
+        lblPaidVal.Name = "lblPaidVal";
+        lblPaidVal.Size = new System.Drawing.Size(235, 25);
+        lblPaidVal.TabIndex = 1;
+        lblPaidVal.Text = "2.000.000 đ";
+        lblPaidVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        // 
+        // lblPaidTitle
+        // 
+        lblPaidTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblPaidTitle.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+        lblPaidTitle.ForeColor = System.Drawing.Color.FromArgb(21, 128, 61);
+        lblPaidTitle.Location = new System.Drawing.Point(10, 6);
+        lblPaidTitle.Name = "lblPaidTitle";
+        lblPaidTitle.Size = new System.Drawing.Size(235, 20);
+        lblPaidTitle.TabIndex = 0;
+        lblPaidTitle.Text = "ĐÃ THANH TOÁN";
+        // 
+        // cardTotal
+        // 
+        cardTotal.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        cardTotal.BorderColor = System.Drawing.Color.FromArgb(191, 219, 254);
+        cardTotal.BorderWidth = 1;
+        cardTotal.Controls.Add(lblTotalVal);
+        cardTotal.Controls.Add(lblTotalTitle);
+        cardTotal.CornerRadius = 5;
+        cardTotal.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardTotal.Location = new System.Drawing.Point(3, 3);
+        cardTotal.Name = "cardTotal";
+        cardTotal.Padding = new System.Windows.Forms.Padding(10, 6, 10, 6);
+        cardTotal.Size = new System.Drawing.Size(255, 58);
+        cardTotal.TabIndex = 0;
+        // 
+        // lblTotalVal
+        // 
+        lblTotalVal.Dock = System.Windows.Forms.DockStyle.Bottom;
+        lblTotalVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+        lblTotalVal.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblTotalVal.Location = new System.Drawing.Point(10, 27);
+        lblTotalVal.Name = "lblTotalVal";
+        lblTotalVal.Size = new System.Drawing.Size(235, 25);
+        lblTotalVal.TabIndex = 1;
+        lblTotalVal.Text = "5.400.000 đ";
+        lblTotalVal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        // 
+        // lblTotalTitle
+        // 
+        lblTotalTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblTotalTitle.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+        lblTotalTitle.ForeColor = System.Drawing.Color.FromArgb(29, 78, 216);
+        lblTotalTitle.Location = new System.Drawing.Point(10, 6);
+        lblTotalTitle.Name = "lblTotalTitle";
+        lblTotalTitle.Size = new System.Drawing.Size(235, 20);
+        lblTotalTitle.TabIndex = 0;
+        lblTotalTitle.Text = "TỔNG HỌC PHÍ";
+        // 
+        // lblClassInfo
+        // 
+        lblClassInfo.AutoSize = true;
+        lblClassInfo.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        lblClassInfo.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblClassInfo.Location = new System.Drawing.Point(475, 48);
+        lblClassInfo.Name = "lblClassInfo";
+        lblClassInfo.Size = new System.Drawing.Size(288, 21);
+        lblClassInfo.TabIndex = 3;
+        lblClassInfo.Text = "Khóa / Lớp: IELTS Foundation · IELTS-F01";
+        // 
+        // cboStudentSelect
+        // 
+        cboStudentSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboStudentSelect.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboStudentSelect.FormattingEnabled = true;
+        cboStudentSelect.Location = new System.Drawing.Point(145, 44);
+        cboStudentSelect.Name = "cboStudentSelect";
+        cboStudentSelect.Size = new System.Drawing.Size(315, 29);
+        cboStudentSelect.TabIndex = 2;
+        // 
+        // lblStudentTitle
+        // 
+        lblStudentTitle.AutoSize = true;
+        lblStudentTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblStudentTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblStudentTitle.Location = new System.Drawing.Point(18, 48);
+        lblStudentTitle.Name = "lblStudentTitle";
+        lblStudentTitle.Size = new System.Drawing.Size(117, 20);
+        lblStudentTitle.TabIndex = 1;
+        lblStudentTitle.Text = "Chọn học viên:";
+        // 
+        // lblSectionStudent
+        // 
+        lblSectionStudent.AutoSize = true;
+        lblSectionStudent.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblSectionStudent.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblSectionStudent.Location = new System.Drawing.Point(4, 8);
+        lblSectionStudent.Name = "lblSectionStudent";
+        lblSectionStudent.Size = new System.Drawing.Size(281, 23);
+        lblSectionStudent.TabIndex = 0;
+        lblSectionStudent.Text = "1. THÔNG TIN HỌC VIÊN & CÔNG NỢ";
+        // 
+        // pnlFooter
+        // 
+        pnlFooter.BackColor = System.Drawing.Color.White;
+        pnlFooter.Controls.Add(chkPrintReceipt);
+        pnlFooter.Controls.Add(btnConfirm);
+        pnlFooter.Controls.Add(btnCancel);
+        pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlFooter.Location = new System.Drawing.Point(0, 594);
+        pnlFooter.Name = "pnlFooter";
+        pnlFooter.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
+        pnlFooter.Size = new System.Drawing.Size(860, 66);
+        pnlFooter.TabIndex = 2;
+        // 
+        // chkPrintReceipt
+        // 
+        chkPrintReceipt.AutoSize = true;
+        chkPrintReceipt.Checked = true;
+        chkPrintReceipt.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkPrintReceipt.Cursor = System.Windows.Forms.Cursors.Hand;
+        chkPrintReceipt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        chkPrintReceipt.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        chkPrintReceipt.Location = new System.Drawing.Point(24, 21);
+        chkPrintReceipt.Name = "chkPrintReceipt";
+        chkPrintReceipt.Size = new System.Drawing.Size(359, 24);
+        chkPrintReceipt.TabIndex = 2;
+        chkPrintReceipt.Text = "🖨️ Mở xem trước và in phiếu thu ngay sau khi lưu";
+        chkPrintReceipt.UseVisualStyleBackColor = true;
+        // 
+        // btnConfirm
+        // 
+        btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnConfirm.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnConfirm.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnConfirm.CornerRadius = 5;
+        btnConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnConfirm.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnConfirm.ForeColor = System.Drawing.Color.White;
+        btnConfirm.Location = new System.Drawing.Point(670, 14);
+        btnConfirm.Name = "btnConfirm";
+        btnConfirm.Size = new System.Drawing.Size(166, 38);
+        btnConfirm.TabIndex = 1;
+        btnConfirm.Text = "💾 Xác nhận & Thu";
+        btnConfirm.UseVisualStyleBackColor = false;
+        btnConfirm.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // btnCancel
         // 
+        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.BackColor = System.Drawing.Color.White;
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnCancel.Location = new System.Drawing.Point(437, 11);
+        btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnCancel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnCancel.Location = new System.Drawing.Point(565, 14);
         btnCancel.Name = "btnCancel";
-        btnCancel.Size = new System.Drawing.Size(100, 36);
-        btnCancel.TabIndex = 1;
-        btnCancel.Text = "Hủy thu";
-        btnCancel.UseVisualStyleBackColor = true;
+        btnCancel.Size = new System.Drawing.Size(95, 38);
+        btnCancel.TabIndex = 0;
+        btnCancel.Text = "Hủy bỏ";
+        btnCancel.UseVisualStyleBackColor = false;
         btnCancel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // txtNote
-        // 
-        txtNote.BackColor = System.Drawing.Color.Transparent;
-        txtNote.CornerRadius = 5;
-        txtNote.ErrorMessage = "";
-        txtNote.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtNote.HasError = false;
-        txtNote.Location = new System.Drawing.Point(20, 354);
-        txtNote.Name = "txtNote";
-        txtNote.Placeholder = "";
-        txtNote.ReadOnly = false;
-        txtNote.Size = new System.Drawing.Size(670, 36);
-        txtNote.TabIndex = 14;
-        txtNote.UseSystemPasswordChar = false;
-        // 
-        // lblNote
-        // 
-        lblNote.AutoSize = true;
-        lblNote.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblNote.Location = new System.Drawing.Point(20, 334);
-        lblNote.Name = "lblNote";
-        lblNote.Size = new System.Drawing.Size(70, 20);
-        lblNote.TabIndex = 13;
-        lblNote.Text = "Diễn giải";
-        // 
-        // txtReference
-        // 
-        txtReference.BackColor = System.Drawing.Color.Transparent;
-        txtReference.CornerRadius = 5;
-        txtReference.ErrorMessage = "";
-        txtReference.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtReference.HasError = false;
-        txtReference.Location = new System.Drawing.Point(20, 288);
-        txtReference.Name = "txtReference";
-        txtReference.Placeholder = "";
-        txtReference.ReadOnly = false;
-        txtReference.Size = new System.Drawing.Size(670, 36);
-        txtReference.TabIndex = 12;
-        txtReference.UseSystemPasswordChar = false;
-        // 
-        // lblReference
-        // 
-        lblReference.AutoSize = true;
-        lblReference.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblReference.Location = new System.Drawing.Point(20, 268);
-        lblReference.Name = "lblReference";
-        lblReference.Size = new System.Drawing.Size(191, 20);
-        lblReference.TabIndex = 11;
-        lblReference.Text = "Tham chiếu chuyển khoản";
-        // 
-        // lblAmountError
-        // 
-        lblAmountError.AutoSize = true;
-        lblAmountError.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblAmountError.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)68)), ((int)((byte)68)));
-        lblAmountError.Location = new System.Drawing.Point(22, 244);
-        lblAmountError.Name = "lblAmountError";
-        lblAmountError.Size = new System.Drawing.Size(372, 20);
-        lblAmountError.TabIndex = 10;
-        lblAmountError.Text = "Vượt số dư 3.400.000đ. Số tiền phải >0 và ≤3.400.000đ.";
-        lblAmountError.Visible = false;
-        // 
-        // txtAmount
-        // 
-        txtAmount.BackColor = System.Drawing.Color.Transparent;
-        txtAmount.CornerRadius = 5;
-        txtAmount.ErrorMessage = "";
-        txtAmount.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        txtAmount.HasError = false;
-        txtAmount.Location = new System.Drawing.Point(20, 204);
-        txtAmount.Name = "txtAmount";
-        txtAmount.Placeholder = "";
-        txtAmount.ReadOnly = false;
-        txtAmount.Size = new System.Drawing.Size(670, 36);
-        txtAmount.TabIndex = 9;
-        txtAmount.UseSystemPasswordChar = false;
-        // 
-        // lblAmount
-        // 
-        lblAmount.AutoSize = true;
-        lblAmount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblAmount.Location = new System.Drawing.Point(20, 184);
-        lblAmount.Name = "lblAmount";
-        lblAmount.Size = new System.Drawing.Size(96, 20);
-        lblAmount.TabIndex = 8;
-        lblAmount.Text = "Số tiền thu *";
-        // 
-        // cboPaymentMethod
-        // 
-        cboPaymentMethod.BackColor = System.Drawing.Color.Transparent;
-        cboPaymentMethod.CornerRadius = 5;
-        cboPaymentMethod.DataSource = null;
-        cboPaymentMethod.DisplayMember = "";
-        cboPaymentMethod.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        cboPaymentMethod.Location = new System.Drawing.Point(370, 136);
-        cboPaymentMethod.Name = "cboPaymentMethod";
-        cboPaymentMethod.SelectedIndex = -1;
-        cboPaymentMethod.SelectedItem = null;
-        cboPaymentMethod.SelectedValue = null;
-        cboPaymentMethod.Size = new System.Drawing.Size(320, 35);
-        cboPaymentMethod.TabIndex = 7;
-        cboPaymentMethod.ValueMember = "";
-        // 
-        // lblPaymentMethod
-        // 
-        lblPaymentMethod.AutoSize = true;
-        lblPaymentMethod.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPaymentMethod.Location = new System.Drawing.Point(370, 116);
-        lblPaymentMethod.Name = "lblPaymentMethod";
-        lblPaymentMethod.Size = new System.Drawing.Size(89, 20);
-        lblPaymentMethod.TabIndex = 6;
-        lblPaymentMethod.Text = "Hình thức *";
-        // 
-        // cboPaymentType
-        // 
-        cboPaymentType.BackColor = System.Drawing.Color.Transparent;
-        cboPaymentType.CornerRadius = 5;
-        cboPaymentType.DataSource = null;
-        cboPaymentType.DisplayMember = "";
-        cboPaymentType.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        cboPaymentType.Location = new System.Drawing.Point(20, 136);
-        cboPaymentType.Name = "cboPaymentType";
-        cboPaymentType.SelectedIndex = -1;
-        cboPaymentType.SelectedItem = null;
-        cboPaymentType.SelectedValue = null;
-        cboPaymentType.Size = new System.Drawing.Size(320, 35);
-        cboPaymentType.TabIndex = 5;
-        cboPaymentType.ValueMember = "";
-        // 
-        // lblPaymentType
-        // 
-        lblPaymentType.AutoSize = true;
-        lblPaymentType.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPaymentType.Location = new System.Drawing.Point(20, 116);
-        lblPaymentType.Name = "lblPaymentType";
-        lblPaymentType.Size = new System.Drawing.Size(132, 20);
-        lblPaymentType.TabIndex = 4;
-        lblPaymentType.Text = "Kiểu thanh toán *";
-        // 
-        // txtPaymentDate
-        // 
-        txtPaymentDate.BackColor = System.Drawing.Color.Transparent;
-        txtPaymentDate.CornerRadius = 5;
-        txtPaymentDate.ErrorMessage = "";
-        txtPaymentDate.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtPaymentDate.HasError = false;
-        txtPaymentDate.Location = new System.Drawing.Point(370, 68);
-        txtPaymentDate.Name = "txtPaymentDate";
-        txtPaymentDate.Placeholder = "";
-        txtPaymentDate.ReadOnly = false;
-        txtPaymentDate.Size = new System.Drawing.Size(320, 36);
-        txtPaymentDate.TabIndex = 3;
-        txtPaymentDate.UseSystemPasswordChar = false;
-        // 
-        // lblPaymentDate
-        // 
-        lblPaymentDate.AutoSize = true;
-        lblPaymentDate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPaymentDate.Location = new System.Drawing.Point(370, 48);
-        lblPaymentDate.Name = "lblPaymentDate";
-        lblPaymentDate.Size = new System.Drawing.Size(85, 20);
-        lblPaymentDate.TabIndex = 2;
-        lblPaymentDate.Text = "Ngày thu *";
-        // 
-        // txtStudentInfo
-        // 
-        txtStudentInfo.BackColor = System.Drawing.Color.Transparent;
-        txtStudentInfo.CornerRadius = 5;
-        txtStudentInfo.Enabled = false;
-        txtStudentInfo.ErrorMessage = "";
-        txtStudentInfo.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtStudentInfo.HasError = false;
-        txtStudentInfo.Location = new System.Drawing.Point(20, 68);
-        txtStudentInfo.Name = "txtStudentInfo";
-        txtStudentInfo.Placeholder = "";
-        txtStudentInfo.ReadOnly = false;
-        txtStudentInfo.Size = new System.Drawing.Size(320, 36);
-        txtStudentInfo.TabIndex = 1;
-        txtStudentInfo.UseSystemPasswordChar = false;
-        // 
-        // lblStudentInfo
-        // 
-        lblStudentInfo.AutoSize = true;
-        lblStudentInfo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStudentInfo.Location = new System.Drawing.Point(20, 48);
-        lblStudentInfo.Name = "lblStudentInfo";
-        lblStudentInfo.Size = new System.Drawing.Size(117, 20);
-        lblStudentInfo.TabIndex = 0;
-        lblStudentInfo.Text = "Học viên / lớp *";
-        // 
-        // pnlRightCard
-        // 
-        pnlRightCard.BackColor = System.Drawing.Color.White;
-        pnlRightCard.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        pnlRightCard.BorderWidth = 1;
-        pnlRightCard.Controls.Add(lblRightCardTitle);
-        pnlRightCard.Controls.Add(btnFillRemaining);
-        pnlRightCard.Controls.Add(lblDueDateVal);
-        pnlRightCard.Controls.Add(lblDueDateTitle);
-        pnlRightCard.Controls.Add(lblRemainingVal);
-        pnlRightCard.Controls.Add(lblRemainingTitle);
-        pnlRightCard.Controls.Add(lblPaidVal);
-        pnlRightCard.Controls.Add(lblPaidTitle);
-        pnlRightCard.Controls.Add(lblNetTuitionVal);
-        pnlRightCard.Controls.Add(lblNetTuitionTitle);
-        pnlRightCard.Controls.Add(lblDiscountVal);
-        pnlRightCard.Controls.Add(lblDiscountTitle);
-        pnlRightCard.Controls.Add(lblBaseTuitionVal);
-        pnlRightCard.Controls.Add(lblBaseTuitionTitle);
-        pnlRightCard.CornerRadius = 6;
-        pnlRightCard.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlRightCard.Location = new System.Drawing.Point(765, 15);
-        pnlRightCard.Name = "pnlRightCard";
-        pnlRightCard.Padding = new System.Windows.Forms.Padding(20);
-        pnlRightCard.Size = new System.Drawing.Size(412, 592);
-        pnlRightCard.TabIndex = 1;
-        // 
-        // lblRightCardTitle
-        // 
-        lblRightCardTitle.AutoSize = true;
-        lblRightCardTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblRightCardTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblRightCardTitle.Location = new System.Drawing.Point(20, 16);
-        lblRightCardTitle.Name = "lblRightCardTitle";
-        lblRightCardTitle.Size = new System.Drawing.Size(165, 25);
-        lblRightCardTitle.TabIndex = 15;
-        lblRightCardTitle.Text = "Đối chiếu học phí";
-        // 
-        // btnFillRemaining
-        // 
-        btnFillRemaining.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnFillRemaining.CornerRadius = 5;
-        btnFillRemaining.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnFillRemaining.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnFillRemaining.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnFillRemaining.Location = new System.Drawing.Point(23, 268);
-        btnFillRemaining.Name = "btnFillRemaining";
-        btnFillRemaining.Size = new System.Drawing.Size(370, 38);
-        btnFillRemaining.TabIndex = 13;
-        btnFillRemaining.Text = "Điền số tiền còn lại 3.400.000đ";
-        btnFillRemaining.UseVisualStyleBackColor = true;
-        btnFillRemaining.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // lblDueDateVal
-        // 
-        lblDueDateVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblDueDateVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblDueDateVal.Location = new System.Drawing.Point(240, 225);
-        lblDueDateVal.Name = "lblDueDateVal";
-        lblDueDateVal.Size = new System.Drawing.Size(150, 18);
-        lblDueDateVal.TabIndex = 11;
-        lblDueDateVal.Text = "15/11/2026";
-        lblDueDateVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblDueDateTitle
-        // 
-        lblDueDateTitle.AutoSize = true;
-        lblDueDateTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDueDateTitle.Location = new System.Drawing.Point(20, 225);
-        lblDueDateTitle.Name = "lblDueDateTitle";
-        lblDueDateTitle.Size = new System.Drawing.Size(111, 20);
-        lblDueDateTitle.TabIndex = 10;
-        lblDueDateTitle.Text = "Hạn thanh toán";
-        // 
-        // lblRemainingVal
-        // 
-        lblRemainingVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblRemainingVal.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblRemainingVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)68)), ((int)((byte)68)));
-        lblRemainingVal.Location = new System.Drawing.Point(240, 190);
-        lblRemainingVal.Name = "lblRemainingVal";
-        lblRemainingVal.Size = new System.Drawing.Size(150, 20);
-        lblRemainingVal.TabIndex = 9;
-        lblRemainingVal.Text = "3.400.000đ";
-        lblRemainingVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblRemainingTitle
-        // 
-        lblRemainingTitle.AutoSize = true;
-        lblRemainingTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblRemainingTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)68)), ((int)((byte)68)));
-        lblRemainingTitle.Location = new System.Drawing.Point(20, 190);
-        lblRemainingTitle.Name = "lblRemainingTitle";
-        lblRemainingTitle.Size = new System.Drawing.Size(98, 20);
-        lblRemainingTitle.TabIndex = 8;
-        lblRemainingTitle.Text = "Còn phải thu";
-        // 
-        // lblPaidVal
-        // 
-        lblPaidVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblPaidVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblPaidVal.Location = new System.Drawing.Point(240, 155);
-        lblPaidVal.Name = "lblPaidVal";
-        lblPaidVal.Size = new System.Drawing.Size(150, 18);
-        lblPaidVal.TabIndex = 7;
-        lblPaidVal.Text = "2.000.000đ";
-        lblPaidVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblPaidTitle
-        // 
-        lblPaidTitle.AutoSize = true;
-        lblPaidTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPaidTitle.Location = new System.Drawing.Point(20, 155);
-        lblPaidTitle.Name = "lblPaidTitle";
-        lblPaidTitle.Size = new System.Drawing.Size(114, 20);
-        lblPaidTitle.TabIndex = 6;
-        lblPaidTitle.Text = "Đã thu trước đó";
-        // 
-        // lblNetTuitionVal
-        // 
-        lblNetTuitionVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblNetTuitionVal.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblNetTuitionVal.Location = new System.Drawing.Point(240, 120);
-        lblNetTuitionVal.Name = "lblNetTuitionVal";
-        lblNetTuitionVal.Size = new System.Drawing.Size(150, 18);
-        lblNetTuitionVal.TabIndex = 5;
-        lblNetTuitionVal.Text = "5.400.000đ";
-        lblNetTuitionVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblNetTuitionTitle
-        // 
-        lblNetTuitionTitle.AutoSize = true;
-        lblNetTuitionTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblNetTuitionTitle.Location = new System.Drawing.Point(20, 120);
-        lblNetTuitionTitle.Name = "lblNetTuitionTitle";
-        lblNetTuitionTitle.Size = new System.Drawing.Size(126, 20);
-        lblNetTuitionTitle.TabIndex = 4;
-        lblNetTuitionTitle.Text = "Học phí thực thu";
-        // 
-        // lblDiscountVal
-        // 
-        lblDiscountVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblDiscountVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblDiscountVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblDiscountVal.Location = new System.Drawing.Point(240, 85);
-        lblDiscountVal.Name = "lblDiscountVal";
-        lblDiscountVal.Size = new System.Drawing.Size(150, 18);
-        lblDiscountVal.TabIndex = 3;
-        lblDiscountVal.Text = "600.000đ · 10%";
-        lblDiscountVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblDiscountTitle
-        // 
-        lblDiscountTitle.AutoSize = true;
-        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDiscountTitle.Location = new System.Drawing.Point(20, 85);
-        lblDiscountTitle.Name = "lblDiscountTitle";
-        lblDiscountTitle.Size = new System.Drawing.Size(53, 20);
-        lblDiscountTitle.TabIndex = 2;
-        lblDiscountTitle.Text = "Ưu đãi";
-        // 
-        // lblBaseTuitionVal
-        // 
-        lblBaseTuitionVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblBaseTuitionVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblBaseTuitionVal.Location = new System.Drawing.Point(240, 50);
-        lblBaseTuitionVal.Name = "lblBaseTuitionVal";
-        lblBaseTuitionVal.Size = new System.Drawing.Size(150, 18);
-        lblBaseTuitionVal.TabIndex = 1;
-        lblBaseTuitionVal.Text = "6.000.000đ";
-        lblBaseTuitionVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblBaseTuitionTitle
-        // 
-        lblBaseTuitionTitle.AutoSize = true;
-        lblBaseTuitionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblBaseTuitionTitle.Location = new System.Drawing.Point(20, 50);
-        lblBaseTuitionTitle.Name = "lblBaseTuitionTitle";
-        lblBaseTuitionTitle.Size = new System.Drawing.Size(90, 20);
-        lblBaseTuitionTitle.TabIndex = 0;
-        lblBaseTuitionTitle.Text = "Học phí gốc";
         // 
         // CollectTuitionDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        ClientSize = new System.Drawing.Size(1200, 740);
+        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        ClientSize = new System.Drawing.Size(860, 660);
         Controls.Add(pnlBody);
-        Controls.Add(pnlStepper);
+        Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
+        Font = new System.Drawing.Font("Segoe UI", 9F);
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         MaximizeBox = false;
         MinimizeBox = false;
+        Name = "CollectTuitionDialog";
+        ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thu học phí · ECMS";
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
-        pnlStepper.ResumeLayout(false);
-        pnlStepper.PerformLayout();
         pnlBody.ResumeLayout(false);
-        pnlLeftCard.ResumeLayout(false);
-        pnlLeftCard.PerformLayout();
-        pnlLeftActions.ResumeLayout(false);
-        pnlRightCard.ResumeLayout(false);
-        pnlRightCard.PerformLayout();
+        cardPaymentDetails.ResumeLayout(false);
+        cardPaymentDetails.PerformLayout();
+        pnlMethod.ResumeLayout(false);
+        pnlMethod.PerformLayout();
+        cardStudentSummary.ResumeLayout(false);
+        cardStudentSummary.PerformLayout();
+        pnlStatsRow.ResumeLayout(false);
+        cardRemaining.ResumeLayout(false);
+        cardPaid.ResumeLayout(false);
+        cardTotal.ResumeLayout(false);
+        pnlFooter.ResumeLayout(false);
+        pnlFooter.PerformLayout();
         ResumeLayout(false);
     }
 
+    #endregion
+
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Panel pnlStepper;
-    private System.Windows.Forms.Label lblStep1;
-    private System.Windows.Forms.Label lblStep2;
-    private System.Windows.Forms.Label lblStep3;
-    private System.Windows.Forms.Label lblStep4;
-    private System.Windows.Forms.TableLayoutPanel pnlBody;
-    private ECMS.UI.Controls.AppCard pnlLeftCard;
-    private System.Windows.Forms.Label lblLeftCardTitle;
-    private ECMS.UI.Controls.AppCard pnlRightCard;
-    private System.Windows.Forms.Label lblRightCardTitle;
-
-    private System.Windows.Forms.Label lblStudentInfo;
-    private ECMS.UI.Controls.AppTextBox txtStudentInfo;
-    private System.Windows.Forms.Label lblPaymentDate;
-    private ECMS.UI.Controls.AppTextBox txtPaymentDate;
-    private System.Windows.Forms.Label lblPaymentType;
-    private ECMS.UI.Controls.AppComboBox cboPaymentType;
-    private System.Windows.Forms.Label lblPaymentMethod;
-    private ECMS.UI.Controls.AppComboBox cboPaymentMethod;
-    private System.Windows.Forms.Label lblAmount;
-    private ECMS.UI.Controls.AppTextBox txtAmount;
-    private System.Windows.Forms.Label lblAmountError;
-    private System.Windows.Forms.Label lblReference;
-    private ECMS.UI.Controls.AppTextBox txtReference;
-    private System.Windows.Forms.Label lblNote;
-    private ECMS.UI.Controls.AppTextBox txtNote;
-    private System.Windows.Forms.FlowLayoutPanel pnlLeftActions;
-    private ECMS.UI.Controls.AppButton btnContinueConfirm;
-    private ECMS.UI.Controls.AppButton btnCancel;
-
-    private System.Windows.Forms.Label lblBaseTuitionTitle;
-    private System.Windows.Forms.Label lblBaseTuitionVal;
-    private System.Windows.Forms.Label lblDiscountTitle;
-    private System.Windows.Forms.Label lblDiscountVal;
-    private System.Windows.Forms.Label lblNetTuitionTitle;
-    private System.Windows.Forms.Label lblNetTuitionVal;
+    private System.Windows.Forms.Label lblReceiptNo;
+    private System.Windows.Forms.Panel pnlBody;
+    private ECMS.UI.Controls.AppCard cardStudentSummary;
+    private System.Windows.Forms.Label lblSectionStudent;
+    private System.Windows.Forms.Label lblStudentTitle;
+    private System.Windows.Forms.ComboBox cboStudentSelect;
+    private System.Windows.Forms.Label lblClassInfo;
+    private System.Windows.Forms.TableLayoutPanel pnlStatsRow;
+    private ECMS.UI.Controls.AppCard cardTotal;
+    private System.Windows.Forms.Label lblTotalTitle;
+    private System.Windows.Forms.Label lblTotalVal;
+    private ECMS.UI.Controls.AppCard cardPaid;
     private System.Windows.Forms.Label lblPaidTitle;
     private System.Windows.Forms.Label lblPaidVal;
+    private ECMS.UI.Controls.AppCard cardRemaining;
     private System.Windows.Forms.Label lblRemainingTitle;
     private System.Windows.Forms.Label lblRemainingVal;
-    private System.Windows.Forms.Label lblDueDateTitle;
-    private System.Windows.Forms.Label lblDueDateVal;
-    private ECMS.UI.Controls.AppButton btnFillRemaining;
+    private ECMS.UI.Controls.AppCard cardPaymentDetails;
+    private System.Windows.Forms.Label lblSectionDetails;
+    private System.Windows.Forms.Label lblPaymentTypeTitle;
+    private System.Windows.Forms.ComboBox cboPaymentType;
+    private System.Windows.Forms.Label lblPaymentDateTitle;
+    private System.Windows.Forms.DateTimePicker dtpPaymentDate;
+    private System.Windows.Forms.Label lblCollector;
+    private System.Windows.Forms.Label lblAmountTitle;
+    private System.Windows.Forms.TextBox txtAmount;
+    private ECMS.UI.Controls.AppButton btnPayFull;
+    private ECMS.UI.Controls.AppButton btnPayHalf;
+    private System.Windows.Forms.Label lblAmountWords;
+    private System.Windows.Forms.Label lblMethodTitle;
+    private System.Windows.Forms.Panel pnlMethod;
+    private System.Windows.Forms.RadioButton rbVietQR;
+    private System.Windows.Forms.RadioButton rbCash;
+    private System.Windows.Forms.RadioButton rbPos;
+    private System.Windows.Forms.Label lblRefTitle;
+    private System.Windows.Forms.TextBox txtReference;
+    private System.Windows.Forms.Label lblNoteTitle;
+    private System.Windows.Forms.TextBox txtNote;
+    private System.Windows.Forms.Panel pnlFooter;
+    private System.Windows.Forms.CheckBox chkPrintReceipt;
+    private ECMS.UI.Controls.AppButton btnCancel;
+    private ECMS.UI.Controls.AppButton btnConfirm;
 }

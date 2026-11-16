@@ -44,7 +44,17 @@ public class AppComboBox : UserControl
     public int SelectedIndex
     {
         get => _inner.SelectedIndex;
-        set => _inner.SelectedIndex = value;
+        set
+        {
+            if (value >= 0 && value < _inner.Items.Count)
+            {
+                _inner.SelectedIndex = value;
+            }
+            else if (value == -1)
+            {
+                _inner.SelectedIndex = -1;
+            }
+        }
     }
 
     public int FindStringExact(string? s) => _inner.FindStringExact(s);
@@ -52,7 +62,17 @@ public class AppComboBox : UserControl
     public object? SelectedItem
     {
         get => _inner.SelectedItem;
-        set => _inner.SelectedItem = value;
+        set
+        {
+            try
+            {
+                _inner.SelectedItem = value;
+            }
+            catch
+            {
+                // Ignore any invalid selection attempts
+            }
+        }
     }
 
     public object? SelectedValue
@@ -60,9 +80,16 @@ public class AppComboBox : UserControl
         get => _inner.SelectedValue;
         set
         {
+            try
+            {
 #pragma warning disable CS8601
-            _inner.SelectedValue = value;
+                _inner.SelectedValue = value;
 #pragma warning restore CS8601
+            }
+            catch
+            {
+                // Ignore any invalid selection attempts
+            }
         }
     }
 

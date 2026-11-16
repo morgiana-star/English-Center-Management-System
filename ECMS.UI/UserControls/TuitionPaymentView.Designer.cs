@@ -13,239 +13,501 @@ partial class TuitionPaymentView
         base.Dispose(disposing);
     }
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
+    #region Component Designer generated code
+
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TuitionPaymentView));
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-        pnlMain = new System.Windows.Forms.Panel();
-        pnlHistoryCard = new ECMS.UI.Controls.AppCard();
-        gridHistory = new ECMS.UI.Controls.AppDataGrid();
-        colHistDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colHistTransCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colHistReceiptCode = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colHistAmount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colHistMethod = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colHistCollector = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        lblHistoryCardTitle = new System.Windows.Forms.Label();
-        pnlDebtCard = new ECMS.UI.Controls.AppCard();
-        lblDebtorsFooter = new System.Windows.Forms.Label();
-        gridDebtors = new ECMS.UI.Controls.AppDataGrid();
-        colStudent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colClass = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colTotalPayable = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colPaid = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colRemaining = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colDueDate = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colAction = new System.Windows.Forms.DataGridViewButtonColumn();
-        lblDebtCardTitle = new System.Windows.Forms.Label();
-        pnlStats = new System.Windows.Forms.TableLayoutPanel();
-        statTotalDebt = new ECMS.UI.Controls.AppStatCard();
-        statDebtorCount = new ECMS.UI.Controls.AppStatCard();
-        statDueIn7Days = new ECMS.UI.Controls.AppStatCard();
-        statCollectedMonth = new ECMS.UI.Controls.AppStatCard();
-        pnlFilter = new System.Windows.Forms.Panel();
-        txtSearch = new ECMS.UI.Controls.AppTextBox();
-        cboDebtFilter = new ECMS.UI.Controls.AppComboBox();
-        cboDueDateFilter = new ECMS.UI.Controls.AppComboBox();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+        pnlHeader = new System.Windows.Forms.Panel();
+        btnExportDebt = new ECMS.UI.Controls.AppButton();
+        btnCollectTuition = new ECMS.UI.Controls.AppButton();
+        lblSubtitle = new System.Windows.Forms.Label();
+        lblTitle = new System.Windows.Forms.Label();
         pnlTabs = new System.Windows.Forms.Panel();
-        btnTabDueDate = new System.Windows.Forms.Button();
         btnTabHistory = new System.Windows.Forms.Button();
         btnTabDebt = new System.Windows.Forms.Button();
-        pnlHeader = new System.Windows.Forms.Panel();
-        lblTitle = new System.Windows.Forms.Label();
-        pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
-        btnCollectTuition = new ECMS.UI.Controls.AppButton();
-        btnExportDebt = new ECMS.UI.Controls.AppButton();
-        pnlMain.SuspendLayout();
-        pnlHistoryCard.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)gridHistory).BeginInit();
-        pnlDebtCard.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)gridDebtors).BeginInit();
-        pnlStats.SuspendLayout();
-        pnlFilter.SuspendLayout();
-        pnlTabs.SuspendLayout();
+        btnTabProfiles = new System.Windows.Forms.Button();
+        pnlFilter = new System.Windows.Forms.Panel();
+        cboClassFilter = new System.Windows.Forms.ComboBox();
+        cboStatusFilter = new System.Windows.Forms.ComboBox();
+        txtSearch = new System.Windows.Forms.TextBox();
+        lblSearch = new System.Windows.Forms.Label();
+        pnlBody = new System.Windows.Forms.Panel();
+        cardProfiles = new ECMS.UI.Controls.AppCard();
+        gridProfiles = new ECMS.UI.Controls.AppDataGrid();
+        pnlProfileSummary = new System.Windows.Forms.Panel();
+        cardSumRemaining = new ECMS.UI.Controls.AppCard();
+        lblSumRemainingVal = new System.Windows.Forms.Label();
+        lblSumRemainingTitle = new System.Windows.Forms.Label();
+        cardSumPaid = new ECMS.UI.Controls.AppCard();
+        lblSumPaidVal = new System.Windows.Forms.Label();
+        lblSumPaidTitle = new System.Windows.Forms.Label();
+        cardSumTotal = new ECMS.UI.Controls.AppCard();
+        lblSumTotalVal = new System.Windows.Forms.Label();
+        lblSumTotalTitle = new System.Windows.Forms.Label();
+        lblProfilesTitle = new System.Windows.Forms.Label();
+        cardDebt = new ECMS.UI.Controls.AppCard();
+        lblDebtorsFooter = new System.Windows.Forms.Label();
+        gridDebtors = new ECMS.UI.Controls.AppDataGrid();
+        lblDebtTitle = new System.Windows.Forms.Label();
+        cardHistory = new ECMS.UI.Controls.AppCard();
+        lblHistoryFooter = new System.Windows.Forms.Label();
+        gridHistory = new ECMS.UI.Controls.AppDataGrid();
+        lblHistoryTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
-        pnlTopActions.SuspendLayout();
+        pnlTabs.SuspendLayout();
+        pnlFilter.SuspendLayout();
+        pnlBody.SuspendLayout();
+        cardProfiles.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)gridProfiles).BeginInit();
+        pnlProfileSummary.SuspendLayout();
+        cardSumRemaining.SuspendLayout();
+        cardSumPaid.SuspendLayout();
+        cardSumTotal.SuspendLayout();
+        cardDebt.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)gridDebtors).BeginInit();
+        cardHistory.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)gridHistory).BeginInit();
         SuspendLayout();
         // 
-        // pnlMain
+        // pnlHeader
         // 
-        pnlMain.AutoScroll = true;
-        pnlMain.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        pnlMain.Controls.Add(pnlHistoryCard);
-        pnlMain.Controls.Add(pnlDebtCard);
-        pnlMain.Controls.Add(pnlStats);
-        pnlMain.Controls.Add(pnlFilter);
-        pnlMain.Controls.Add(pnlTabs);
-        pnlMain.Controls.Add(pnlHeader);
-        pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlMain.Location = new System.Drawing.Point(0, 0);
-        pnlMain.Name = "pnlMain";
-        pnlMain.Padding = new System.Windows.Forms.Padding(24, 16, 24, 24);
-        pnlMain.Size = new System.Drawing.Size(1200, 900);
-        pnlMain.TabIndex = 0;
+        pnlHeader.BackColor = System.Drawing.Color.White;
+        pnlHeader.Controls.Add(btnExportDebt);
+        pnlHeader.Controls.Add(btnCollectTuition);
+        pnlHeader.Controls.Add(lblSubtitle);
+        pnlHeader.Controls.Add(lblTitle);
+        pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlHeader.Location = new System.Drawing.Point(0, 0);
+        pnlHeader.Name = "pnlHeader";
+        pnlHeader.Padding = new System.Windows.Forms.Padding(24, 14, 24, 12);
+        pnlHeader.Size = new System.Drawing.Size(1200, 75);
+        pnlHeader.TabIndex = 0;
         // 
-        // pnlHistoryCard
+        // btnExportDebt
         // 
-        pnlHistoryCard.BackColor = System.Drawing.Color.White;
-        pnlHistoryCard.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        pnlHistoryCard.BorderWidth = 1;
-        pnlHistoryCard.Controls.Add(gridHistory);
-        pnlHistoryCard.Controls.Add(lblHistoryCardTitle);
-        pnlHistoryCard.CornerRadius = 6;
-        pnlHistoryCard.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlHistoryCard.Location = new System.Drawing.Point(24, 518);
-        pnlHistoryCard.Margin = new System.Windows.Forms.Padding(0, 14, 0, 0);
-        pnlHistoryCard.Name = "pnlHistoryCard";
-        pnlHistoryCard.Padding = new System.Windows.Forms.Padding(16);
-        pnlHistoryCard.Size = new System.Drawing.Size(1152, 364);
-        pnlHistoryCard.TabIndex = 5;
+        btnExportDebt.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnExportDebt.BackColor = System.Drawing.Color.White;
+        btnExportDebt.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnExportDebt.CornerRadius = 5;
+        btnExportDebt.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnExportDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnExportDebt.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnExportDebt.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnExportDebt.Location = new System.Drawing.Point(920, 18);
+        btnExportDebt.Name = "btnExportDebt";
+        btnExportDebt.Size = new System.Drawing.Size(120, 38);
+        btnExportDebt.TabIndex = 1;
+        btnExportDebt.Text = "Xuất báo cáo";
+        btnExportDebt.UseVisualStyleBackColor = false;
+        btnExportDebt.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
-        // gridHistory
+        // btnCollectTuition
         // 
-        gridHistory.AllowUserToAddRows = false;
-        gridHistory.AllowUserToDeleteRows = false;
-        gridHistory.AllowUserToResizeColumns = false;
-        gridHistory.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
-        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        gridHistory.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        gridHistory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-        gridHistory.BackgroundColor = System.Drawing.Color.White;
-        gridHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        gridHistory.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-        gridHistory.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        btnCollectTuition.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCollectTuition.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnCollectTuition.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnCollectTuition.CornerRadius = 5;
+        btnCollectTuition.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnCollectTuition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnCollectTuition.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnCollectTuition.ForeColor = System.Drawing.Color.White;
+        btnCollectTuition.Location = new System.Drawing.Point(1050, 18);
+        btnCollectTuition.Name = "btnCollectTuition";
+        btnCollectTuition.Size = new System.Drawing.Size(130, 38);
+        btnCollectTuition.TabIndex = 2;
+        btnCollectTuition.Text = "+ Thu học phí";
+        btnCollectTuition.UseVisualStyleBackColor = false;
+        btnCollectTuition.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        // 
+        // lblSubtitle
+        // 
+        lblSubtitle.AutoSize = true;
+        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblSubtitle.Location = new System.Drawing.Point(24, 46);
+        lblSubtitle.Name = "lblSubtitle";
+        lblSubtitle.Size = new System.Drawing.Size(395, 20);
+        lblSubtitle.TabIndex = 1;
+        lblSubtitle.Text = "Hệ thống quản lý hồ sơ học phí, theo dõi công nợ và phiếu thu";
+        // 
+        // lblTitle
+        // 
+        lblTitle.AutoSize = true;
+        lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.Location = new System.Drawing.Point(22, 12);
+        lblTitle.Name = "lblTitle";
+        lblTitle.Size = new System.Drawing.Size(262, 35);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "Học phí & Thanh toán";
+        // 
+        // pnlTabs
+        // 
+        pnlTabs.BackColor = System.Drawing.Color.White;
+        pnlTabs.Controls.Add(btnTabHistory);
+        pnlTabs.Controls.Add(btnTabDebt);
+        pnlTabs.Controls.Add(btnTabProfiles);
+        pnlTabs.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlTabs.Location = new System.Drawing.Point(0, 75);
+        pnlTabs.Name = "pnlTabs";
+        pnlTabs.Padding = new System.Windows.Forms.Padding(24, 0, 24, 0);
+        pnlTabs.Size = new System.Drawing.Size(1200, 44);
+        pnlTabs.TabIndex = 1;
+        // 
+        // btnTabHistory
+        // 
+        btnTabHistory.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnTabHistory.Dock = System.Windows.Forms.DockStyle.Left;
+        btnTabHistory.FlatAppearance.BorderSize = 0;
+        btnTabHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnTabHistory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnTabHistory.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        btnTabHistory.Location = new System.Drawing.Point(344, 0);
+        btnTabHistory.Name = "btnTabHistory";
+        btnTabHistory.Size = new System.Drawing.Size(160, 44);
+        btnTabHistory.TabIndex = 2;
+        btnTabHistory.Text = "3. Lịch sử thu";
+        btnTabHistory.UseVisualStyleBackColor = true;
+        // 
+        // btnTabDebt
+        // 
+        btnTabDebt.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnTabDebt.Dock = System.Windows.Forms.DockStyle.Left;
+        btnTabDebt.FlatAppearance.BorderSize = 0;
+        btnTabDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnTabDebt.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnTabDebt.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        btnTabDebt.Location = new System.Drawing.Point(184, 0);
+        btnTabDebt.Name = "btnTabDebt";
+        btnTabDebt.Size = new System.Drawing.Size(160, 44);
+        btnTabDebt.TabIndex = 1;
+        btnTabDebt.Text = "2. Công nợ";
+        btnTabDebt.UseVisualStyleBackColor = true;
+        // 
+        // btnTabProfiles
+        // 
+        btnTabProfiles.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnTabProfiles.Dock = System.Windows.Forms.DockStyle.Left;
+        btnTabProfiles.FlatAppearance.BorderSize = 0;
+        btnTabProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnTabProfiles.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnTabProfiles.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnTabProfiles.Location = new System.Drawing.Point(24, 0);
+        btnTabProfiles.Name = "btnTabProfiles";
+        btnTabProfiles.Size = new System.Drawing.Size(160, 44);
+        btnTabProfiles.TabIndex = 0;
+        btnTabProfiles.Text = "1. Hồ sơ học phí";
+        btnTabProfiles.UseVisualStyleBackColor = true;
+        // 
+        // pnlFilter
+        // 
+        pnlFilter.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlFilter.Controls.Add(cboClassFilter);
+        pnlFilter.Controls.Add(cboStatusFilter);
+        pnlFilter.Controls.Add(txtSearch);
+        pnlFilter.Controls.Add(lblSearch);
+        pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlFilter.Location = new System.Drawing.Point(0, 119);
+        pnlFilter.Name = "pnlFilter";
+        pnlFilter.Padding = new System.Windows.Forms.Padding(24, 8, 24, 8);
+        pnlFilter.Size = new System.Drawing.Size(1200, 50);
+        pnlFilter.TabIndex = 2;
+        // 
+        // cboClassFilter
+        // 
+        cboClassFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboClassFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboClassFilter.FormattingEnabled = true;
+        cboClassFilter.Location = new System.Drawing.Point(1020, 10);
+        cboClassFilter.Name = "cboClassFilter";
+        cboClassFilter.Size = new System.Drawing.Size(155, 29);
+        cboClassFilter.TabIndex = 3;
+        // 
+        // cboStatusFilter
+        // 
+        cboStatusFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboStatusFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboStatusFilter.FormattingEnabled = true;
+        cboStatusFilter.Location = new System.Drawing.Point(825, 10);
+        cboStatusFilter.Name = "cboStatusFilter";
+        cboStatusFilter.Size = new System.Drawing.Size(185, 29);
+        cboStatusFilter.TabIndex = 2;
+        // 
+        // txtSearch
+        // 
+        txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtSearch.Location = new System.Drawing.Point(115, 10);
+        txtSearch.Name = "txtSearch";
+        txtSearch.PlaceholderText = "Tìm theo mã học viên, họ và tên, lớp học...";
+        txtSearch.Size = new System.Drawing.Size(430, 29);
+        txtSearch.TabIndex = 1;
+        // 
+        // lblSearch
+        // 
+        lblSearch.AutoSize = true;
+        lblSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSearch.Location = new System.Drawing.Point(24, 14);
+        lblSearch.Name = "lblSearch";
+        lblSearch.Size = new System.Drawing.Size(87, 20);
+        lblSearch.TabIndex = 0;
+        lblSearch.Text = "🔍 Tìm kiếm:";
+        // 
+        // pnlBody
+        // 
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        pnlBody.Controls.Add(cardProfiles);
+        pnlBody.Controls.Add(cardDebt);
+        pnlBody.Controls.Add(cardHistory);
+        pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
+        pnlBody.Location = new System.Drawing.Point(0, 169);
+        pnlBody.Name = "pnlBody";
+        pnlBody.Padding = new System.Windows.Forms.Padding(24, 14, 24, 18);
+        pnlBody.Size = new System.Drawing.Size(1200, 631);
+        pnlBody.TabIndex = 3;
+        // 
+        // cardProfiles
+        // 
+        cardProfiles.BackColor = System.Drawing.Color.White;
+        cardProfiles.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardProfiles.BorderWidth = 1;
+        cardProfiles.Controls.Add(gridProfiles);
+        cardProfiles.Controls.Add(pnlProfileSummary);
+        cardProfiles.Controls.Add(lblProfilesTitle);
+        cardProfiles.CornerRadius = 8;
+        cardProfiles.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardProfiles.Location = new System.Drawing.Point(24, 14);
+        cardProfiles.Name = "cardProfiles";
+        cardProfiles.Padding = new System.Windows.Forms.Padding(16);
+        cardProfiles.Size = new System.Drawing.Size(1152, 599);
+        cardProfiles.TabIndex = 0;
+        // 
+        // gridProfiles
+        // 
+        gridProfiles.AllowUserToAddRows = false;
+        gridProfiles.AllowUserToDeleteRows = false;
+        gridProfiles.AllowUserToResizeColumns = false;
+        gridProfiles.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        gridProfiles.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        gridProfiles.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        gridProfiles.BackgroundColor = System.Drawing.Color.White;
+        gridProfiles.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        gridProfiles.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        gridProfiles.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-        gridHistory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-        gridHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        gridHistory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colHistDate, colHistTransCode, colHistReceiptCode, colHistAmount, colHistMethod, colHistCollector });
+        gridProfiles.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        gridProfiles.ColumnHeadersHeight = 38;
+        gridProfiles.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-        gridHistory.DefaultCellStyle = dataGridViewCellStyle3;
-        gridHistory.Dock = System.Windows.Forms.DockStyle.Top;
-        gridHistory.EnableHeadersVisualStyles = false;
-        gridHistory.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        gridHistory.Location = new System.Drawing.Point(16, 16);
-        gridHistory.MultiSelect = false;
-        gridHistory.Name = "gridHistory";
-        gridHistory.ReadOnly = true;
-        gridHistory.RowHeadersVisible = false;
-        gridHistory.RowHeadersWidth = 51;
-        gridHistory.ScrollBars = System.Windows.Forms.ScrollBars.None;
-        gridHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridHistory.Size = new System.Drawing.Size(1120, 329);
-        gridHistory.TabIndex = 0;
+        gridProfiles.DefaultCellStyle = dataGridViewCellStyle3;
+        gridProfiles.Dock = System.Windows.Forms.DockStyle.Fill;
+        gridProfiles.EnableHeadersVisualStyles = false;
+        gridProfiles.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        gridProfiles.Location = new System.Drawing.Point(16, 44);
+        gridProfiles.MultiSelect = false;
+        gridProfiles.Name = "gridProfiles";
+        gridProfiles.ReadOnly = true;
+        gridProfiles.RowHeadersVisible = false;
+        gridProfiles.RowHeadersWidth = 51;
+        gridProfiles.RowTemplate.Height = 42;
+        gridProfiles.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+        gridProfiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        gridProfiles.Size = new System.Drawing.Size(1120, 467);
+        gridProfiles.TabIndex = 1;
         // 
-        // colHistDate
+        // pnlProfileSummary
         // 
-        colHistDate.FillWeight = 15F;
-        colHistDate.HeaderText = "Ngày ↑";
-        colHistDate.MinimumWidth = 6;
-        colHistDate.Name = "colHistDate";
-        colHistDate.ReadOnly = true;
+        pnlProfileSummary.Controls.Add(cardSumRemaining);
+        pnlProfileSummary.Controls.Add(cardSumPaid);
+        pnlProfileSummary.Controls.Add(cardSumTotal);
+        pnlProfileSummary.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlProfileSummary.Location = new System.Drawing.Point(16, 511);
+        pnlProfileSummary.Name = "pnlProfileSummary";
+        pnlProfileSummary.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
+        pnlProfileSummary.Size = new System.Drawing.Size(1120, 72);
+        pnlProfileSummary.TabIndex = 2;
         // 
-        // colHistTransCode
+        // cardSumRemaining
         // 
-        colHistTransCode.FillWeight = 20F;
-        colHistTransCode.HeaderText = "Mã giao dịch";
-        colHistTransCode.MinimumWidth = 6;
-        colHistTransCode.Name = "colHistTransCode";
-        colHistTransCode.ReadOnly = true;
+        cardSumRemaining.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardSumRemaining.BackColor = System.Drawing.Color.FromArgb(254, 242, 242);
+        cardSumRemaining.BorderColor = System.Drawing.Color.FromArgb(254, 202, 202);
+        cardSumRemaining.BorderWidth = 1;
+        cardSumRemaining.Controls.Add(lblSumRemainingVal);
+        cardSumRemaining.Controls.Add(lblSumRemainingTitle);
+        cardSumRemaining.CornerRadius = 6;
+        cardSumRemaining.Location = new System.Drawing.Point(755, 10);
+        cardSumRemaining.Name = "cardSumRemaining";
+        cardSumRemaining.Padding = new System.Windows.Forms.Padding(12, 6, 12, 6);
+        cardSumRemaining.Size = new System.Drawing.Size(360, 52);
+        cardSumRemaining.TabIndex = 2;
         // 
-        // colHistReceiptCode
+        // lblSumRemainingVal
         // 
-        colHistReceiptCode.FillWeight = 20F;
-        colHistReceiptCode.HeaderText = "Phiếu thu";
-        colHistReceiptCode.MinimumWidth = 6;
-        colHistReceiptCode.Name = "colHistReceiptCode";
-        colHistReceiptCode.ReadOnly = true;
+        lblSumRemainingVal.Dock = System.Windows.Forms.DockStyle.Right;
+        lblSumRemainingVal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        lblSumRemainingVal.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+        lblSumRemainingVal.Location = new System.Drawing.Point(160, 6);
+        lblSumRemainingVal.Name = "lblSumRemainingVal";
+        lblSumRemainingVal.Size = new System.Drawing.Size(188, 40);
+        lblSumRemainingVal.TabIndex = 1;
+        lblSumRemainingVal.Text = "10.700.000 đ";
+        lblSumRemainingVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
-        // colHistAmount
+        // lblSumRemainingTitle
         // 
-        colHistAmount.FillWeight = 15F;
-        colHistAmount.HeaderText = "Số tiền";
-        colHistAmount.MinimumWidth = 6;
-        colHistAmount.Name = "colHistAmount";
-        colHistAmount.ReadOnly = true;
+        lblSumRemainingTitle.Dock = System.Windows.Forms.DockStyle.Left;
+        lblSumRemainingTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSumRemainingTitle.ForeColor = System.Drawing.Color.FromArgb(153, 27, 27);
+        lblSumRemainingTitle.Location = new System.Drawing.Point(12, 6);
+        lblSumRemainingTitle.Name = "lblSumRemainingTitle";
+        lblSumRemainingTitle.Size = new System.Drawing.Size(145, 40);
+        lblSumRemainingTitle.TabIndex = 0;
+        lblSumRemainingTitle.Text = "⏳ Tổng còn phải thu:";
+        lblSumRemainingTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         // 
-        // colHistMethod
+        // cardSumPaid
         // 
-        colHistMethod.FillWeight = 15F;
-        colHistMethod.HeaderText = "Phương thức";
-        colHistMethod.MinimumWidth = 6;
-        colHistMethod.Name = "colHistMethod";
-        colHistMethod.ReadOnly = true;
+        cardSumPaid.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardSumPaid.BackColor = System.Drawing.Color.FromArgb(240, 253, 244);
+        cardSumPaid.BorderColor = System.Drawing.Color.FromArgb(187, 247, 208);
+        cardSumPaid.BorderWidth = 1;
+        cardSumPaid.Controls.Add(lblSumPaidVal);
+        cardSumPaid.Controls.Add(lblSumPaidTitle);
+        cardSumPaid.CornerRadius = 6;
+        cardSumPaid.Location = new System.Drawing.Point(380, 10);
+        cardSumPaid.Name = "cardSumPaid";
+        cardSumPaid.Padding = new System.Windows.Forms.Padding(12, 6, 12, 6);
+        cardSumPaid.Size = new System.Drawing.Size(360, 52);
+        cardSumPaid.TabIndex = 1;
         // 
-        // colHistCollector
+        // lblSumPaidVal
         // 
-        colHistCollector.FillWeight = 15F;
-        colHistCollector.HeaderText = "Người thu";
-        colHistCollector.MinimumWidth = 6;
-        colHistCollector.Name = "colHistCollector";
-        colHistCollector.ReadOnly = true;
+        lblSumPaidVal.Dock = System.Windows.Forms.DockStyle.Right;
+        lblSumPaidVal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        lblSumPaidVal.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
+        lblSumPaidVal.Location = new System.Drawing.Point(160, 6);
+        lblSumPaidVal.Name = "lblSumPaidVal";
+        lblSumPaidVal.Size = new System.Drawing.Size(188, 40);
+        lblSumPaidVal.TabIndex = 1;
+        lblSumPaidVal.Text = "73.900.000 đ";
+        lblSumPaidVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
-        // lblHistoryCardTitle
+        // lblSumPaidTitle
         // 
-        lblHistoryCardTitle.AutoSize = true;
-        lblHistoryCardTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblHistoryCardTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblHistoryCardTitle.Location = new System.Drawing.Point(16, 12);
-        lblHistoryCardTitle.Name = "lblHistoryCardTitle";
-        lblHistoryCardTitle.Size = new System.Drawing.Size(356, 25);
-        lblHistoryCardTitle.TabIndex = 2;
-        lblHistoryCardTitle.Text = "Lịch sử · Nguyễn Minh Anh / IELTS-F01";
+        lblSumPaidTitle.Dock = System.Windows.Forms.DockStyle.Left;
+        lblSumPaidTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSumPaidTitle.ForeColor = System.Drawing.Color.FromArgb(22, 101, 52);
+        lblSumPaidTitle.Location = new System.Drawing.Point(12, 6);
+        lblSumPaidTitle.Name = "lblSumPaidTitle";
+        lblSumPaidTitle.Size = new System.Drawing.Size(145, 40);
+        lblSumPaidTitle.TabIndex = 0;
+        lblSumPaidTitle.Text = "💵 Tổng đã thu:";
+        lblSumPaidTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         // 
-        // pnlDebtCard
+        // cardSumTotal
         // 
-        pnlDebtCard.BackColor = System.Drawing.Color.White;
-        pnlDebtCard.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        pnlDebtCard.BorderWidth = 1;
-        pnlDebtCard.Controls.Add(lblDebtorsFooter);
-        pnlDebtCard.Controls.Add(gridDebtors);
-        pnlDebtCard.Controls.Add(lblDebtCardTitle);
-        pnlDebtCard.CornerRadius = 6;
-        pnlDebtCard.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlDebtCard.Location = new System.Drawing.Point(24, 258);
-        pnlDebtCard.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
-        pnlDebtCard.Name = "pnlDebtCard";
-        pnlDebtCard.Padding = new System.Windows.Forms.Padding(16);
-        pnlDebtCard.Size = new System.Drawing.Size(1152, 260);
-        pnlDebtCard.TabIndex = 4;
+        cardSumTotal.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cardSumTotal.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        cardSumTotal.BorderColor = System.Drawing.Color.FromArgb(191, 219, 254);
+        cardSumTotal.BorderWidth = 1;
+        cardSumTotal.Controls.Add(lblSumTotalVal);
+        cardSumTotal.Controls.Add(lblSumTotalTitle);
+        cardSumTotal.CornerRadius = 6;
+        cardSumTotal.Location = new System.Drawing.Point(5, 10);
+        cardSumTotal.Name = "cardSumTotal";
+        cardSumTotal.Padding = new System.Windows.Forms.Padding(12, 6, 12, 6);
+        cardSumTotal.Size = new System.Drawing.Size(360, 52);
+        cardSumTotal.TabIndex = 0;
+        // 
+        // lblSumTotalVal
+        // 
+        lblSumTotalVal.Dock = System.Windows.Forms.DockStyle.Right;
+        lblSumTotalVal.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        lblSumTotalVal.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblSumTotalVal.Location = new System.Drawing.Point(160, 6);
+        lblSumTotalVal.Name = "lblSumTotalVal";
+        lblSumTotalVal.Size = new System.Drawing.Size(188, 40);
+        lblSumTotalVal.TabIndex = 1;
+        lblSumTotalVal.Text = "84.600.000 đ";
+        lblSumTotalVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        // 
+        // lblSumTotalTitle
+        // 
+        lblSumTotalTitle.Dock = System.Windows.Forms.DockStyle.Left;
+        lblSumTotalTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSumTotalTitle.ForeColor = System.Drawing.Color.FromArgb(30, 64, 175);
+        lblSumTotalTitle.Location = new System.Drawing.Point(12, 6);
+        lblSumTotalTitle.Name = "lblSumTotalTitle";
+        lblSumTotalTitle.Size = new System.Drawing.Size(145, 40);
+        lblSumTotalTitle.TabIndex = 0;
+        lblSumTotalTitle.Text = "📊 Tổng phải thu:";
+        lblSumTotalTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        // 
+        // lblProfilesTitle
+        // 
+        lblProfilesTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblProfilesTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblProfilesTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblProfilesTitle.Location = new System.Drawing.Point(16, 16);
+        lblProfilesTitle.Name = "lblProfilesTitle";
+        lblProfilesTitle.Size = new System.Drawing.Size(1120, 28);
+        lblProfilesTitle.TabIndex = 0;
+        lblProfilesTitle.Text = "HỒ SƠ HỌC PHÍ HỌC VIÊN TOÀN TRUNG TÂM";
+        // 
+        // cardDebt
+        // 
+        cardDebt.BackColor = System.Drawing.Color.White;
+        cardDebt.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardDebt.BorderWidth = 1;
+        cardDebt.Controls.Add(lblDebtorsFooter);
+        cardDebt.Controls.Add(gridDebtors);
+        cardDebt.Controls.Add(lblDebtTitle);
+        cardDebt.CornerRadius = 8;
+        cardDebt.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardDebt.Location = new System.Drawing.Point(24, 14);
+        cardDebt.Name = "cardDebt";
+        cardDebt.Padding = new System.Windows.Forms.Padding(16);
+        cardDebt.Size = new System.Drawing.Size(1152, 599);
+        cardDebt.TabIndex = 1;
+        cardDebt.Visible = false;
         // 
         // lblDebtorsFooter
         // 
         lblDebtorsFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         lblDebtorsFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblDebtorsFooter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDebtorsFooter.Location = new System.Drawing.Point(16, 219);
+        lblDebtorsFooter.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblDebtorsFooter.Location = new System.Drawing.Point(16, 555);
         lblDebtorsFooter.Name = "lblDebtorsFooter";
-        lblDebtorsFooter.Size = new System.Drawing.Size(1120, 25);
-        lblDebtorsFooter.TabIndex = 1;
-        lblDebtorsFooter.Text = resources.GetString("lblDebtorsFooter.Text");
+        lblDebtorsFooter.Size = new System.Drawing.Size(1120, 28);
+        lblDebtorsFooter.TabIndex = 2;
+        lblDebtorsFooter.Text = "📌 Nhấn '💵 Thu tiền' tại học viên bất kỳ để mở hộp thoại thu học phí và tự động lập phiếu thu.";
         // 
         // gridDebtors
         // 
@@ -253,10 +515,7 @@ partial class TuitionPaymentView
         gridDebtors.AllowUserToDeleteRows = false;
         gridDebtors.AllowUserToResizeColumns = false;
         gridDebtors.AllowUserToResizeRows = false;
-        dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
-        dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
         gridDebtors.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
         gridDebtors.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         gridDebtors.BackgroundColor = System.Drawing.Color.White;
@@ -264,425 +523,205 @@ partial class TuitionPaymentView
         gridDebtors.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         gridDebtors.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
         dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle5.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
         dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         gridDebtors.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
-        gridDebtors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        gridDebtors.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colStudent, colClass, colTotalPayable, colPaid, colRemaining, colDueDate, colAction });
+        gridDebtors.ColumnHeadersHeight = 38;
+        gridDebtors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle6.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
         dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         gridDebtors.DefaultCellStyle = dataGridViewCellStyle6;
-        gridDebtors.Dock = System.Windows.Forms.DockStyle.Top;
+        gridDebtors.Dock = System.Windows.Forms.DockStyle.Fill;
         gridDebtors.EnableHeadersVisualStyles = false;
-        gridDebtors.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        gridDebtors.Location = new System.Drawing.Point(16, 16);
+        gridDebtors.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        gridDebtors.Location = new System.Drawing.Point(16, 44);
         gridDebtors.MultiSelect = false;
         gridDebtors.Name = "gridDebtors";
         gridDebtors.ReadOnly = true;
         gridDebtors.RowHeadersVisible = false;
         gridDebtors.RowHeadersWidth = 51;
-        gridDebtors.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        gridDebtors.RowTemplate.Height = 42;
+        gridDebtors.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         gridDebtors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridDebtors.Size = new System.Drawing.Size(1120, 200);
-        gridDebtors.TabIndex = 0;
+        gridDebtors.Size = new System.Drawing.Size(1120, 511);
+        gridDebtors.TabIndex = 1;
         // 
-        // colStudent
+        // lblDebtTitle
         // 
-        colStudent.FillWeight = 25F;
-        colStudent.HeaderText = "Học viên ↑";
-        colStudent.MinimumWidth = 6;
-        colStudent.Name = "colStudent";
-        colStudent.ReadOnly = true;
+        lblDebtTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblDebtTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblDebtTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblDebtTitle.Location = new System.Drawing.Point(16, 16);
+        lblDebtTitle.Name = "lblDebtTitle";
+        lblDebtTitle.Size = new System.Drawing.Size(1120, 28);
+        lblDebtTitle.TabIndex = 0;
+        lblDebtTitle.Text = "DANH SÁCH HỌC VIÊN CÒN KHOẢN PHẢI THANH TOÁN (CÔNG NỢ > 0đ)";
         // 
-        // colClass
+        // cardHistory
         // 
-        colClass.FillWeight = 15F;
-        colClass.HeaderText = "Lớp";
-        colClass.MinimumWidth = 6;
-        colClass.Name = "colClass";
-        colClass.ReadOnly = true;
+        cardHistory.BackColor = System.Drawing.Color.White;
+        cardHistory.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardHistory.BorderWidth = 1;
+        cardHistory.Controls.Add(lblHistoryFooter);
+        cardHistory.Controls.Add(gridHistory);
+        cardHistory.Controls.Add(lblHistoryTitle);
+        cardHistory.CornerRadius = 8;
+        cardHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardHistory.Location = new System.Drawing.Point(24, 14);
+        cardHistory.Name = "cardHistory";
+        cardHistory.Padding = new System.Windows.Forms.Padding(16);
+        cardHistory.Size = new System.Drawing.Size(1152, 599);
+        cardHistory.TabIndex = 2;
+        cardHistory.Visible = false;
         // 
-        // colTotalPayable
+        // lblHistoryFooter
         // 
-        colTotalPayable.FillWeight = 15F;
-        colTotalPayable.HeaderText = "Thực thu";
-        colTotalPayable.MinimumWidth = 6;
-        colTotalPayable.Name = "colTotalPayable";
-        colTotalPayable.ReadOnly = true;
+        lblHistoryFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+        lblHistoryFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        lblHistoryFooter.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblHistoryFooter.Location = new System.Drawing.Point(16, 555);
+        lblHistoryFooter.Name = "lblHistoryFooter";
+        lblHistoryFooter.Size = new System.Drawing.Size(1120, 28);
+        lblHistoryFooter.TabIndex = 2;
+        lblHistoryFooter.Text = "📌 Nhấn '🖨️ In phiếu thu' để mở phôi biên lai thu tiền chuẩn A5 hai liên và gửi lệnh in.";
         // 
-        // colPaid
+        // gridHistory
         // 
-        colPaid.FillWeight = 15F;
-        colPaid.HeaderText = "Đã thu";
-        colPaid.MinimumWidth = 6;
-        colPaid.Name = "colPaid";
-        colPaid.ReadOnly = true;
+        gridHistory.AllowUserToAddRows = false;
+        gridHistory.AllowUserToDeleteRows = false;
+        gridHistory.AllowUserToResizeColumns = false;
+        gridHistory.AllowUserToResizeRows = false;
+        dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        gridHistory.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+        gridHistory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        gridHistory.BackgroundColor = System.Drawing.Color.White;
+        gridHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        gridHistory.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        gridHistory.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle8.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle8.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        gridHistory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+        gridHistory.ColumnHeadersHeight = 38;
+        gridHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle9.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        gridHistory.DefaultCellStyle = dataGridViewCellStyle9;
+        gridHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+        gridHistory.EnableHeadersVisualStyles = false;
+        gridHistory.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        gridHistory.Location = new System.Drawing.Point(16, 44);
+        gridHistory.MultiSelect = false;
+        gridHistory.Name = "gridHistory";
+        gridHistory.ReadOnly = true;
+        gridHistory.RowHeadersVisible = false;
+        gridHistory.RowHeadersWidth = 51;
+        gridHistory.RowTemplate.Height = 42;
+        gridHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+        gridHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        gridHistory.Size = new System.Drawing.Size(1120, 511);
+        gridHistory.TabIndex = 1;
         // 
-        // colRemaining
+        // lblHistoryTitle
         // 
-        colRemaining.FillWeight = 15F;
-        colRemaining.HeaderText = "Còn nợ";
-        colRemaining.MinimumWidth = 6;
-        colRemaining.Name = "colRemaining";
-        colRemaining.ReadOnly = true;
-        // 
-        // colDueDate
-        // 
-        colDueDate.FillWeight = 15F;
-        colDueDate.HeaderText = "Hạn trả";
-        colDueDate.MinimumWidth = 6;
-        colDueDate.Name = "colDueDate";
-        colDueDate.ReadOnly = true;
-        // 
-        // colAction
-        // 
-        colAction.FillWeight = 12F;
-        colAction.HeaderText = "Thao tác";
-        colAction.MinimumWidth = 6;
-        colAction.Name = "colAction";
-        colAction.ReadOnly = true;
-        colAction.Text = "Thu tiền";
-        colAction.UseColumnTextForButtonValue = true;
-        // 
-        // lblDebtCardTitle
-        // 
-        lblDebtCardTitle.AutoSize = true;
-        lblDebtCardTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblDebtCardTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblDebtCardTitle.Location = new System.Drawing.Point(16, 12);
-        lblDebtCardTitle.Name = "lblDebtCardTitle";
-        lblDebtCardTitle.Size = new System.Drawing.Size(168, 25);
-        lblDebtCardTitle.TabIndex = 2;
-        lblDebtCardTitle.Text = "Công nợ học viên";
-        // 
-        // pnlStats
-        // 
-        pnlStats.ColumnCount = 4;
-        pnlStats.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-        pnlStats.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-        pnlStats.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-        pnlStats.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-        pnlStats.Controls.Add(statTotalDebt, 0, 0);
-        pnlStats.Controls.Add(statDebtorCount, 1, 0);
-        pnlStats.Controls.Add(statDueIn7Days, 2, 0);
-        pnlStats.Controls.Add(statCollectedMonth, 3, 0);
-        pnlStats.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlStats.Location = new System.Drawing.Point(24, 168);
-        pnlStats.Name = "pnlStats";
-        pnlStats.RowCount = 1;
-        pnlStats.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlStats.Size = new System.Drawing.Size(1152, 90);
-        pnlStats.TabIndex = 3;
-        // 
-        // statTotalDebt
-        // 
-        statTotalDebt.BackColor = System.Drawing.Color.White;
-        statTotalDebt.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        statTotalDebt.BorderWidth = 1;
-        statTotalDebt.CornerRadius = 6;
-        statTotalDebt.Dock = System.Windows.Forms.DockStyle.Fill;
-        statTotalDebt.Location = new System.Drawing.Point(3, 3);
-        statTotalDebt.Name = "statTotalDebt";
-        statTotalDebt.Padding = new System.Windows.Forms.Padding(14, 12, 14, 12);
-        statTotalDebt.Size = new System.Drawing.Size(282, 84);
-        statTotalDebt.Subtext = "Ghi chú phụ";
-        statTotalDebt.TabIndex = 0;
-        statTotalDebt.Title = "Tổng công nợ trước thu";
-        statTotalDebt.Value = "44,4 tr";
-        // 
-        // statDebtorCount
-        // 
-        statDebtorCount.BackColor = System.Drawing.Color.White;
-        statDebtorCount.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        statDebtorCount.BorderWidth = 1;
-        statDebtorCount.CornerRadius = 6;
-        statDebtorCount.Dock = System.Windows.Forms.DockStyle.Fill;
-        statDebtorCount.Location = new System.Drawing.Point(291, 3);
-        statDebtorCount.Name = "statDebtorCount";
-        statDebtorCount.Padding = new System.Windows.Forms.Padding(14, 12, 14, 12);
-        statDebtorCount.Size = new System.Drawing.Size(282, 84);
-        statDebtorCount.Subtext = "Ghi chú phụ";
-        statDebtorCount.TabIndex = 1;
-        statDebtorCount.Title = "Học viên còn nợ";
-        statDebtorCount.Value = "27";
-        // 
-        // statDueIn7Days
-        // 
-        statDueIn7Days.BackColor = System.Drawing.Color.White;
-        statDueIn7Days.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        statDueIn7Days.BorderWidth = 1;
-        statDueIn7Days.CornerRadius = 6;
-        statDueIn7Days.Dock = System.Windows.Forms.DockStyle.Fill;
-        statDueIn7Days.Location = new System.Drawing.Point(579, 3);
-        statDueIn7Days.Name = "statDueIn7Days";
-        statDueIn7Days.Padding = new System.Windows.Forms.Padding(14, 12, 14, 12);
-        statDueIn7Days.Size = new System.Drawing.Size(282, 84);
-        statDueIn7Days.Subtext = "Ghi chú phụ";
-        statDueIn7Days.TabIndex = 2;
-        statDueIn7Days.Title = "Đến hạn trong 7 ngày";
-        statDueIn7Days.Value = "12";
-        // 
-        // statCollectedMonth
-        // 
-        statCollectedMonth.BackColor = System.Drawing.Color.White;
-        statCollectedMonth.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        statCollectedMonth.BorderWidth = 1;
-        statCollectedMonth.CornerRadius = 6;
-        statCollectedMonth.Dock = System.Windows.Forms.DockStyle.Fill;
-        statCollectedMonth.Location = new System.Drawing.Point(867, 3);
-        statCollectedMonth.Name = "statCollectedMonth";
-        statCollectedMonth.Padding = new System.Windows.Forms.Padding(14, 12, 14, 12);
-        statCollectedMonth.Size = new System.Drawing.Size(282, 84);
-        statCollectedMonth.Subtext = "Ghi chú phụ";
-        statCollectedMonth.TabIndex = 3;
-        statCollectedMonth.Title = "Đã thu tháng 10";
-        statCollectedMonth.Value = "185 tr";
-        // 
-        // pnlFilter
-        // 
-        pnlFilter.Controls.Add(txtSearch);
-        pnlFilter.Controls.Add(cboDebtFilter);
-        pnlFilter.Controls.Add(cboDueDateFilter);
-        pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlFilter.Location = new System.Drawing.Point(24, 122);
-        pnlFilter.Name = "pnlFilter";
-        pnlFilter.Size = new System.Drawing.Size(1152, 46);
-        pnlFilter.TabIndex = 2;
-        // 
-        // txtSearch
-        // 
-        txtSearch.BackColor = System.Drawing.Color.Transparent;
-        txtSearch.CornerRadius = 5;
-        txtSearch.ErrorMessage = "";
-        txtSearch.Font = new System.Drawing.Font("Segoe UI", 9F);
-        txtSearch.HasError = false;
-        txtSearch.Location = new System.Drawing.Point(0, 6);
-        txtSearch.Name = "txtSearch";
-        txtSearch.Placeholder = "⌕  Tìm mã, tên học viên, lớp...";
-        txtSearch.ReadOnly = false;
-        txtSearch.Size = new System.Drawing.Size(260, 34);
-        txtSearch.TabIndex = 0;
-        txtSearch.UseSystemPasswordChar = false;
-        // 
-        // cboDebtFilter
-        // 
-        cboDebtFilter.BackColor = System.Drawing.Color.Transparent;
-        cboDebtFilter.CornerRadius = 5;
-        cboDebtFilter.DataSource = null;
-        cboDebtFilter.DisplayMember = "";
-        cboDebtFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboDebtFilter.Location = new System.Drawing.Point(270, 7);
-        cboDebtFilter.Name = "cboDebtFilter";
-        cboDebtFilter.SelectedIndex = -1;
-        cboDebtFilter.SelectedItem = null;
-        cboDebtFilter.SelectedValue = null;
-        cboDebtFilter.Size = new System.Drawing.Size(130, 32);
-        cboDebtFilter.TabIndex = 1;
-        cboDebtFilter.ValueMember = "";
-        // 
-        // cboDueDateFilter
-        // 
-        cboDueDateFilter.BackColor = System.Drawing.Color.Transparent;
-        cboDueDateFilter.CornerRadius = 5;
-        cboDueDateFilter.DataSource = null;
-        cboDueDateFilter.DisplayMember = "";
-        cboDueDateFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboDueDateFilter.Location = new System.Drawing.Point(410, 7);
-        cboDueDateFilter.Name = "cboDueDateFilter";
-        cboDueDateFilter.SelectedIndex = -1;
-        cboDueDateFilter.SelectedItem = null;
-        cboDueDateFilter.SelectedValue = null;
-        cboDueDateFilter.Size = new System.Drawing.Size(160, 32);
-        cboDueDateFilter.TabIndex = 2;
-        cboDueDateFilter.ValueMember = "";
-        // 
-        // pnlTabs
-        // 
-        pnlTabs.Controls.Add(btnTabDueDate);
-        pnlTabs.Controls.Add(btnTabHistory);
-        pnlTabs.Controls.Add(btnTabDebt);
-        pnlTabs.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlTabs.Location = new System.Drawing.Point(24, 86);
-        pnlTabs.Name = "pnlTabs";
-        pnlTabs.Size = new System.Drawing.Size(1152, 36);
-        pnlTabs.TabIndex = 1;
-        // 
-        // btnTabDueDate
-        // 
-        btnTabDueDate.FlatAppearance.BorderSize = 0;
-        btnTabDueDate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabDueDate.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabDueDate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnTabDueDate.Location = new System.Drawing.Point(210, 4);
-        btnTabDueDate.Name = "btnTabDueDate";
-        btnTabDueDate.Size = new System.Drawing.Size(120, 28);
-        btnTabDueDate.TabIndex = 2;
-        btnTabDueDate.Text = "Hạn thanh toán";
-        btnTabDueDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        btnTabDueDate.UseVisualStyleBackColor = true;
-        // 
-        // btnTabHistory
-        // 
-        btnTabHistory.FlatAppearance.BorderSize = 0;
-        btnTabHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabHistory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabHistory.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnTabHistory.Location = new System.Drawing.Point(105, 4);
-        btnTabHistory.Name = "btnTabHistory";
-        btnTabHistory.Size = new System.Drawing.Size(100, 28);
-        btnTabHistory.TabIndex = 1;
-        btnTabHistory.Text = "Lịch sử thu";
-        btnTabHistory.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        btnTabHistory.UseVisualStyleBackColor = true;
-        // 
-        // btnTabDebt
-        // 
-        btnTabDebt.FlatAppearance.BorderSize = 0;
-        btnTabDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabDebt.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnTabDebt.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        btnTabDebt.Location = new System.Drawing.Point(0, 4);
-        btnTabDebt.Name = "btnTabDebt";
-        btnTabDebt.Size = new System.Drawing.Size(100, 28);
-        btnTabDebt.TabIndex = 0;
-        btnTabDebt.Text = "• Công nợ";
-        btnTabDebt.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        btnTabDebt.UseVisualStyleBackColor = true;
-        // 
-        // pnlHeader
-        // 
-        pnlHeader.Controls.Add(lblTitle);
-        pnlHeader.Controls.Add(pnlTopActions);
-        pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlHeader.Location = new System.Drawing.Point(24, 16);
-        pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new System.Drawing.Size(1152, 70);
-        pnlHeader.TabIndex = 0;
-        // 
-        // lblTitle
-        // 
-        lblTitle.AutoSize = true;
-        lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(0, 18);
-        lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(270, 37);
-        lblTitle.TabIndex = 1;
-        lblTitle.Text = "Học phí & thanh toán";
-        // 
-        // pnlTopActions
-        // 
-        pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        pnlTopActions.Controls.Add(btnCollectTuition);
-        pnlTopActions.Controls.Add(btnExportDebt);
-        pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlTopActions.Location = new System.Drawing.Point(852, 12);
-        pnlTopActions.Name = "pnlTopActions";
-        pnlTopActions.Size = new System.Drawing.Size(300, 48);
-        pnlTopActions.TabIndex = 3;
-        // 
-        // btnCollectTuition
-        // 
-        btnCollectTuition.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
-        btnCollectTuition.CornerRadius = 5;
-        btnCollectTuition.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnCollectTuition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnCollectTuition.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnCollectTuition.Location = new System.Drawing.Point(167, 3);
-        btnCollectTuition.Name = "btnCollectTuition";
-        btnCollectTuition.Size = new System.Drawing.Size(130, 38);
-        btnCollectTuition.TabIndex = 1;
-        btnCollectTuition.Text = "Thu học phí";
-        btnCollectTuition.UseVisualStyleBackColor = true;
-        btnCollectTuition.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
-        // 
-        // btnExportDebt
-        // 
-        btnExportDebt.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnExportDebt.CornerRadius = 5;
-        btnExportDebt.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnExportDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnExportDebt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnExportDebt.Location = new System.Drawing.Point(15, 3);
-        btnExportDebt.Name = "btnExportDebt";
-        btnExportDebt.Size = new System.Drawing.Size(146, 38);
-        btnExportDebt.TabIndex = 0;
-        btnExportDebt.Text = "Xuất công nợ";
-        btnExportDebt.UseVisualStyleBackColor = true;
-        btnExportDebt.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        lblHistoryTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblHistoryTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblHistoryTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblHistoryTitle.Location = new System.Drawing.Point(16, 16);
+        lblHistoryTitle.Name = "lblHistoryTitle";
+        lblHistoryTitle.Size = new System.Drawing.Size(1120, 28);
+        lblHistoryTitle.TabIndex = 0;
+        lblHistoryTitle.Text = "NHẬT KÝ TẤT CẢ GIAO DỊCH THU TIỀN CỦA TRUNG TÂM";
         // 
         // TuitionPaymentView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        Controls.Add(pnlMain);
-        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        Size = new System.Drawing.Size(1200, 900);
-        pnlMain.ResumeLayout(false);
-        pnlHistoryCard.ResumeLayout(false);
-        pnlHistoryCard.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)gridHistory).EndInit();
-        pnlDebtCard.ResumeLayout(false);
-        pnlDebtCard.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)gridDebtors).EndInit();
-        pnlStats.ResumeLayout(false);
-        pnlFilter.ResumeLayout(false);
-        pnlTabs.ResumeLayout(false);
+        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        Controls.Add(pnlBody);
+        Controls.Add(pnlFilter);
+        Controls.Add(pnlTabs);
+        Controls.Add(pnlHeader);
+        Font = new System.Drawing.Font("Segoe UI", 9F);
+        Name = "TuitionPaymentView";
+        Size = new System.Drawing.Size(1200, 800);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
-        pnlTopActions.ResumeLayout(false);
+        pnlTabs.ResumeLayout(false);
+        pnlFilter.ResumeLayout(false);
+        pnlFilter.PerformLayout();
+        pnlBody.ResumeLayout(false);
+        cardProfiles.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)gridProfiles).EndInit();
+        pnlProfileSummary.ResumeLayout(false);
+        cardSumRemaining.ResumeLayout(false);
+        cardSumPaid.ResumeLayout(false);
+        cardSumTotal.ResumeLayout(false);
+        cardDebt.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)gridDebtors).EndInit();
+        cardHistory.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)gridHistory).EndInit();
         ResumeLayout(false);
     }
 
-    private System.Windows.Forms.Panel pnlMain;
+    #endregion
+
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.FlowLayoutPanel pnlTopActions;
-    private ECMS.UI.Controls.AppButton btnExportDebt;
+    private System.Windows.Forms.Label lblSubtitle;
     private ECMS.UI.Controls.AppButton btnCollectTuition;
+    private ECMS.UI.Controls.AppButton btnExportDebt;
     private System.Windows.Forms.Panel pnlTabs;
+    private System.Windows.Forms.Button btnTabProfiles;
     private System.Windows.Forms.Button btnTabDebt;
     private System.Windows.Forms.Button btnTabHistory;
-    private System.Windows.Forms.Button btnTabDueDate;
     private System.Windows.Forms.Panel pnlFilter;
-    private ECMS.UI.Controls.AppTextBox txtSearch;
-    private ECMS.UI.Controls.AppComboBox cboDebtFilter;
-    private ECMS.UI.Controls.AppComboBox cboDueDateFilter;
-    private System.Windows.Forms.TableLayoutPanel pnlStats;
-    private ECMS.UI.Controls.AppStatCard statTotalDebt;
-    private ECMS.UI.Controls.AppStatCard statDebtorCount;
-    private ECMS.UI.Controls.AppStatCard statDueIn7Days;
-    private ECMS.UI.Controls.AppStatCard statCollectedMonth;
-    private ECMS.UI.Controls.AppCard pnlDebtCard;
-    private System.Windows.Forms.Label lblDebtCardTitle;
+    private System.Windows.Forms.Label lblSearch;
+    private System.Windows.Forms.TextBox txtSearch;
+    private System.Windows.Forms.ComboBox cboStatusFilter;
+    private System.Windows.Forms.ComboBox cboClassFilter;
+    private System.Windows.Forms.Panel pnlBody;
+    private ECMS.UI.Controls.AppCard cardProfiles;
+    private System.Windows.Forms.Label lblProfilesTitle;
+    private ECMS.UI.Controls.AppDataGrid gridProfiles;
+    private System.Windows.Forms.Panel pnlProfileSummary;
+    private ECMS.UI.Controls.AppCard cardSumTotal;
+    private System.Windows.Forms.Label lblSumTotalTitle;
+    private System.Windows.Forms.Label lblSumTotalVal;
+    private ECMS.UI.Controls.AppCard cardSumPaid;
+    private System.Windows.Forms.Label lblSumPaidTitle;
+    private System.Windows.Forms.Label lblSumPaidVal;
+    private ECMS.UI.Controls.AppCard cardSumRemaining;
+    private System.Windows.Forms.Label lblSumRemainingTitle;
+    private System.Windows.Forms.Label lblSumRemainingVal;
+    private ECMS.UI.Controls.AppCard cardDebt;
+    private System.Windows.Forms.Label lblDebtTitle;
     private ECMS.UI.Controls.AppDataGrid gridDebtors;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colStudent;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colClass;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colTotalPayable;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colPaid;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colRemaining;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colDueDate;
-    private System.Windows.Forms.DataGridViewButtonColumn colAction;
     private System.Windows.Forms.Label lblDebtorsFooter;
-    private ECMS.UI.Controls.AppCard pnlHistoryCard;
-    private System.Windows.Forms.Label lblHistoryCardTitle;
+    private ECMS.UI.Controls.AppCard cardHistory;
+    private System.Windows.Forms.Label lblHistoryTitle;
     private ECMS.UI.Controls.AppDataGrid gridHistory;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistDate;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistTransCode;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistReceiptCode;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistAmount;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistMethod;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colHistCollector;
+    private System.Windows.Forms.Label lblHistoryFooter;
 }

@@ -114,11 +114,7 @@ partial class LogoutConfirmDialog
 
     #endregion
 
-    private System.Windows.Forms.Panel pnlStripe;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblDesc;
-    private System.Windows.Forms.Panel pnlBannerNote;
-    private System.Windows.Forms.Label lblBannerNote;
     private ECMS.UI.Controls.AppButton btnStay;
     private ECMS.UI.Controls.AppButton btnLogout;
 }

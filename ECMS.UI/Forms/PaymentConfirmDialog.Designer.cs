@@ -548,7 +548,6 @@ partial class PaymentConfirmDialog
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Label lblSubtitle;
-    private ECMS.UI.Controls.AppBanner bannerStatus;
     private System.Windows.Forms.TableLayoutPanel pnlBody;
     private ECMS.UI.Controls.AppCard cardLeftInfo;
     private System.Windows.Forms.Label lblCardLeftTitle;

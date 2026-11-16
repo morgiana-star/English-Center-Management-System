@@ -147,6 +147,18 @@ public class AppDialog : Form
         dlg.ShowDialog(owner);
     }
 
+    public static void ShowWarning(IWin32Window? owner, string title, string message, string closeText = "Đóng")
+    {
+        using var dlg = new AppDialog(title, message, AppDialogType.Warning, closeText, "", false);
+        dlg.ShowDialog(owner);
+    }
+
+    public static void ShowInfo(IWin32Window? owner, string title, string message, string closeText = "Đóng")
+    {
+        using var dlg = new AppDialog(title, message, AppDialogType.Info, closeText, "", false);
+        dlg.ShowDialog(owner);
+    }
+
     public static void ShowError(IWin32Window? owner, string title, string message, string closeText = "Đóng")
     {
         using var dlg = new AppDialog(title, message, AppDialogType.Danger, closeText, "", false);

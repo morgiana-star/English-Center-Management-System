@@ -38,8 +38,6 @@ partial class TeacherGradeEntryView
         lblScoreError = new System.Windows.Forms.Label();
         txtCurrentScore = new ECMS.UI.Controls.AppTextBox();
         lblCurrentStudentTitle = new System.Windows.Forms.Label();
-        lblPagingNav = new System.Windows.Forms.Label();
-        lblPagingInfo = new System.Windows.Forms.Label();
         dgvGrades = new ECMS.UI.Controls.AppDataGrid();
         lblGridTitle = new System.Windows.Forms.Label();
         pnlStats = new System.Windows.Forms.Panel();
@@ -118,8 +116,6 @@ partial class TeacherGradeEntryView
         cardGradeGrid.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardGradeGrid.BorderWidth = 1;
         cardGradeGrid.Controls.Add(pnlEditStudentScore);
-        cardGradeGrid.Controls.Add(lblPagingNav);
-        cardGradeGrid.Controls.Add(lblPagingInfo);
         cardGradeGrid.Controls.Add(dgvGrades);
         cardGradeGrid.Controls.Add(lblGridTitle);
         cardGradeGrid.CornerRadius = 6;
@@ -244,31 +240,6 @@ partial class TeacherGradeEntryView
         lblCurrentStudentTitle.TabIndex = 0;
         lblCurrentStudentTitle.Text = "Điểm đang nhập · Trần Gia Bảo";
         // 
-        // lblPagingNav
-        // 
-        lblPagingNav.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        lblPagingNav.AutoSize = true;
-        lblPagingNav.Cursor = System.Windows.Forms.Cursors.Hand;
-        lblPagingNav.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblPagingNav.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblPagingNav.Location = new System.Drawing.Point(934, 369);
-        lblPagingNav.Name = "lblPagingNav";
-        lblPagingNav.Size = new System.Drawing.Size(160, 20);
-        lblPagingNav.TabIndex = 3;
-        lblPagingNav.Text = "< Trước   [1]   2   Sau >";
-        // 
-        // lblPagingInfo
-        // 
-        lblPagingInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
-        lblPagingInfo.AutoSize = true;
-        lblPagingInfo.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblPagingInfo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPagingInfo.Location = new System.Drawing.Point(20, 369);
-        lblPagingInfo.Name = "lblPagingInfo";
-        lblPagingInfo.Size = new System.Drawing.Size(122, 20);
-        lblPagingInfo.TabIndex = 2;
-        lblPagingInfo.Text = "1–5 / 20 học viên";
-        // 
         // dgvGrades
         // 
         dgvGrades.AllowUserToAddRows = false;
@@ -321,9 +292,9 @@ partial class TeacherGradeEntryView
         dgvGrades.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvGrades.RowHeadersVisible = false;
         dgvGrades.RowHeadersWidth = 51;
-        dgvGrades.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvGrades.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvGrades.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvGrades.Size = new System.Drawing.Size(1072, 309);
+        dgvGrades.Size = new System.Drawing.Size(1072, 335);
         dgvGrades.TabIndex = 1;
         // 
         // lblGridTitle
@@ -460,8 +431,6 @@ partial class TeacherGradeEntryView
     private ECMS.UI.Controls.AppCard cardGradeGrid;
     private System.Windows.Forms.Label lblGridTitle;
     private ECMS.UI.Controls.AppDataGrid dgvGrades;
-    private System.Windows.Forms.Label lblPagingInfo;
-    private System.Windows.Forms.Label lblPagingNav;
     private System.Windows.Forms.Panel pnlEditStudentScore;
     private System.Windows.Forms.Label lblCurrentStudentTitle;
     private ECMS.UI.Controls.AppTextBox txtCurrentScore;

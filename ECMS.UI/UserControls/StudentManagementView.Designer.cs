@@ -43,8 +43,7 @@ partial class StudentManagementView
         lblStatTotalValue = new System.Windows.Forms.Label();
         lblStatTotalTitle = new System.Windows.Forms.Label();
         cardStudentList = new ECMS.UI.Controls.AppCard();
-        lblPagingNav = new System.Windows.Forms.Label();
-        lblPagingInfo = new System.Windows.Forms.Label();
+        pnlStudentFilterBar = new System.Windows.Forms.Panel();
         dgvStudents = new ECMS.UI.Controls.AppDataGrid();
         cboClassFilter = new ECMS.UI.Controls.AppComboBox();
         cboStatusFilter = new ECMS.UI.Controls.AppComboBox();
@@ -57,6 +56,7 @@ partial class StudentManagementView
         cardStatStudying.SuspendLayout();
         cardStatTotal.SuspendLayout();
         cardStudentList.SuspendLayout();
+        pnlStudentFilterBar.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvStudents).BeginInit();
         SuspendLayout();
         // 
@@ -105,7 +105,7 @@ partial class StudentManagementView
         btnAddStudent.Name = "btnAddStudent";
         btnAddStudent.Size = new System.Drawing.Size(145, 36);
         btnAddStudent.TabIndex = 3;
-        btnAddStudent.Text = "+ Thêm học viên";
+        btnAddStudent.Text = "+ Đăng ký học";
         btnAddStudent.UseVisualStyleBackColor = false;
         btnAddStudent.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -285,12 +285,8 @@ partial class StudentManagementView
         cardStudentList.BackColor = System.Drawing.Color.White;
         cardStudentList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStudentList.BorderWidth = 1;
-        cardStudentList.Controls.Add(lblPagingNav);
-        cardStudentList.Controls.Add(lblPagingInfo);
         cardStudentList.Controls.Add(dgvStudents);
-        cardStudentList.Controls.Add(cboClassFilter);
-        cardStudentList.Controls.Add(cboStatusFilter);
-        cardStudentList.Controls.Add(txtSearchStudent);
+        cardStudentList.Controls.Add(pnlStudentFilterBar);
         cardStudentList.Controls.Add(lblStudentListTitle);
         cardStudentList.CornerRadius = 8;
         cardStudentList.Location = new System.Drawing.Point(20, 120);
@@ -299,29 +295,48 @@ partial class StudentManagementView
         cardStudentList.Size = new System.Drawing.Size(1115, 570);
         cardStudentList.TabIndex = 0;
         // 
-        // lblPagingNav
+        // pnlStudentFilterBar
         // 
-        lblPagingNav.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
-        lblPagingNav.AutoSize = true;
-        lblPagingNav.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPagingNav.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblPagingNav.Location = new System.Drawing.Point(930, 525);
-        lblPagingNav.Name = "lblPagingNav";
-        lblPagingNav.Size = new System.Drawing.Size(150, 20);
-        lblPagingNav.TabIndex = 6;
-        lblPagingNav.Text = "‹ Trước   [1]   2   Sau ›";
+        pnlStudentFilterBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        pnlStudentFilterBar.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlStudentFilterBar.Controls.Add(cboClassFilter);
+        pnlStudentFilterBar.Controls.Add(cboStatusFilter);
+        pnlStudentFilterBar.Controls.Add(txtSearchStudent);
+        pnlStudentFilterBar.Location = new System.Drawing.Point(20, 48);
+        pnlStudentFilterBar.Name = "pnlStudentFilterBar";
+        pnlStudentFilterBar.Size = new System.Drawing.Size(1075, 48);
+        pnlStudentFilterBar.TabIndex = 1;
         // 
-        // lblPagingInfo
+        // txtSearchStudent
         // 
-        lblPagingInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
-        lblPagingInfo.AutoSize = true;
-        lblPagingInfo.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPagingInfo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPagingInfo.Location = new System.Drawing.Point(20, 525);
-        lblPagingInfo.Name = "lblPagingInfo";
-        lblPagingInfo.Size = new System.Drawing.Size(196, 20);
-        lblPagingInfo.TabIndex = 5;
-        lblPagingInfo.Text = "1–5 / 348 học viên đang học";
+        txtSearchStudent.BackColor = System.Drawing.Color.White;
+        txtSearchStudent.CornerRadius = 6;
+        txtSearchStudent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtSearchStudent.Location = new System.Drawing.Point(10, 7);
+        txtSearchStudent.Name = "txtSearchStudent";
+        txtSearchStudent.Placeholder = "🔍  Tìm theo mã HV, họ tên, số điện thoại...";
+        txtSearchStudent.Size = new System.Drawing.Size(360, 34);
+        txtSearchStudent.TabIndex = 0;
+        // 
+        // cboStatusFilter
+        // 
+        cboStatusFilter.BackColor = System.Drawing.Color.White;
+        cboStatusFilter.CornerRadius = 5;
+        cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
+        cboStatusFilter.Location = new System.Drawing.Point(380, 7);
+        cboStatusFilter.Name = "cboStatusFilter";
+        cboStatusFilter.Size = new System.Drawing.Size(180, 34);
+        cboStatusFilter.TabIndex = 1;
+        // 
+        // cboClassFilter
+        // 
+        cboClassFilter.BackColor = System.Drawing.Color.White;
+        cboClassFilter.CornerRadius = 5;
+        cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
+        cboClassFilter.Location = new System.Drawing.Point(570, 7);
+        cboClassFilter.Name = "cboClassFilter";
+        cboClassFilter.Size = new System.Drawing.Size(200, 34);
+        cboClassFilter.TabIndex = 2;
         // 
         // dgvStudents
         // 
@@ -362,7 +377,7 @@ partial class StudentManagementView
         dgvStudents.DefaultCellStyle = dataGridViewCellStyle3;
         dgvStudents.EnableHeadersVisualStyles = false;
         dgvStudents.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        dgvStudents.Location = new System.Drawing.Point(20, 95);
+        dgvStudents.Location = new System.Drawing.Point(20, 108);
         dgvStudents.MultiSelect = false;
         dgvStudents.Name = "dgvStudents";
         dgvStudents.ReadOnly = true;
@@ -376,57 +391,10 @@ partial class StudentManagementView
         dgvStudents.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvStudents.RowHeadersVisible = false;
         dgvStudents.RowHeadersWidth = 51;
-        dgvStudents.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvStudents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvStudents.Size = new System.Drawing.Size(1075, 416);
-        dgvStudents.TabIndex = 4;
-        // 
-        // cboClassFilter
-        // 
-        cboClassFilter.BackColor = System.Drawing.Color.White;
-        cboClassFilter.CornerRadius = 5;
-        cboClassFilter.DataSource = null;
-        cboClassFilter.DisplayMember = "";
-        cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboClassFilter.Location = new System.Drawing.Point(550, 50);
-        cboClassFilter.Name = "cboClassFilter";
-        cboClassFilter.SelectedIndex = -1;
-        cboClassFilter.SelectedItem = null;
-        cboClassFilter.SelectedValue = null;
-        cboClassFilter.Size = new System.Drawing.Size(160, 32);
-        cboClassFilter.TabIndex = 3;
-        cboClassFilter.ValueMember = "";
-        // 
-        // cboStatusFilter
-        // 
-        cboStatusFilter.BackColor = System.Drawing.Color.White;
-        cboStatusFilter.CornerRadius = 5;
-        cboStatusFilter.DataSource = null;
-        cboStatusFilter.DisplayMember = "";
-        cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboStatusFilter.Location = new System.Drawing.Point(375, 50);
-        cboStatusFilter.Name = "cboStatusFilter";
-        cboStatusFilter.SelectedIndex = -1;
-        cboStatusFilter.SelectedItem = null;
-        cboStatusFilter.SelectedValue = null;
-        cboStatusFilter.Size = new System.Drawing.Size(160, 32);
-        cboStatusFilter.TabIndex = 2;
-        cboStatusFilter.ValueMember = "";
-        // 
-        // txtSearchStudent
-        // 
-        txtSearchStudent.BackColor = System.Drawing.Color.Transparent;
-        txtSearchStudent.CornerRadius = 6;
-        txtSearchStudent.ErrorMessage = "";
-        txtSearchStudent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtSearchStudent.HasError = false;
-        txtSearchStudent.Location = new System.Drawing.Point(20, 50);
-        txtSearchStudent.Name = "txtSearchStudent";
-        txtSearchStudent.Placeholder = "🔍  Tìm mã, họ tên, điện thoại...";
-        txtSearchStudent.ReadOnly = false;
-        txtSearchStudent.Size = new System.Drawing.Size(344, 32);
-        txtSearchStudent.TabIndex = 1;
-        txtSearchStudent.UseSystemPasswordChar = false;
+        dgvStudents.Size = new System.Drawing.Size(1075, 442);
+        dgvStudents.TabIndex = 2;
         // 
         // lblStudentListTitle
         // 
@@ -459,6 +427,7 @@ partial class StudentManagementView
         cardStatStudying.PerformLayout();
         cardStatTotal.ResumeLayout(false);
         cardStatTotal.PerformLayout();
+        pnlStudentFilterBar.ResumeLayout(false);
         cardStudentList.ResumeLayout(false);
         cardStudentList.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvStudents).EndInit();
@@ -488,10 +457,9 @@ partial class StudentManagementView
 
     private ECMS.UI.Controls.AppCard cardStudentList;
     private System.Windows.Forms.Label lblStudentListTitle;
+    private System.Windows.Forms.Panel pnlStudentFilterBar;
     private ECMS.UI.Controls.AppTextBox txtSearchStudent;
     private ECMS.UI.Controls.AppComboBox cboStatusFilter;
     private ECMS.UI.Controls.AppComboBox cboClassFilter;
     private ECMS.UI.Controls.AppDataGrid dgvStudents;
-    private System.Windows.Forms.Label lblPagingInfo;
-    private System.Windows.Forms.Label lblPagingNav;
 }

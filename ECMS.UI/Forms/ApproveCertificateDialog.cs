@@ -6,12 +6,12 @@ namespace ECMS.UI.Forms;
 
 public partial class ApproveCertificateDialog : Form
 {
-    private readonly string _studentName;
-    private readonly string _studentCode;
-    private readonly string _finalScore;
-    private readonly string _avgScore;
-    private readonly string _attendance;
-    private readonly string _certSerial;
+    private readonly string _studentName = string.Empty;
+    private readonly string _studentCode = string.Empty;
+    private readonly string _finalScore = string.Empty;
+    private readonly string _avgScore = string.Empty;
+    private readonly string _attendance = string.Empty;
+    private readonly string _certSerial = string.Empty;
 
     public ApproveCertificateDialog() : this("Trần Gia Bảo", "HV-0204", "8.0", "7.7", "22/24 · 91,7%", "CC-2026-0042")
     {
@@ -20,6 +20,9 @@ public partial class ApproveCertificateDialog : Form
     public ApproveCertificateDialog(string studentName, string studentCode, string finalScore, string avgScore, string attendance, string certSerial)
     {
         InitializeComponent();
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
         _studentName = studentName;
         _studentCode = studentCode;
         _finalScore = finalScore;
@@ -39,7 +42,17 @@ public partial class ApproveCertificateDialog : Form
         lblM3Val.Text = _attendance;
         lblCertSerialVal.Text = _certSerial;
 
-        cboSigner.SelectedIndex = 0;
+        cboSigner.Items.Clear();
+        cboSigner.Items.AddRange(new object[]
+        {
+            "Nguyễn Thành Long · Giám đốc trung tâm",
+            "Trần Minh Quân · Quản lý học vụ",
+            "Lê Phương Thảo · Kế toán trưởng"
+        });
+        if (cboSigner.Items.Count > 0)
+        {
+            cboSigner.SelectedIndex = 0;
+        }
 
         btnCancel.Click += (s, e) => Close();
 

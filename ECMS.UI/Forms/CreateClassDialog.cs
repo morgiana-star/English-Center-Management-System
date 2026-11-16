@@ -6,12 +6,45 @@ namespace ECMS.UI.Forms;
 
 public partial class CreateClassDialog : Form
 {
-    public CreateClassDialog()
+    private readonly bool _isEditMode;
+    private readonly string _initialClassCode = string.Empty;
+
+    public CreateClassDialog() : this(false, "")
+    {
+    }
+
+    public CreateClassDialog(bool isEditMode = false, string classCode = "")
     {
         InitializeComponent();
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
+        _isEditMode = isEditMode;
+        _initialClassCode = classCode;
 
         SetupDropdowns();
+        ApplyMode();
         WireEvents();
+    }
+
+    private void ApplyMode()
+    {
+        if (_isEditMode)
+        {
+            Text = "Chỉnh sửa thông tin lớp học · ECMS";
+            lblTitle.Text = "Chỉnh sửa thông tin lớp học";
+            btnSaveDraft.Text = "Lưu thay đổi";
+            txtClassCode.Text = string.IsNullOrEmpty(_initialClassCode) ? "IELTS-F01" : _initialClassCode;
+            txtClassCode.ReadOnly = true;
+        }
+        else
+        {
+            Text = "Tạo lớp học mới · ECMS";
+            lblTitle.Text = "Tạo lớp học mới";
+            btnSaveDraft.Text = "Lưu lớp học";
+            txtClassCode.Text = "IELTS-F04";
+            txtClassCode.ReadOnly = false;
+        }
     }
 
     private void SetupDropdowns()
@@ -25,7 +58,7 @@ public partial class CreateClassDialog : Form
             "TOEIC 650+",
             "English Communication Basic"
         });
-        cboCourse.SelectedIndex = 0;
+        if (cboCourse.Items.Count > 0) cboCourse.SelectedIndex = 0;
 
         cboTeacher.Items.Clear();
         cboTeacher.Items.AddRange(new object[]
@@ -35,7 +68,7 @@ public partial class CreateClassDialog : Form
             "Lê Thu Hà",
             "Phạm Quốc Hùng"
         });
-        cboTeacher.SelectedIndex = 0;
+        if (cboTeacher.Items.Count > 0) cboTeacher.SelectedIndex = 0;
 
         cboDaysOfWeek.Items.Clear();
         cboDaysOfWeek.Items.AddRange(new object[]
@@ -45,7 +78,7 @@ public partial class CreateClassDialog : Form
             "Thứ Tư / Thứ Bảy",
             "Thứ Bảy / Chủ Nhật"
         });
-        cboDaysOfWeek.SelectedIndex = 0;
+        if (cboDaysOfWeek.Items.Count > 0) cboDaysOfWeek.SelectedIndex = 0;
 
         cboTimeSlot.Items.Clear();
         cboTimeSlot.Items.AddRange(new object[]
@@ -55,7 +88,7 @@ public partial class CreateClassDialog : Form
             "08:30–10:30",
             "14:00–16:00"
         });
-        cboTimeSlot.SelectedIndex = 0;
+        if (cboTimeSlot.Items.Count > 0) cboTimeSlot.SelectedIndex = 0;
 
         cboRoom.Items.Clear();
         cboRoom.Items.AddRange(new object[]
@@ -65,19 +98,19 @@ public partial class CreateClassDialog : Form
             "P203 · 18 chỗ",
             "P101 · 30 chỗ"
         });
-        cboRoom.SelectedIndex = 0;
+        if (cboRoom.Items.Count > 0) cboRoom.SelectedIndex = 0;
 
         cboStatus.Items.Clear();
         cboStatus.Items.AddRange(new object[]
         {
             "Bản nháp",
-            "Sắp mở",
-            "Đang học"
+            "Đang tuyển sinh",
+            "Đang học",
+            "Đã kết thúc"
         });
-        cboStatus.SelectedIndex = 0;
+        if (cboStatus.Items.Count > 0) cboStatus.SelectedIndex = 0;
 
-        txtClassCode.Text = "IELTS-F04";
-        txtCapacity.Text = "20 học viên";
+        txtCapacity.Text = "20";
         dtpStartDate.Value = DateTime.Today;
         dtpEndDate.Value = DateTime.Today.AddMonths(3);
     }
@@ -99,47 +132,10 @@ public partial class CreateClassDialog : Form
                 return;
             }
 
-            MessageBox.Show($"Đã lưu lớp học '{txtClassCode.Text}' ở trạng thái Bản nháp vào SQLite cục bộ.\nBước tiếp theo: thêm học viên hoặc kiểm tra điều kiện để mở lớp.", "Tạo lớp thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string actionMsg = _isEditMode ? "cập nhật" : "lưu mới";
+            MessageBox.Show($"Đã {actionMsg} lớp học '{txtClassCode.Text}' thành công vào hệ thống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;
             Close();
         };
-
-        cboTeacher.SelectedIndexChanged += (s, e) =>
-        {
-            UpdateTeacherInfo(cboTeacher.Text);
-        };
-
-        btnViewTeacherProfile.Click += (s, e) =>
-        {
-            MessageBox.Show($"Xem thông tin chi tiết và lịch giảng dạy của giáo viên {cboTeacher.Text}.", "Hồ sơ giáo viên", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        };
-    }
-
-    private void UpdateTeacherInfo(string teacherName)
-    {
-        if (teacherName.Contains("Tuấn"))
-        {
-            lblTeacherNameVal.Text = "Trần Minh Tuấn · GV-002";
-            lblSpecialtyVal.Text = "TOEIC · Giao tiếp";
-            lblCurrentTeachingVal.Text = "TOEIC-T01 · T3 / T6";
-            lblFreeScheduleVal.Text = "T2 / T4 · 18:00–20:00";
-            lblCurrentHoursVal.Text = "6 giờ / tuần";
-        }
-        else if (teacherName.Contains("Hà"))
-        {
-            lblTeacherNameVal.Text = "Lê Thu Hà · GV-003";
-            lblSpecialtyVal.Text = "Giao tiếp cơ bản";
-            lblCurrentTeachingVal.Text = "COM-B01 · T2 / T4";
-            lblFreeScheduleVal.Text = "T3 / T5 · 18:00–20:00";
-            lblCurrentHoursVal.Text = "4 giờ / tuần";
-        }
-        else
-        {
-            lblTeacherNameVal.Text = "Nguyễn Hoàng Anh · GV-001";
-            lblSpecialtyVal.Text = "IELTS · Cơ bản đến 6.5";
-            lblCurrentTeachingVal.Text = "IELTS-F01 · T3 / T6";
-            lblFreeScheduleVal.Text = "T2 / T5 · 18:00–20:00";
-            lblCurrentHoursVal.Text = "4 giờ / tuần";
-        }
     }
 }

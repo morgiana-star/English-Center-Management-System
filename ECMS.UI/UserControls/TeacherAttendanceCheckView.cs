@@ -1,207 +1,197 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using ECMS.UI.Controls;
+using ECMS.UI.Forms;
 
 namespace ECMS.UI.UserControls;
 
 public partial class TeacherAttendanceCheckView : UserControl
 {
-    public class AttendanceRecord
-    {
-        public string StudentCode { get; set; } = string.Empty;
-        public string FullName { get; set; } = string.Empty;
-        public string Status { get; set; } = "Có mặt";
-        public string Note { get; set; } = string.Empty;
-    }
-
-    private readonly List<AttendanceRecord> _records = new();
-
     public TeacherAttendanceCheckView()
     {
         InitializeComponent();
 
         SetupFilters();
         SetupGrid();
-        LoadSampleData();
+        LoadClassesData();
         WireEvents();
     }
 
     private void SetupFilters()
     {
-        cboClass.Items.Clear();
-        cboClass.Items.AddRange(new object[]
+        cboStatusFilter.Items.Clear();
+        cboStatusFilter.Items.AddRange(new object[]
         {
-            "IELTS-F01",
-            "IELTS-F02",
-            "TOEIC-T01"
+            "Tất cả trạng thái",
+            "Đang học",
+            "Sắp mở",
+            "Đã kết thúc"
         });
-        cboClass.SelectedIndex = 0;
+        cboStatusFilter.SelectedIndex = 0;
 
-        cboSession.Items.Clear();
-        cboSession.Items.AddRange(new object[]
+        cboCourseFilter.Items.Clear();
+        cboCourseFilter.Items.AddRange(new object[]
         {
-            "Buổi 08 · 30/10",
-            "Buổi 07 · 27/10",
-            "Buổi 06 · 23/10"
+            "Tất cả khóa học",
+            "IELTS Foundation",
+            "IELTS Intensive",
+            "TOEIC 500+",
+            "Giao tiếp cơ bản"
         });
-        cboSession.SelectedIndex = 0;
+        cboCourseFilter.SelectedIndex = 0;
     }
 
     private void SetupGrid()
     {
-        dgvAttendance.AutoGenerateColumns = false;
-        dgvAttendance.Columns.Clear();
-        dgvAttendance.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvAttendance.MultiSelect = false;
-        dgvAttendance.ReadOnly = false;
-        dgvAttendance.RowHeadersVisible = false;
-        dgvAttendance.AllowUserToAddRows = false;
+        dgvAttendanceClasses.AutoGenerateColumns = false;
+        dgvAttendanceClasses.Columns.Clear();
+        dgvAttendanceClasses.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        dgvAttendanceClasses.MultiSelect = false;
+        dgvAttendanceClasses.ReadOnly = true;
+        dgvAttendanceClasses.RowHeadersVisible = false;
+        dgvAttendanceClasses.AllowUserToAddRows = false;
+        dgvAttendanceClasses.ScrollBars = ScrollBars.Both;
 
-        dgvAttendance.Columns.Add(new DataGridViewTextBoxColumn
-        {
-            DataPropertyName = "FullName",
-            HeaderText = "Học viên ↑",
-            Width = 220,
-            ReadOnly = true
-        });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 55, MinimumWidth = 50, FillWeight = 5F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã lớp", Width = 105, MinimumWidth = 95, FillWeight = 10F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCourse", HeaderText = "Khóa học", MinimumWidth = 150, FillWeight = 18F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTeacher", HeaderText = "Giáo viên phụ trách", Width = 150, MinimumWidth = 130, FillWeight = 15F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSchedule", HeaderText = "Lịch học & Giờ", Width = 160, MinimumWidth = 140, FillWeight = 16F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRoom", HeaderText = "Phòng", Width = 85, MinimumWidth = 75, FillWeight = 8F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colProgress", HeaderText = "Tiến độ", Width = 110, MinimumWidth = 95, FillWeight = 11F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRate", HeaderText = "Chuyên cần", Width = 135, MinimumWidth = 115, FillWeight = 13F });
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStatus", HeaderText = "Trạng thái", Width = 100, MinimumWidth = 90, FillWeight = 10F });
 
-        var colStatus = new DataGridViewComboBoxColumn
+        var actionCol = new DataGridViewButtonColumn
         {
-            DataPropertyName = "Status",
-            HeaderText = "Trạng thái",
-            Width = 180,
-            FlatStyle = FlatStyle.Flat
+            Name = "colAction",
+            HeaderText = "Thao tác",
+            Text = "Điểm danh",
+            UseColumnTextForButtonValue = true,
+            Width = 110,
+            MinimumWidth = 100,
+            FillWeight = 11F
         };
-        colStatus.Items.AddRange(new object[]
-        {
-            "Có mặt",
-            "Vắng có phép",
-            "Vắng không phép",
-            "Đi muộn"
-        });
-        dgvAttendance.Columns.Add(colStatus);
+        dgvAttendanceClasses.Columns.Add(actionCol);
 
-        dgvAttendance.Columns.Add(new DataGridViewTextBoxColumn
+        dgvAttendanceClasses.CellFormatting += (s, e) =>
         {
-            DataPropertyName = "Note",
-            HeaderText = "Ghi chú",
-            Width = 320
-        });
-
-        dgvAttendance.CellValueChanged += (s, e) =>
-        {
-            UpdateStats();
-            // bannerUnsaved.Visible = true;
-        };
-    }
-
-    private void LoadSampleData()
-    {
-        _records.Clear();
-        _records.Add(new AttendanceRecord { StudentCode = "HV-0201", FullName = "Nguyễn Minh Anh", Status = "Vắng có phép", Note = "Phụ huynh báo ốm" });
-        _records.Add(new AttendanceRecord { StudentCode = "HV-0202", FullName = "Lê Hoàng Nam", Status = "Có mặt", Note = "Cần liên hệ về 4 buổi vắng trước" });
-        _records.Add(new AttendanceRecord { StudentCode = "HV-0203", FullName = "Phạm Khánh Linh", Status = "Có mặt", Note = "—" });
-        _records.Add(new AttendanceRecord { StudentCode = "HV-0204", FullName = "Vũ Quang Huy", Status = "Đi muộn", Note = "Đến lúc 18:10" });
-        _records.Add(new AttendanceRecord { StudentCode = "HV-0205", FullName = "Đỗ Ngọc Trâm", Status = "Vắng không phép", Note = "Chưa có thông tin" });
-
-        // Add 13 more present students to make 18 students like in the design
-        for (int i = 6; i <= 18; i++)
-        {
-            _records.Add(new AttendanceRecord
+            if (e.RowIndex >= 0 && dgvAttendanceClasses.Columns[e.ColumnIndex].Name == "colRate" && e.Value != null)
             {
-                StudentCode = $"HV-02{i:D2}",
-                FullName = $"Học viên {i:D2}",
-                Status = "Có mặt",
-                Note = "—"
-            });
-        }
-
-        dgvAttendance.DataSource = null;
-        dgvAttendance.DataSource = _records;
-
-        UpdateStats();
+                string rateStr = e.Value.ToString() ?? "";
+                if (rateStr.Contains("9") || rateStr.Contains("100%"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52); // Xanh lá đậm
+                    e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                }
+                else if (rateStr.Contains("8"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(180, 83, 9); // Cam đậm
+                }
+                else if (rateStr.Contains("6") || rateStr.Contains("7"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(220, 38, 38); // Đỏ cảnh báo
+                    e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                }
+            }
+        };
     }
 
-    private void UpdateStats()
+    private void LoadClassesData()
     {
-        int total = _records.Count;
-        int present = _records.Count(r => r.Status == "Có mặt");
-        int late = _records.Count(r => r.Status == "Đi muộn");
-        int excused = _records.Count(r => r.Status == "Vắng có phép");
-        int unexcused = _records.Count(r => r.Status == "Vắng không phép");
+        dgvAttendanceClasses.Rows.Clear();
 
-        statTotal.Value = total.ToString();
-        statPresent.Value = present.ToString();
-        statLate.Value = late.ToString();
-        statAbsent.Value = $"{excused} / {unexcused}";
-
-        double attending = present + late;
-        double rate = total > 0 ? (attending / total) * 100.0 : 0.0;
-        statRate.Value = $"{rate:F1}%";
-
-        lblPagingInfo.Text = $"1–5 / {total} học viên · {total - 5} học viên còn lại: Có mặt";
+        dgvAttendanceClasses.Rows.Add("1", "IELTS-F01", "IELTS Foundation", "Nguyễn Hoàng Anh", "T3 / T6 · 18:00–20:00", "P201", "8 / 24 buổi", "90,3% (Tốt)", "Đang học", "Điểm danh");
+        dgvAttendanceClasses.Rows.Add("2", "IELTS-F02", "IELTS Foundation", "Trần Minh Tuấn", "T2 / T5 · 18:00–20:00", "P202", "6 / 24 buổi", "95,8% (Tốt)", "Đang học", "Điểm danh");
+        dgvAttendanceClasses.Rows.Add("3", "IELTS-I01", "IELTS Intensive", "Trần Minh Tuấn", "T4 / T7 · 14:00–17:00", "P203", "12 / 30 buổi", "86,7% (Khá)", "Đang học", "Điểm danh");
+        dgvAttendanceClasses.Rows.Add("4", "TOEIC-A01", "TOEIC 500+", "Lê Thu Hà", "T3 / T6 · 18:30–20:30", "P202", "4 / 20 buổi", "92,5% (Tốt)", "Đang học", "Điểm danh");
+        dgvAttendanceClasses.Rows.Add("5", "COM-B01", "Giao tiếp cơ bản", "Lê Thu Hà", "T7 / CN · 08:30–11:30", "P102", "2 / 16 buổi", "100% (Tốt)", "Đang học", "Điểm danh");
+        dgvAttendanceClasses.Rows.Add("6", "IELTS-F04", "IELTS Foundation", "Võ Tấn Toàn", "T2 / T5 · 18:00–20:00", "P201", "0 / 24 buổi", "Chưa bắt đầu", "Sắp mở", "Điểm danh");
     }
 
     private void WireEvents()
     {
-        txtSearchStudent.TextChanged += (s, e) =>
-        {
-            var q = txtSearchStudent.Text?.Trim().ToLowerInvariant() ?? "";
-            if (string.IsNullOrEmpty(q))
-            {
-                dgvAttendance.DataSource = _records;
-            }
-            else
-            {
-                dgvAttendance.DataSource = _records.Where(r => r.FullName.ToLowerInvariant().Contains(q)).ToList();
-            }
-        };
+        txtSearch.TextChanged += (s, e) => FilterClasses();
+        cboStatusFilter.SelectedIndexChanged += (s, e) => FilterClasses();
+        cboCourseFilter.SelectedIndexChanged += (s, e) => FilterClasses();
 
-        btnMarkAllPresent.Click += (s, e) =>
+        dgvAttendanceClasses.CellContentClick += (s, e) =>
         {
-            foreach (var r in _records)
+            if (e.RowIndex >= 0 && dgvAttendanceClasses.Columns[e.ColumnIndex].Name == "colAction")
             {
-                r.Status = "Có mặt";
-            }
-            dgvAttendance.Refresh();
-            UpdateStats();
-            // bannerUnsaved.Visible = true;
-            AppDialog.ShowSuccess(ParentForm, "Điểm danh nhanh", "Đã đánh dấu tất cả 18 học viên Có mặt.");
-        };
-
-        btnCancelChanges.Click += (s, e) =>
-        {
-            LoadSampleData();
-            // bannerUnsaved.Visible = false;
-        };
-
-        btnSaveAttendance.Click += (s, e) =>
-        {
-            // bannerUnsaved.Visible = false;
-            AppDialog.ShowSuccess(ParentForm, "Lưu điểm danh thành công",
-                $"Đã lưu điểm danh buổi 08 lớp IELTS-F01 vào SQLite.\n" +
-                $"• Có mặt: {statPresent.Value}\n" +
-                $"• Đi muộn: {statLate.Value}\n" +
-                $"• Vắng: {statAbsent.Value}\n" +
-                $"• Tỷ lệ tham dự: {statRate.Value}\n\n" +
-                "Chuyển tiếp sang bước Tổng hợp chuyên cần.");
-
-            // Navigate to Summary View
-            if (ParentForm is Forms.MainForm main)
-            {
-                main.LoadView(new TeacherAttendanceSummaryView());
+                OpenClassAttendance(e.RowIndex);
             }
         };
 
-        btnSummaryView.Click += (s, e) =>
+        dgvAttendanceClasses.CellDoubleClick += (s, e) =>
         {
-            if (ParentForm is Forms.MainForm main)
+            if (e.RowIndex >= 0)
             {
-                main.LoadView(new TeacherAttendanceSummaryView());
+                OpenClassAttendance(e.RowIndex);
             }
         };
+    }
+
+    private void OpenClassAttendance(int rowIndex)
+    {
+        var row = dgvAttendanceClasses.Rows[rowIndex];
+        string classCode = row.Cells["colCode"].Value?.ToString() ?? "IELTS-F01";
+        string courseName = row.Cells["colCourse"].Value?.ToString() ?? "IELTS Foundation";
+        string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "Nguyễn Hoàng Anh";
+        string room = row.Cells["colRoom"].Value?.ToString() ?? "P201";
+
+        using var dlg = new ClassAttendanceDialog(classCode, courseName, teacher, room);
+        dlg.ShowDialog(FindForm());
+    }
+
+    private void FilterClasses()
+    {
+        string kw = txtSearch.Text.Trim().ToLowerInvariant();
+        string status = cboStatusFilter.SelectedItem?.ToString() ?? "Tất cả trạng thái";
+        string course = cboCourseFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
+
+        foreach (DataGridViewRow row in dgvAttendanceClasses.Rows)
+        {
+            if (row.IsNewRow) continue;
+            string code = row.Cells["colCode"].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string rowCourse = row.Cells["colCourse"].Value?.ToString() ?? "";
+            string teacher = row.Cells["colTeacher"].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string room = row.Cells["colRoom"].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string rowStatus = row.Cells["colStatus"].Value?.ToString() ?? "";
+
+            bool matchKw = string.IsNullOrEmpty(kw) || code.Contains(kw) || rowCourse.ToLowerInvariant().Contains(kw) || teacher.Contains(kw) || room.Contains(kw);
+            bool matchStatus = status == "Tất cả trạng thái" || rowStatus == status;
+            bool matchCourse = course == "Tất cả khóa học" || rowCourse.Contains(course);
+
+            row.Visible = matchKw && matchStatus && matchCourse;
+        }
+    }
+
+    private void AdjustLayout()
+    {
+        if (pnlBody == null || cardClasses == null || dgvAttendanceClasses == null || pnlFilters == null) return;
+
+        int margin = 24;
+        pnlFilters.SetBounds(margin, 16, Math.Max(500, pnlBody.ClientSize.Width - (margin * 2)), 48);
+
+        int cardTop = 76;
+        int cardWidth = Math.Max(500, pnlBody.ClientSize.Width - (margin * 2));
+        int cardHeight = Math.Max(250, pnlBody.ClientSize.Height - cardTop - margin);
+        cardClasses.SetBounds(margin, cardTop, cardWidth, cardHeight);
+
+        dgvAttendanceClasses.SetBounds(16, 16, cardClasses.ClientSize.Width - 32, cardClasses.ClientSize.Height - 32);
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        AdjustLayout();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        AdjustLayout();
     }
 }

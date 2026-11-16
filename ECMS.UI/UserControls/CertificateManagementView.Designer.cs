@@ -13,529 +13,407 @@ partial class CertificateManagementView
         base.Dispose(disposing);
     }
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
+    #region Component Designer generated code
+
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-        pnlMain = new System.Windows.Forms.Panel();
-        pnlBottomInfo = new System.Windows.Forms.TableLayoutPanel();
-        cardBlockedInfo = new ECMS.UI.Controls.AppCard();
-        pnlShortcutActions = new System.Windows.Forms.FlowLayoutPanel();
-        btnOpenGrades = new ECMS.UI.Controls.AppButton();
-        btnOpenAttendance = new ECMS.UI.Controls.AppButton();
-        btnOpenTuition = new ECMS.UI.Controls.AppButton();
-        cardActiveCourseNote = new ECMS.UI.Controls.AppCard();
-        lblActiveCourseDesc = new System.Windows.Forms.Label();
-        lblActiveCourseBadge = new System.Windows.Forms.Label();
-        lblActiveCourseTitle = new System.Windows.Forms.Label();
-        pnlGridCard = new ECMS.UI.Controls.AppCard();
-        lblGridFooter = new System.Windows.Forms.Label();
-        gridEligibility = new ECMS.UI.Controls.AppDataGrid();
-        colStudent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colScores = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colAttendance = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colDebt = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colConclusion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colReason = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        colAction = new System.Windows.Forms.DataGridViewButtonColumn();
-        lblGridCardTitle = new System.Windows.Forms.Label();
-        pnlStepper = new System.Windows.Forms.Panel();
-        lblStep4 = new System.Windows.Forms.Label();
-        lblStep3 = new System.Windows.Forms.Label();
-        lblStep2 = new System.Windows.Forms.Label();
-        lblStep1 = new System.Windows.Forms.Label();
         pnlHeader = new System.Windows.Forms.Panel();
+        cboSigner = new System.Windows.Forms.ComboBox();
+        lblSigner = new System.Windows.Forms.Label();
+        btnIssueSelectedTop = new ECMS.UI.Controls.AppButton();
+        btnIssuedRegistryTop = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
-        pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
-        btnApproveEligible = new ECMS.UI.Controls.AppButton();
-        btnRecheck = new ECMS.UI.Controls.AppButton();
-        pnlMain.SuspendLayout();
-        pnlBottomInfo.SuspendLayout();
-        cardBlockedInfo.SuspendLayout();
-        pnlShortcutActions.SuspendLayout();
-        cardActiveCourseNote.SuspendLayout();
-        pnlGridCard.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)gridEligibility).BeginInit();
-        pnlStepper.SuspendLayout();
+        pnlBody = new System.Windows.Forms.Panel();
+        cardStudentList = new ECMS.UI.Controls.AppCard();
+        dgvEligible = new ECMS.UI.Controls.AppDataGrid();
+        pnlCardHeader = new System.Windows.Forms.Panel();
+        lblSelectedSummary = new System.Windows.Forms.Label();
+        lblTableTitle = new System.Windows.Forms.Label();
+        pnlFooterNote = new System.Windows.Forms.Panel();
+        lblFooterNote = new System.Windows.Forms.Label();
+        pnlFilterBar = new System.Windows.Forms.Panel();
+        btnDeselectAll = new ECMS.UI.Controls.AppButton();
+        btnSelectAllEligible = new ECMS.UI.Controls.AppButton();
+        cboConditionFilter = new System.Windows.Forms.ComboBox();
+        cboClassFilter = new System.Windows.Forms.ComboBox();
+        cboCourseFilter = new System.Windows.Forms.ComboBox();
+        txtSearch = new System.Windows.Forms.TextBox();
+        lblSearch = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
-        pnlTopActions.SuspendLayout();
+        pnlBody.SuspendLayout();
+        cardStudentList.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)dgvEligible).BeginInit();
+        pnlCardHeader.SuspendLayout();
+        pnlFooterNote.SuspendLayout();
+        pnlFilterBar.SuspendLayout();
         SuspendLayout();
-        // 
-        // pnlMain
-        // 
-        pnlMain.AutoScroll = true;
-        pnlMain.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        pnlMain.Controls.Add(pnlBottomInfo);
-        pnlMain.Controls.Add(pnlGridCard);
-        pnlMain.Controls.Add(pnlStepper);
-        pnlMain.Controls.Add(pnlHeader);
-        pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlMain.Location = new System.Drawing.Point(0, 0);
-        pnlMain.Name = "pnlMain";
-        pnlMain.Padding = new System.Windows.Forms.Padding(24, 16, 24, 24);
-        pnlMain.Size = new System.Drawing.Size(1200, 900);
-        pnlMain.TabIndex = 0;
-        // 
-        // pnlBottomInfo
-        // 
-        pnlBottomInfo.ColumnCount = 2;
-        pnlBottomInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
-        pnlBottomInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 45F));
-        pnlBottomInfo.Controls.Add(cardBlockedInfo, 0, 0);
-        pnlBottomInfo.Controls.Add(cardActiveCourseNote, 1, 0);
-        pnlBottomInfo.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlBottomInfo.Location = new System.Drawing.Point(24, 454);
-        pnlBottomInfo.Margin = new System.Windows.Forms.Padding(0, 14, 0, 0);
-        pnlBottomInfo.Name = "pnlBottomInfo";
-        pnlBottomInfo.RowCount = 1;
-        pnlBottomInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlBottomInfo.Size = new System.Drawing.Size(1152, 170);
-        pnlBottomInfo.TabIndex = 4;
-        // 
-        // cardBlockedInfo
-        // 
-        cardBlockedInfo.BackColor = System.Drawing.Color.White;
-        cardBlockedInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardBlockedInfo.BorderWidth = 1;
-        cardBlockedInfo.Controls.Add(pnlShortcutActions);
-        cardBlockedInfo.CornerRadius = 6;
-        cardBlockedInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardBlockedInfo.Location = new System.Drawing.Point(3, 3);
-        cardBlockedInfo.Name = "cardBlockedInfo";
-        cardBlockedInfo.Padding = new System.Windows.Forms.Padding(16);
-        cardBlockedInfo.Size = new System.Drawing.Size(627, 164);
-        cardBlockedInfo.TabIndex = 0;
-        // 
-        // pnlShortcutActions
-        // 
-        pnlShortcutActions.Controls.Add(btnOpenGrades);
-        pnlShortcutActions.Controls.Add(btnOpenAttendance);
-        pnlShortcutActions.Controls.Add(btnOpenTuition);
-        pnlShortcutActions.Location = new System.Drawing.Point(16, 85);
-        pnlShortcutActions.Name = "pnlShortcutActions";
-        pnlShortcutActions.Size = new System.Drawing.Size(590, 48);
-        pnlShortcutActions.TabIndex = 2;
-        // 
-        // btnOpenGrades
-        // 
-        btnOpenGrades.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnOpenGrades.CornerRadius = 5;
-        btnOpenGrades.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnOpenGrades.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnOpenGrades.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnOpenGrades.Location = new System.Drawing.Point(3, 3);
-        btnOpenGrades.Name = "btnOpenGrades";
-        btnOpenGrades.Size = new System.Drawing.Size(110, 34);
-        btnOpenGrades.TabIndex = 0;
-        btnOpenGrades.Text = "Mở điểm số";
-        btnOpenGrades.UseVisualStyleBackColor = true;
-        btnOpenGrades.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // btnOpenAttendance
-        // 
-        btnOpenAttendance.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnOpenAttendance.CornerRadius = 5;
-        btnOpenAttendance.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnOpenAttendance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnOpenAttendance.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnOpenAttendance.Location = new System.Drawing.Point(119, 3);
-        btnOpenAttendance.Name = "btnOpenAttendance";
-        btnOpenAttendance.Size = new System.Drawing.Size(110, 34);
-        btnOpenAttendance.TabIndex = 1;
-        btnOpenAttendance.Text = "Mở điểm danh";
-        btnOpenAttendance.UseVisualStyleBackColor = true;
-        btnOpenAttendance.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // btnOpenTuition
-        // 
-        btnOpenTuition.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnOpenTuition.CornerRadius = 5;
-        btnOpenTuition.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnOpenTuition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnOpenTuition.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnOpenTuition.Location = new System.Drawing.Point(235, 3);
-        btnOpenTuition.Name = "btnOpenTuition";
-        btnOpenTuition.Size = new System.Drawing.Size(110, 34);
-        btnOpenTuition.TabIndex = 2;
-        btnOpenTuition.Text = "Mở công nợ";
-        btnOpenTuition.UseVisualStyleBackColor = true;
-        btnOpenTuition.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // cardActiveCourseNote
-        // 
-        cardActiveCourseNote.BackColor = System.Drawing.Color.White;
-        cardActiveCourseNote.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardActiveCourseNote.BorderWidth = 1;
-        cardActiveCourseNote.Controls.Add(lblActiveCourseDesc);
-        cardActiveCourseNote.Controls.Add(lblActiveCourseBadge);
-        cardActiveCourseNote.Controls.Add(lblActiveCourseTitle);
-        cardActiveCourseNote.CornerRadius = 6;
-        cardActiveCourseNote.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardActiveCourseNote.Location = new System.Drawing.Point(636, 3);
-        cardActiveCourseNote.Name = "cardActiveCourseNote";
-        cardActiveCourseNote.Padding = new System.Windows.Forms.Padding(16);
-        cardActiveCourseNote.Size = new System.Drawing.Size(513, 164);
-        cardActiveCourseNote.TabIndex = 1;
-        // 
-        // lblActiveCourseDesc
-        // 
-        lblActiveCourseDesc.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblActiveCourseDesc.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblActiveCourseDesc.Location = new System.Drawing.Point(16, 68);
-        lblActiveCourseDesc.Name = "lblActiveCourseDesc";
-        lblActiveCourseDesc.Size = new System.Drawing.Size(480, 50);
-        lblActiveCourseDesc.TabIndex = 2;
-        lblActiveCourseDesc.Text = ("Nguyễn Minh Anh mới học 8/24 buổi, chưa có điểm cuối khóa. Không đưa vào danh sác" + "h cấp của IELTS-F02.");
-        // 
-        // lblActiveCourseBadge
-        // 
-        lblActiveCourseBadge.AutoSize = true;
-        lblActiveCourseBadge.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        lblActiveCourseBadge.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)68)), ((int)((byte)68)));
-        lblActiveCourseBadge.Location = new System.Drawing.Point(16, 42);
-        lblActiveCourseBadge.Name = "lblActiveCourseBadge";
-        lblActiveCourseBadge.Size = new System.Drawing.Size(215, 20);
-        lblActiveCourseBadge.TabIndex = 1;
-        lblActiveCourseBadge.Text = "IELTS-F01 · Chưa đủ điều kiện";
-        // 
-        // lblActiveCourseTitle
-        // 
-        lblActiveCourseTitle.AutoSize = true;
-        lblActiveCourseTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblActiveCourseTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblActiveCourseTitle.Location = new System.Drawing.Point(16, 12);
-        lblActiveCourseTitle.Name = "lblActiveCourseTitle";
-        lblActiveCourseTitle.Size = new System.Drawing.Size(269, 25);
-        lblActiveCourseTitle.TabIndex = 0;
-        lblActiveCourseTitle.Text = "Lớp đang học không được cấp";
-        // 
-        // pnlGridCard
-        // 
-        pnlGridCard.BackColor = System.Drawing.Color.White;
-        pnlGridCard.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        pnlGridCard.BorderWidth = 1;
-        pnlGridCard.Controls.Add(lblGridFooter);
-        pnlGridCard.Controls.Add(gridEligibility);
-        pnlGridCard.Controls.Add(lblGridCardTitle);
-        pnlGridCard.CornerRadius = 6;
-        pnlGridCard.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlGridCard.Location = new System.Drawing.Point(24, 124);
-        pnlGridCard.Margin = new System.Windows.Forms.Padding(0, 10, 0, 0);
-        pnlGridCard.Name = "pnlGridCard";
-        pnlGridCard.Padding = new System.Windows.Forms.Padding(16);
-        pnlGridCard.Size = new System.Drawing.Size(1152, 330);
-        pnlGridCard.TabIndex = 3;
-        // 
-        // lblGridFooter
-        // 
-        lblGridFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-        lblGridFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblGridFooter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblGridFooter.Location = new System.Drawing.Point(16, 289);
-        lblGridFooter.Name = "lblGridFooter";
-        lblGridFooter.Size = new System.Drawing.Size(1120, 25);
-        lblGridFooter.TabIndex = 2;
-        lblGridFooter.Text = ("1–5 / 20 học viên · 16 đạt, 1 không đạt, 3 chưa đủ điều kiện                     " + "                                                                                " + "           ‹ Trước   [1]   2   Sau ›");
-        // 
-        // gridEligibility
-        // 
-        gridEligibility.AllowUserToAddRows = false;
-        gridEligibility.AllowUserToDeleteRows = false;
-        gridEligibility.AllowUserToResizeColumns = false;
-        gridEligibility.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
-        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        gridEligibility.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        gridEligibility.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-        gridEligibility.BackgroundColor = System.Drawing.Color.White;
-        gridEligibility.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        gridEligibility.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-        gridEligibility.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-        gridEligibility.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-        gridEligibility.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-        gridEligibility.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colStudent, colScores, colAttendance, colDebt, colConclusion, colReason, colAction });
-        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-        gridEligibility.DefaultCellStyle = dataGridViewCellStyle3;
-        gridEligibility.Dock = System.Windows.Forms.DockStyle.Top;
-        gridEligibility.EnableHeadersVisualStyles = false;
-        gridEligibility.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        gridEligibility.Location = new System.Drawing.Point(16, 16);
-        gridEligibility.MultiSelect = false;
-        gridEligibility.Name = "gridEligibility";
-        gridEligibility.ReadOnly = true;
-        gridEligibility.RowHeadersVisible = false;
-        gridEligibility.RowHeadersWidth = 51;
-        gridEligibility.ScrollBars = System.Windows.Forms.ScrollBars.None;
-        gridEligibility.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridEligibility.Size = new System.Drawing.Size(1120, 256);
-        gridEligibility.TabIndex = 1;
-        // 
-        // colStudent
-        // 
-        colStudent.FillWeight = 20F;
-        colStudent.HeaderText = "Học viên ↑";
-        colStudent.MinimumWidth = 6;
-        colStudent.Name = "colStudent";
-        colStudent.ReadOnly = true;
-        // 
-        // colScores
-        // 
-        colScores.FillWeight = 14F;
-        colScores.HeaderText = "Điểm cuối / TB";
-        colScores.MinimumWidth = 6;
-        colScores.Name = "colScores";
-        colScores.ReadOnly = true;
-        // 
-        // colAttendance
-        // 
-        colAttendance.FillWeight = 16F;
-        colAttendance.HeaderText = "Tham dự";
-        colAttendance.MinimumWidth = 6;
-        colAttendance.Name = "colAttendance";
-        colAttendance.ReadOnly = true;
-        // 
-        // colDebt
-        // 
-        colDebt.FillWeight = 12F;
-        colDebt.HeaderText = "Còn nợ";
-        colDebt.MinimumWidth = 6;
-        colDebt.Name = "colDebt";
-        colDebt.ReadOnly = true;
-        // 
-        // colConclusion
-        // 
-        colConclusion.FillWeight = 14F;
-        colConclusion.HeaderText = "Kết luận";
-        colConclusion.MinimumWidth = 6;
-        colConclusion.Name = "colConclusion";
-        colConclusion.ReadOnly = true;
-        // 
-        // colReason
-        // 
-        colReason.FillWeight = 24F;
-        colReason.HeaderText = "Lý do / sửa ở đâu";
-        colReason.MinimumWidth = 6;
-        colReason.Name = "colReason";
-        colReason.ReadOnly = true;
-        // 
-        // colAction
-        // 
-        colAction.FillWeight = 12F;
-        colAction.HeaderText = "Thao tác";
-        colAction.MinimumWidth = 6;
-        colAction.Name = "colAction";
-        colAction.ReadOnly = true;
-        colAction.Text = "Cấp bằng";
-        colAction.UseColumnTextForButtonValue = true;
-        // 
-        // lblGridCardTitle
-        // 
-        lblGridCardTitle.AutoSize = true;
-        lblGridCardTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblGridCardTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblGridCardTitle.Location = new System.Drawing.Point(16, 12);
-        lblGridCardTitle.Name = "lblGridCardTitle";
-        lblGridCardTitle.Size = new System.Drawing.Size(200, 25);
-        lblGridCardTitle.TabIndex = 0;
-        lblGridCardTitle.Text = "Kết quả xét điều kiện";
-        // 
-        // pnlStepper
-        // 
-        pnlStepper.BackColor = System.Drawing.Color.White;
-        pnlStepper.Controls.Add(lblStep4);
-        pnlStepper.Controls.Add(lblStep3);
-        pnlStepper.Controls.Add(lblStep2);
-        pnlStepper.Controls.Add(lblStep1);
-        pnlStepper.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlStepper.Location = new System.Drawing.Point(24, 86);
-        pnlStepper.Name = "pnlStepper";
-        pnlStepper.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-        pnlStepper.Size = new System.Drawing.Size(1152, 38);
-        pnlStepper.TabIndex = 1;
-        // 
-        // lblStep4
-        // 
-        lblStep4.AutoSize = true;
-        lblStep4.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep4.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStep4.Location = new System.Drawing.Point(640, 10);
-        lblStep4.Name = "lblStep4";
-        lblStep4.Size = new System.Drawing.Size(109, 20);
-        lblStep4.TabIndex = 3;
-        lblStep4.Text = "4. Xem trước in";
-        // 
-        // lblStep3
-        // 
-        lblStep3.AutoSize = true;
-        lblStep3.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStep3.Location = new System.Drawing.Point(440, 10);
-        lblStep3.Name = "lblStep3";
-        lblStep3.Size = new System.Drawing.Size(109, 20);
-        lblStep3.TabIndex = 2;
-        lblStep3.Text = "3. Sổ chứng chỉ";
-        // 
-        // lblStep2
-        // 
-        lblStep2.AutoSize = true;
-        lblStep2.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStep2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStep2.Location = new System.Drawing.Point(240, 10);
-        lblStep2.Name = "lblStep2";
-        lblStep2.Size = new System.Drawing.Size(91, 20);
-        lblStep2.TabIndex = 1;
-        lblStep2.Text = "2. Duyệt cấp";
-        // 
-        // lblStep1
-        // 
-        lblStep1.AutoSize = true;
-        lblStep1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStep1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblStep1.Location = new System.Drawing.Point(16, 10);
-        lblStep1.Name = "lblStep1";
-        lblStep1.Size = new System.Drawing.Size(163, 20);
-        lblStep1.TabIndex = 0;
-        lblStep1.Text = "• 1. Kiểm tra điều kiện";
         // 
         // pnlHeader
         // 
+        pnlHeader.BackColor = System.Drawing.Color.White;
+        pnlHeader.Controls.Add(cboSigner);
+        pnlHeader.Controls.Add(lblSigner);
+        pnlHeader.Controls.Add(btnIssueSelectedTop);
+        pnlHeader.Controls.Add(btnIssuedRegistryTop);
         pnlHeader.Controls.Add(lblTitle);
-        pnlHeader.Controls.Add(pnlTopActions);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlHeader.Location = new System.Drawing.Point(24, 16);
+        pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new System.Drawing.Size(1152, 70);
+        pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
+        pnlHeader.Size = new System.Drawing.Size(1200, 75);
         pnlHeader.TabIndex = 0;
+        // 
+        // cboSigner
+        // 
+        cboSigner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboSigner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboSigner.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboSigner.FormattingEnabled = true;
+        cboSigner.Location = new System.Drawing.Point(545, 22);
+        cboSigner.Name = "cboSigner";
+        cboSigner.Size = new System.Drawing.Size(265, 29);
+        cboSigner.TabIndex = 4;
+        // 
+        // lblSigner
+        // 
+        lblSigner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        lblSigner.AutoSize = true;
+        lblSigner.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSigner.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSigner.Location = new System.Drawing.Point(440, 26);
+        lblSigner.Name = "lblSigner";
+        lblSigner.Size = new System.Drawing.Size(102, 20);
+        lblSigner.TabIndex = 3;
+        lblSigner.Text = "✍️ Người ký:";
+        // 
+        // btnIssueSelectedTop
+        // 
+        btnIssueSelectedTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnIssueSelectedTop.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnIssueSelectedTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnIssueSelectedTop.CornerRadius = 5;
+        btnIssueSelectedTop.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnIssueSelectedTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnIssueSelectedTop.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnIssueSelectedTop.ForeColor = System.Drawing.Color.White;
+        btnIssueSelectedTop.Location = new System.Drawing.Point(1005, 18);
+        btnIssueSelectedTop.Name = "btnIssueSelectedTop";
+        btnIssueSelectedTop.Size = new System.Drawing.Size(170, 38);
+        btnIssueSelectedTop.TabIndex = 2;
+        btnIssueSelectedTop.Text = "🎓 Cấp chứng chỉ (0)";
+        btnIssueSelectedTop.UseVisualStyleBackColor = false;
+        btnIssueSelectedTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        // 
+        // btnIssuedRegistryTop
+        // 
+        btnIssuedRegistryTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnIssuedRegistryTop.BackColor = System.Drawing.Color.White;
+        btnIssuedRegistryTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnIssuedRegistryTop.CornerRadius = 5;
+        btnIssuedRegistryTop.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnIssuedRegistryTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnIssuedRegistryTop.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnIssuedRegistryTop.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnIssuedRegistryTop.Location = new System.Drawing.Point(825, 18);
+        btnIssuedRegistryTop.Name = "btnIssuedRegistryTop";
+        btnIssuedRegistryTop.Size = new System.Drawing.Size(168, 38);
+        btnIssuedRegistryTop.TabIndex = 1;
+        btnIssuedRegistryTop.Text = "📜 Sổ chứng chỉ đã cấp";
+        btnIssuedRegistryTop.UseVisualStyleBackColor = false;
+        btnIssuedRegistryTop.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(0, 18);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(357, 37);
-        lblTitle.TabIndex = 1;
-        lblTitle.Text = "Xét hoàn thành · IELTS-F02";
+        lblTitle.Size = new System.Drawing.Size(378, 37);
+        lblTitle.TabIndex = 0;
+        lblTitle.Text = "Quản lý Chứng chỉ tốt nghiệp";
         // 
-        // pnlTopActions
+        // pnlBody
         // 
-        pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        pnlTopActions.Controls.Add(btnApproveEligible);
-        pnlTopActions.Controls.Add(btnRecheck);
-        pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlTopActions.Location = new System.Drawing.Point(822, 12);
-        pnlTopActions.Name = "pnlTopActions";
-        pnlTopActions.Size = new System.Drawing.Size(330, 48);
-        pnlTopActions.TabIndex = 3;
+        pnlBody.AutoScroll = false;
+        pnlBody.Controls.Add(cardStudentList);
+        pnlBody.Controls.Add(pnlFilterBar);
+        pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
+        pnlBody.Location = new System.Drawing.Point(0, 75);
+        pnlBody.Name = "pnlBody";
+        pnlBody.Padding = new System.Windows.Forms.Padding(24);
+        pnlBody.Size = new System.Drawing.Size(1200, 725);
+        pnlBody.TabIndex = 1;
         // 
-        // btnApproveEligible
+        // cardStudentList
         // 
-        btnApproveEligible.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
-        btnApproveEligible.CornerRadius = 5;
-        btnApproveEligible.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnApproveEligible.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnApproveEligible.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnApproveEligible.Location = new System.Drawing.Point(167, 3);
-        btnApproveEligible.Name = "btnApproveEligible";
-        btnApproveEligible.Size = new System.Drawing.Size(160, 38);
-        btnApproveEligible.TabIndex = 0;
-        btnApproveEligible.Text = "Duyệt học viên đạt";
-        btnApproveEligible.UseVisualStyleBackColor = true;
-        btnApproveEligible.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        cardStudentList.BackColor = System.Drawing.Color.White;
+        cardStudentList.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStudentList.BorderWidth = 1;
+        cardStudentList.Controls.Add(dgvEligible);
+        cardStudentList.Controls.Add(pnlCardHeader);
+        cardStudentList.Controls.Add(pnlFooterNote);
+        cardStudentList.CornerRadius = 8;
+        cardStudentList.Location = new System.Drawing.Point(24, 76);
+        cardStudentList.Name = "cardStudentList";
+        cardStudentList.Padding = new System.Windows.Forms.Padding(16);
+        cardStudentList.Size = new System.Drawing.Size(1152, 625);
+        cardStudentList.TabIndex = 1;
         // 
-        // btnRecheck
+        // dgvEligible
         // 
-        btnRecheck.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnRecheck.CornerRadius = 5;
-        btnRecheck.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnRecheck.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnRecheck.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnRecheck.Location = new System.Drawing.Point(41, 3);
-        btnRecheck.Name = "btnRecheck";
-        btnRecheck.Size = new System.Drawing.Size(120, 38);
-        btnRecheck.TabIndex = 1;
-        btnRecheck.Text = "Kiểm tra lại";
-        btnRecheck.UseVisualStyleBackColor = true;
-        btnRecheck.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        dgvEligible.AllowUserToAddRows = false;
+        dgvEligible.AllowUserToDeleteRows = false;
+        dgvEligible.AllowUserToResizeColumns = false;
+        dgvEligible.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        dgvEligible.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvEligible.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvEligible.BackgroundColor = System.Drawing.Color.White;
+        dgvEligible.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvEligible.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvEligible.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvEligible.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvEligible.ColumnHeadersHeight = 38;
+        dgvEligible.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvEligible.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvEligible.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvEligible.EnableHeadersVisualStyles = false;
+        dgvEligible.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        dgvEligible.Location = new System.Drawing.Point(16, 50);
+        dgvEligible.MultiSelect = false;
+        dgvEligible.Name = "dgvEligible";
+        dgvEligible.RowHeadersVisible = false;
+        dgvEligible.RowHeadersWidth = 51;
+        dgvEligible.RowTemplate.Height = 42;
+        dgvEligible.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+        dgvEligible.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvEligible.Size = new System.Drawing.Size(1120, 527);
+        dgvEligible.TabIndex = 1;
+        // 
+        // pnlCardHeader
+        // 
+        pnlCardHeader.Controls.Add(lblSelectedSummary);
+        pnlCardHeader.Controls.Add(lblTableTitle);
+        pnlCardHeader.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlCardHeader.Location = new System.Drawing.Point(16, 16);
+        pnlCardHeader.Name = "pnlCardHeader";
+        pnlCardHeader.Size = new System.Drawing.Size(1120, 34);
+        pnlCardHeader.TabIndex = 0;
+        // 
+        // lblSelectedSummary
+        // 
+        lblSelectedSummary.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        lblSelectedSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSelectedSummary.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblSelectedSummary.Location = new System.Drawing.Point(740, 6);
+        lblSelectedSummary.Name = "lblSelectedSummary";
+        lblSelectedSummary.Size = new System.Drawing.Size(370, 20);
+        lblSelectedSummary.TabIndex = 1;
+        lblSelectedSummary.Text = "Đang chọn: 0 học viên đủ điều kiện";
+        lblSelectedSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        // 
+        // lblTableTitle
+        // 
+        lblTableTitle.AutoSize = true;
+        lblTableTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblTableTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblTableTitle.Location = new System.Drawing.Point(2, 6);
+        lblTableTitle.Name = "lblTableTitle";
+        lblTableTitle.Size = new System.Drawing.Size(534, 23);
+        lblTableTitle.TabIndex = 0;
+        lblTableTitle.Text = "DANH SÁCH HỌC VIÊN HOÀN THÀNH KHÓA HỌC CHỜ CẤP CHỨNG CHỈ";
+        // 
+        // pnlFooterNote
+        // 
+        pnlFooterNote.Controls.Add(lblFooterNote);
+        pnlFooterNote.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlFooterNote.Location = new System.Drawing.Point(16, 577);
+        pnlFooterNote.Name = "pnlFooterNote";
+        pnlFooterNote.Size = new System.Drawing.Size(1120, 32);
+        pnlFooterNote.TabIndex = 2;
+        // 
+        // lblFooterNote
+        // 
+        lblFooterNote.AutoSize = true;
+        lblFooterNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        lblFooterNote.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblFooterNote.Location = new System.Drawing.Point(4, 7);
+        lblFooterNote.Name = "lblFooterNote";
+        lblFooterNote.Size = new System.Drawing.Size(860, 20);
+        lblFooterNote.TabIndex = 0;
+        lblFooterNote.Text = "📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học phí hoàn thành 100%  |  Người ký duyệt: Trần Minh Quân (Admin · Giám đốc)";
+        // 
+        // pnlFilterBar
+        // 
+        pnlFilterBar.BackColor = System.Drawing.Color.White;
+        pnlFilterBar.Controls.Add(btnDeselectAll);
+        pnlFilterBar.Controls.Add(btnSelectAllEligible);
+        pnlFilterBar.Controls.Add(cboConditionFilter);
+        pnlFilterBar.Controls.Add(cboClassFilter);
+        pnlFilterBar.Controls.Add(cboCourseFilter);
+        pnlFilterBar.Controls.Add(txtSearch);
+        pnlFilterBar.Controls.Add(lblSearch);
+        pnlFilterBar.Location = new System.Drawing.Point(24, 16);
+        pnlFilterBar.Name = "pnlFilterBar";
+        pnlFilterBar.Padding = new System.Windows.Forms.Padding(12);
+        pnlFilterBar.Size = new System.Drawing.Size(1152, 48);
+        pnlFilterBar.TabIndex = 0;
+        // 
+        // btnDeselectAll
+        // 
+        btnDeselectAll.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnDeselectAll.BackColor = System.Drawing.Color.White;
+        btnDeselectAll.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnDeselectAll.CornerRadius = 4;
+        btnDeselectAll.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnDeselectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnDeselectAll.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        btnDeselectAll.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        btnDeselectAll.Location = new System.Drawing.Point(1065, 8);
+        btnDeselectAll.Name = "btnDeselectAll";
+        btnDeselectAll.Size = new System.Drawing.Size(75, 30);
+        btnDeselectAll.TabIndex = 6;
+        btnDeselectAll.Text = "Bỏ chọn";
+        btnDeselectAll.UseVisualStyleBackColor = false;
+        btnDeselectAll.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // btnSelectAllEligible
+        // 
+        btnSelectAllEligible.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnSelectAllEligible.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        btnSelectAllEligible.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnSelectAllEligible.CornerRadius = 4;
+        btnSelectAllEligible.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnSelectAllEligible.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnSelectAllEligible.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
+        btnSelectAllEligible.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnSelectAllEligible.Location = new System.Drawing.Point(920, 8);
+        btnSelectAllEligible.Name = "btnSelectAllEligible";
+        btnSelectAllEligible.Size = new System.Drawing.Size(140, 30);
+        btnSelectAllEligible.TabIndex = 5;
+        btnSelectAllEligible.Text = "✓ Chọn tất cả đủ ĐK";
+        btnSelectAllEligible.UseVisualStyleBackColor = false;
+        btnSelectAllEligible.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // cboConditionFilter
+        // 
+        cboConditionFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboConditionFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboConditionFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboConditionFilter.FormattingEnabled = true;
+        cboConditionFilter.Location = new System.Drawing.Point(750, 9);
+        cboConditionFilter.Name = "cboConditionFilter";
+        cboConditionFilter.Size = new System.Drawing.Size(160, 29);
+        cboConditionFilter.TabIndex = 4;
+        // 
+        // cboClassFilter
+        // 
+        cboClassFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboClassFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboClassFilter.FormattingEnabled = true;
+        cboClassFilter.Location = new System.Drawing.Point(605, 9);
+        cboClassFilter.Name = "cboClassFilter";
+        cboClassFilter.Size = new System.Drawing.Size(138, 29);
+        cboClassFilter.TabIndex = 3;
+        // 
+        // cboCourseFilter
+        // 
+        cboCourseFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboCourseFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+        cboCourseFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        cboCourseFilter.FormattingEnabled = true;
+        cboCourseFilter.Location = new System.Drawing.Point(430, 9);
+        cboCourseFilter.Name = "cboCourseFilter";
+        cboCourseFilter.Size = new System.Drawing.Size(168, 29);
+        cboCourseFilter.TabIndex = 2;
+        // 
+        // txtSearch
+        // 
+        txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtSearch.Location = new System.Drawing.Point(100, 9);
+        txtSearch.Name = "txtSearch";
+        txtSearch.PlaceholderText = "Tìm theo mã học viên, họ và tên, lớp học...";
+        txtSearch.Size = new System.Drawing.Size(315, 29);
+        txtSearch.TabIndex = 1;
+        // 
+        // lblSearch
+        // 
+        lblSearch.AutoSize = true;
+        lblSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSearch.Location = new System.Drawing.Point(12, 13);
+        lblSearch.Name = "lblSearch";
+        lblSearch.Size = new System.Drawing.Size(87, 20);
+        lblSearch.TabIndex = 0;
+        lblSearch.Text = "🔍 Tìm kiếm:";
         // 
         // CertificateManagementView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        Controls.Add(pnlMain);
-        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        Size = new System.Drawing.Size(1200, 900);
-        pnlMain.ResumeLayout(false);
-        pnlBottomInfo.ResumeLayout(false);
-        cardBlockedInfo.ResumeLayout(false);
-        pnlShortcutActions.ResumeLayout(false);
-        cardActiveCourseNote.ResumeLayout(false);
-        cardActiveCourseNote.PerformLayout();
-        pnlGridCard.ResumeLayout(false);
-        pnlGridCard.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)gridEligibility).EndInit();
-        pnlStepper.ResumeLayout(false);
-        pnlStepper.PerformLayout();
+        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        Controls.Add(pnlBody);
+        Controls.Add(pnlHeader);
+        Font = new System.Drawing.Font("Segoe UI", 9F);
+        Name = "CertificateManagementView";
+        Size = new System.Drawing.Size(1200, 800);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
-        pnlTopActions.ResumeLayout(false);
+        pnlBody.ResumeLayout(false);
+        cardStudentList.ResumeLayout(false);
+        ((System.ComponentModel.ISupportInitialize)dgvEligible).EndInit();
+        pnlCardHeader.ResumeLayout(false);
+        pnlCardHeader.PerformLayout();
+        pnlFooterNote.ResumeLayout(false);
+        pnlFooterNote.PerformLayout();
+        pnlFilterBar.ResumeLayout(false);
+        pnlFilterBar.PerformLayout();
         ResumeLayout(false);
     }
 
-    private System.Windows.Forms.Panel pnlMain;
+    #endregion
+
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.FlowLayoutPanel pnlTopActions;
-    private ECMS.UI.Controls.AppButton btnApproveEligible;
-    private ECMS.UI.Controls.AppButton btnRecheck;
-    private System.Windows.Forms.Panel pnlStepper;
-    private System.Windows.Forms.Label lblStep1;
-    private System.Windows.Forms.Label lblStep2;
-    private System.Windows.Forms.Label lblStep3;
-    private System.Windows.Forms.Label lblStep4;
-    private ECMS.UI.Controls.AppCard pnlGridCard;
-    private System.Windows.Forms.Label lblGridCardTitle;
-    private ECMS.UI.Controls.AppDataGrid gridEligibility;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colStudent;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colScores;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colAttendance;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colDebt;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colConclusion;
-    private System.Windows.Forms.DataGridViewTextBoxColumn colReason;
-    private System.Windows.Forms.DataGridViewButtonColumn colAction;
-    private System.Windows.Forms.Label lblGridFooter;
-    private System.Windows.Forms.TableLayoutPanel pnlBottomInfo;
-    private ECMS.UI.Controls.AppCard cardBlockedInfo;
-    private System.Windows.Forms.FlowLayoutPanel pnlShortcutActions;
-    private ECMS.UI.Controls.AppButton btnOpenGrades;
-    private ECMS.UI.Controls.AppButton btnOpenAttendance;
-    private ECMS.UI.Controls.AppButton btnOpenTuition;
-    private ECMS.UI.Controls.AppCard cardActiveCourseNote;
-    private System.Windows.Forms.Label lblActiveCourseTitle;
-    private System.Windows.Forms.Label lblActiveCourseBadge;
-    private System.Windows.Forms.Label lblActiveCourseDesc;
+    private System.Windows.Forms.Label lblSigner;
+    private System.Windows.Forms.ComboBox cboSigner;
+    private ECMS.UI.Controls.AppButton btnIssuedRegistryTop;
+    private ECMS.UI.Controls.AppButton btnIssueSelectedTop;
+    private System.Windows.Forms.Panel pnlBody;
+    private System.Windows.Forms.Panel pnlFilterBar;
+    private System.Windows.Forms.Label lblSearch;
+    private System.Windows.Forms.TextBox txtSearch;
+    private System.Windows.Forms.ComboBox cboCourseFilter;
+    private System.Windows.Forms.ComboBox cboClassFilter;
+    private System.Windows.Forms.ComboBox cboConditionFilter;
+    private ECMS.UI.Controls.AppButton btnSelectAllEligible;
+    private ECMS.UI.Controls.AppButton btnDeselectAll;
+    private ECMS.UI.Controls.AppCard cardStudentList;
+    private System.Windows.Forms.Panel pnlCardHeader;
+    private System.Windows.Forms.Label lblTableTitle;
+    private System.Windows.Forms.Label lblSelectedSummary;
+    private ECMS.UI.Controls.AppDataGrid dgvEligible;
+    private System.Windows.Forms.Panel pnlFooterNote;
+    private System.Windows.Forms.Label lblFooterNote;
 }

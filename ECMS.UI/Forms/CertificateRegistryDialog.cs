@@ -1,69 +1,346 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using ECMS.UI.Services;
 
 namespace ECMS.UI.Forms;
 
 public partial class CertificateRegistryDialog : Form
 {
-    private readonly string _studentName;
-    private readonly string _studentCode;
-    private readonly string _certSerial;
+    private IssuedCertificateModel? _selectedCert;
 
-    public CertificateRegistryDialog() : this("Trần Gia Bảo", "HV-0204", "CC-2026-0042")
-    {
-    }
-
-    public CertificateRegistryDialog(string studentName, string studentCode, string certSerial)
+    public CertificateRegistryDialog()
     {
         InitializeComponent();
-        _studentName = studentName;
-        _studentCode = studentCode;
-        _certSerial = certSerial;
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
 
-        SetupView();
+        SetupFilters();
+        SetupGrid();
+        LoadCertificates();
+        WireEvents();
     }
 
-    private void SetupView()
+    public CertificateRegistryDialog(string studentName, string studentCode, string certSerial) : this()
     {
-        lblDetailTitle.Text = _certSerial;
-        lblStudentVal.Text = $"{_studentName} · {_studentCode}";
-
-        cboCourseFilter.SelectedIndex = 0;
-        cboYearFilter.SelectedIndex = 0;
-
-        gridRegistry.Rows.Clear();
-        gridRegistry.Rows.Add(_certSerial, _studentName, "IELTS-F02", "30/10/2026", "Đã cấp · Chưa in");
-        gridRegistry.Rows.Add("CC-2026-0041", "Ngô Bảo Ngọc", "TOEIC-T00", "22/10/2026", "Đã cấp");
-        gridRegistry.Rows.Add("CC-2026-0040", "Trần Hải Yến", "COM-A01", "19/10/2026", "Đã cấp");
-        gridRegistry.Rows.Add("CC-2026-0039", "Nguyễn Đức Duy", "COM-A01", "19/10/2026", "Đã cấp");
-
-        gridRegistry.SelectionChanged += (s, e) =>
+        var certs = CertificateService.GetIssuedCertificates();
+        var match = certs.FirstOrDefault(c => c.SerialNumber == certSerial || c.StudentCode == studentCode);
+        if (match != null)
         {
-            if (gridRegistry.SelectedRows.Count > 0)
-            {
-                var row = gridRegistry.SelectedRows[0];
-                string serial = row.Cells[0].Value?.ToString() ?? "CC-2026-0042";
-                string student = row.Cells[1].Value?.ToString() ?? "Trần Gia Bảo";
-                string className = row.Cells[2].Value?.ToString() ?? "IELTS-F02";
-                string date = row.Cells[3].Value?.ToString() ?? "30/10/2026";
+            _selectedCert = match;
+            HighlightCertificate(match.SerialNumber);
+        }
+    }
 
-                lblDetailTitle.Text = serial;
-                lblStudentVal.Text = $"{student} · HV-0204";
-                lblClassVal.Text = className;
-                lblIssueDateVal.Text = date;
+    private void SetupFilters()
+    {
+        cboCourseFilter.Items.Clear();
+        cboCourseFilter.Items.AddRange(new object[]
+        {
+            "Tất cả khóa học",
+            "IELTS Foundation",
+            "IELTS Intensive",
+            "TOEIC 500+",
+            "Tiếng Anh Giao tiếp Cơ bản"
+        });
+        cboCourseFilter.SelectedIndex = 0;
+
+        cboYearFilter.Items.Clear();
+        cboYearFilter.Items.AddRange(new object[]
+        {
+            "Tất cả các năm",
+            "Năm 2026",
+            "Năm 2025"
+        });
+        cboYearFilter.SelectedIndex = 0;
+    }
+
+    private void SetupGrid()
+    {
+        gridRegistry.AutoGenerateColumns = false;
+        gridRegistry.Columns.Clear();
+        gridRegistry.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+        gridRegistry.MultiSelect = false;
+        gridRegistry.ReadOnly = true;
+        gridRegistry.RowHeadersVisible = false;
+        gridRegistry.AllowUserToAddRows = false;
+        gridRegistry.AllowUserToDeleteRows = false;
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colStt",
+            DataPropertyName = "Stt",
+            HeaderText = "STT",
+            Width = 45,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colCertNo",
+            DataPropertyName = "SerialNumber",
+            HeaderText = "Số chứng chỉ",
+            Width = 125,
+            DefaultCellStyle = new DataGridViewCellStyle { Font = new Font("Consolas", 9.5f, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235) }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colCode",
+            DataPropertyName = "StudentCode",
+            HeaderText = "Mã HV",
+            Width = 85,
+            DefaultCellStyle = new DataGridViewCellStyle { Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colStudent",
+            DataPropertyName = "StudentName",
+            HeaderText = "Họ và tên",
+            Width = 160,
+            DefaultCellStyle = new DataGridViewCellStyle { Font = new Font("Segoe UI", 9.5f, FontStyle.Bold), ForeColor = Color.FromArgb(15, 23, 42) }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colCourse",
+            DataPropertyName = "CourseName",
+            HeaderText = "Khóa học",
+            Width = 150
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colClass",
+            DataPropertyName = "ClassName",
+            HeaderText = "Lớp",
+            Width = 90
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colScore",
+            DataPropertyName = "Score",
+            HeaderText = "Điểm / Xếp loại",
+            Width = 120,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colAttendance",
+            DataPropertyName = "Attendance",
+            HeaderText = "Chuyên cần",
+            Width = 110,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colDate",
+            DataPropertyName = "IssueDate",
+            HeaderText = "Ngày cấp",
+            Width = 95,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colApprover",
+            DataPropertyName = "Approver",
+            HeaderText = "Người ký duyệt",
+            Width = 160
+        });
+
+        gridRegistry.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colStatus",
+            DataPropertyName = "Status",
+            HeaderText = "Trạng thái in",
+            Width = 120,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        var btnActionCol = new DataGridViewButtonColumn
+        {
+            Name = "colAction",
+            HeaderText = "Thao tác",
+            Text = "🖨️ Xem & In",
+            UseColumnTextForButtonValue = true,
+            Width = 110,
+            FlatStyle = FlatStyle.Flat
+        };
+        gridRegistry.Columns.Add(btnActionCol);
+
+        gridRegistry.CellFormatting += (s, e) =>
+        {
+            if (e.RowIndex < 0 || e.RowIndex >= gridRegistry.Rows.Count) return;
+
+            string colName = gridRegistry.Columns[e.ColumnIndex].Name;
+            var val = e.Value?.ToString() ?? "";
+
+            if (colName == "colStatus")
+            {
+                if (val.Contains("Đã in"))
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(234, 88, 12);
+                }
             }
         };
 
-        btnClose.Click += (s, e) => Close();
+        gridRegistry.CellContentClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0 && gridRegistry.Columns[e.ColumnIndex].Name == "colAction")
+            {
+                OpenPreviewForRow(e.RowIndex);
+            }
+        };
 
-        btnPreviewPrint.Click += (s, e) => OpenCertPrintPreview();
-        btnViewCertToPrint.Click += (s, e) => OpenCertPrintPreview();
+        gridRegistry.CellDoubleClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0)
+            {
+                OpenPreviewForRow(e.RowIndex);
+            }
+        };
     }
 
-    private void OpenCertPrintPreview()
+    private void WireEvents()
     {
-        using var previewDlg = new CertificatePrintPreviewDialog(_studentName, _studentCode, _certSerial);
-        previewDlg.ShowDialog(this);
+        txtSearch.TextChanged += (s, e) => LoadCertificates();
+        cboCourseFilter.SelectedIndexChanged += (s, e) => LoadCertificates();
+        cboYearFilter.SelectedIndexChanged += (s, e) => LoadCertificates();
+
+        btnClose.Click += (s, e) => Close();
+
+        btnPreviewPrint.Click += (s, e) =>
+        {
+            if (gridRegistry.CurrentRow != null && gridRegistry.CurrentRow.Index >= 0)
+            {
+                OpenPreviewForRow(gridRegistry.CurrentRow.Index);
+            }
+            else
+            {
+                MessageBox.Show("Vui lòng chọn một chứng chỉ từ bảng để xem trước hoặc in.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        };
+    }
+
+    private class RegistryDisplayRow
+    {
+        public int Stt { get; set; }
+        public string SerialNumber { get; set; } = string.Empty;
+        public string StudentCode { get; set; } = string.Empty;
+        public string StudentName { get; set; } = string.Empty;
+        public string CourseName { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
+        public string Score { get; set; } = string.Empty;
+        public string Attendance { get; set; } = string.Empty;
+        public string IssueDate { get; set; } = string.Empty;
+        public string Approver { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+        public IssuedCertificateModel OriginalCert { get; set; } = null!;
+    }
+
+    private void LoadCertificates()
+    {
+        string q = txtSearch.Text?.Trim().ToLowerInvariant() ?? "";
+        string selectedCourse = cboCourseFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
+        string selectedYear = cboYearFilter.SelectedItem?.ToString() ?? "Tất cả các năm";
+
+        var certs = CertificateService.GetIssuedCertificates();
+        var filtered = certs.Where(c =>
+            (string.IsNullOrEmpty(q) ||
+             c.SerialNumber.ToLowerInvariant().Contains(q) ||
+             c.StudentName.ToLowerInvariant().Contains(q) ||
+             c.StudentCode.ToLowerInvariant().Contains(q) ||
+             c.ClassName.ToLowerInvariant().Contains(q)) &&
+            (selectedCourse == "Tất cả khóa học" || c.CourseName.Contains(selectedCourse.Replace("Tất cả khóa học", ""))) &&
+            (selectedYear == "Tất cả các năm" || c.IssueDate.Contains(selectedYear.Replace("Năm ", "")))
+        ).ToList();
+
+        var displayList = filtered.Select((c, idx) => new RegistryDisplayRow
+        {
+            Stt = idx + 1,
+            SerialNumber = c.SerialNumber,
+            StudentCode = c.StudentCode,
+            StudentName = c.StudentName,
+            CourseName = c.CourseName,
+            ClassName = c.ClassName,
+            Score = $"{c.Score} ({c.GradeRank})",
+            Attendance = c.Attendance,
+            IssueDate = c.IssueDate,
+            Approver = c.Approver,
+            Status = c.Status,
+            OriginalCert = c
+        }).ToList();
+
+        gridRegistry.DataSource = null;
+        gridRegistry.DataSource = displayList;
+
+        lblGridFooter.Text = $"📌 Tổng số: {displayList.Count} chứng chỉ đã cấp | Nhấn đúp chuột hoặc ấn '🖨️ Xem & In' để mở phôi chứng chỉ in ấn.";
+    }
+
+    private void HighlightCertificate(string serial)
+    {
+        for (int i = 0; i < gridRegistry.Rows.Count; i++)
+        {
+            if (gridRegistry.Rows[i].DataBoundItem is RegistryDisplayRow row && row.SerialNumber == serial)
+            {
+                gridRegistry.Rows[i].Selected = true;
+                gridRegistry.CurrentCell = gridRegistry.Rows[i].Cells[0];
+                break;
+            }
+        }
+    }
+
+    private void OpenPreviewForRow(int rowIndex)
+    {
+        if (rowIndex < 0 || rowIndex >= gridRegistry.Rows.Count) return;
+
+        if (gridRegistry.Rows[rowIndex].DataBoundItem is RegistryDisplayRow row)
+        {
+            var cert = row.OriginalCert;
+            string signerName = cert.Approver;
+            string signerRole = "GIÁM ĐỐC TRUNG TÂM";
+
+            if (signerName.Contains("·"))
+            {
+                var parts = signerName.Split('·');
+                signerName = parts[0].Trim();
+                if (parts.Length > 1) signerRole = parts[1].Trim();
+            }
+            else if (signerName.Contains("("))
+            {
+                int openParen = signerName.IndexOf('(');
+                int closeParen = signerName.IndexOf(')');
+                if (openParen > 0 && closeParen > openParen)
+                {
+                    signerRole = signerName.Substring(openParen + 1, closeParen - openParen - 1);
+                    signerName = signerName.Substring(0, openParen).Trim();
+                }
+            }
+
+            using var previewDlg = new CertificatePrintPreviewDialog(
+                cert.StudentName,
+                cert.StudentCode,
+                cert.SerialNumber,
+                cert.CourseName,
+                cert.ClassName,
+                cert.GradeRank,
+                cert.Score,
+                cert.Attendance,
+                signerName,
+                signerRole
+            );
+            previewDlg.ShowDialog(this);
+        }
     }
 }
