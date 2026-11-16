@@ -1,11 +1,14 @@
 using System;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class CourseEditDialog : Form
 {
+    private readonly ICourseService _courseService = new CourseService();
     private readonly bool _isEditMode;
     private readonly string? _courseCode;
 
@@ -80,7 +83,7 @@ public partial class CourseEditDialog : Form
             Close();
         };
 
-        btnSave.Click += (s, e) =>
+        btnSave.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtCourseCode.Text) || txtCourseCode.Text == "CT-")
             {
@@ -93,6 +96,32 @@ public partial class CourseEditDialog : Form
             {
                 MessageBox.Show("Vui lòng nhập Tên khóa học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtCourseName.Focus();
+                return;
+            }
+
+            int.TryParse(txtSessionCount.Text, out int sessions);
+            if (sessions <= 0) sessions = 24;
+
+            string feeRaw = txtTuitionFee.Text.Replace("đ", "").Replace(".", "").Replace(",", "").Trim();
+            decimal.TryParse(feeRaw, out decimal fee);
+            if (fee <= 0) fee = 5000000;
+
+            var newCourse = new Course
+            {
+                CourseCode = txtCourseCode.Text.Trim(),
+                CourseName = txtCourseName.Text.Trim(),
+                Level = cboInputLevel.SelectedItem?.ToString() ?? "Cơ bản",
+                TotalHours = sessions * 2,
+                TotalSessions = sessions,
+                BaseTuitionFee = fee,
+                PassingScore = 5.0m,
+                IsActive = true
+            };
+
+            var res = await _courseService.CreateCourseAsync(newCourse);
+            if (!res.Success)
+            {
+                MessageBox.Show(res.Message, "Lỗi lưu CSDL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
