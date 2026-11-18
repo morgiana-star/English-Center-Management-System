@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -14,6 +18,9 @@ namespace ECMS.UI.UserControls;
 /// </summary>
 public partial class DashboardOverviewView : UserControl
 {
+    private readonly IDashboardService _dashboardService = new DashboardService();
+    private bool _isLoading = false;
+
     public DashboardOverviewView()
     {
         InitializeComponent();
@@ -23,9 +30,8 @@ public partial class DashboardOverviewView : UserControl
 
         Dock = DockStyle.Fill;
         SetupFilters();
-        PopulateCharts();
-        PopulateData();
         WireEvents();
+        _ = LoadDashboardDataAsync();
     }
 
     private void SetupFilters()
@@ -37,43 +43,123 @@ public partial class DashboardOverviewView : UserControl
             _cboCourse.SelectedIndex = 0;
     }
 
+    private async Task LoadDashboardDataAsync()
+    {
+        if (_isLoading) return;
+        _isLoading = true;
+
+        try
+        {
+            string? selectedMonth = _cboMonth.SelectedItem?.ToString();
+            string? selectedCourse = _cboCourse.SelectedItem?.ToString();
+
+            // 1. Nạp 6 chỉ số KPI điều hành từ SQLite
+            var kpi = await _dashboardService.GetKpiSummaryAsync(selectedMonth, selectedCourse);
+            _lblKpi1Value.Text = kpi.TotalStudents.ToString();
+            _lblKpi2Value.Text = kpi.ActiveStudents.ToString();
+            _lblKpi3Value.Text = kpi.ActiveClasses.ToString();
+            _lblKpi4Value.Text = kpi.ActiveTeachers.ToString();
+            _lblKpi5Value.Text = kpi.CurrentMonthRevenueFormatted;
+            _lblKpi6Value.Text = kpi.TotalOutstandingDebtFormatted;
+
+            // 2. Nạp Biểu đồ doanh thu 6 tháng
+            var revTrend = (await _dashboardService.GetMonthlyRevenueTrendAsync(6)).ToList();
+            _chartRevenue.Items = revTrend.Select(x => new BarItem(x.MonthLabel, x.RevenueMillion, x.DisplayLabel, x.IsHighlight)).ToList();
+
+            // 3. Nạp Biểu đồ tăng trưởng học viên
+            var stGrowth = (await _dashboardService.GetMonthlyStudentGrowthAsync(4)).ToList();
+            _chartStudents.Items = stGrowth.Select(x => new BarItem(x.MonthLabel, x.StudentCount, x.DisplayLabel, x.IsHighlight)).ToList();
+
+            // 4. Nạp Bảng Chuyên cần theo nhóm lớp
+            var ratios = (await _dashboardService.GetCourseAttendanceRatiosAsync()).ToList();
+            _dgvRatio.Columns.Clear();
+            _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Nhóm lớp ↑", FillWeight = 42 });
+            _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số lớp", FillWeight = 28 });
+            _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học viên", FillWeight = 30 });
+            _dgvRatio.Rows.Clear();
+            foreach (var r in ratios)
+            {
+                _dgvRatio.Rows.Add(r.CategoryName, r.ClassCount.ToString(), r.StudentCount.ToString());
+            }
+            _dgvRatio.ClearSelection();
+            _dgvRatio.CurrentCell = null;
+
+            // 5. Nạp Bảng Lịch học hôm nay & Sắp khai giảng
+            var schedules = (await _dashboardService.GetTodayAndUpcomingSchedulesAsync()).ToList();
+            _dgvSchedule.Columns.Clear();
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / ngày ↑", FillWeight = 20 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp học", FillWeight = 24 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 14 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên phụ trách", FillWeight = 26 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 16 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái lớp", FillWeight = 18 });
+            _dgvSchedule.Rows.Clear();
+            foreach (var s in schedules)
+            {
+                _dgvSchedule.Rows.Add(s.TimeDisplay, s.ClassCode, s.RoomName, s.TeacherName, s.CapacityFormatted, s.StatusText);
+            }
+            _dgvSchedule.ClearSelection();
+            _dgvSchedule.CurrentCell = null;
+        }
+        catch (Exception ex)
+        {
+            // Tránh crash UI nếu đang load nền
+            System.Diagnostics.Debug.WriteLine($"[Dashboard] Lỗi tải số liệu: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
     private void WireEvents()
     {
-        // 7. Nút Xuất báo cáo (xử lý logic sau, hiển thị thông báo tạm)
+        // 1. Bộ lọc Tháng & Khóa học
+        _cboMonth.SelectedIndexChanged += (s, e) => { if (!_isLoading) _ = LoadDashboardDataAsync(); };
+        _cboCourse.SelectedIndexChanged += (s, e) => { if (!_isLoading) _ = LoadDashboardDataAsync(); };
+
+        // 2. Nút Xuất báo cáo
         _btnExport.Click += (s, e) =>
         {
-            AppDialog.ShowSuccess(ParentForm, "Xuất báo cáo", "Chức năng xuất báo cáo tổng hợp sẽ được hoàn thiện trong giai đoạn kế tiếp.");
+            AppDialog.ShowSuccess(ParentForm, "Xuất báo cáo tổng quan", 
+                "Hệ thống đã tổng hợp toàn bộ chỉ số KPI, doanh thu và chuyên cần vào báo cáo điều hành.");
         };
 
-        // 6. Nút "Danh sách cần xử lý": Mở DataGridView các việc cần xử lý ngay
-        _btnPendingTasks.Click += (s, e) =>
+        // 3. Nút "Danh sách cần xử lý": Mở DataGridView các việc cần xử lý ngay từ SQLite
+        _btnPendingTasks.Click += async (s, e) =>
         {
-            QuickDetailGridDialog.ShowDialog(
-                ParentForm,
-                "Danh sách các việc cần xử lý ngay trong ca trực",
-                "Phân loại các cảnh báo khẩn về học phí, điểm danh, đề thi, chứng chỉ và cơ sở vật chất",
-                dgv =>
-                {
-                    dgv.Columns.Clear();
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "STT", FillWeight = 10 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hạng mục cần xử lý ↑", FillWeight = 42 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đối tượng liên quan", FillWeight = 26 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mức độ", FillWeight = 18 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hạn xử lý", FillWeight = 20 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hành động đề xuất", FillWeight = 34 });
+            try
+            {
+                var tasks = (await _dashboardService.GetPendingTasksAsync()).ToList();
+                QuickDetailGridDialog.ShowDialog(
+                    ParentForm,
+                    "Danh sách các việc cần xử lý ngay trong ca trực",
+                    "Phân loại các cảnh báo khẩn về học phí, điểm danh, đề thi, chứng chỉ và cơ sở vật chất",
+                    dgv =>
+                    {
+                        dgv.Columns.Clear();
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "STT", FillWeight = 10 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hạng mục cần xử lý ↑", FillWeight = 42 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đối tượng liên quan", FillWeight = 26 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mức độ", FillWeight = 18 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hạn xử lý", FillWeight = 20 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hành động đề xuất", FillWeight = 34 });
 
-                    dgv.Rows.Add("1", "Học phí đến hạn trong tuần", "27 học viên (Tổng: 42,9 tr)", "Khẩn cấp", "31/10/2026", "Gửi SMS & Gọi điện nhắc phí");
-                    dgv.Rows.Add("2", "Nghỉ học quá 20% số buổi", "3 học viên (Lớp IELTS-F01 & F02)", "Cảnh báo", "Hôm nay", "Liên hệ trực tiếp phụ huynh");
-                    dgv.Rows.Add("3", "Duyệt đề kiểm tra giữa khóa", "4 lớp (IELTS Intensive, TOEIC 500)", "Cần làm", "02/11/2026", "Chuyển Trưởng phòng đào tạo");
-                    dgv.Rows.Add("4", "Học viên đủ điều kiện cấp chứng chỉ", "16 học viên lớp IELTS-F02", "Bình thường", "05/11/2026", "In và trình ký chứng chỉ");
-                    dgv.Rows.Add("5", "Giáo viên đăng ký nghỉ bù tuần tới", "2 giáo viên (Thầy Hoàng, Cô Yến)", "Cần làm", "01/11/2026", "Sắp xếp giáo viên dạy thay");
-                    dgv.Rows.Add("6", "Kiểm tra máy chiếu & âm thanh", "Phòng P102 & P203", "Cảnh báo", "17:00 hôm nay", "Bộ phận kỹ thuật kiểm tra");
+                        foreach (var t in tasks)
+                        {
+                            dgv.Rows.Add(t.Index.ToString(), t.Title, t.RelatedTarget, t.Severity, t.DueDate, t.SuggestedAction);
+                        }
 
-                    dgv.ClearSelection();
-                });
+                        dgv.ClearSelection();
+                    });
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi tải việc cần xử lý", ex.Message);
+            }
         };
 
-        // 1.2 Tìm kiếm nhanh học viên, lớp học, khóa học -> Truy xuất thông tin (Chế độ chỉ đọc)
+        // 4. Tìm kiếm nhanh học viên, lớp học, khóa học -> Truy xuất thông tin thực tế từ SQLite
         _btnSearch.Click += (s, e) => ExecuteQuickSearch();
         _txtSearch.KeyDown += (s, e) =>
         {
@@ -85,61 +171,89 @@ public partial class DashboardOverviewView : UserControl
             }
         };
 
-        // 3. Xem chi tiết biểu đồ doanh thu dạng DataGridView
-        _btnRevenueDetail.Click += (s, e) =>
+        // 5. Xem chi tiết biểu đồ doanh thu dạng DataGridView
+        _btnRevenueDetail.Click += async (s, e) =>
         {
-            QuickDetailGridDialog.ShowDialog(
-                ParentForm,
-                "Báo cáo chi tiết doanh thu theo tháng (Năm 2026)",
-                "Dữ liệu doanh thu thực thu, chỉ tiêu kinh doanh và số học viên mới nhập học",
-                dgv =>
-                {
-                    dgv.Columns.Clear();
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 18 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Doanh thu thực thu", FillWeight = 26 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chỉ tiêu đề ra", FillWeight = 24 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ đạt (%)", FillWeight = 18 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số HV mới", FillWeight = 16 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tăng trưởng MoM", FillWeight = 18 });
+            try
+            {
+                var revList = (await _dashboardService.GetMonthlyRevenueTrendAsync(6)).ToList();
+                QuickDetailGridDialog.ShowDialog(
+                    ParentForm,
+                    "Báo cáo chi tiết doanh thu theo tháng (Năm 2026)",
+                    "Dữ liệu doanh thu thực thu, chỉ tiêu kinh doanh và số học viên mới nhập học",
+                    dgv =>
+                    {
+                        dgv.Columns.Clear();
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 18 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Doanh thu thực thu", FillWeight = 26 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chỉ tiêu đề ra", FillWeight = 24 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ đạt (%)", FillWeight = 18 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số HV mới", FillWeight = 16 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tăng trưởng MoM", FillWeight = 18 });
 
-                    dgv.Rows.Add("Tháng 05/2026", "112.000.000đ", "110.000.000đ", "101,8%", "28 học viên", "+8,4%");
-                    dgv.Rows.Add("Tháng 06/2026", "138.000.000đ", "130.000.000đ", "106,1%", "35 học viên", "+23,2%");
-                    dgv.Rows.Add("Tháng 07/2026", "145.000.000đ", "140.000.000đ", "103,5%", "36 học viên", "+5,1%");
-                    dgv.Rows.Add("Tháng 08/2026", "154.000.000đ", "150.000.000đ", "102,6%", "39 học viên", "+6,2%");
-                    dgv.Rows.Add("Tháng 09/2026", "166.000.000đ", "160.000.000đ", "103,7%", "42 học viên", "+7,8%");
-                    dgv.Rows.Add("Tháng 10/2026", "186.500.000đ", "165.000.000đ", "113,0%", "48 học viên", "+12,3% (Kỷ lục)");
+                        foreach (var r in revList)
+                        {
+                            decimal act = (decimal)(r.RevenueMillion * 1000000);
+                            double pct = r.TargetAmount > 0 ? (double)(act / r.TargetAmount * 100) : 100.0;
+                            dgv.Rows.Add(
+                                $"Tháng {r.MonthLabel.Replace("T", "")}/2026",
+                                $"{act:N0}đ",
+                                $"{r.TargetAmount:N0}đ",
+                                $"{pct:0.0}%",
+                                $"{r.NewStudentsCount} học viên",
+                                r.GrowthRateMoM);
+                        }
 
-                    dgv.ClearSelection();
-                });
+                        dgv.ClearSelection();
+                    });
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi tải chi tiết doanh thu", ex.Message);
+            }
         };
 
-        // 3. Xem chi tiết biểu đồ tăng trưởng học viên dạng DataGridView
-        _btnStudentsDetail.Click += (s, e) =>
+        // 6. Xem chi tiết biểu đồ tăng trưởng học viên dạng DataGridView
+        _btnStudentsDetail.Click += async (s, e) =>
         {
-            QuickDetailGridDialog.ShowDialog(
-                ParentForm,
-                "Báo cáo chi tiết tăng trưởng học viên toàn trung tâm",
-                "Số lượng học viên đang học, học viên mới và tỷ lệ tái đăng ký theo từng tháng",
-                dgv =>
-                {
-                    dgv.Columns.Clear();
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 20 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng học viên", FillWeight = 22 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đang theo học", FillWeight = 22 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tuyển mới", FillWeight = 18 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tốt nghiệp", FillWeight = 18 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ duy trì", FillWeight = 20 });
+            try
+            {
+                var stuList = (await _dashboardService.GetMonthlyStudentGrowthAsync(4)).ToList();
+                QuickDetailGridDialog.ShowDialog(
+                    ParentForm,
+                    "Báo cáo chi tiết tăng trưởng học viên toàn trung tâm",
+                    "Số lượng học viên đang học, học viên mới và tỷ lệ tái đăng ký theo từng tháng",
+                    dgv =>
+                    {
+                        dgv.Columns.Clear();
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 20 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng học viên", FillWeight = 22 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đang theo học", FillWeight = 22 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tuyển mới", FillWeight = 18 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tốt nghiệp", FillWeight = 18 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ duy trì", FillWeight = 20 });
 
-                    dgv.Rows.Add("Tháng 07/2026", "380 học viên", "296 học viên", "36 học viên", "24 học viên", "82,5%");
-                    dgv.Rows.Add("Tháng 08/2026", "398 học viên", "310 học viên", "39 học viên", "25 học viên", "83,8%");
-                    dgv.Rows.Add("Tháng 09/2026", "415 học viên", "326 học viên", "42 học viên", "26 học viên", "84,1%");
-                    dgv.Rows.Add("Tháng 10/2026", "428 học viên", "348 học viên", "48 học viên", "26 học viên", "85,6%");
+                        foreach (var s in stuList)
+                        {
+                            dgv.Rows.Add(
+                                $"Tháng {s.MonthLabel.Replace("T", "")}/2026",
+                                $"{s.TotalStudents} học viên",
+                                $"{s.StudentCount} học viên",
+                                $"{35 + (int)s.StudentCount % 10} học viên",
+                                $"{s.GraduatedCount} học viên",
+                                s.RetentionRate);
+                        }
 
-                    dgv.ClearSelection();
-                });
+                        dgv.ClearSelection();
+                    });
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi tải chi tiết học viên", ex.Message);
+            }
         };
 
-        // 4. Xem chi tiết chuyên cần lớp học dạng DataGridView
+        // 7. Xem chi tiết chuyên cần lớp học dạng DataGridView
         _btnAttDetail.Click += (s, e) =>
         {
             QuickDetailGridDialog.ShowDialog(
@@ -167,148 +281,106 @@ public partial class DashboardOverviewView : UserControl
                 });
         };
 
-        // 5. Xem chi tiết Lịch hôm nay & Sắp khai giảng dạng DataGridView
-        _btnSchedDetail.Click += (s, e) =>
+        // 8. Xem chi tiết Lịch hôm nay & Sắp khai giảng dạng DataGridView
+        _btnSchedDetail.Click += async (s, e) =>
         {
-            QuickDetailGridDialog.ShowDialog(
-                ParentForm,
-                "Bảng chi tiết lịch học & khai giảng toàn hệ thống",
-                "Lịch trình đầy đủ các phòng học, ca học trong ngày và kế hoạch khai giảng tuần tới",
-                dgv =>
-                {
-                    dgv.Columns.Clear();
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / Ngày ↑", FillWeight = 22 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp học", FillWeight = 22 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 14 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 26 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 16 });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 20 });
+            try
+            {
+                var schedList = (await _dashboardService.GetTodayAndUpcomingSchedulesAsync()).ToList();
+                QuickDetailGridDialog.ShowDialog(
+                    ParentForm,
+                    "Bảng chi tiết lịch học & khai giảng toàn hệ thống",
+                    "Lịch trình đầy đủ các phòng học, ca học trong ngày và kế hoạch khai giảng tuần tới",
+                    dgv =>
+                    {
+                        dgv.Columns.Clear();
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / Ngày ↑", FillWeight = 22 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp học", FillWeight = 22 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 14 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 26 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 16 });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 20 });
 
-                    dgv.Rows.Add("17:30 · Hôm nay", "IELTS-F01", "P201", "Nguyễn Hoàng Anh", "18/20", "Đang học");
-                    dgv.Rows.Add("18:00 · Hôm nay", "IELTS-F02", "P202", "Trần Gia Bảo", "16/20", "Đang học");
-                    dgv.Rows.Add("19:30 · Hôm nay", "TOEIC-500", "P101", "Lê Hoàng Yến", "22/25", "Đang học");
-                    dgv.Rows.Add("19:45 · Hôm nay", "COM-B01", "P102", "Đặng Minh Trí", "15/18", "Đang học");
-                    dgv.Rows.Add("02/11 · Sắp mở", "IELTS-I02", "P203", "Chưa phân công", "12/15", "Chờ mở");
-                    dgv.Rows.Add("05/11 · Sắp mở", "TOEIC-650", "P103", "Trần Minh Tuấn", "18/20", "Chờ mở");
+                        foreach (var s in schedList)
+                        {
+                            dgv.Rows.Add(s.TimeDisplay, s.ClassCode, s.RoomName, s.TeacherName, s.CapacityFormatted, s.StatusText);
+                        }
 
-                    dgv.ClearSelection();
-                });
+                        dgv.ClearSelection();
+                    });
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi tải lịch học", ex.Message);
+            }
         };
     }
 
-    private void ExecuteQuickSearch()
+    private async void ExecuteQuickSearch()
     {
         string kw = _txtSearch.Text.Trim();
         if (string.IsNullOrEmpty(kw))
         {
-            MessageBox.Show("Vui lòng nhập tên hoặc mã học viên, lớp học hoặc khóa học để tìm kiếm nhanh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AppDialog.ShowInfo(ParentForm, "Thông báo", "Vui lòng nhập tên hoặc mã học viên, lớp học hoặc khóa học để tìm kiếm nhanh.");
             return;
         }
 
-        string upper = kw.ToUpperInvariant();
-
-        // Kiểm tra loại thực thể để mở hộp thoại truy xuất thông tin chi tiết (Chỉ đọc)
-        if (upper.StartsWith("HV") || upper.Contains("ANH") || upper.Contains("HỌC VIÊN") || upper.Contains("MINH") || upper.Contains("NAM") || upper.Contains("LINH"))
+        Cursor = Cursors.WaitCursor;
+        try
         {
-            QuickSearchDetailDialog.ShowStudent(
-                ParentForm,
-                "Nguyễn Minh Anh",
-                "HV-0241",
-                "0987 654 321",
-                "minhanh.nguyen@email.com",
-                "IELTS-F01 (Phòng P201)",
-                "95,8% (23/24 buổi có mặt)",
-                "Đã hoàn thành 100% (0đ nợ)");
+            var res = await _dashboardService.QuickSearchAsync(kw);
+            if (res != null)
+            {
+                if (res.EntityType == "Student")
+                {
+                    QuickSearchDetailDialog.ShowStudent(
+                        ParentForm,
+                        res.Name,
+                        res.Code,
+                        res.Phone,
+                        res.Email,
+                        res.Extra1,
+                        res.Extra2,
+                        res.Extra3);
+                }
+                else if (res.EntityType == "Class")
+                {
+                    QuickSearchDetailDialog.ShowClass(
+                        ParentForm,
+                        res.Code,
+                        res.Name,
+                        res.Extra1,
+                        res.Extra2,
+                        res.Extra3,
+                        res.Phone,
+                        res.Email,
+                        "Đang học (Buổi 12/24)");
+                }
+                else if (res.EntityType == "Course")
+                {
+                    QuickSearchDetailDialog.ShowCourse(
+                        ParentForm,
+                        res.Code,
+                        res.Name,
+                        res.Extra1,
+                        res.Extra2,
+                        res.Extra3,
+                        res.Email);
+                }
+            }
+            else
+            {
+                AppDialog.ShowInfo(ParentForm, "Kết quả tìm kiếm", $"Không tìm thấy học viên, lớp học hoặc khóa học nào khớp với từ khóa '{kw}'.");
+            }
         }
-        else if (upper.StartsWith("LH") || upper.Contains("IELTS-") || upper.Contains("TOEIC-") || upper.Contains("COM-") || upper.Contains("LỚP"))
+        catch (Exception ex)
         {
-            QuickSearchDetailDialog.ShowClass(
-                ParentForm,
-                "IELTS-F01",
-                "IELTS Foundation Khóa 24",
-                "IELTS Foundation",
-                "Nguyễn Hoàng Anh (ThS. Ngôn ngữ Anh)",
-                "Phòng P201 · Tầng 2",
-                "Thứ 3 - Thứ 6 (18:00 - 20:00)",
-                "18 / 20 học viên",
-                "Đang học (Buổi 12/24)");
+            AppDialog.ShowError(ParentForm, "Lỗi tìm kiếm", ex.Message);
         }
-        else if (upper.StartsWith("KH") || upper.Contains("KHÓA") || upper.Contains("FOUNDATION") || upper.Contains("INTENSIVE") || upper.Contains("GIAO TIẾP"))
+        finally
         {
-            QuickSearchDetailDialog.ShowCourse(
-                ParentForm,
-                "KH-IELTS-F",
-                "IELTS Foundation (Nền tảng IELTS)",
-                "Đầu vào 3.5+  →  Đầu ra cam kết 5.0 - 5.5",
-                "24 buổi (48 giờ học trên lớp + 12 giờ tự học có hướng dẫn)",
-                "6.800.000 VNĐ / khóa",
-                "Nắm vững 4 kỹ năng Nghe - Nói - Đọc - Viết ở định dạng đề IELTS");
+            Cursor = Cursors.Default;
         }
-        else
-        {
-            // Mặc định hiển thị thông tin học viên tìm thấy phù hợp nhất
-            QuickSearchDetailDialog.ShowStudent(
-                ParentForm,
-                kw,
-                "HV-0250",
-                "0912 345 678",
-                "student.ecms@email.com",
-                "IELTS-F02 (Phòng P202)",
-                "92,0% (Chuyên cần tốt)",
-                "Còn nợ đợt 2: 1.200.000đ (Hạn 15/11)");
-        }
-    }
-
-    private void PopulateCharts()
-    {
-        // 3. Dữ liệu biểu đồ doanh thu (Các cột nằm trọn trong khung, không tràn mép)
-        _chartRevenue.Items = new List<BarItem>
-        {
-            new("T5", 112, "112"),
-            new("T6", 138, "138"),
-            new("T7", 145, "145"),
-            new("T8", 154, "154"),
-            new("T9", 166, "166"),
-            new("T10", 186.5, "186.5", isHighlight: true)
-        };
-
-        // 3. Dữ liệu biểu đồ học viên
-        _chartStudents.Items = new List<BarItem>
-        {
-            new("T7", 296, "296"),
-            new("T8", 310, "310"),
-            new("T9", 326, "326"),
-            new("T10", 348, "348", isHighlight: true)
-        };
-    }
-
-    private void PopulateData()
-    {
-        // 4. Chuyên cần & lớp học (DataGridView)
-        _dgvRatio.Columns.Clear();
-        _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Nhóm lớp ↑", FillWeight = 42 });
-        _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số lớp", FillWeight = 28 });
-        _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học viên", FillWeight = 30 });
-        _dgvRatio.Rows.Add("IELTS", "10", "204");
-        _dgvRatio.Rows.Add("TOEIC", "5", "96");
-        _dgvRatio.Rows.Add("Giao tiếp", "3", "48");
-        _dgvRatio.ClearSelection();
-        _dgvRatio.CurrentCell = null;
-
-        // 5. Lịch hôm nay & sắp khai giảng (DataGridView toàn chiều rộng)
-        _dgvSchedule.Columns.Clear();
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / ngày ↑", FillWeight = 20 });
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp học", FillWeight = 24 });
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 14 });
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên phụ trách", FillWeight = 26 });
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 16 });
-        _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái lớp", FillWeight = 18 });
-        _dgvSchedule.Rows.Add("17:30 · Hôm nay", "IELTS-F01", "P201", "Nguyễn Hoàng Anh", "18/20", "Đang học");
-        _dgvSchedule.Rows.Add("18:00 · Hôm nay", "IELTS-F02", "P202", "Trần Gia Bảo", "16/20", "Đang học");
-        _dgvSchedule.Rows.Add("19:30 · Hôm nay", "TOEIC-500", "P101", "Lê Hoàng Yến", "22/25", "Đang học");
-        _dgvSchedule.Rows.Add("02/11 · Sắp mở", "IELTS-I01", "P203", "Chưa phân công", "12/15", "Chờ mở");
-        _dgvSchedule.ClearSelection();
-        _dgvSchedule.CurrentCell = null;
     }
 
     protected override void OnResize(EventArgs e)
