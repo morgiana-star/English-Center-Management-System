@@ -65,3 +65,21 @@ public class AdminTelemetryDto
     public int AuditLogsCount { get; set; }
     public string DatabaseStatus { get; set; } = "WAL Online";
 }
+
+public class ChangePasswordDto
+{
+    public int UserId { get; set; }
+    public string CurrentPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+
+public class ResetPasswordAdminDto
+{
+    public int TargetUserId { get; set; }
+    public string Username { get; set; } = string.Empty;
+    public string TempPassword { get; set; } = string.Empty;
+    public bool MustChangePassword { get; set; } = true;
+    public bool UnlockAccount { get; set; } = true;
+    public string Reason { get; set; } = "Quản trị viên thiết lập lại mật khẩu";
+}
