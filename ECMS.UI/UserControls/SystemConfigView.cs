@@ -1,8 +1,13 @@
 using System;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -16,53 +21,87 @@ namespace ECMS.UI.UserControls;
 /// </summary>
 public partial class SystemConfigView : UserControl
 {
+    private readonly ISystemConfigService _configService = new SystemConfigService();
+    private bool _isLoading = false;
+
     public SystemConfigView()
     {
         InitializeComponent();
-        LoadDefaultConfig();
+
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
         SetupBackupsGrid();
-        PopulateMockBackups();
+        InitComboBoxes();
         WireEvents();
+        _ = LoadAllConfigsAsync();
     }
 
-    private void LoadDefaultConfig()
+    private void InitComboBoxes()
     {
-        // 1. Tab 1: Trung tâm & CSDL
-        txtCenterName.Text = "Trung tâm Anh ngữ ECMS Minh Trí";
-        txtCenterPhone.Text = "028 3822 6688";
-        txtCenterEmail.Text = "contact@ecms.edu.vn";
-        txtCenterWebsite.Text = "https://ecms.edu.vn";
-        txtCenterAddress.Text = "25 Nguyễn Văn Cừ, Phường 4, Quận 5, TP. Hồ Chí Minh";
-        txtDirector.Text = AppSession.FullName;
-        txtDirectorTitle.Text = AppSession.SignerTitle;
-
-        txtDatabasePath.Text = @"C:\ECMS\Data\ecms.db";
-        txtStoragePath.Text = @"C:\ECMS\TaiLieu\";
-        txtBackupDir.Text = @"D:\ECMS_Backup\";
-
-        // 2. Tab 2: Quy tắc điểm & Chuyên cần
         cboScoreScale.Items.Clear();
         cboScoreScale.Items.AddRange(new object[] { "Thang điểm 10 (0.0 - 10.0)", "Thang điểm 100 (0 - 100)", "Thang điểm 4.0 (0.0 - 4.0)" });
         cboScoreScale.SelectedIndex = 0;
 
-        txtPassingScore.Text = "6.5";
-        txtWeightRegular.Text = "20%";
-        txtWeightMidterm.Text = "30%";
-        txtWeightFinal.Text = "50%";
-        txtMinAttendance.Text = "80%";
-        txtAbsenceAlert.Text = "Nghỉ từ 3 buổi";
-
-        chkLateCounted.Checked = true;
-        chkDebtCertRule.Checked = true;
-        chkAutoLockAttendance.Checked = true;
-
-        ValidateWeights();
-
-        // 3. Tab 3: Sao lưu tự động
         cboBackupTime.Items.Clear();
         cboBackupTime.Items.AddRange(new object[] { "23:00 hàng ngày", "12:00 & 23:00 hàng ngày", "Chủ nhật hàng tuần lúc 00:00" });
         cboBackupTime.SelectedIndex = 0;
-        chkAutoBackup.Checked = true;
+    }
+
+    private async Task LoadAllConfigsAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            // 1. Nạp cấu hình Trung tâm & CSDL từ SQLite
+            var center = await _configService.GetCenterConfigAsync();
+            txtCenterName.Text = center.CenterName;
+            txtCenterPhone.Text = center.CenterPhone;
+            txtCenterEmail.Text = center.CenterEmail;
+            txtCenterWebsite.Text = center.CenterWebsite;
+            txtCenterAddress.Text = center.CenterAddress;
+            txtDirector.Text = center.DirectorName;
+            txtDirectorTitle.Text = center.DirectorTitle;
+
+            txtDatabasePath.Text = DatabaseConfig.DatabasePath;
+            txtStoragePath.Text = center.StoragePath;
+            txtBackupDir.Text = center.BackupDir;
+
+            // 2. Nạp cấu hình Quy tắc học vụ & Điểm số
+            var rules = await _configService.GetAcademicRulesAsync();
+            var scaleIdx = cboScoreScale.FindString(rules.ScoreScale);
+            cboScoreScale.SelectedIndex = scaleIdx >= 0 ? scaleIdx : 0;
+
+            txtPassingScore.Text = rules.PassingScore.ToString("0.0", CultureInfo.InvariantCulture);
+            txtWeightRegular.Text = rules.WeightRegular.ToString();
+            txtWeightMidterm.Text = rules.WeightMidterm.ToString();
+            txtWeightFinal.Text = rules.WeightFinal.ToString();
+            txtMinAttendance.Text = rules.MinAttendanceRate.ToString("0", CultureInfo.InvariantCulture);
+            txtAbsenceAlert.Text = rules.MaxAbsencesAlert.ToString();
+
+            chkLateCounted.Checked = rules.IsLateCounted;
+            chkDebtCertRule.Checked = rules.IsDebtBlockCert;
+            chkAutoLockAttendance.Checked = rules.IsAutoLockAttendance;
+
+            ValidateWeights();
+
+            // 3. Nạp cấu hình Lịch sao lưu
+            var sched = await _configService.GetBackupScheduleConfigAsync();
+            chkAutoBackup.Checked = sched.IsAutoBackupEnabled;
+            var schedIdx = cboBackupTime.FindString(sched.BackupScheduleTime);
+            cboBackupTime.SelectedIndex = schedIdx >= 0 ? schedIdx : 0;
+
+            // 4. Nạp danh sách bản sao lưu thực tế trên đĩa
+            await RefreshBackupsGridAsync();
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi nạp cấu hình", $"Không thể nạp dữ liệu cấu hình từ cơ sở dữ liệu: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
     }
 
     private void SetupBackupsGrid()
@@ -93,13 +132,21 @@ public partial class SystemConfigView : UserControl
         dgvBackups.Columns.AddRange(colRestore, colDelete);
     }
 
-    private void PopulateMockBackups()
+    private async Task RefreshBackupsGridAsync()
     {
+        string dir = string.IsNullOrWhiteSpace(txtBackupDir.Text)
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ECMS", "Backups")
+            : txtBackupDir.Text.Trim();
+
+        var backups = (await _configService.GetBackupFilesAsync(dir)).ToList();
+
         dgvBackups.Rows.Clear();
-        dgvBackups.Rows.Add("ecms_backup_20261116_0200.db", "16/11/2026 02:00", "18.6 MB", "Tự động", "✓ Hợp lệ (OK)");
-        dgvBackups.Rows.Add("ecms_backup_20261115_2300.db", "15/11/2026 23:00", "18.5 MB", "Tự động", "✓ Hợp lệ (OK)");
-        dgvBackups.Rows.Add("ecms_backup_20261114_2300.db", "14/11/2026 23:00", "18.2 MB", "Tự động", "✓ Hợp lệ (OK)");
-        dgvBackups.Rows.Add("ecms_backup_20261110_1545.db", "10/11/2026 15:45", "17.9 MB", "Thủ công", "✓ Hợp lệ (OK)");
+        foreach (var b in backups)
+        {
+            int rIdx = dgvBackups.Rows.Add(b.FileName, b.CreatedAtFormatted, b.FileSizeFormatted, b.BackupType, b.IntegrityStatus);
+            dgvBackups.Rows[rIdx].Tag = b.FilePath;
+        }
+
         dgvBackups.ClearSelection();
         dgvBackups.CurrentCell = null;
     }
@@ -131,10 +178,10 @@ public partial class SystemConfigView : UserControl
 
     private void WireEvents()
     {
-        // 1. Trọng số điểm
-        txtWeightRegular.TextChanged += (s, e) => ValidateWeights();
-        txtWeightMidterm.TextChanged += (s, e) => ValidateWeights();
-        txtWeightFinal.TextChanged += (s, e) => ValidateWeights();
+        // 1. Trọng số điểm validate realtime
+        txtWeightRegular.TextChanged += (s, e) => { if (!_isLoading) ValidateWeights(); };
+        txtWeightMidterm.TextChanged += (s, e) => { if (!_isLoading) ValidateWeights(); };
+        txtWeightFinal.TextChanged += (s, e) => { if (!_isLoading) ValidateWeights(); };
 
         // 2. Browse buttons cho Tab 1
         btnBrowseDb.Click += (s, e) =>
@@ -151,14 +198,24 @@ public partial class SystemConfigView : UserControl
             }
         };
 
-        btnCheckDb.Click += (s, e) =>
+        btnCheckDb.Click += async (s, e) =>
         {
-            AppDialog.ShowSuccess(ParentForm, "Kết nối CSDL thành công",
-                $"Đã kết nối thành công tới tệp SQLite:\n" +
-                $"• Tệp: {txtDatabasePath.Text}\n" +
-                $"• Trạng thái: PRAGMA integrity_check: OK\n" +
-                $"• Dung lượng: 18.6 MB\n" +
-                $"• Tổng số bảng hệ thống: 16 bảng hoạt động.");
+            try
+            {
+                var status = await _configService.GetDatabaseStatusAsync();
+                AppDialog.ShowSuccess(ParentForm, "Kết nối CSDL thành công",
+                    $"Đã kiểm tra thành công tệp SQLite:\n\n" +
+                    $"• Đường dẫn: {status.DatabasePath}\n" +
+                    $"• Dung lượng tệp: {status.FileSizeFormatted}\n" +
+                    $"• Trạng thái Journal: {status.JournalMode}\n" +
+                    $"• Khóa ngoại (Foreign Keys): {status.ForeignKeysStatus}\n" +
+                    $"• Tổng số bảng hệ thống: {status.TotalTablesCount} bảng hoạt động\n" +
+                    $"• Kiểm tra tính toàn vẹn (PRAGMA integrity_check): {status.IntegrityCheckResult}");
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi kiểm tra CSDL", $"Không thể kết nối hoặc kiểm tra CSDL: {ex.Message}");
+            }
         };
 
         btnBrowseStorage.Click += (s, e) =>
@@ -173,7 +230,7 @@ public partial class SystemConfigView : UserControl
             }
         };
 
-        btnBrowseBackup.Click += (s, e) =>
+        btnBrowseBackup.Click += async (s, e) =>
         {
             using var fbd = new FolderBrowserDialog
             {
@@ -182,51 +239,95 @@ public partial class SystemConfigView : UserControl
             if (fbd.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 txtBackupDir.Text = fbd.SelectedPath;
+                await RefreshBackupsGridAsync();
             }
         };
 
         // 3. Nút Lưu tổng thể
-        btnSaveAllTop.Click += (s, e) => SaveAllConfig();
+        btnSaveAllTop.Click += async (s, e) => await SaveAllConfigAsync();
 
         // 4. Tab 3 Toolbar Events
-        btnCreateBackupNow.Click += (s, e) =>
+        btnCreateBackupNow.Click += async (s, e) =>
         {
-            using var backupDlg = new CreateBackupDialog();
+            using var backupDlg = new CreateBackupDialog(txtBackupDir.Text.Trim(), _configService);
             if (backupDlg.ShowDialog(ParentForm) == DialogResult.OK)
             {
-                string fileName = Path.GetFileName(backupDlg.GeneratedBackupPath);
-                dgvBackups.Rows.Insert(0, fileName, DateTime.Now.ToString("dd/MM/yyyy HH:mm"), "18.6 MB", "Thủ công", "✓ Hợp lệ (OK)");
-                AppDialog.ShowSuccess(ParentForm, "Sao lưu hoàn tất", $"Bản sao lưu '{fileName}' đã được tạo và ghi nhận vào lịch sử sao lưu.");
+                await RefreshBackupsGridAsync();
             }
         };
 
-        btnRestoreBackup.Click += (s, e) =>
+        btnRestoreBackup.Click += async (s, e) =>
         {
             using var ofd = new OpenFileDialog
             {
                 Title = "Chọn tệp sao lưu SQLite để phục hồi",
-                Filter = "SQLite Backup (*.db;*.sqlite)|*.db;*.sqlite|All Files (*.*)|*.*"
+                Filter = "SQLite Backup (*.db;*.sqlite)|*.db;*.sqlite|All Files (*.*)|*.*",
+                InitialDirectory = Directory.Exists(txtBackupDir.Text) ? txtBackupDir.Text : Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)
             };
             if (ofd.ShowDialog(ParentForm) == DialogResult.OK)
             {
+                string fileName = Path.GetFileName(ofd.FileName);
                 if (AppDialog.ShowConfirm(ParentForm, "Xác nhận phục hồi CSDL",
-                    $"Cảnh báo: Dữ liệu hiện tại sẽ được ghi đè hoàn toàn bởi bản sao lưu:\n'{Path.GetFileName(ofd.FileName)}'.\n\nBạn có chắc chắn muốn tiến hành phục hồi không?") == DialogResult.OK)
+                    $"CẢNH BÁO: Toàn bộ dữ liệu hiện tại sẽ được thay thế bởi bản sao lưu:\n'{fileName}'.\n\nHệ thống sẽ tự động tạo snapshot dự phòng trước khi ghi đè.\nBạn có chắc chắn muốn tiến hành phục hồi không?") == DialogResult.OK)
                 {
-                    AppDialog.ShowSuccess(ParentForm, "Khôi phục thành công", "Đã phục hồi cơ sở dữ liệu về trạng thái sao lưu thành công. Hệ thống đã sẵn sàng.");
+                    Cursor = Cursors.WaitCursor;
+                    try
+                    {
+                        var res = await _configService.RestoreDatabaseAsync(ofd.FileName, AppSession.UserId);
+                        if (res.Success)
+                        {
+                            AppDialog.ShowSuccess(ParentForm, "Khôi phục thành công", res.Message);
+                            await LoadAllConfigsAsync();
+                        }
+                        else
+                        {
+                            AppDialog.ShowError(ParentForm, "Lỗi khôi phục", res.Message);
+                        }
+                    }
+                    finally
+                    {
+                        Cursor = Cursors.Default;
+                    }
                 }
             }
         };
 
         btnOpenBackupFolder.Click += (s, e) =>
         {
-            AppDialog.ShowInfo(ParentForm, "Thư mục sao lưu", $"Đường dẫn thư mục sao lưu của hệ thống:\n{txtBackupDir.Text}");
+            string bDir = string.IsNullOrWhiteSpace(txtBackupDir.Text)
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ECMS", "Backups")
+                : txtBackupDir.Text.Trim();
+
+            if (!Directory.Exists(bDir))
+            {
+                try { Directory.CreateDirectory(bDir); } catch { }
+            }
+
+            try
+            {
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = bDir,
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowInfo(ParentForm, "Thư mục sao lưu", $"Đường dẫn thư mục sao lưu:\n{bDir}\n\nLỗi mở Explorer: {ex.Message}");
+            }
         };
 
         // Thao tác trên DataGridView Backups
-        dgvBackups.CellContentClick += (s, e) =>
+        dgvBackups.CellContentClick += async (s, e) =>
         {
             if (e.RowIndex < 0) return;
             string fileName = dgvBackups.Rows[e.RowIndex].Cells[0].Value?.ToString() ?? "";
+            string filePath = dgvBackups.Rows[e.RowIndex].Tag?.ToString() ?? "";
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                filePath = Path.Combine(txtBackupDir.Text.Trim(), fileName);
+            }
 
             // Nút Phục hồi (col 5)
             if (e.ColumnIndex == 5)
@@ -234,17 +335,42 @@ public partial class SystemConfigView : UserControl
                 if (AppDialog.ShowConfirm(ParentForm, "Khôi phục từ bản sao lưu",
                     $"Bạn có chắc chắn muốn khôi phục dữ liệu từ bản sao lưu '{fileName}' không?\nToàn bộ dữ liệu hiện tại sẽ quay về thời điểm này.") == DialogResult.OK)
                 {
-                    AppDialog.ShowSuccess(ParentForm, "Phục hồi thành công", $"Đã hoàn tất quá trình phục hồi từ bản sao lưu '{fileName}'.");
+                    Cursor = Cursors.WaitCursor;
+                    try
+                    {
+                        var res = await _configService.RestoreDatabaseAsync(filePath, AppSession.UserId);
+                        if (res.Success)
+                        {
+                            AppDialog.ShowSuccess(ParentForm, "Phục hồi thành công", res.Message);
+                            await LoadAllConfigsAsync();
+                        }
+                        else
+                        {
+                            AppDialog.ShowError(ParentForm, "Lỗi phục hồi", res.Message);
+                        }
+                    }
+                    finally
+                    {
+                        Cursor = Cursors.Default;
+                    }
                 }
             }
             // Nút Xóa (col 6)
             else if (e.ColumnIndex == 6)
             {
                 if (AppDialog.ShowConfirm(ParentForm, "Xóa bản sao lưu",
-                    $"Bạn có chắc chắn muốn xóa bản sao lưu '{fileName}' khỏi lịch sử lưu trữ không?") == DialogResult.OK)
+                    $"Bạn có chắc chắn muốn xóa bản sao lưu '{fileName}' khỏi ổ đĩa không?") == DialogResult.OK)
                 {
-                    dgvBackups.Rows.RemoveAt(e.RowIndex);
-                    AppDialog.ShowSuccess(ParentForm, "Đã xóa", $"Đã xóa tệp sao lưu '{fileName}' thành công.");
+                    var res = await _configService.DeleteBackupFileAsync(filePath, AppSession.UserId);
+                    if (res.Success)
+                    {
+                        dgvBackups.Rows.RemoveAt(e.RowIndex);
+                        AppDialog.ShowSuccess(ParentForm, "Đã xóa", res.Message);
+                    }
+                    else
+                    {
+                        AppDialog.ShowError(ParentForm, "Lỗi xóa tệp", res.Message);
+                    }
                 }
             }
         };
@@ -261,8 +387,9 @@ public partial class SystemConfigView : UserControl
         };
     }
 
-    private void SaveAllConfig()
+    private async Task SaveAllConfigAsync()
     {
+        // 1. Kiểm tra Tab Trung tâm
         if (string.IsNullOrWhiteSpace(txtCenterName.Text))
         {
             tabMainConfig.SelectedTab = tabCenter;
@@ -287,15 +414,86 @@ public partial class SystemConfigView : UserControl
             return;
         }
 
-        // Đồng bộ AppSession
-        AppSession.FullName = txtDirector.Text.Trim();
-        if (!string.IsNullOrWhiteSpace(txtDirectorTitle.Text))
+        // 2. Kiểm tra trọng số điểm Tab 2
+        int ParseWeight(string text)
         {
-            AppSession.SignerTitle = txtDirectorTitle.Text.Trim();
+            var clean = text.Replace("%", "").Trim();
+            return int.TryParse(clean, out var val) ? val : 0;
         }
 
-        bannerCenterSuccess.Visible = true;
-        AppDialog.ShowSuccess(ParentForm, "Lưu cấu hình hệ thống",
-            "Toàn bộ cấu hình hệ thống (Thông tin trung tâm, Đường dẫn CSDL, Quy tắc đánh giá & Chuyên cần) đã được lưu thành công.");
+        var w1 = ParseWeight(txtWeightRegular.Text);
+        var w2 = ParseWeight(txtWeightMidterm.Text);
+        var w3 = ParseWeight(txtWeightFinal.Text);
+        var totalWeight = w1 + w2 + w3;
+
+        if (totalWeight != 100)
+        {
+            tabMainConfig.SelectedTab = tabGrading;
+            AppDialog.ShowError(ParentForm, "Ràng buộc trọng số",
+                $"Tổng trọng số điểm ({w1}% + {w2}% + {w3}% = {totalWeight}%) bắt buộc phải đúng 100% trước khi lưu.");
+            txtWeightRegular.Focus();
+            return;
+        }
+
+        // 3. Tiến hành lưu
+        Cursor = Cursors.WaitCursor;
+        try
+        {
+            var centerDto = new CenterConfigDto
+            {
+                CenterName = txtCenterName.Text.Trim(),
+                CenterPhone = txtCenterPhone.Text.Trim(),
+                CenterEmail = txtCenterEmail.Text.Trim(),
+                CenterWebsite = txtCenterWebsite.Text.Trim(),
+                CenterAddress = txtCenterAddress.Text.Trim(),
+                DirectorName = txtDirector.Text.Trim(),
+                DirectorTitle = txtDirectorTitle.Text.Trim(),
+                StoragePath = txtStoragePath.Text.Trim(),
+                BackupDir = txtBackupDir.Text.Trim()
+            };
+
+            var ruleDto = new AcademicRuleConfigDto
+            {
+                ScoreScale = cboScoreScale.SelectedItem?.ToString() ?? "Thang điểm 10 (0.0 - 10.0)",
+                PassingScore = double.TryParse(txtPassingScore.Text.Trim(), NumberStyles.Any, CultureInfo.InvariantCulture, out var ps) ? ps : 6.5,
+                WeightRegular = w1,
+                WeightMidterm = w2,
+                WeightFinal = w3,
+                MinAttendanceRate = double.TryParse(txtMinAttendance.Text.Trim().Replace("%", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out var ar) ? ar : 80.0,
+                MaxAbsencesAlert = int.TryParse(txtAbsenceAlert.Text.Trim().Replace("Nghỉ từ", "").Replace("buổi", "").Trim(), out var ma) ? ma : 3,
+                IsLateCounted = chkLateCounted.Checked,
+                IsDebtBlockCert = chkDebtCertRule.Checked,
+                IsAutoLockAttendance = chkAutoLockAttendance.Checked
+            };
+
+            var schedDto = new BackupScheduleConfigDto
+            {
+                IsAutoBackupEnabled = chkAutoBackup.Checked,
+                BackupScheduleTime = cboBackupTime.SelectedItem?.ToString() ?? "23:00 hàng ngày"
+            };
+
+            await _configService.SaveCenterConfigAsync(centerDto, AppSession.UserId);
+            await _configService.SaveAcademicRulesAsync(ruleDto, AppSession.UserId);
+            await _configService.SaveBackupScheduleConfigAsync(schedDto, AppSession.UserId);
+
+            // Đồng bộ AppSession
+            AppSession.FullName = txtDirector.Text.Trim();
+            if (!string.IsNullOrWhiteSpace(txtDirectorTitle.Text))
+            {
+                AppSession.SignerTitle = txtDirectorTitle.Text.Trim();
+            }
+
+            bannerCenterSuccess.Visible = true;
+            AppDialog.ShowSuccess(ParentForm, "Lưu cấu hình hệ thống",
+                "Toàn bộ cấu hình hệ thống (Thông tin trung tâm, Quy tắc đánh giá & Chuyên cần, Lịch sao lưu) đã được lưu thành công vào CSDL SQLite.");
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi lưu cấu hình", $"Đã xảy ra lỗi khi lưu cấu hình: {ex.Message}");
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
     }
 }

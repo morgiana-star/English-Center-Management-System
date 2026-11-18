@@ -58,6 +58,7 @@ public class AppComboBox : UserControl
     }
 
     public int FindStringExact(string? s) => _inner.FindStringExact(s);
+    public int FindString(string? s) => _inner.FindString(s);
 
     public object? SelectedItem
     {

@@ -6,17 +6,23 @@ namespace ECMS.UI.Forms;
 
 public partial class ResetPasswordDialog : Form
 {
+    public int TargetUserId { get; private set; }
     public string TempPassword => txtTempPassword.Text.Trim();
     public bool MustChangePassword => chkMustChangePass.Checked;
     public bool UnlockAccount => chkUnlockAccount.Checked;
 
-    public ResetPasswordDialog() : this("admin", "Trần Minh Quân")
+    public ResetPasswordDialog() : this(0, "admin", "Trần Minh Quân")
     {
     }
 
-    public ResetPasswordDialog(string username, string fullName)
+    public ResetPasswordDialog(string username, string fullName) : this(0, username, fullName)
+    {
+    }
+
+    public ResetPasswordDialog(int targetUserId, string username, string fullName)
     {
         InitializeComponent();
+        TargetUserId = targetUserId;
 
         txtTargetAccount.Text = $"{username} ({fullName})";
         GeneratePassword();
