@@ -3,11 +3,14 @@ using System.Drawing;
 using System.Windows.Forms;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.Entities;
 
 namespace ECMS.UI.UserControls;
 
 public partial class CourseManagementView : UserControl
 {
+    private readonly ICourseService _courseService = new CourseService();
     public CourseManagementView()
     {
         InitializeComponent();
@@ -17,7 +20,7 @@ public partial class CourseManagementView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadSampleCourses();
+        LoadRealCoursesAsync();
         WireEvents();
     }
 
@@ -119,6 +122,33 @@ public partial class CourseManagementView : UserControl
         dgvCourses.CurrentCell = null;
     }
 
+    private async void LoadRealCoursesAsync()
+    {
+        try
+        {
+            var courses = await _courseService.GetCoursesAsync();
+            dgvCourses.Rows.Clear();
+            foreach (var c in courses)
+            {
+                dgvCourses.Rows.Add(
+                    c.CourseCode,
+                    c.CourseName,
+                    c.Level,
+                    $"Đạt chuẩn {c.PassingScore:N1}đ",
+                    $"{c.TotalSessions} buổi",
+                    $"{c.BaseTuitionFee:N0} đ",
+                    c.IsActive ? "Đang sử dụng" : "Tạm dừng"
+                );
+            }
+            dgvCourses.ClearSelection();
+            dgvCourses.CurrentCell = null;
+        }
+        catch
+        {
+            LoadSampleCourses();
+        }
+    }
+
     private void WireEvents()
     {
         btnAddCourse.Click += (s, e) =>
@@ -126,7 +156,7 @@ public partial class CourseManagementView : UserControl
             using var dlg = new CourseEditDialog();
             if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                LoadSampleCourses();
+                LoadRealCoursesAsync();
             }
         };
 
