@@ -1,6 +1,11 @@
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
+using ECMS.Business.Session;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -14,7 +19,7 @@ public partial class TeacherAttendanceCheckView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadClassesData();
+        _ = LoadClassesDataAsync();
         WireEvents();
     }
 
@@ -53,6 +58,7 @@ public partial class TeacherAttendanceCheckView : UserControl
         dgvAttendanceClasses.AllowUserToAddRows = false;
         dgvAttendanceClasses.ScrollBars = ScrollBars.Both;
 
+        dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colClassId", Visible = false });
         dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 55, MinimumWidth = 50, FillWeight = 5F });
         dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã lớp", Width = 105, MinimumWidth = 95, FillWeight = 10F });
         dgvAttendanceClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCourse", HeaderText = "Khóa học", MinimumWidth = 150, FillWeight = 18F });
@@ -98,16 +104,153 @@ public partial class TeacherAttendanceCheckView : UserControl
         };
     }
 
-    private void LoadClassesData()
+    private async Task LoadClassesDataAsync()
     {
-        dgvAttendanceClasses.Rows.Clear();
+        try
+        {
+            dgvAttendanceClasses.Rows.Clear();
 
-        dgvAttendanceClasses.Rows.Add("1", "IELTS-F01", "IELTS Foundation", "Nguyễn Hoàng Anh", "T3 / T6 · 18:00–20:00", "P201", "8 / 24 buổi", "90,3% (Tốt)", "Đang học", "Điểm danh");
-        dgvAttendanceClasses.Rows.Add("2", "IELTS-F02", "IELTS Foundation", "Trần Minh Tuấn", "T2 / T5 · 18:00–20:00", "P202", "6 / 24 buổi", "95,8% (Tốt)", "Đang học", "Điểm danh");
-        dgvAttendanceClasses.Rows.Add("3", "IELTS-I01", "IELTS Intensive", "Trần Minh Tuấn", "T4 / T7 · 14:00–17:00", "P203", "12 / 30 buổi", "86,7% (Khá)", "Đang học", "Điểm danh");
-        dgvAttendanceClasses.Rows.Add("4", "TOEIC-A01", "TOEIC 500+", "Lê Thu Hà", "T3 / T6 · 18:30–20:30", "P202", "4 / 20 buổi", "92,5% (Tốt)", "Đang học", "Điểm danh");
-        dgvAttendanceClasses.Rows.Add("5", "COM-B01", "Giao tiếp cơ bản", "Lê Thu Hà", "T7 / CN · 08:30–11:30", "P102", "2 / 16 buổi", "100% (Tốt)", "Đang học", "Điểm danh");
-        dgvAttendanceClasses.Rows.Add("6", "IELTS-F04", "IELTS Foundation", "Võ Tấn Toàn", "T2 / T5 · 18:00–20:00", "P201", "0 / 24 buổi", "Chưa bắt đầu", "Sắp mở", "Điểm danh");
+            int? teacherId = SessionManager.CurrentUser?.TeacherId;
+            string roleCode = SessionManager.CurrentUser?.RoleCode ?? "";
+
+            // Nếu là Admin / Quản lý / Giáo vụ thì cho xem tất cả lớp, còn Giáo viên chỉ xem lớp mình phụ trách
+            bool filterByTeacher = roleCode == "ROLE_TEA" || teacherId.HasValue;
+
+            using var conn = DatabaseConfig.GetConnection();
+
+            var query = @"
+                SELECT 
+                    c.ClassId,
+                    c.ClassCode,
+                    co.CourseName,
+                    COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                    COALESCE(r.RoomName, '—') AS RoomName,
+                    c.Status,
+                    co.TotalSessions,
+                    COUNT(DISTINCT cs.ScheduleId) AS ScheduledSessions,
+                    COUNT(DISTINCT CASE WHEN cs.IsAttendanceLocked = 1 OR EXISTS (SELECT 1 FROM AttendanceRecords ar WHERE ar.ScheduleId = cs.ScheduleId) THEN cs.ScheduleId END) AS DoneSessions,
+                    COUNT(DISTINCT e.StudentId) AS StudentCount
+                FROM Classes c
+                JOIN Courses co ON c.CourseId = co.CourseId
+                LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
+                LEFT JOIN ClassRooms r ON c.DefaultRoomId = r.RoomId
+                LEFT JOIN ClassSchedules cs ON cs.ClassId = c.ClassId
+                LEFT JOIN Enrollments e ON e.ClassId = c.ClassId
+                WHERE (@FilterByTeacher = 0 OR c.MainTeacherId = @TeacherId)
+                GROUP BY c.ClassId
+                ORDER BY c.ClassId DESC;";
+
+            var classes = (await conn.QueryAsync<dynamic>(query, new 
+            { 
+                FilterByTeacher = filterByTeacher ? 1 : 0, 
+                TeacherId = teacherId ?? 1 
+            })).ToList();
+
+            // Nếu CSDL chưa có lớp nào cho GV, thử lấy tất cả lớp để không bị rỗng giao diện
+            if (classes.Count == 0 && filterByTeacher)
+            {
+                classes = (await conn.QueryAsync<dynamic>(query, new { FilterByTeacher = 0, TeacherId = 0 })).ToList();
+            }
+
+            int stt = 1;
+            foreach (var cls in classes)
+            {
+                int classId = (int)cls.ClassId;
+                string classCode = (string)cls.ClassCode;
+                string courseName = (string)cls.CourseName;
+                string teacherName = (string)cls.TeacherName;
+                string roomName = (string)cls.RoomName;
+                string rawStatus = (string)cls.Status;
+
+                // Lấy thông tin lịch học tóm tắt từ ClassSchedules
+                var scheduleSummary = await conn.QueryFirstOrDefaultAsync<string>(@"
+                    SELECT cs.StartTime || '–' || cs.EndTime
+                    FROM ClassSchedules cs
+                    WHERE cs.ClassId = @ClassId
+                    ORDER BY cs.ScheduleId ASC LIMIT 1;", new { ClassId = classId }) ?? "18:00–20:00";
+
+                int total = cls.TotalSessions != null ? (int)cls.TotalSessions : 24;
+                int done = Convert.ToInt32(cls.DoneSessions);
+                string progress = $"{done} / {total} buổi";
+
+                // Tính tỷ lệ chuyên cần trung bình thực tế từ AttendanceRecords của lớp
+                var attStats = await conn.QueryFirstOrDefaultAsync<dynamic>(@"
+                    SELECT 
+                        COUNT(CASE WHEN ar.Status = 'Present' THEN 1 END) AS PresentCount,
+                        COUNT(ar.AttendanceId) AS TotalCount
+                    FROM AttendanceRecords ar
+                    JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId
+                    WHERE cs.ClassId = @ClassId;", new { ClassId = classId });
+
+                string rateStr = "100% (Tốt)";
+                if (attStats != null && attStats.TotalCount != null && (long)attStats.TotalCount > 0)
+                {
+                    double present = Convert.ToDouble(attStats.PresentCount);
+                    double totalAtt = Convert.ToDouble(attStats.TotalCount);
+                    double percent = (present / totalAtt) * 100.0;
+                    string grade = percent >= 90 ? "Tốt" : percent >= 80 ? "Khá" : "Cần lưu ý";
+                    rateStr = $"{percent:0.0}% ({grade})";
+                }
+                else if (done == 0)
+                {
+                    rateStr = "Chưa diễn ra";
+                }
+
+                // Dịch trạng thái hiển thị
+                string displayStatus = rawStatus switch
+                {
+                    "InProgress" => "Đang học",
+                    "OpenForEnrollment" or "Planning" => "Sắp mở",
+                    "Completed" => "Đã kết thúc",
+                    _ => rawStatus
+                };
+
+                dgvAttendanceClasses.Rows.Add(
+                    classId.ToString(),
+                    stt.ToString(),
+                    classCode,
+                    courseName,
+                    teacherName,
+                    scheduleSummary,
+                    roomName,
+                    progress,
+                    rateStr,
+                    displayStatus,
+                    "Điểm danh"
+                );
+
+                stt++;
+            }
+
+            // Đồng bộ bộ lọc Khóa học từ CSDL
+            UpdateCourseFilterOptions();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi nạp danh sách lớp học từ CSDL: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void UpdateCourseFilterOptions()
+    {
+        var current = cboCourseFilter.SelectedItem?.ToString();
+        var courses = new System.Collections.Generic.HashSet<string>();
+
+        foreach (DataGridViewRow row in dgvAttendanceClasses.Rows)
+        {
+            if (row.IsNewRow) continue;
+            string c = row.Cells["colCourse"].Value?.ToString() ?? "";
+            if (!string.IsNullOrEmpty(c)) courses.Add(c);
+        }
+
+        cboCourseFilter.Items.Clear();
+        cboCourseFilter.Items.Add("Tất cả khóa học");
+        foreach (var c in courses)
+        {
+            cboCourseFilter.Items.Add(c);
+        }
+
+        cboCourseFilter.SelectedIndex = 0;
     }
 
     private void WireEvents()
@@ -136,10 +279,15 @@ public partial class TeacherAttendanceCheckView : UserControl
     private void OpenClassAttendance(int rowIndex)
     {
         var row = dgvAttendanceClasses.Rows[rowIndex];
-        string classCode = row.Cells["colCode"].Value?.ToString() ?? "IELTS-F01";
+        int classId = 1;
+        if (row.Cells["colClassId"].Value != null)
+        {
+            _ = int.TryParse(row.Cells["colClassId"].Value.ToString(), out classId);
+        }
+        string classCode = row.Cells["colCode"].Value?.ToString() ?? "IELTS-2026-K12";
         string courseName = row.Cells["colCourse"].Value?.ToString() ?? "IELTS Foundation";
-        string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "Nguyễn Hoàng Anh";
-        string room = row.Cells["colRoom"].Value?.ToString() ?? "P201";
+        string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "Thầy John Smith";
+        string room = row.Cells["colRoom"].Value?.ToString() ?? "P.201";
 
         using var dlg = new ClassAttendanceDialog(classCode, courseName, teacher, room);
         dlg.ShowDialog(FindForm());
