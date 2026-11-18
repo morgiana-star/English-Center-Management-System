@@ -1,11 +1,15 @@
 using System;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.Entities;
+using ECMS.Core.Enums;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class CreateClassDialog : Form
 {
+    private readonly IClassService _classService = new ClassService();
     private readonly bool _isEditMode;
     private readonly string _initialClassCode = string.Empty;
 
@@ -123,12 +127,35 @@ public partial class CreateClassDialog : Form
             Close();
         };
 
-        btnSaveDraft.Click += (s, e) =>
+        btnSaveDraft.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtClassCode.Text))
             {
                 MessageBox.Show("Vui lòng nhập Mã lớp học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtClassCode.Focus();
+                return;
+            }
+
+            int.TryParse(txtCapacity.Text, out int capacity);
+            if (capacity <= 0) capacity = 20;
+
+            var newClass = new Class
+            {
+                ClassCode = txtClassCode.Text.Trim(),
+                ClassName = $"Lớp {txtClassCode.Text.Trim()} ({cboCourse.SelectedItem ?? "IELTS"})",
+                CourseId = 1,
+                MainTeacherId = 1,
+                DefaultRoomId = 1,
+                StartDate = dtpStartDate.Value,
+                EndDate = dtpEndDate.Value,
+                MaxStudents = capacity,
+                Status = ClassStatus.InProgress
+            };
+
+            var res = await _classService.CreateClassAsync(newClass);
+            if (!res.Success)
+            {
+                MessageBox.Show(res.Message, "Lỗi lưu CSDL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
