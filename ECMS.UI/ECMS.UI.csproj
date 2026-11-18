@@ -21,13 +21,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="UserControls\AttendanceSheetView.cs">
-        <SubType>UserControl</SubType>
+      <Folder Include="Controls\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Forms\LoginForm.cs">
+        <SubType>Form</SubType>
       </Compile>
-      <Compile Update="UserControls\AttendanceScheduleView.cs">
-        <SubType>UserControl</SubType>
-      </Compile>
-      <Compile Update="Helper\Method.cs">
+      <Compile Update="UserControls\DashboardOverviewView.cs">
         <SubType>UserControl</SubType>
       </Compile>
     </ItemGroup>

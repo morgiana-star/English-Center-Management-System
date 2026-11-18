@@ -14,8 +14,6 @@ static class Program
     static void Main()
     {
         ApplicationConfiguration.Initialize();
-
-        // 1. Tự động khởi tạo CSDL SQLite (tạo 26 bảng & nạp tài khoản admin nếu chưa có)
         try
         {
             DatabaseInitializer.Initialize();
@@ -26,12 +24,7 @@ static class Program
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        // 2. Mở màn hình đăng nhập trước
-        using var loginForm = new LoginForm();
-        if (loginForm.ShowDialog() == DialogResult.OK)
-        {
-            // Đăng nhập thành công -> Mở MainForm chính
-            Application.Run(new MainForm());
-        }
+        // 2. Chạy ứng dụng từ MainForm
+        Application.Run(new LoginForm());
     }
 }
