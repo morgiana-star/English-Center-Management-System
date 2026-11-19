@@ -1,36 +1,48 @@
 using System;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class ClassAttendanceDialog : Form
 {
-    private readonly string _classCode = "IELTS-F01";
+    private readonly int _classId = 1;
+    private readonly string _classCode = "IELTS-2026-K12";
     private readonly string _courseName = "IELTS Foundation";
-    private readonly string _teacher = "Nguyễn Hoàng Anh";
-    private readonly string _room = "P201";
+    private readonly string _teacher = "Thầy John Smith";
+    private readonly string _room = "Phòng P.201";
 
-    public ClassAttendanceDialog() : this("IELTS-F01", "IELTS Foundation", "Nguyễn Hoàng Anh", "P201")
+    public ClassAttendanceDialog() : this(1, "IELTS-2026-K12", "IELTS Foundation", "Thầy John Smith", "Phòng P.201")
     {
     }
 
-    public ClassAttendanceDialog(string classCode, string courseName, string teacher, string room)
+    public ClassAttendanceDialog(string classCode, string courseName, string teacher, string room) 
+        : this(1, classCode, courseName, teacher, room)
+    {
+    }
+
+    public ClassAttendanceDialog(int classId, string classCode, string courseName, string teacher, string room)
     {
         InitializeComponent();
 
-        _classCode = string.IsNullOrEmpty(classCode) ? "IELTS-F01" : classCode;
+        _classId = classId > 0 ? classId : 1;
+        _classCode = string.IsNullOrEmpty(classCode) ? "IELTS-2026-K12" : classCode;
         _courseName = string.IsNullOrEmpty(courseName) ? "IELTS Foundation" : courseName;
-        _teacher = string.IsNullOrEmpty(teacher) ? "Nguyễn Hoàng Anh" : teacher;
-        _room = string.IsNullOrEmpty(room) ? "P201" : room;
+        _teacher = string.IsNullOrEmpty(teacher) ? "Thầy John Smith" : teacher;
+        _room = string.IsNullOrEmpty(room) ? "Phòng P.201" : room;
 
         SetupHeader();
         SetupSessionsGrid();
         SetupStudentCheckGrid();
         SetupMatrixGrid();
 
-        LoadSessionsData();
+        _ = LoadSessionsDataAsync();
         LoadMatrixData();
 
         WireEvents();
@@ -55,6 +67,7 @@ public partial class ClassAttendanceDialog : Form
         dgvSessions.AllowUserToAddRows = false;
         dgvSessions.ScrollBars = ScrollBars.Both;
 
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colScheduleId", Visible = false });
         dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSessionNum", HeaderText = "Buổi", Width = 80, MinimumWidth = 70, FillWeight = 8F });
         dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDate", HeaderText = "Ngày học", Width = 110, MinimumWidth = 100, FillWeight = 11F });
         dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDayTime", HeaderText = "Thứ & Giờ", Width = 150, MinimumWidth = 135, FillWeight = 15F });
@@ -208,20 +221,106 @@ public partial class ClassAttendanceDialog : Form
         };
     }
 
-    private void LoadSessionsData()
+    private async Task LoadSessionsDataAsync()
     {
-        dgvSessions.Rows.Clear();
+        try
+        {
+            dgvSessions.Rows.Clear();
 
-        dgvSessions.Rows.Add("Buổi 1", "06/10/2026", "Thứ 3 · 18:00–20:00", "Unit 1: Listening & Speaking Foundation", "20 / 20", "100%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 2", "09/10/2026", "Thứ 6 · 18:00–20:00", "Unit 2: Reading Strategies & Vocabulary", "19 / 20", "95%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 3", "13/10/2026", "Thứ 3 · 18:00–20:00", "Unit 3: Grammar in Context & Structures", "20 / 20", "100%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 4", "16/10/2026", "Thứ 6 · 18:00–20:00", "Unit 4: Writing Task 1 Basics & Bar Chart", "18 / 20", "90%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 5", "20/10/2026", "Thứ 3 · 18:00–20:00", "Unit 5: Speaking Part 1 Practice & Fluency", "19 / 20", "95%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 6", "23/10/2026", "Thứ 6 · 18:00–20:00", "Unit 6: Reading Multiple Choice & Matching", "18 / 20", "90%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 7", "27/10/2026", "Thứ 3 · 18:00–20:00", "Unit 7: Listening Section 2 & Note-taking", "19 / 20", "95%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 8", "30/10/2026", "Thứ 6 · 18:00–20:00", "Kiểm tra định kỳ 1 (Mini-Test 1) & Review", "18 / 20", "90%", "Đã điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 9", "03/11/2026", "Thứ 3 · 18:00–20:00", "Unit 8: Writing Task 2 Idea Generation", "-- / 20", "--", "Chưa điểm danh", "Điểm danh / Sửa");
-        dgvSessions.Rows.Add("Buổi 10", "06/11/2026", "Thứ 6 · 18:00–20:00", "Unit 9: Speaking Part 2 Long Turn", "-- / 20", "--", "Chưa điểm danh", "Điểm danh / Sửa");
+            using var conn = DatabaseConfig.GetConnection();
+
+            // Lấy sĩ số thực tế của lớp
+            int totalStudents = await conn.ExecuteScalarAsync<int>(@"
+                SELECT COUNT(*) FROM Enrollments WHERE ClassId = @ClassId;", new { ClassId = _classId });
+            if (totalStudents == 0) totalStudents = 20; // fallback mặc định nếu lớp mới tạo chưa có HV
+
+            lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: {totalStudents} học viên";
+
+            // Lấy danh sách các buổi học thật của lớp
+            var query = @"
+                SELECT 
+                    cs.ScheduleId,
+                    cs.SessionNumber,
+                    cs.Date,
+                    cs.StartTime,
+                    cs.EndTime,
+                    COALESCE(cs.Topic, 'Chưa có chủ đề') AS Topic,
+                    cs.IsAttendanceLocked,
+                    COUNT(DISTINCT ar.AttendanceId) AS TotalAttRecords,
+                    COUNT(DISTINCT CASE WHEN ar.Status = 'Present' THEN ar.AttendanceId END) AS PresentCount
+                FROM ClassSchedules cs
+                LEFT JOIN AttendanceRecords ar ON cs.ScheduleId = ar.ScheduleId
+                WHERE cs.ClassId = @ClassId
+                GROUP BY cs.ScheduleId
+                ORDER BY cs.SessionNumber ASC;";
+
+            var sessions = (await conn.QueryAsync<dynamic>(query, new { ClassId = _classId })).ToList();
+
+            if (sessions.Count == 0)
+            {
+                // Nếu chưa có lịch trong CSDL, thông báo hoặc để trống
+                return;
+            }
+
+            foreach (var s in sessions)
+            {
+                int scheduleId = (int)s.ScheduleId;
+                int sessionNum = (int)s.SessionNumber;
+                string dateStr = ((string)s.Date).Split('T')[0];
+
+                // Xác định thứ trong tuần
+                string dayOfWeek = "";
+                if (DateTime.TryParse(dateStr, out var parsedDate))
+                {
+                    dayOfWeek = parsedDate.DayOfWeek switch
+                    {
+                        DayOfWeek.Monday => "Thứ 2",
+                        DayOfWeek.Tuesday => "Thứ 3",
+                        DayOfWeek.Wednesday => "Thứ 4",
+                        DayOfWeek.Thursday => "Thứ 5",
+                        DayOfWeek.Friday => "Thứ 6",
+                        DayOfWeek.Saturday => "Thứ 7",
+                        DayOfWeek.Sunday => "Chủ nhật",
+                        _ => ""
+                    };
+                    dateStr = parsedDate.ToString("dd/MM/yyyy");
+                }
+
+                string dayTime = $"{dayOfWeek} · {s.StartTime}–{s.EndTime}".Trim(' ', '·');
+                string topic = (string)s.Topic;
+
+                int totalAtt = Convert.ToInt32(s.TotalAttRecords);
+                int present = Convert.ToInt32(s.PresentCount);
+                bool isLocked = Convert.ToInt32(s.IsAttendanceLocked) == 1;
+
+                string presentRatio = totalAtt > 0 ? $"{present} / {totalStudents}" : $"-- / {totalStudents}";
+                string rateStr = "--";
+                string statusStr = "Chưa điểm danh";
+
+                if (totalAtt > 0 || isLocked)
+                {
+                    double rate = totalStudents > 0 ? (present * 100.0 / totalStudents) : 0;
+                    rateStr = $"{rate:0.#}%";
+                    statusStr = isLocked ? "🔒 Đã khóa sổ" : "Đã điểm danh";
+                }
+
+                dgvSessions.Rows.Add(
+                    scheduleId.ToString(),
+                    $"Buổi {sessionNum}",
+                    dateStr,
+                    dayTime,
+                    topic,
+                    presentRatio,
+                    rateStr,
+                    statusStr,
+                    "Điểm danh / Sửa"
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải lịch học từ CSDL: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
     }
 
     private void LoadStudentCheckData(string sessionNum, string sessionDate)

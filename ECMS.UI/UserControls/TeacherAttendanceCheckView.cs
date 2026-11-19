@@ -289,8 +289,9 @@ public partial class TeacherAttendanceCheckView : UserControl
         string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "Thầy John Smith";
         string room = row.Cells["colRoom"].Value?.ToString() ?? "P.201";
 
-        using var dlg = new ClassAttendanceDialog(classCode, courseName, teacher, room);
+        using var dlg = new ClassAttendanceDialog(classId, classCode, courseName, teacher, room);
         dlg.ShowDialog(FindForm());
+        _ = LoadClassesDataAsync(); // Cập nhật lại số liệu sau khi đóng dialog
     }
 
     private void FilterClasses()
