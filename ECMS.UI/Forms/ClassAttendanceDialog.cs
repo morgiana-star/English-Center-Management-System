@@ -17,6 +17,7 @@ public partial class ClassAttendanceDialog : Form
     private readonly string _courseName = "IELTS Foundation";
     private readonly string _teacher = "Thầy John Smith";
     private readonly string _room = "Phòng P.201";
+    private int _currentScheduleId = 0;
 
     public ClassAttendanceDialog() : this(1, "IELTS-2026-K12", "IELTS Foundation", "Thầy John Smith", "Phòng P.201")
     {
@@ -117,6 +118,7 @@ public partial class ClassAttendanceDialog : Form
         dgvStudentCheck.AllowUserToAddRows = false;
         dgvStudentCheck.ScrollBars = ScrollBars.Both;
 
+        dgvStudentCheck.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStudentId", Visible = false });
         dgvStudentCheck.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 55, MinimumWidth = 50, FillWeight = 5F, ReadOnly = true });
         dgvStudentCheck.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã HV", Width = 105, MinimumWidth = 95, FillWeight = 11F, ReadOnly = true });
         dgvStudentCheck.Columns.Add(new DataGridViewTextBoxColumn { Name = "colName", HeaderText = "Họ và tên", MinimumWidth = 180, FillWeight = 25F, ReadOnly = true });
@@ -323,20 +325,66 @@ public partial class ClassAttendanceDialog : Form
         }
     }
 
-    private void LoadStudentCheckData(string sessionNum, string sessionDate)
+    private async Task LoadStudentCheckDataAsync(int scheduleId, string sessionNum, string sessionDate)
     {
-        lblCurrentSessionTitle.Text = $"ĐIỂM DANH {sessionNum.ToUpper()} · {sessionDate} (18:00 – 20:00)";
+        lblCurrentSessionTitle.Text = $"ĐIỂM DANH {sessionNum.ToUpper()} · {sessionDate}";
         lblSaveStatus.Visible = false;
-
         dgvStudentCheck.Rows.Clear();
-        dgvStudentCheck.Rows.Add("1", "HV-0241", "Nguyễn Minh Anh", "0908 123 456", "Có mặt", "");
-        dgvStudentCheck.Rows.Add("2", "HV-0237", "Lê Hoàng Nam", "0912 345 678", "Có mặt", "");
-        dgvStudentCheck.Rows.Add("3", "HV-0238", "Phạm Khánh Linh", "0933 456 789", "Có mặt", "");
-        dgvStudentCheck.Rows.Add("4", "HV-0240", "Vũ Quang Huy", "0988 567 890", "Vắng có phép", "Nghỉ ốm (phụ huynh đã gọi xin phép)");
-        dgvStudentCheck.Rows.Add("5", "HV-0242", "Đặng Thị Thảo", "0977 890 123", "Vắng không phép", "Không liên lạc được");
-        dgvStudentCheck.Rows.Add("6", "HV-0245", "Trần Bảo Long", "0966 112 233", "Có mặt", "Đi muộn 15 phút");
-        dgvStudentCheck.Rows.Add("7", "HV-0246", "Hoàng Ngọc Mai", "0918 223 344", "Có mặt", "");
-        dgvStudentCheck.Rows.Add("8", "HV-0247", "Đỗ Quốc Cường", "0934 334 455", "Có mặt", "");
+
+        try
+        {
+            using var conn = DatabaseConfig.GetConnection();
+
+            // Lấy danh sách học viên đã đăng ký lớp này
+            var students = (await conn.QueryAsync<dynamic>(@"
+                SELECT s.StudentId, s.StudentCode, s.FullName, s.Phone
+                FROM Enrollments e
+                JOIN Students s ON e.StudentId = s.StudentId
+                WHERE e.ClassId = @ClassId
+                ORDER BY s.FullName ASC;", new { ClassId = _classId })).ToList();
+
+            // Lấy dữ liệu điểm danh đã có cho buổi này
+            var existingRecords = (await conn.QueryAsync<dynamic>(@"
+                SELECT StudentId, Status, Note
+                FROM AttendanceRecords
+                WHERE ScheduleId = @ScheduleId;", new { ScheduleId = scheduleId })).ToList();
+
+            // Tạo dict tra cứu nhanh theo StudentId
+            var existingDict = existingRecords.ToDictionary(
+                r => (int)r.StudentId,
+                r => new { Status = (string)r.Status, Note = (string?)r.Note });
+
+            int stt = 1;
+            foreach (var student in students)
+            {
+                int sid = (int)student.StudentId;
+                string code = (string)student.StudentCode;
+                string name = (string)student.FullName;
+                string phone = (string?)student.Phone ?? "";
+
+                string displayStatus = "Có mặt"; // mặc định
+                string? note = null;
+
+                if (existingDict.TryGetValue(sid, out var rec))
+                {
+                    displayStatus = rec.Status switch
+                    {
+                        "Present" => "Có mặt",
+                        "Excused" => "Vắng có phép",
+                        "Absent"  => "Vắng không phép",
+                        _         => "Có mặt"
+                    };
+                    note = rec.Note;
+                }
+
+                dgvStudentCheck.Rows.Add(sid.ToString(), stt.ToString(), code, name, phone, displayStatus, note ?? "");
+                stt++;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải danh sách học viên: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
     }
 
     private void LoadMatrixData()
