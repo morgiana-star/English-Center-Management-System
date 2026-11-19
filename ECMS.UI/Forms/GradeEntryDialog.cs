@@ -191,7 +191,6 @@ public partial class GradeEntryDialog : Form
         _currentClass = classCode;
         lblTitle.Text = $"Sổ điểm lớp học · {_currentClass}";
         lblSub.Text = $"Khóa học: {GetCourseName(_currentClass)} | Giáo viên: {GetTeacherName(_currentClass)} | Sĩ số: 20 học viên";
-        lblSaveNotice.Visible = false;
 
         _isCalculating = true;
         dgvStudentGrades.Rows.Clear();
@@ -238,7 +237,6 @@ public partial class GradeEntryDialog : Form
 
         btnSave.Click += (s, e) =>
         {
-            lblSaveNotice.Visible = true;
             MessageBox.Show($"Đã lưu kết quả bảng điểm thành công cho lớp {_currentClass}!", "Lưu bảng điểm", MessageBoxButtons.OK, MessageBoxIcon.Information);
         };
     }

@@ -178,27 +178,12 @@ public partial class StudentEnrollmentWizardDialog : Form
 
     private void WireEvents()
     {
-        btnCancel.Click += (s, e) => Close();
         btnBack.Click += (s, e) => ShowStep(_currentStep - 1);
         btnNext.Click += (s, e) => HandleNextStep();
 
-        btnPrintReceipt.Click += (s, e) =>
-        {
-            AppDialog.ShowInfo(this, "In biên lai",
-                $"Biên lai điện tử cho học viên {CreatedStudentName} ({CreatedStudentCode}) đã được gửi tới máy in thành công!");
-        };
+  
 
-        btnRegisterAnother.Click += (s, e) =>
-        {
-            txtFullName.Text = "";
-            txtPhone.Text = "";
-            txtEmail.Text = "";
-            txtAddress.Text = "";
-            txtParentName.Text = "";
-            txtParentPhone.Text = "";
-            txtNotes.Text = "";
-            ShowStep(1);
-        };
+    
 
         // Đổi khóa học
         cboCourse.SelectedIndexChanged += (s, e) =>
@@ -423,9 +408,7 @@ public partial class StudentEnrollmentWizardDialog : Form
         pnlStep4.Visible = false;
 
         btnBack.Visible = (step > 1);
-        btnCancel.Visible = true;
-        btnPrintReceipt.Visible = false;
-        btnRegisterAnother.Visible = false;
+       
 
         switch (step)
         {

@@ -20,7 +20,6 @@ partial class PaymentConfirmDialog
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.TableLayoutPanel();
         cardLeftInfo = new ECMS.UI.Controls.AppCard();
@@ -69,25 +68,13 @@ partial class PaymentConfirmDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 10);
-        pnlHeader.Size = new System.Drawing.Size(840, 85);
+        pnlHeader.Size = new System.Drawing.Size(840, 68);
         pnlHeader.TabIndex = 0;
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblSubtitle.Location = new System.Drawing.Point(24, 49);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(422, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Kiểm tra đối soát các chỉ số tài chính trước khi thực hiện ghi sổ";
         // 
         // lblTitle
         // 
@@ -96,9 +83,9 @@ partial class PaymentConfirmDialog
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(24, 14);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(314, 35);
+        lblTitle.Size = new System.Drawing.Size(262, 35);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "Xác nhận thu 1.500.000đ?";
+        lblTitle.Text = "Xác nhận thu học phí";
         // 
         // pnlBody
         // 
@@ -108,12 +95,12 @@ partial class PaymentConfirmDialog
         pnlBody.Controls.Add(cardLeftInfo, 0, 0);
         pnlBody.Controls.Add(cardRightBalance, 1, 0);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 85);
+        pnlBody.Location = new System.Drawing.Point(0, 68);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(20, 12, 20, 8);
         pnlBody.RowCount = 1;
         pnlBody.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlBody.Size = new System.Drawing.Size(840, 365);
+        pnlBody.Size = new System.Drawing.Size(840, 382);
         pnlBody.TabIndex = 1;
         // 
         // cardLeftInfo
@@ -139,7 +126,7 @@ partial class PaymentConfirmDialog
         cardLeftInfo.Location = new System.Drawing.Point(23, 15);
         cardLeftInfo.Name = "cardLeftInfo";
         cardLeftInfo.Padding = new System.Windows.Forms.Padding(16);
-        cardLeftInfo.Size = new System.Drawing.Size(394, 339);
+        cardLeftInfo.Size = new System.Drawing.Size(394, 356);
         cardLeftInfo.TabIndex = 0;
         // 
         // lblCardLeftTitle
@@ -169,9 +156,9 @@ partial class PaymentConfirmDialog
         lblReceiptCodeTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblReceiptCodeTitle.Location = new System.Drawing.Point(16, 220);
         lblReceiptCodeTitle.Name = "lblReceiptCodeTitle";
-        lblReceiptCodeTitle.Size = new System.Drawing.Size(126, 20);
+        lblReceiptCodeTitle.Size = new System.Drawing.Size(73, 20);
         lblReceiptCodeTitle.TabIndex = 10;
-        lblReceiptCodeTitle.Text = "Phiếu thu dự kiến:";
+        lblReceiptCodeTitle.Text = "Phiếu thu:";
         // 
         // lblTransCodeVal
         // 
@@ -294,7 +281,7 @@ partial class PaymentConfirmDialog
         cardRightBalance.Location = new System.Drawing.Point(423, 15);
         cardRightBalance.Name = "cardRightBalance";
         cardRightBalance.Padding = new System.Windows.Forms.Padding(16);
-        cardRightBalance.Size = new System.Drawing.Size(394, 339);
+        cardRightBalance.Size = new System.Drawing.Size(394, 356);
         cardRightBalance.TabIndex = 1;
         // 
         // lblCardRightTitle
@@ -312,7 +299,7 @@ partial class PaymentConfirmDialog
         // 
         lblNewDebtVal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblNewDebtVal.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblNewDebtVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblNewDebtVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)68)), ((int)((byte)68)));
         lblNewDebtVal.Location = new System.Drawing.Point(200, 226);
         lblNewDebtVal.Name = "lblNewDebtVal";
         lblNewDebtVal.Size = new System.Drawing.Size(178, 20);
@@ -482,7 +469,7 @@ partial class PaymentConfirmDialog
         pnlActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
         pnlActions.Location = new System.Drawing.Point(0, 498);
         pnlActions.Name = "pnlActions";
-        pnlActions.Padding = new System.Windows.Forms.Padding(24, 8, 24, 8);
+        pnlActions.Padding = new System.Windows.Forms.Padding(24, 8, 0, 8);
         pnlActions.Size = new System.Drawing.Size(840, 52);
         pnlActions.TabIndex = 3;
         // 
@@ -493,7 +480,7 @@ partial class PaymentConfirmDialog
         btnConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
         btnConfirm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnConfirm.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnConfirm.Location = new System.Drawing.Point(619, 11);
+        btnConfirm.Location = new System.Drawing.Point(643, 11);
         btnConfirm.Name = "btnConfirm";
         btnConfirm.Size = new System.Drawing.Size(170, 34);
         btnConfirm.TabIndex = 0;
@@ -508,7 +495,7 @@ partial class PaymentConfirmDialog
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnCancel.Location = new System.Drawing.Point(513, 11);
+        btnCancel.Location = new System.Drawing.Point(537, 11);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(100, 34);
         btnCancel.TabIndex = 1;
@@ -547,7 +534,6 @@ partial class PaymentConfirmDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.TableLayoutPanel pnlBody;
     private ECMS.UI.Controls.AppCard cardLeftInfo;
     private System.Windows.Forms.Label lblCardLeftTitle;

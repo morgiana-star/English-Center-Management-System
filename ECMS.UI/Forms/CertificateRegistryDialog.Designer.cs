@@ -15,11 +15,16 @@ partial class CertificateRegistryDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
         btnPreviewPrint = new ECMS.UI.Controls.AppButton();
@@ -33,7 +38,6 @@ partial class CertificateRegistryDialog
         pnlBody = new System.Windows.Forms.Panel();
         cardRegistryList = new ECMS.UI.Controls.AppCard();
         gridRegistry = new ECMS.UI.Controls.AppDataGrid();
-        lblGridFooter = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlTopActions.SuspendLayout();
         pnlFilterBar.SuspendLayout();
@@ -56,7 +60,7 @@ partial class CertificateRegistryDialog
         // 
         // pnlTopActions
         // 
-        pnlTopActions.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         pnlTopActions.Controls.Add(btnPreviewPrint);
         pnlTopActions.Controls.Add(btnClose);
         pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
@@ -67,7 +71,7 @@ partial class CertificateRegistryDialog
         // 
         // btnPreviewPrint
         // 
-        btnPreviewPrint.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnPreviewPrint.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnPreviewPrint.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnPreviewPrint.CornerRadius = 5;
         btnPreviewPrint.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -78,7 +82,7 @@ partial class CertificateRegistryDialog
         btnPreviewPrint.Name = "btnPreviewPrint";
         btnPreviewPrint.Size = new System.Drawing.Size(152, 38);
         btnPreviewPrint.TabIndex = 0;
-        btnPreviewPrint.Text = "🖨️ Xem trước khi in";
+        btnPreviewPrint.Text = "Xem trước khi in";
         btnPreviewPrint.UseVisualStyleBackColor = false;
         btnPreviewPrint.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -90,7 +94,7 @@ partial class CertificateRegistryDialog
         btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
         btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnClose.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnClose.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnClose.Location = new System.Drawing.Point(59, 3);
         btnClose.Name = "btnClose";
         btnClose.Size = new System.Drawing.Size(100, 38);
@@ -103,16 +107,16 @@ partial class CertificateRegistryDialog
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(24, 20);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(360, 35);
+        lblTitle.Size = new System.Drawing.Size(345, 35);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Sổ cấp chứng chỉ tốt nghiệp";
         // 
         // pnlFilterBar
         // 
-        pnlFilterBar.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlFilterBar.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         pnlFilterBar.Controls.Add(cboYearFilter);
         pnlFilterBar.Controls.Add(cboCourseFilter);
         pnlFilterBar.Controls.Add(txtSearch);
@@ -126,7 +130,7 @@ partial class CertificateRegistryDialog
         // 
         // cboYearFilter
         // 
-        cboYearFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboYearFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboYearFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboYearFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboYearFilter.FormattingEnabled = true;
@@ -137,7 +141,7 @@ partial class CertificateRegistryDialog
         // 
         // cboCourseFilter
         // 
-        cboCourseFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboCourseFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboCourseFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboCourseFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboCourseFilter.FormattingEnabled = true;
@@ -159,16 +163,16 @@ partial class CertificateRegistryDialog
         // 
         lblSearch.AutoSize = true;
         lblSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSearch.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSearch.Location = new System.Drawing.Point(24, 14);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new System.Drawing.Size(87, 20);
+        lblSearch.Size = new System.Drawing.Size(78, 20);
         lblSearch.TabIndex = 0;
-        lblSearch.Text = "🔍 Tìm kiếm:";
+        lblSearch.Text = "Tìm kiếm:";
         // 
         // pnlBody
         // 
-        pnlBody.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         pnlBody.Controls.Add(cardRegistryList);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlBody.Location = new System.Drawing.Point(0, 125);
@@ -180,10 +184,9 @@ partial class CertificateRegistryDialog
         // cardRegistryList
         // 
         cardRegistryList.BackColor = System.Drawing.Color.White;
-        cardRegistryList.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardRegistryList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardRegistryList.BorderWidth = 1;
         cardRegistryList.Controls.Add(gridRegistry);
-        cardRegistryList.Controls.Add(lblGridFooter);
         cardRegistryList.CornerRadius = 8;
         cardRegistryList.Dock = System.Windows.Forms.DockStyle.Fill;
         cardRegistryList.Location = new System.Drawing.Point(24, 16);
@@ -198,7 +201,7 @@ partial class CertificateRegistryDialog
         gridRegistry.AllowUserToDeleteRows = false;
         gridRegistry.AllowUserToResizeColumns = false;
         gridRegistry.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         gridRegistry.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
         gridRegistry.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         gridRegistry.BackgroundColor = System.Drawing.Color.White;
@@ -206,12 +209,12 @@ partial class CertificateRegistryDialog
         gridRegistry.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         gridRegistry.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         gridRegistry.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         gridRegistry.ColumnHeadersHeight = 38;
@@ -219,44 +222,39 @@ partial class CertificateRegistryDialog
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         gridRegistry.DefaultCellStyle = dataGridViewCellStyle3;
         gridRegistry.Dock = System.Windows.Forms.DockStyle.Fill;
         gridRegistry.EnableHeadersVisualStyles = false;
-        gridRegistry.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        gridRegistry.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         gridRegistry.Location = new System.Drawing.Point(16, 16);
         gridRegistry.MultiSelect = false;
         gridRegistry.Name = "gridRegistry";
         gridRegistry.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        gridRegistry.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         gridRegistry.RowHeadersVisible = false;
         gridRegistry.RowHeadersWidth = 51;
         gridRegistry.RowTemplate.Height = 42;
-        gridRegistry.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         gridRegistry.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridRegistry.Size = new System.Drawing.Size(1180, 517);
+        gridRegistry.Size = new System.Drawing.Size(1180, 547);
         gridRegistry.TabIndex = 0;
-        // 
-        // lblGridFooter
-        // 
-        lblGridFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-        lblGridFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblGridFooter.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblGridFooter.Location = new System.Drawing.Point(16, 533);
-        lblGridFooter.Name = "lblGridFooter";
-        lblGridFooter.Size = new System.Drawing.Size(1180, 30);
-        lblGridFooter.TabIndex = 1;
-        lblGridFooter.Text = "📌 Chọn một dòng và ấn 'Xem trước khi in' (hoặc double-click dòng) để mở phôi chứng chỉ in ấn.";
-        lblGridFooter.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         // 
         // CertificateRegistryDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         ClientSize = new System.Drawing.Size(1260, 740);
         Controls.Add(pnlBody);
         Controls.Add(pnlFilterBar);
@@ -265,7 +263,6 @@ partial class CertificateRegistryDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "CertificateRegistryDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Sổ chứng chỉ · ECMS";
@@ -295,5 +292,4 @@ partial class CertificateRegistryDialog
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppCard cardRegistryList;
     private ECMS.UI.Controls.AppDataGrid gridRegistry;
-    private System.Windows.Forms.Label lblGridFooter;
 }

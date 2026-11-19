@@ -15,6 +15,10 @@ partial class SystemConfigView
 
     #region Component Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -56,7 +60,6 @@ partial class SystemConfigView
         lblCenterName = new System.Windows.Forms.Label();
         lblCenterInfoSub = new System.Windows.Forms.Label();
         lblCenterInfoTitle = new System.Windows.Forms.Label();
-        bannerCenterSuccess = new ECMS.UI.Controls.AppBanner();
         tabGrading = new System.Windows.Forms.TabPage();
         pnlTabGradingContent = new System.Windows.Forms.Panel();
         cardAttendanceRules = new ECMS.UI.Controls.AppCard();
@@ -70,7 +73,6 @@ partial class SystemConfigView
         lblAttendanceSub = new System.Windows.Forms.Label();
         lblAttendanceTitle = new System.Windows.Forms.Label();
         cardGradingRules = new ECMS.UI.Controls.AppCard();
-        lblTotalWeightValidation = new System.Windows.Forms.Label();
         txtWeightFinal = new ECMS.UI.Controls.AppTextBox();
         lblWeightFinal = new System.Windows.Forms.Label();
         txtWeightMidterm = new ECMS.UI.Controls.AppTextBox();
@@ -131,7 +133,7 @@ partial class SystemConfigView
         // 
         // btnSaveAllTop
         // 
-        btnSaveAllTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        btnSaveAllTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnSaveAllTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnSaveAllTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnSaveAllTop.CornerRadius = 5;
@@ -144,7 +146,7 @@ partial class SystemConfigView
         btnSaveAllTop.Name = "btnSaveAllTop";
         btnSaveAllTop.Size = new System.Drawing.Size(170, 36);
         btnSaveAllTop.TabIndex = 4;
-        btnSaveAllTop.Text = "💾 Lưu cấu hình";
+        btnSaveAllTop.Text = "Lưu cấu hình";
         btnSaveAllTop.UseVisualStyleBackColor = false;
         btnSaveAllTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -155,7 +157,7 @@ partial class SystemConfigView
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTitle.Location = new System.Drawing.Point(24, 12);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(256, 37);
+        lblTitle.Size = new System.Drawing.Size(250, 37);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Cấu hình hệ thống";
         // 
@@ -192,7 +194,6 @@ partial class SystemConfigView
         pnlTabCenterContent.AutoScroll = true;
         pnlTabCenterContent.Controls.Add(cardDbInfo);
         pnlTabCenterContent.Controls.Add(cardCenterInfo);
-        pnlTabCenterContent.Controls.Add(bannerCenterSuccess);
         pnlTabCenterContent.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlTabCenterContent.Location = new System.Drawing.Point(16, 12);
         pnlTabCenterContent.Name = "pnlTabCenterContent";
@@ -201,7 +202,7 @@ partial class SystemConfigView
         // 
         // cardDbInfo
         // 
-        cardDbInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardDbInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardDbInfo.BackColor = System.Drawing.Color.White;
         cardDbInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardDbInfo.BorderWidth = 1;
@@ -226,7 +227,7 @@ partial class SystemConfigView
         // 
         // btnBrowseBackup
         // 
-        btnBrowseBackup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        btnBrowseBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnBrowseBackup.BackColor = System.Drawing.Color.White;
         btnBrowseBackup.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnBrowseBackup.CornerRadius = 5;
@@ -245,7 +246,7 @@ partial class SystemConfigView
         // 
         // txtBackupDir
         // 
-        txtBackupDir.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtBackupDir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtBackupDir.BackColor = System.Drawing.Color.Transparent;
         txtBackupDir.CornerRadius = 5;
         txtBackupDir.ErrorMessage = "";
@@ -265,13 +266,13 @@ partial class SystemConfigView
         lblBackupDir.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblBackupDir.Location = new System.Drawing.Point(20, 188);
         lblBackupDir.Name = "lblBackupDir";
-        lblBackupDir.Size = new System.Drawing.Size(201, 20);
+        lblBackupDir.Size = new System.Drawing.Size(209, 20);
         lblBackupDir.TabIndex = 9;
         lblBackupDir.Text = "Thư mục lưu trữ bản sao lưu";
         // 
         // btnBrowseStorage
         // 
-        btnBrowseStorage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        btnBrowseStorage.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnBrowseStorage.BackColor = System.Drawing.Color.White;
         btnBrowseStorage.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnBrowseStorage.CornerRadius = 5;
@@ -290,7 +291,7 @@ partial class SystemConfigView
         // 
         // txtStoragePath
         // 
-        txtStoragePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtStoragePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtStoragePath.BackColor = System.Drawing.Color.Transparent;
         txtStoragePath.CornerRadius = 5;
         txtStoragePath.ErrorMessage = "";
@@ -310,13 +311,13 @@ partial class SystemConfigView
         lblStoragePath.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblStoragePath.Location = new System.Drawing.Point(20, 122);
         lblStoragePath.Name = "lblStoragePath";
-        lblStoragePath.Size = new System.Drawing.Size(229, 20);
+        lblStoragePath.Size = new System.Drawing.Size(231, 20);
         lblStoragePath.TabIndex = 6;
         lblStoragePath.Text = "Thư mục lưu trữ tài liệu học tập";
         // 
         // btnCheckDb
         // 
-        btnCheckDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        btnCheckDb.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCheckDb.BackColor = System.Drawing.Color.White;
         btnCheckDb.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCheckDb.CornerRadius = 5;
@@ -329,13 +330,13 @@ partial class SystemConfigView
         btnCheckDb.Name = "btnCheckDb";
         btnCheckDb.Size = new System.Drawing.Size(130, 34);
         btnCheckDb.TabIndex = 5;
-        btnCheckDb.Text = "⚡ Kiểm tra";
+        btnCheckDb.Text = "Kiểm tra";
         btnCheckDb.UseVisualStyleBackColor = false;
         btnCheckDb.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnBrowseDb
         // 
-        btnBrowseDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        btnBrowseDb.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnBrowseDb.BackColor = System.Drawing.Color.White;
         btnBrowseDb.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnBrowseDb.CornerRadius = 5;
@@ -354,7 +355,7 @@ partial class SystemConfigView
         // 
         // txtDatabasePath
         // 
-        txtDatabasePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtDatabasePath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtDatabasePath.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         txtDatabasePath.CornerRadius = 5;
         txtDatabasePath.ErrorMessage = "";
@@ -374,7 +375,7 @@ partial class SystemConfigView
         lblDatabasePath.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblDatabasePath.Location = new System.Drawing.Point(20, 58);
         lblDatabasePath.Name = "lblDatabasePath";
-        lblDatabasePath.Size = new System.Drawing.Size(193, 20);
+        lblDatabasePath.Size = new System.Drawing.Size(187, 20);
         lblDatabasePath.TabIndex = 2;
         lblDatabasePath.Text = "Đường dẫn CSDL SQLite *";
         // 
@@ -385,7 +386,7 @@ partial class SystemConfigView
         lblDbInfoSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblDbInfoSub.Location = new System.Drawing.Point(20, 36);
         lblDbInfoSub.Name = "lblDbInfoSub";
-        lblDbInfoSub.Size = new System.Drawing.Size(490, 20);
+        lblDbInfoSub.Size = new System.Drawing.Size(502, 20);
         lblDbInfoSub.TabIndex = 1;
         lblDbInfoSub.Text = "Cấu hình vị trí tệp cơ sở dữ liệu SQLite và các thư mục lưu trữ của hệ thống";
         // 
@@ -396,13 +397,13 @@ partial class SystemConfigView
         lblDbInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblDbInfoTitle.Location = new System.Drawing.Point(20, 10);
         lblDbInfoTitle.Name = "lblDbInfoTitle";
-        lblDbInfoTitle.Size = new System.Drawing.Size(262, 28);
+        lblDbInfoTitle.Size = new System.Drawing.Size(256, 28);
         lblDbInfoTitle.TabIndex = 0;
         lblDbInfoTitle.Text = "Cơ sở dữ liệu & Lưu trữ tệp";
         // 
         // cardCenterInfo
         // 
-        cardCenterInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardCenterInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardCenterInfo.BackColor = System.Drawing.Color.White;
         cardCenterInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardCenterInfo.BorderWidth = 1;
@@ -423,15 +424,15 @@ partial class SystemConfigView
         cardCenterInfo.Controls.Add(lblCenterInfoSub);
         cardCenterInfo.Controls.Add(lblCenterInfoTitle);
         cardCenterInfo.CornerRadius = 6;
-        cardCenterInfo.Location = new System.Drawing.Point(0, 56);
+        cardCenterInfo.Location = new System.Drawing.Point(0, 3);
         cardCenterInfo.Name = "cardCenterInfo";
         cardCenterInfo.Padding = new System.Windows.Forms.Padding(20);
-        cardCenterInfo.Size = new System.Drawing.Size(1140, 320);
+        cardCenterInfo.Size = new System.Drawing.Size(1140, 373);
         cardCenterInfo.TabIndex = 1;
         // 
         // txtDirectorTitle
         // 
-        txtDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtDirectorTitle.BackColor = System.Drawing.Color.Transparent;
         txtDirectorTitle.CornerRadius = 5;
         txtDirectorTitle.ErrorMessage = "";
@@ -446,19 +447,19 @@ partial class SystemConfigView
         // 
         // lblDirectorTitle
         // 
-        lblDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblDirectorTitle.AutoSize = true;
         lblDirectorTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblDirectorTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblDirectorTitle.Location = new System.Drawing.Point(590, 238);
         lblDirectorTitle.Name = "lblDirectorTitle";
-        lblDirectorTitle.Size = new System.Drawing.Size(155, 20);
+        lblDirectorTitle.Size = new System.Drawing.Size(141, 20);
         lblDirectorTitle.TabIndex = 14;
         lblDirectorTitle.Text = "Chức vụ người ký *";
         // 
         // txtDirector
         // 
-        txtDirector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtDirector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtDirector.BackColor = System.Drawing.Color.Transparent;
         txtDirector.CornerRadius = 5;
         txtDirector.ErrorMessage = "";
@@ -478,13 +479,13 @@ partial class SystemConfigView
         lblDirector.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblDirector.Location = new System.Drawing.Point(20, 238);
         lblDirector.Name = "lblDirector";
-        lblDirector.Size = new System.Drawing.Size(225, 20);
+        lblDirector.Size = new System.Drawing.Size(199, 20);
         lblDirector.TabIndex = 12;
         lblDirector.Text = "Người đại diện / Ký duyệt *";
         // 
         // txtCenterAddress
         // 
-        txtCenterAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtCenterAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtCenterAddress.BackColor = System.Drawing.Color.Transparent;
         txtCenterAddress.CornerRadius = 5;
         txtCenterAddress.ErrorMessage = "";
@@ -499,19 +500,19 @@ partial class SystemConfigView
         // 
         // lblCenterAddress
         // 
-        lblCenterAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblCenterAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblCenterAddress.AutoSize = true;
         lblCenterAddress.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterAddress.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCenterAddress.Location = new System.Drawing.Point(590, 168);
         lblCenterAddress.Name = "lblCenterAddress";
-        lblCenterAddress.Size = new System.Drawing.Size(121, 20);
+        lblCenterAddress.Size = new System.Drawing.Size(112, 20);
         lblCenterAddress.TabIndex = 10;
         lblCenterAddress.Text = "Địa chỉ trụ sở *";
         // 
         // txtCenterWebsite
         // 
-        txtCenterWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtCenterWebsite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtCenterWebsite.BackColor = System.Drawing.Color.Transparent;
         txtCenterWebsite.CornerRadius = 5;
         txtCenterWebsite.ErrorMessage = "";
@@ -531,13 +532,13 @@ partial class SystemConfigView
         lblCenterWebsite.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCenterWebsite.Location = new System.Drawing.Point(20, 168);
         lblCenterWebsite.Name = "lblCenterWebsite";
-        lblCenterWebsite.Size = new System.Drawing.Size(147, 20);
+        lblCenterWebsite.Size = new System.Drawing.Size(140, 20);
         lblCenterWebsite.TabIndex = 8;
         lblCenterWebsite.Text = "Website / Fanpage";
         // 
         // txtCenterEmail
         // 
-        txtCenterEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtCenterEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtCenterEmail.BackColor = System.Drawing.Color.Transparent;
         txtCenterEmail.CornerRadius = 5;
         txtCenterEmail.ErrorMessage = "";
@@ -552,19 +553,19 @@ partial class SystemConfigView
         // 
         // lblCenterEmail
         // 
-        lblCenterEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblCenterEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblCenterEmail.AutoSize = true;
         lblCenterEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCenterEmail.Location = new System.Drawing.Point(590, 98);
         lblCenterEmail.Name = "lblCenterEmail";
-        lblCenterEmail.Size = new System.Drawing.Size(107, 20);
+        lblCenterEmail.Size = new System.Drawing.Size(97, 20);
         lblCenterEmail.TabIndex = 6;
         lblCenterEmail.Text = "Email liên hệ";
         // 
         // txtCenterPhone
         // 
-        txtCenterPhone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtCenterPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtCenterPhone.BackColor = System.Drawing.Color.Transparent;
         txtCenterPhone.CornerRadius = 5;
         txtCenterPhone.ErrorMessage = "";
@@ -579,19 +580,19 @@ partial class SystemConfigView
         // 
         // lblCenterPhone
         // 
-        lblCenterPhone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblCenterPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblCenterPhone.AutoSize = true;
         lblCenterPhone.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCenterPhone.Location = new System.Drawing.Point(860, 98);
         lblCenterPhone.Name = "lblCenterPhone";
-        lblCenterPhone.Size = new System.Drawing.Size(112, 20);
+        lblCenterPhone.Size = new System.Drawing.Size(111, 20);
         lblCenterPhone.TabIndex = 4;
         lblCenterPhone.Text = "Số điện thoại *";
         // 
         // txtCenterName
         // 
-        txtCenterName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtCenterName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtCenterName.BackColor = System.Drawing.Color.Transparent;
         txtCenterName.CornerRadius = 5;
         txtCenterName.ErrorMessage = "";
@@ -611,7 +612,7 @@ partial class SystemConfigView
         lblCenterName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCenterName.Location = new System.Drawing.Point(20, 98);
         lblCenterName.Name = "lblCenterName";
-        lblCenterName.Size = new System.Drawing.Size(130, 20);
+        lblCenterName.Size = new System.Drawing.Size(120, 20);
         lblCenterName.TabIndex = 2;
         lblCenterName.Text = "Tên trung tâm *";
         // 
@@ -622,7 +623,7 @@ partial class SystemConfigView
         lblCenterInfoSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblCenterInfoSub.Location = new System.Drawing.Point(20, 36);
         lblCenterInfoSub.Name = "lblCenterInfoSub";
-        lblCenterInfoSub.Size = new System.Drawing.Size(570, 20);
+        lblCenterInfoSub.Size = new System.Drawing.Size(536, 20);
         lblCenterInfoSub.TabIndex = 1;
         lblCenterInfoSub.Text = "Thông tin định danh hiển thị trên chứng chỉ đào tạo, biên lai thu tiền và báo cáo";
         // 
@@ -633,24 +634,9 @@ partial class SystemConfigView
         lblCenterInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblCenterInfoTitle.Location = new System.Drawing.Point(20, 10);
         lblCenterInfoTitle.Name = "lblCenterInfoTitle";
-        lblCenterInfoTitle.Size = new System.Drawing.Size(206, 28);
+        lblCenterInfoTitle.Size = new System.Drawing.Size(205, 28);
         lblCenterInfoTitle.TabIndex = 0;
         lblCenterInfoTitle.Text = "Thông tin trung tâm";
-        // 
-        // bannerCenterSuccess
-        // 
-        bannerCenterSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-        bannerCenterSuccess.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
-        bannerCenterSuccess.BannerType = ECMS.UI.Controls.BannerType.Success;
-        bannerCenterSuccess.Location = new System.Drawing.Point(0, 4);
-        bannerCenterSuccess.Message = "✓ Toàn bộ thông tin trung tâm và cấu hình CSDL đã được lưu thành công.";
-        bannerCenterSuccess.Name = "bannerCenterSuccess";
-        bannerCenterSuccess.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-        bannerCenterSuccess.Size = new System.Drawing.Size(1140, 44);
-        bannerCenterSuccess.TabIndex = 0;
-        bannerCenterSuccess.Title = "";
-        bannerCenterSuccess.Variant = ECMS.UI.Controls.BannerVariant.Success;
-        bannerCenterSuccess.Visible = false;
         // 
         // tabGrading
         // 
@@ -677,7 +663,7 @@ partial class SystemConfigView
         // 
         // cardAttendanceRules
         // 
-        cardAttendanceRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardAttendanceRules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardAttendanceRules.BackColor = System.Drawing.Color.White;
         cardAttendanceRules.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardAttendanceRules.BorderWidth = 1;
@@ -694,7 +680,7 @@ partial class SystemConfigView
         cardAttendanceRules.Location = new System.Drawing.Point(0, 310);
         cardAttendanceRules.Name = "cardAttendanceRules";
         cardAttendanceRules.Padding = new System.Windows.Forms.Padding(20);
-        cardAttendanceRules.Size = new System.Drawing.Size(1140, 270);
+        cardAttendanceRules.Size = new System.Drawing.Size(1140, 333);
         cardAttendanceRules.TabIndex = 1;
         // 
         // chkAutoLockAttendance
@@ -707,7 +693,7 @@ partial class SystemConfigView
         chkAutoLockAttendance.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         chkAutoLockAttendance.Location = new System.Drawing.Point(20, 215);
         chkAutoLockAttendance.Name = "chkAutoLockAttendance";
-        chkAutoLockAttendance.Size = new System.Drawing.Size(437, 25);
+        chkAutoLockAttendance.Size = new System.Drawing.Size(441, 25);
         chkAutoLockAttendance.TabIndex = 8;
         chkAutoLockAttendance.Text = "Tự động khóa sổ điểm danh sau 24h kể từ khi kết thúc buổi";
         chkAutoLockAttendance.UseVisualStyleBackColor = true;
@@ -722,9 +708,9 @@ partial class SystemConfigView
         chkDebtCertRule.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
         chkDebtCertRule.Location = new System.Drawing.Point(20, 180);
         chkDebtCertRule.Name = "chkDebtCertRule";
-        chkDebtCertRule.Size = new System.Drawing.Size(515, 25);
+        chkDebtCertRule.Size = new System.Drawing.Size(572, 25);
         chkDebtCertRule.TabIndex = 7;
-        chkDebtCertRule.Text = "Ràng buộc tài chính: Chỉ cho phép cấp chứng chỉ khi công nợ = 0đ";
+        chkDebtCertRule.Text = "Ràng buộc tài chính: Chỉ cho phép cấp chứng chỉ khi không có công nợ";
         chkDebtCertRule.UseVisualStyleBackColor = true;
         // 
         // chkLateCounted
@@ -737,14 +723,14 @@ partial class SystemConfigView
         chkLateCounted.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         chkLateCounted.Location = new System.Drawing.Point(20, 145);
         chkLateCounted.Name = "chkLateCounted";
-        chkLateCounted.Size = new System.Drawing.Size(360, 25);
+        chkLateCounted.Size = new System.Drawing.Size(343, 25);
         chkLateCounted.TabIndex = 6;
         chkLateCounted.Text = "Đi muộn (< 15 phút) được tính là có tham dự";
         chkLateCounted.UseVisualStyleBackColor = true;
         // 
         // txtAbsenceAlert
         // 
-        txtAbsenceAlert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtAbsenceAlert.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtAbsenceAlert.BackColor = System.Drawing.Color.Transparent;
         txtAbsenceAlert.CornerRadius = 5;
         txtAbsenceAlert.ErrorMessage = "";
@@ -759,19 +745,19 @@ partial class SystemConfigView
         // 
         // lblAbsenceAlert
         // 
-        lblAbsenceAlert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblAbsenceAlert.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblAbsenceAlert.AutoSize = true;
         lblAbsenceAlert.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblAbsenceAlert.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblAbsenceAlert.Location = new System.Drawing.Point(590, 62);
         lblAbsenceAlert.Name = "lblAbsenceAlert";
-        lblAbsenceAlert.Size = new System.Drawing.Size(248, 20);
+        lblAbsenceAlert.Size = new System.Drawing.Size(245, 20);
         lblAbsenceAlert.TabIndex = 4;
         lblAbsenceAlert.Text = "Ngưỡng cảnh báo vắng học viên *";
         // 
         // txtMinAttendance
         // 
-        txtMinAttendance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtMinAttendance.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtMinAttendance.BackColor = System.Drawing.Color.Transparent;
         txtMinAttendance.CornerRadius = 5;
         txtMinAttendance.ErrorMessage = "";
@@ -791,7 +777,7 @@ partial class SystemConfigView
         lblMinAttendance.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblMinAttendance.Location = new System.Drawing.Point(20, 62);
         lblMinAttendance.Name = "lblMinAttendance";
-        lblMinAttendance.Size = new System.Drawing.Size(262, 20);
+        lblMinAttendance.Size = new System.Drawing.Size(271, 20);
         lblMinAttendance.TabIndex = 2;
         lblMinAttendance.Text = "Tỷ lệ chuyên cần tối thiểu đạt chuẩn *";
         // 
@@ -802,7 +788,7 @@ partial class SystemConfigView
         lblAttendanceSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblAttendanceSub.Location = new System.Drawing.Point(20, 36);
         lblAttendanceSub.Name = "lblAttendanceSub";
-        lblAttendanceSub.Size = new System.Drawing.Size(515, 20);
+        lblAttendanceSub.Size = new System.Drawing.Size(521, 20);
         lblAttendanceSub.TabIndex = 1;
         lblAttendanceSub.Text = "Điều kiện tham dự lớp học và tiêu chuẩn bắt buộc để xét duyệt cấp chứng chỉ";
         // 
@@ -813,17 +799,16 @@ partial class SystemConfigView
         lblAttendanceTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblAttendanceTitle.Location = new System.Drawing.Point(20, 10);
         lblAttendanceTitle.Name = "lblAttendanceTitle";
-        lblAttendanceTitle.Size = new System.Drawing.Size(325, 28);
+        lblAttendanceTitle.Size = new System.Drawing.Size(331, 28);
         lblAttendanceTitle.TabIndex = 0;
         lblAttendanceTitle.Text = "Tiêu chuẩn chuyên cần & Điều kiện";
         // 
         // cardGradingRules
         // 
-        cardGradingRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardGradingRules.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardGradingRules.BackColor = System.Drawing.Color.White;
         cardGradingRules.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardGradingRules.BorderWidth = 1;
-        cardGradingRules.Controls.Add(lblTotalWeightValidation);
         cardGradingRules.Controls.Add(txtWeightFinal);
         cardGradingRules.Controls.Add(lblWeightFinal);
         cardGradingRules.Controls.Add(txtWeightMidterm);
@@ -843,20 +828,9 @@ partial class SystemConfigView
         cardGradingRules.Size = new System.Drawing.Size(1140, 280);
         cardGradingRules.TabIndex = 0;
         // 
-        // lblTotalWeightValidation
-        // 
-        lblTotalWeightValidation.AutoSize = true;
-        lblTotalWeightValidation.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblTotalWeightValidation.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
-        lblTotalWeightValidation.Location = new System.Drawing.Point(20, 235);
-        lblTotalWeightValidation.Name = "lblTotalWeightValidation";
-        lblTotalWeightValidation.Size = new System.Drawing.Size(434, 21);
-        lblTotalWeightValidation.TabIndex = 12;
-        lblTotalWeightValidation.Text = "✓ Tổng trọng số = 20% + 30% + 50% = 100% (Đạt tiêu chuẩn)";
-        // 
         // txtWeightFinal
         // 
-        txtWeightFinal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtWeightFinal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtWeightFinal.BackColor = System.Drawing.Color.Transparent;
         txtWeightFinal.CornerRadius = 5;
         txtWeightFinal.ErrorMessage = "";
@@ -871,19 +845,19 @@ partial class SystemConfigView
         // 
         // lblWeightFinal
         // 
-        lblWeightFinal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblWeightFinal.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblWeightFinal.AutoSize = true;
         lblWeightFinal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblWeightFinal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblWeightFinal.Location = new System.Drawing.Point(780, 162);
         lblWeightFinal.Name = "lblWeightFinal";
-        lblWeightFinal.Size = new System.Drawing.Size(227, 20);
+        lblWeightFinal.Size = new System.Drawing.Size(202, 20);
         lblWeightFinal.TabIndex = 10;
         lblWeightFinal.Text = "Trọng số bài thi Cuối khóa *";
         // 
         // txtWeightMidterm
         // 
-        txtWeightMidterm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        txtWeightMidterm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtWeightMidterm.BackColor = System.Drawing.Color.Transparent;
         txtWeightMidterm.CornerRadius = 5;
         txtWeightMidterm.ErrorMessage = "";
@@ -903,7 +877,7 @@ partial class SystemConfigView
         lblWeightMidterm.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblWeightMidterm.Location = new System.Drawing.Point(400, 162);
         lblWeightMidterm.Name = "lblWeightMidterm";
-        lblWeightMidterm.Size = new System.Drawing.Size(229, 20);
+        lblWeightMidterm.Size = new System.Drawing.Size(204, 20);
         lblWeightMidterm.TabIndex = 8;
         lblWeightMidterm.Text = "Trọng số bài thi Giữa khóa *";
         // 
@@ -928,13 +902,13 @@ partial class SystemConfigView
         lblWeightRegular.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblWeightRegular.Location = new System.Drawing.Point(20, 162);
         lblWeightRegular.Name = "lblWeightRegular";
-        lblWeightRegular.Size = new System.Drawing.Size(262, 20);
+        lblWeightRegular.Size = new System.Drawing.Size(248, 20);
         lblWeightRegular.TabIndex = 6;
         lblWeightRegular.Text = "Trọng số kiểm tra Thường xuyên *";
         // 
         // txtPassingScore
         // 
-        txtPassingScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        txtPassingScore.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtPassingScore.BackColor = System.Drawing.Color.Transparent;
         txtPassingScore.CornerRadius = 5;
         txtPassingScore.ErrorMessage = "";
@@ -949,19 +923,19 @@ partial class SystemConfigView
         // 
         // lblPassingScore
         // 
-        lblPassingScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblPassingScore.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblPassingScore.AutoSize = true;
         lblPassingScore.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblPassingScore.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblPassingScore.Location = new System.Drawing.Point(590, 82);
         lblPassingScore.Name = "lblPassingScore";
-        lblPassingScore.Size = new System.Drawing.Size(183, 20);
+        lblPassingScore.Size = new System.Drawing.Size(176, 20);
         lblPassingScore.TabIndex = 4;
         lblPassingScore.Text = "Điểm đạt chuẩn (GPA) *";
         // 
         // cboScoreScale
         // 
-        cboScoreScale.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cboScoreScale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cboScoreScale.BackColor = System.Drawing.Color.White;
         cboScoreScale.CornerRadius = 5;
         cboScoreScale.DataSource = null;
@@ -983,7 +957,7 @@ partial class SystemConfigView
         lblScoreScale.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblScoreScale.Location = new System.Drawing.Point(20, 82);
         lblScoreScale.Name = "lblScoreScale";
-        lblScoreScale.Size = new System.Drawing.Size(176, 20);
+        lblScoreScale.Size = new System.Drawing.Size(164, 20);
         lblScoreScale.TabIndex = 2;
         lblScoreScale.Text = "Thang điểm áp dụng *";
         // 
@@ -994,7 +968,7 @@ partial class SystemConfigView
         lblGradingRulesSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblGradingRulesSub.Location = new System.Drawing.Point(20, 36);
         lblGradingRulesSub.Name = "lblGradingRulesSub";
-        lblGradingRulesSub.Size = new System.Drawing.Size(565, 20);
+        lblGradingRulesSub.Size = new System.Drawing.Size(548, 20);
         lblGradingRulesSub.TabIndex = 1;
         lblGradingRulesSub.Text = "Cấu hình thang điểm và tỷ lệ phần trăm giữa các bài kiểm tra trong suốt khóa học";
         // 
@@ -1005,7 +979,7 @@ partial class SystemConfigView
         lblGradingRulesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblGradingRulesTitle.Location = new System.Drawing.Point(20, 10);
         lblGradingRulesTitle.Name = "lblGradingRulesTitle";
-        lblGradingRulesTitle.Size = new System.Drawing.Size(262, 28);
+        lblGradingRulesTitle.Size = new System.Drawing.Size(263, 28);
         lblGradingRulesTitle.TabIndex = 0;
         lblGradingRulesTitle.Text = "Quy tắc điểm số & Đánh giá";
         // 
@@ -1034,7 +1008,7 @@ partial class SystemConfigView
         // 
         // cardBackupTable
         // 
-        cardBackupTable.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardBackupTable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardBackupTable.BackColor = System.Drawing.Color.White;
         cardBackupTable.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardBackupTable.BorderWidth = 1;
@@ -1059,7 +1033,7 @@ partial class SystemConfigView
         dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dgvBackups.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvBackups.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        dgvBackups.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         dgvBackups.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvBackups.BackgroundColor = System.Drawing.Color.White;
         dgvBackups.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -1092,7 +1066,6 @@ partial class SystemConfigView
         dgvBackups.ReadOnly = true;
         dgvBackups.RowHeadersVisible = false;
         dgvBackups.RowHeadersWidth = 51;
-        dgvBackups.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvBackups.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvBackups.Size = new System.Drawing.Size(1120, 410);
         dgvBackups.TabIndex = 2;
@@ -1104,9 +1077,9 @@ partial class SystemConfigView
         lblBackupListSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblBackupListSub.Location = new System.Drawing.Point(20, 36);
         lblBackupListSub.Name = "lblBackupListSub";
-        lblBackupListSub.Size = new System.Drawing.Size(560, 20);
+        lblBackupListSub.Size = new System.Drawing.Size(567, 20);
         lblBackupListSub.TabIndex = 1;
-        lblBackupListSub.Text = "Danh sách các bản sao lưu đã tạo, có thể phục hồi dữ liệu về trạng thái thời điểm đó";
+        lblBackupListSub.Text = ("Danh sách các bản sao lưu đã tạo, có thể phục hồi dữ liệu về trạng thái thời điểm" + " đó");
         // 
         // lblBackupListTitle
         // 
@@ -1115,13 +1088,13 @@ partial class SystemConfigView
         lblBackupListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblBackupListTitle.Location = new System.Drawing.Point(20, 10);
         lblBackupListTitle.Name = "lblBackupListTitle";
-        lblBackupListTitle.Size = new System.Drawing.Size(252, 28);
+        lblBackupListTitle.Size = new System.Drawing.Size(231, 28);
         lblBackupListTitle.TabIndex = 0;
         lblBackupListTitle.Text = "Lịch sử các bản sao lưu";
         // 
         // cardAutoBackup
         // 
-        cardAutoBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardAutoBackup.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardAutoBackup.BackColor = System.Drawing.Color.White;
         cardAutoBackup.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardAutoBackup.BorderWidth = 1;
@@ -1139,7 +1112,7 @@ partial class SystemConfigView
         // 
         // cboBackupTime
         // 
-        cboBackupTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        cboBackupTime.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboBackupTime.BackColor = System.Drawing.Color.White;
         cboBackupTime.CornerRadius = 5;
         cboBackupTime.DataSource = null;
@@ -1156,13 +1129,13 @@ partial class SystemConfigView
         // 
         // lblBackupTime
         // 
-        lblBackupTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+        lblBackupTime.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblBackupTime.AutoSize = true;
         lblBackupTime.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblBackupTime.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblBackupTime.Location = new System.Drawing.Point(920, 14);
         lblBackupTime.Name = "lblBackupTime";
-        lblBackupTime.Size = new System.Drawing.Size(131, 20);
+        lblBackupTime.Size = new System.Drawing.Size(134, 20);
         lblBackupTime.TabIndex = 3;
         lblBackupTime.Text = "Thời điểm sao lưu";
         // 
@@ -1176,7 +1149,7 @@ partial class SystemConfigView
         chkAutoBackup.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)101)), ((int)((byte)52)));
         chkAutoBackup.Location = new System.Drawing.Point(20, 56);
         chkAutoBackup.Name = "chkAutoBackup";
-        chkAutoBackup.Size = new System.Drawing.Size(437, 25);
+        chkAutoBackup.Size = new System.Drawing.Size(420, 25);
         chkAutoBackup.TabIndex = 2;
         chkAutoBackup.Text = "Bật chế độ tự động sao lưu dự phòng CSDL định kỳ";
         chkAutoBackup.UseVisualStyleBackColor = true;
@@ -1188,7 +1161,7 @@ partial class SystemConfigView
         lblAutoBackupSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblAutoBackupSub.Location = new System.Drawing.Point(20, 32);
         lblAutoBackupSub.Name = "lblAutoBackupSub";
-        lblAutoBackupSub.Size = new System.Drawing.Size(515, 20);
+        lblAutoBackupSub.Size = new System.Drawing.Size(523, 20);
         lblAutoBackupSub.TabIndex = 1;
         lblAutoBackupSub.Text = "Hệ thống tự động nén và sao chép CSDL vào thư mục sao lưu theo lịch đã đặt";
         // 
@@ -1199,7 +1172,7 @@ partial class SystemConfigView
         lblAutoBackupTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblAutoBackupTitle.Location = new System.Drawing.Point(20, 8);
         lblAutoBackupTitle.Name = "lblAutoBackupTitle";
-        lblAutoBackupTitle.Size = new System.Drawing.Size(232, 25);
+        lblAutoBackupTitle.Size = new System.Drawing.Size(195, 25);
         lblAutoBackupTitle.TabIndex = 0;
         lblAutoBackupTitle.Text = "Lịch sao lưu tự động";
         // 
@@ -1317,7 +1290,6 @@ partial class SystemConfigView
 
     // Tab 1: Center & DB
     private System.Windows.Forms.Panel pnlTabCenterContent;
-    private ECMS.UI.Controls.AppBanner bannerCenterSuccess;
     private ECMS.UI.Controls.AppCard cardCenterInfo;
     private System.Windows.Forms.Label lblCenterInfoTitle;
     private System.Windows.Forms.Label lblCenterInfoSub;
@@ -1365,7 +1337,6 @@ partial class SystemConfigView
     private ECMS.UI.Controls.AppTextBox txtWeightMidterm;
     private System.Windows.Forms.Label lblWeightFinal;
     private ECMS.UI.Controls.AppTextBox txtWeightFinal;
-    private System.Windows.Forms.Label lblTotalWeightValidation;
 
     private ECMS.UI.Controls.AppCard cardAttendanceRules;
     private System.Windows.Forms.Label lblAttendanceTitle;

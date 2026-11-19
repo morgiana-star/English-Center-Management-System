@@ -72,7 +72,6 @@ partial class StudentDetailDialog
         lblColGradesTitle = new System.Windows.Forms.Label();
         pnlLearningPath = new System.Windows.Forms.Panel();
         cardLearningPath = new ECMS.UI.Controls.AppCard();
-        pnlPathHeader = new System.Windows.Forms.Panel();
         dgvLearningPath = new ECMS.UI.Controls.AppDataGrid();
         colClassCourse = new System.Windows.Forms.DataGridViewTextBoxColumn();
         colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -81,6 +80,7 @@ partial class StudentDetailDialog
         colGradeMid = new System.Windows.Forms.DataGridViewTextBoxColumn();
         colGradeFinal = new System.Windows.Forms.DataGridViewTextBoxColumn();
         colTuitionStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        pnlPathHeader = new System.Windows.Forms.Panel();
         lblPathTitle = new System.Windows.Forms.Label();
         pnlTop.SuspendLayout();
         pnlNavTabs.SuspendLayout();
@@ -97,6 +97,7 @@ partial class StudentDetailDialog
         pnlLearningPath.SuspendLayout();
         cardLearningPath.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLearningPath).BeginInit();
+        pnlPathHeader.SuspendLayout();
         SuspendLayout();
         // 
         // pnlTop
@@ -127,7 +128,7 @@ partial class StudentDetailDialog
         btnEditProfile.Name = "btnEditProfile";
         btnEditProfile.Size = new System.Drawing.Size(115, 38);
         btnEditProfile.TabIndex = 4;
-        btnEditProfile.Text = "✎ Sửa hồ sơ";
+        btnEditProfile.Text = "Sửa hồ sơ";
         btnEditProfile.UseVisualStyleBackColor = false;
         btnEditProfile.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -194,7 +195,7 @@ partial class StudentDetailDialog
         btnTabLearningPath.Name = "btnTabLearningPath";
         btnTabLearningPath.Size = new System.Drawing.Size(210, 46);
         btnTabLearningPath.TabIndex = 1;
-        btnTabLearningPath.Text = "🎓 Quá trình học tập";
+        btnTabLearningPath.Text = "Quá trình học tập";
         btnTabLearningPath.UseVisualStyleBackColor = true;
         // 
         // btnTabOverview
@@ -208,7 +209,7 @@ partial class StudentDetailDialog
         btnTabOverview.Name = "btnTabOverview";
         btnTabOverview.Size = new System.Drawing.Size(120, 46);
         btnTabOverview.TabIndex = 0;
-        btnTabOverview.Text = "⊞ Tổng quan";
+        btnTabOverview.Text = "Tổng quan";
         btnTabOverview.UseVisualStyleBackColor = true;
         // 
         // pnlBody
@@ -443,9 +444,9 @@ partial class StudentDetailDialog
         lblRoomVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblRoomVal.Location = new System.Drawing.Point(10, 185);
         lblRoomVal.Name = "lblRoomVal";
-        lblRoomVal.Size = new System.Drawing.Size(131, 21);
+        lblRoomVal.Size = new System.Drawing.Size(127, 21);
         lblRoomVal.TabIndex = 4;
-        lblRoomVal.Text = "Phòng học:  P201";
+        lblRoomVal.Text = "Phòng học: P201";
         // 
         // lblScheduleVal
         // 
@@ -453,9 +454,9 @@ partial class StudentDetailDialog
         lblScheduleVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblScheduleVal.Location = new System.Drawing.Point(10, 140);
         lblScheduleVal.Name = "lblScheduleVal";
-        lblScheduleVal.Size = new System.Drawing.Size(235, 21);
+        lblScheduleVal.Size = new System.Drawing.Size(219, 21);
         lblScheduleVal.TabIndex = 3;
-        lblScheduleVal.Text = "Lịch học:     T3 / T6 · 18:00–20:00";
+        lblScheduleVal.Text = "Lịch học: T3 / T6 · 18:00–20:00";
         // 
         // lblTeacherVal
         // 
@@ -463,9 +464,9 @@ partial class StudentDetailDialog
         lblTeacherVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblTeacherVal.Location = new System.Drawing.Point(10, 95);
         lblTeacherVal.Name = "lblTeacherVal";
-        lblTeacherVal.Size = new System.Drawing.Size(227, 21);
+        lblTeacherVal.Size = new System.Drawing.Size(219, 21);
         lblTeacherVal.TabIndex = 2;
-        lblTeacherVal.Text = "Giáo viên:   Nguyễn Hoàng Anh";
+        lblTeacherVal.Text = "Giáo viên: Nguyễn Hoàng Anh";
         // 
         // lblCourseVal
         // 
@@ -473,9 +474,9 @@ partial class StudentDetailDialog
         lblCourseVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblCourseVal.Location = new System.Drawing.Point(10, 50);
         lblCourseVal.Name = "lblCourseVal";
-        lblCourseVal.Size = new System.Drawing.Size(212, 21);
+        lblCourseVal.Size = new System.Drawing.Size(200, 21);
         lblCourseVal.TabIndex = 1;
-        lblCourseVal.Text = "Khóa học:    IELTS Foundation";
+        lblCourseVal.Text = "Khóa học: IELTS Foundation";
         // 
         // lblColClassTitle
         // 
@@ -516,9 +517,9 @@ partial class StudentDetailDialog
         lblAttAbsent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
         lblAttAbsent.Location = new System.Drawing.Point(10, 185);
         lblAttAbsent.Name = "lblAttAbsent";
-        lblAttAbsent.Size = new System.Drawing.Size(176, 21);
+        lblAttAbsent.Size = new System.Drawing.Size(131, 21);
         lblAttAbsent.TabIndex = 4;
-        lblAttAbsent.Text = "✕ Vắng:        1 (có phép)";
+        lblAttAbsent.Text = "Vắng: 1 (có phép)";
         // 
         // lblAttLate
         // 
@@ -527,9 +528,9 @@ partial class StudentDetailDialog
         lblAttLate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)202)), ((int)((byte)138)), ((int)((byte)4)));
         lblAttLate.Location = new System.Drawing.Point(10, 140);
         lblAttLate.Name = "lblAttLate";
-        lblAttLate.Size = new System.Drawing.Size(108, 21);
+        lblAttLate.Size = new System.Drawing.Size(86, 21);
         lblAttLate.TabIndex = 3;
-        lblAttLate.Text = "◔ Đi muộn:  1";
+        lblAttLate.Text = "Đi muộn: 1";
         // 
         // lblAttPresent
         // 
@@ -538,9 +539,9 @@ partial class StudentDetailDialog
         lblAttPresent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)101)), ((int)((byte)52)));
         lblAttPresent.Location = new System.Drawing.Point(10, 95);
         lblAttPresent.Name = "lblAttPresent";
-        lblAttPresent.Size = new System.Drawing.Size(104, 21);
+        lblAttPresent.Size = new System.Drawing.Size(76, 21);
         lblAttPresent.TabIndex = 2;
-        lblAttPresent.Text = "✓ Có mặt:    6";
+        lblAttPresent.Text = "Có mặt: 6";
         // 
         // lblAttCountVal
         // 
@@ -549,9 +550,9 @@ partial class StudentDetailDialog
         lblAttCountVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         lblAttCountVal.Location = new System.Drawing.Point(10, 50);
         lblAttCountVal.Name = "lblAttCountVal";
-        lblAttCountVal.Size = new System.Drawing.Size(196, 21);
+        lblAttCountVal.Size = new System.Drawing.Size(188, 21);
         lblAttCountVal.TabIndex = 1;
-        lblAttCountVal.Text = "Tiến độ học:   8 / 24 buổi";
+        lblAttCountVal.Text = "Tiến độ học: 8 / 24 buổi";
         // 
         // lblColAttTitle
         // 
@@ -623,9 +624,9 @@ partial class StudentDetailDialog
         lblGradeEntry.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblGradeEntry.Location = new System.Drawing.Point(10, 45);
         lblGradeEntry.Name = "lblGradeEntry";
-        lblGradeEntry.Size = new System.Drawing.Size(159, 21);
+        lblGradeEntry.Size = new System.Drawing.Size(127, 21);
         lblGradeEntry.TabIndex = 1;
-        lblGradeEntry.Text = "Đầu vào:         4.0 / 10";
+        lblGradeEntry.Text = "Đầu vào: 4.0 / 10";
         // 
         // lblColGradesTitle
         // 
@@ -662,26 +663,6 @@ partial class StudentDetailDialog
         cardLearningPath.Padding = new System.Windows.Forms.Padding(20);
         cardLearningPath.Size = new System.Drawing.Size(992, 531);
         cardLearningPath.TabIndex = 0;
-        // 
-        // pnlPathHeader
-        // 
-        pnlPathHeader.Controls.Add(lblPathTitle);
-        pnlPathHeader.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlPathHeader.Location = new System.Drawing.Point(20, 20);
-        pnlPathHeader.Name = "pnlPathHeader";
-        pnlPathHeader.Size = new System.Drawing.Size(952, 40);
-        pnlPathHeader.TabIndex = 0;
-        // 
-        // lblPathTitle
-        // 
-        lblPathTitle.AutoSize = true;
-        lblPathTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblPathTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblPathTitle.Location = new System.Drawing.Point(0, 5);
-        lblPathTitle.Name = "lblPathTitle";
-        lblPathTitle.Size = new System.Drawing.Size(317, 25);
-        lblPathTitle.TabIndex = 0;
-        lblPathTitle.Text = "Lịch sử đăng ký & Tiến trình học tập";
         // 
         // dgvLearningPath
         // 
@@ -736,6 +717,7 @@ partial class StudentDetailDialog
         dgvLearningPath.RowHeadersVisible = false;
         dgvLearningPath.RowHeadersWidth = 51;
         dgvLearningPath.RowTemplate.Height = 44;
+        dgvLearningPath.ScrollBars = System.Windows.Forms.ScrollBars.None;
         dgvLearningPath.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvLearningPath.Size = new System.Drawing.Size(952, 451);
         dgvLearningPath.TabIndex = 1;
@@ -796,6 +778,26 @@ partial class StudentDetailDialog
         colTuitionStatus.Name = "colTuitionStatus";
         colTuitionStatus.ReadOnly = true;
         // 
+        // pnlPathHeader
+        // 
+        pnlPathHeader.Controls.Add(lblPathTitle);
+        pnlPathHeader.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlPathHeader.Location = new System.Drawing.Point(20, 20);
+        pnlPathHeader.Name = "pnlPathHeader";
+        pnlPathHeader.Size = new System.Drawing.Size(952, 40);
+        pnlPathHeader.TabIndex = 0;
+        // 
+        // lblPathTitle
+        // 
+        lblPathTitle.AutoSize = true;
+        lblPathTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+        lblPathTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblPathTitle.Location = new System.Drawing.Point(0, 5);
+        lblPathTitle.Name = "lblPathTitle";
+        lblPathTitle.Size = new System.Drawing.Size(317, 25);
+        lblPathTitle.TabIndex = 0;
+        lblPathTitle.Text = "Lịch sử đăng ký & Tiến trình học tập";
+        // 
         // StudentDetailDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -835,8 +837,9 @@ partial class StudentDetailDialog
         pnlColGrades.PerformLayout();
         pnlLearningPath.ResumeLayout(false);
         cardLearningPath.ResumeLayout(false);
-        cardLearningPath.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLearningPath).EndInit();
+        pnlPathHeader.ResumeLayout(false);
+        pnlPathHeader.PerformLayout();
         ResumeLayout(false);
     }
 

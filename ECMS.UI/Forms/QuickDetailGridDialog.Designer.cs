@@ -21,26 +21,24 @@ partial class QuickDetailGridDialog
     /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         lblTitle = new System.Windows.Forms.Label();
-        lblSubtitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardGrid = new ECMS.UI.Controls.AppCard();
         dgvGrid = new ECMS.UI.Controls.AppDataGrid();
-        pnlFooter = new System.Windows.Forms.Panel();
-        btnClose = new ECMS.UI.Controls.AppButton();
-        lblCount = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
         cardGrid.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvGrid).BeginInit();
-        pnlFooter.SuspendLayout();
         SuspendLayout();
         // 
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -53,23 +51,12 @@ partial class QuickDetailGridDialog
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(22, 14);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(185, 25);
+        lblTitle.Size = new System.Drawing.Size(226, 31);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Tiêu đề xem chi tiết";
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(262, 15);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Dữ liệu dạng bảng tra cứu chi tiết toàn trung tâm";
         // 
         // pnlBody
         // 
@@ -78,85 +65,93 @@ partial class QuickDetailGridDialog
         pnlBody.Location = new System.Drawing.Point(0, 72);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(20, 16, 20, 12);
-        pnlBody.Size = new System.Drawing.Size(820, 418);
+        pnlBody.Size = new System.Drawing.Size(820, 474);
         pnlBody.TabIndex = 1;
         // 
         // cardGrid
         // 
         cardGrid.BackColor = System.Drawing.Color.White;
-        cardGrid.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardGrid.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardGrid.BorderWidth = 1;
         cardGrid.Controls.Add(dgvGrid);
+        cardGrid.CornerRadius = 6;
         cardGrid.Dock = System.Windows.Forms.DockStyle.Fill;
         cardGrid.Location = new System.Drawing.Point(20, 16);
         cardGrid.Name = "cardGrid";
         cardGrid.Padding = new System.Windows.Forms.Padding(12);
-        cardGrid.Size = new System.Drawing.Size(780, 390);
+        cardGrid.Size = new System.Drawing.Size(780, 446);
         cardGrid.TabIndex = 0;
         // 
         // dgvGrid
         // 
+        dgvGrid.AllowUserToAddRows = false;
+        dgvGrid.AllowUserToDeleteRows = false;
+        dgvGrid.AllowUserToResizeColumns = false;
+        dgvGrid.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvGrid.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvGrid.BackgroundColor = System.Drawing.Color.White;
+        dgvGrid.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvGrid.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvGrid.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvGrid.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvGrid.DefaultCellStyle = dataGridViewCellStyle3;
         dgvGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvGrid.EnableHeadersVisualStyles = false;
+        dgvGrid.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvGrid.Location = new System.Drawing.Point(12, 12);
+        dgvGrid.MultiSelect = false;
         dgvGrid.Name = "dgvGrid";
-        dgvGrid.Size = new System.Drawing.Size(756, 366);
+        dgvGrid.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvGrid.RowHeadersVisible = false;
+        dgvGrid.RowHeadersWidth = 51;
+        dgvGrid.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvGrid.Size = new System.Drawing.Size(756, 422);
         dgvGrid.TabIndex = 0;
-        // 
-        // pnlFooter
-        // 
-        pnlFooter.BackColor = System.Drawing.Color.White;
-        pnlFooter.Controls.Add(lblCount);
-        pnlFooter.Controls.Add(btnClose);
-        pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlFooter.Location = new System.Drawing.Point(0, 490);
-        pnlFooter.Name = "pnlFooter";
-        pnlFooter.Padding = new System.Windows.Forms.Padding(24, 10, 24, 10);
-        pnlFooter.Size = new System.Drawing.Size(820, 56);
-        pnlFooter.TabIndex = 2;
-        // 
-        // btnClose
-        // 
-        btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-        btnClose.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
-        btnClose.CornerRadius = 5;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatAppearance.BorderSize = 0;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnClose.ForeColor = System.Drawing.Color.White;
-        btnClose.Location = new System.Drawing.Point(702, 11);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(96, 34);
-        btnClose.TabIndex = 0;
-        btnClose.Text = "Đóng";
-        // 
-        // lblCount
-        // 
-        lblCount.AutoSize = true;
-        lblCount.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblCount.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblCount.Location = new System.Drawing.Point(24, 20);
-        lblCount.Name = "lblCount";
-        lblCount.Size = new System.Drawing.Size(99, 15);
-        lblCount.TabIndex = 1;
-        lblCount.Text = "Hiển thị: 0 bản ghi";
         // 
         // QuickDetailGridDialog
         // 
-        AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+        AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(820, 546);
         Controls.Add(pnlBody);
-        Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "QuickDetailGridDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Chi tiết dữ liệu";
@@ -165,8 +160,6 @@ partial class QuickDetailGridDialog
         pnlBody.ResumeLayout(false);
         cardGrid.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvGrid).EndInit();
-        pnlFooter.ResumeLayout(false);
-        pnlFooter.PerformLayout();
         ResumeLayout(false);
     }
 
@@ -174,11 +167,7 @@ partial class QuickDetailGridDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppCard cardGrid;
-    public ECMS.UI.Controls.AppDataGrid dgvGrid;
-    private System.Windows.Forms.Panel pnlFooter;
-    private ECMS.UI.Controls.AppButton btnClose;
-    private System.Windows.Forms.Label lblCount;
+    private ECMS.UI.Controls.AppDataGrid dgvGrid;
 }

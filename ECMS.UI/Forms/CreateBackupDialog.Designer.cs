@@ -177,9 +177,9 @@ partial class CreateBackupDialog
         lblSizeKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblSizeKey.Location = new System.Drawing.Point(24, 108);
         lblSizeKey.Name = "lblSizeKey";
-        lblSizeKey.Size = new System.Drawing.Size(141, 20);
+        lblSizeKey.Size = new System.Drawing.Size(88, 20);
         lblSizeKey.TabIndex = 6;
-        lblSizeKey.Text = "Dung lượng dự kiến";
+        lblSizeKey.Text = "Dung lượng";
         // 
         // lblScopeVal
         // 
@@ -207,7 +207,7 @@ partial class CreateBackupDialog
         // 
         lblTargetVal.AutoSize = true;
         lblTargetVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblTargetVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblTargetVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTargetVal.Location = new System.Drawing.Point(140, 48);
         lblTargetVal.Name = "lblTargetVal";
         lblTargetVal.Size = new System.Drawing.Size(312, 20);

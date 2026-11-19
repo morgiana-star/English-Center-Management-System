@@ -166,7 +166,7 @@ public partial class AccountManagementView : UserControl
         dgvAccounts.ClearSelection();
         dgvAccounts.CurrentCell = null;
 
-        lblAccountCountBadge.Text = $"(Hiển thị: {filtered.Count} / {_accounts.Count} tài khoản)";
+        // lblAccountCountBadge.Text = $"(Hiển thị: {filtered.Count} / {_accounts.Count} tài khoản)";
     }
 
     private void SetupPermissionsMatrix()

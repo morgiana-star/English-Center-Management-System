@@ -16,7 +16,6 @@ public partial class RestoreDatabaseDialog : Form
         var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmm");
         lblPreBackupVal.Text = $@"D:\ECMS_Backup\ecms_before_restore_{timestamp}.db (tự động)";
 
-        btnCloseTop.Click += (s, e) => Close();
         btnCancel.Click += (s, e) => Close();
 
         btnConfirmRestore.Click += (s, e) =>

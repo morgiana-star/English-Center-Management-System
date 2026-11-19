@@ -35,7 +35,6 @@ partial class CertificatePrintPreviewDialog
         lblDirectorName = new System.Windows.Forms.Label();
         lblDirectorTitle = new System.Windows.Forms.Label();
         lblIssueLocationDate = new System.Windows.Forms.Label();
-        lblCertDesignNote = new System.Windows.Forms.Label();
         lblCertSerialBottom = new System.Windows.Forms.Label();
         lblResultLine = new System.Windows.Forms.Label();
         lblDurationLine = new System.Windows.Forms.Label();
@@ -214,7 +213,6 @@ partial class CertificatePrintPreviewDialog
         pnlInnerFrame.Controls.Add(lblDirectorName);
         pnlInnerFrame.Controls.Add(lblDirectorTitle);
         pnlInnerFrame.Controls.Add(lblIssueLocationDate);
-        pnlInnerFrame.Controls.Add(lblCertDesignNote);
         pnlInnerFrame.Controls.Add(lblCertSerialBottom);
         pnlInnerFrame.Controls.Add(lblResultLine);
         pnlInnerFrame.Controls.Add(lblDurationLine);
@@ -236,9 +234,9 @@ partial class CertificatePrintPreviewDialog
         lblDirectorName.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblDirectorName.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblDirectorName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblDirectorName.Location = new System.Drawing.Point(680, 425);
+        lblDirectorName.Location = new System.Drawing.Point(680, 403);
         lblDirectorName.Name = "lblDirectorName";
-        lblDirectorName.Size = new System.Drawing.Size(260, 20);
+        lblDirectorName.Size = new System.Drawing.Size(260, 30);
         lblDirectorName.TabIndex = 12;
         lblDirectorName.Text = "Nguyễn Thành Long";
         lblDirectorName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -248,7 +246,7 @@ partial class CertificatePrintPreviewDialog
         lblDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblDirectorTitle.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         lblDirectorTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblDirectorTitle.Location = new System.Drawing.Point(680, 355);
+        lblDirectorTitle.Location = new System.Drawing.Point(680, 359);
         lblDirectorTitle.Name = "lblDirectorTitle";
         lblDirectorTitle.Size = new System.Drawing.Size(260, 20);
         lblDirectorTitle.TabIndex = 11;
@@ -260,27 +258,17 @@ partial class CertificatePrintPreviewDialog
         lblIssueLocationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblIssueLocationDate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
         lblIssueLocationDate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblIssueLocationDate.Location = new System.Drawing.Point(680, 330);
+        lblIssueLocationDate.Location = new System.Drawing.Point(641, 335);
         lblIssueLocationDate.Name = "lblIssueLocationDate";
-        lblIssueLocationDate.Size = new System.Drawing.Size(260, 20);
+        lblIssueLocationDate.Size = new System.Drawing.Size(315, 20);
         lblIssueLocationDate.TabIndex = 10;
         lblIssueLocationDate.Text = "TP. Hồ Chí Minh, ngày 30 tháng 10 năm 2026";
         lblIssueLocationDate.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
-        // lblCertDesignNote
-        // 
-        lblCertDesignNote.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Italic);
-        lblCertDesignNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblCertDesignNote.Location = new System.Drawing.Point(40, 385);
-        lblCertDesignNote.Name = "lblCertDesignNote";
-        lblCertDesignNote.Size = new System.Drawing.Size(260, 20);
-        lblCertDesignNote.TabIndex = 9;
-        lblCertDesignNote.Text = "Dữ liệu thiết kế minh họa";
-        // 
         // lblCertSerialBottom
         // 
         lblCertSerialBottom.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold);
-        lblCertSerialBottom.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblCertSerialBottom.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblCertSerialBottom.Location = new System.Drawing.Point(40, 360);
         lblCertSerialBottom.Name = "lblCertSerialBottom";
         lblCertSerialBottom.Size = new System.Drawing.Size(260, 20);
@@ -352,9 +340,9 @@ partial class CertificatePrintPreviewDialog
         lblCertDocSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         lblCertDocSubtitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Italic);
         lblCertDocSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblCertDocSubtitle.Location = new System.Drawing.Point(24, 90);
+        lblCertDocSubtitle.Location = new System.Drawing.Point(24, 86);
         lblCertDocSubtitle.Name = "lblCertDocSubtitle";
-        lblCertDocSubtitle.Size = new System.Drawing.Size(932, 20);
+        lblCertDocSubtitle.Size = new System.Drawing.Size(932, 34);
         lblCertDocSubtitle.TabIndex = 2;
         lblCertDocSubtitle.Text = "Chứng nhận học viên";
         lblCertDocSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -380,7 +368,7 @@ partial class CertificatePrintPreviewDialog
         lblCenterName.Name = "lblCenterName";
         lblCenterName.Size = new System.Drawing.Size(932, 22);
         lblCenterName.TabIndex = 0;
-        lblCenterName.Text = "TRUNG TÂM ANH NGỮ MINH TRÍ";
+        lblCenterName.Text = "TRUNG TÂM ANH NGỮ\r\n\r\n";
         lblCenterName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // CertificatePrintPreviewDialog
@@ -433,7 +421,6 @@ partial class CertificatePrintPreviewDialog
     private System.Windows.Forms.Label lblDurationLine;
     private System.Windows.Forms.Label lblResultLine;
     private System.Windows.Forms.Label lblCertSerialBottom;
-    private System.Windows.Forms.Label lblCertDesignNote;
     private System.Windows.Forms.Label lblIssueLocationDate;
     private System.Windows.Forms.Label lblDirectorTitle;
     private System.Windows.Forms.Label lblDirectorName;

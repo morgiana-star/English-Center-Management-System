@@ -50,7 +50,6 @@ public partial class AddStudentDialog : Form
             txtParentName.Text = "Nguyễn Thu Hương";
             txtParentPhone.Text = "0911 556 889";
             txtNotes.Text = "Mục tiêu: Đạt IELTS 6.5 trong 6 tháng. Ưu tiên lớp tối T3/T6.";
-            bannerCheckPhone.Message = "Hồ sơ hợp lệ và đang được mở chỉnh sửa trực tiếp.";
         }
     }
 

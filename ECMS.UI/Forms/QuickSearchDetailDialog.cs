@@ -14,18 +14,13 @@ public partial class QuickSearchDetailDialog : Form
     public QuickSearchDetailDialog()
     {
         InitializeComponent();
-        btnClose.Click += (s, e) => Close();
     }
 
     public static void ShowStudent(IWin32Window? owner, string name, string code, string phone, string email, string className, string attendance, string debt)
     {
         using var dlg = new QuickSearchDetailDialog();
         dlg.lblTitle.Text = $"{name} · {code}";
-        dlg.lblSubtitle.Text = "Hồ sơ học viên (Giới hạn truy xuất thông tin)";
-        dlg.lblEntityBadge.Text = "HỌC VIÊN";
-        dlg.lblEntityBadge.BackColor = Color.FromArgb(239, 246, 255);
-        dlg.lblEntityBadge.ForeColor = Color.FromArgb(37, 99, 235);
-
+     
         dlg.SetupPropsGrid();
         dlg.dgvProps.Rows.Add("Mã học viên", code);
         dlg.dgvProps.Rows.Add("Họ và tên", name);
@@ -44,11 +39,7 @@ public partial class QuickSearchDetailDialog : Form
     {
         using var dlg = new QuickSearchDetailDialog();
         dlg.lblTitle.Text = $"{classCode} · {className}";
-        dlg.lblSubtitle.Text = "Thông tin lớp học (Giới hạn truy xuất thông tin)";
-        dlg.lblEntityBadge.Text = "LỚP HỌC";
-        dlg.lblEntityBadge.BackColor = Color.FromArgb(240, 253, 244);
-        dlg.lblEntityBadge.ForeColor = Color.FromArgb(22, 163, 74);
-
+     
         dlg.SetupPropsGrid();
         dlg.dgvProps.Rows.Add("Mã lớp", classCode);
         dlg.dgvProps.Rows.Add("Tên lớp học", className);
@@ -67,10 +58,7 @@ public partial class QuickSearchDetailDialog : Form
     {
         using var dlg = new QuickSearchDetailDialog();
         dlg.lblTitle.Text = $"{courseCode} · {courseName}";
-        dlg.lblSubtitle.Text = "Thông tin chương trình đào tạo (Giới hạn truy xuất thông tin)";
-        dlg.lblEntityBadge.Text = "KHÓA HỌC";
-        dlg.lblEntityBadge.BackColor = Color.FromArgb(254, 243, 199);
-        dlg.lblEntityBadge.ForeColor = Color.FromArgb(217, 119, 6);
+   
 
         dlg.SetupPropsGrid();
         dlg.dgvProps.Rows.Add("Mã khóa học", courseCode);

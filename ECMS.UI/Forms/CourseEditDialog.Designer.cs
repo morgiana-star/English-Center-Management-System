@@ -127,7 +127,7 @@ partial class CourseEditDialog
         cardRules.Location = new System.Drawing.Point(860, 24);
         cardRules.Name = "cardRules";
         cardRules.Padding = new System.Windows.Forms.Padding(20);
-        cardRules.Size = new System.Drawing.Size(336, 440);
+        cardRules.Size = new System.Drawing.Size(336, 620);
         cardRules.TabIndex = 1;
         // 
         // lblAttendanceVal

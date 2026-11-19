@@ -21,7 +21,6 @@ public partial class EditAccountDialog : Form
     public string FullName => txtFullName.Text.Trim();
     public string Role => cboRole.SelectedItem?.ToString() ?? "Học viên";
     public string Profile => cboProfile.SelectedItem?.ToString() ?? "Không liên kết";
-    public bool IsActive => chkActive.Checked;
     public bool RequirePassChange => chkRequirePassChange.Checked;
 
     public int SelectedRoleId
@@ -87,20 +86,17 @@ public partial class EditAccountDialog : Form
         var roleIdx = cboRole.FindStringExact(role);
         cboRole.SelectedIndex = roleIdx >= 0 ? roleIdx : 0;
 
-        chkActive.Checked = isActive;
         chkRequirePassChange.Checked = isCreateMode;
 
         if (isCreateMode)
         {
             lblTitle.Text = "Thêm tài khoản mới";
-            lblSubtitle.Text = "Tạo tài khoản người dùng và thiết lập phân quyền ban đầu";
             btnSave.Text = "Tạo tài khoản";
             txtUsername.ReadOnly = false;
         }
         else
         {
             lblTitle.Text = "Chỉnh sửa tài khoản";
-            lblSubtitle.Text = "Cập nhật thông tin vai trò và phân quyền";
             btnSave.Text = "Lưu thay đổi";
             txtUsername.ReadOnly = true;
         }
@@ -156,7 +152,6 @@ public partial class EditAccountDialog : Form
                     Email = $"{Username}@ecms.edu.vn",
                     Phone = "0901 000 000",
                     Password = "User@2026",
-                    IsActive = IsActive
                 };
 
                 var res = await _userService.CreateUserAsync(createDto);
@@ -175,7 +170,6 @@ public partial class EditAccountDialog : Form
                     UserId = UserId,
                     FullName = FullName,
                     RoleId = SelectedRoleId,
-                    IsActive = IsActive
                 };
 
                 var res = await _userService.UpdateUserAsync(updateDto);

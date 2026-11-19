@@ -85,8 +85,6 @@ public partial class CollectTuitionDialog : Form
 
     private void SetupForm()
     {
-        lblCollector.Text = $"Người lập: {AppSession.FullName} ({AppSession.RoleName})";
-        dtpPaymentDate.Value = DateTime.Today;
 
         cboPaymentType.Items.Clear();
         cboPaymentType.Items.AddRange(new object[]

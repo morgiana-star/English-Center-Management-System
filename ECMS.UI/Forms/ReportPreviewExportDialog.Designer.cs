@@ -72,7 +72,7 @@ partial class ReportPreviewExportDialog
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 12);
-        pnlHeader.Size = new System.Drawing.Size(1200, 78);
+        pnlHeader.Size = new System.Drawing.Size(1200, 72);
         pnlHeader.TabIndex = 0;
         // 
         // pnlTopActions
@@ -121,7 +121,7 @@ partial class ReportPreviewExportDialog
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(24, 28);
+        lblTitle.Location = new System.Drawing.Point(23, 20);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(346, 35);
         lblTitle.TabIndex = 1;
@@ -135,12 +135,12 @@ partial class ReportPreviewExportDialog
         pnlBody.Controls.Add(cardReportDocument, 0, 0);
         pnlBody.Controls.Add(cardExportSettings, 1, 0);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 78);
+        pnlBody.Location = new System.Drawing.Point(0, 72);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
         pnlBody.RowCount = 1;
         pnlBody.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlBody.Size = new System.Drawing.Size(1200, 662);
+        pnlBody.Size = new System.Drawing.Size(1200, 668);
         pnlBody.TabIndex = 1;
         // 
         // cardReportDocument
@@ -161,7 +161,7 @@ partial class ReportPreviewExportDialog
         cardReportDocument.Location = new System.Drawing.Point(23, 15);
         cardReportDocument.Name = "cardReportDocument";
         cardReportDocument.Padding = new System.Windows.Forms.Padding(24);
-        cardReportDocument.Size = new System.Drawing.Size(713, 628);
+        cardReportDocument.Size = new System.Drawing.Size(713, 634);
         cardReportDocument.TabIndex = 0;
         // 
         // lblMetaIncludes
@@ -169,7 +169,7 @@ partial class ReportPreviewExportDialog
         lblMetaIncludes.AutoSize = true;
         lblMetaIncludes.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblMetaIncludes.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblMetaIncludes.Location = new System.Drawing.Point(24, 385);
+        lblMetaIncludes.Location = new System.Drawing.Point(24, 585);
         lblMetaIncludes.Name = "lblMetaIncludes";
         lblMetaIncludes.Size = new System.Drawing.Size(366, 20);
         lblMetaIncludes.TabIndex = 7;
@@ -180,7 +180,7 @@ partial class ReportPreviewExportDialog
         lblMetaAuthor.AutoSize = true;
         lblMetaAuthor.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblMetaAuthor.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblMetaAuthor.Location = new System.Drawing.Point(24, 355);
+        lblMetaAuthor.Location = new System.Drawing.Point(24, 555);
         lblMetaAuthor.Name = "lblMetaAuthor";
         lblMetaAuthor.Size = new System.Drawing.Size(195, 20);
         lblMetaAuthor.TabIndex = 6;
@@ -191,7 +191,7 @@ partial class ReportPreviewExportDialog
         lblMetaTime.AutoSize = true;
         lblMetaTime.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblMetaTime.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblMetaTime.Location = new System.Drawing.Point(24, 330);
+        lblMetaTime.Location = new System.Drawing.Point(24, 530);
         lblMetaTime.Name = "lblMetaTime";
         lblMetaTime.Size = new System.Drawing.Size(281, 20);
         lblMetaTime.TabIndex = 5;
@@ -202,7 +202,7 @@ partial class ReportPreviewExportDialog
         lblMetaSource.AutoSize = true;
         lblMetaSource.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblMetaSource.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblMetaSource.Location = new System.Drawing.Point(24, 305);
+        lblMetaSource.Location = new System.Drawing.Point(24, 505);
         lblMetaSource.Name = "lblMetaSource";
         lblMetaSource.Size = new System.Drawing.Size(276, 20);
         lblMetaSource.TabIndex = 4;
@@ -254,7 +254,7 @@ partial class ReportPreviewExportDialog
         gridReportData.RowHeadersWidth = 51;
         gridReportData.ScrollBars = System.Windows.Forms.ScrollBars.None;
         gridReportData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridReportData.Size = new System.Drawing.Size(665, 170);
+        gridReportData.Size = new System.Drawing.Size(665, 387);
         gridReportData.TabIndex = 3;
         // 
         // colCourseGroup
@@ -314,7 +314,7 @@ partial class ReportPreviewExportDialog
         lblOrgName.Name = "lblOrgName";
         lblOrgName.Size = new System.Drawing.Size(665, 20);
         lblOrgName.TabIndex = 0;
-        lblOrgName.Text = "TRUNG TÂM ANH NGỮ MINH TRÍ";
+        lblOrgName.Text = "TRUNG TÂM ANH NGỮ";
         lblOrgName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // cardExportSettings
@@ -335,7 +335,7 @@ partial class ReportPreviewExportDialog
         cardExportSettings.Location = new System.Drawing.Point(742, 15);
         cardExportSettings.Name = "cardExportSettings";
         cardExportSettings.Padding = new System.Windows.Forms.Padding(20);
-        cardExportSettings.Size = new System.Drawing.Size(435, 628);
+        cardExportSettings.Size = new System.Drawing.Size(435, 634);
         cardExportSettings.TabIndex = 1;
         // 
         // pnlExportActions
@@ -343,7 +343,7 @@ partial class ReportPreviewExportDialog
         pnlExportActions.Controls.Add(btnConfirmSave);
         pnlExportActions.Controls.Add(btnCancel);
         pnlExportActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlExportActions.Location = new System.Drawing.Point(20, 345);
+        pnlExportActions.Location = new System.Drawing.Point(20, 557);
         pnlExportActions.Name = "pnlExportActions";
         pnlExportActions.Size = new System.Drawing.Size(390, 48);
         pnlExportActions.TabIndex = 8;

@@ -15,10 +15,13 @@ partial class EditRoomDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
         btnSave = new ECMS.UI.Controls.AppButton();
@@ -44,7 +47,6 @@ partial class EditRoomDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -53,25 +55,14 @@ partial class EditRoomDialog
         pnlHeader.Size = new System.Drawing.Size(560, 72);
         pnlHeader.TabIndex = 0;
         // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(262, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Cấu hình thông tin và sức chứa phòng";
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(22, 12);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(232, 31);
+        lblTitle.Size = new System.Drawing.Size(243, 31);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Thêm phòng học mới";
         // 
@@ -89,7 +80,7 @@ partial class EditRoomDialog
         // 
         // btnSave
         // 
-        btnSave.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnSave.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnSave.CornerRadius = 5;
         btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -105,7 +96,7 @@ partial class EditRoomDialog
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -121,7 +112,7 @@ partial class EditRoomDialog
         // 
         // pnlBody
         // 
-        pnlBody.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         pnlBody.Controls.Add(cardForm);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlBody.Location = new System.Drawing.Point(0, 72);
@@ -133,7 +124,7 @@ partial class EditRoomDialog
         // cardForm
         // 
         cardForm.BackColor = System.Drawing.Color.White;
-        cardForm.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardForm.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardForm.BorderWidth = 1;
         cardForm.Controls.Add(cboStatus);
         cardForm.Controls.Add(lblStatus);
@@ -157,20 +148,26 @@ partial class EditRoomDialog
         // 
         cboStatus.BackColor = System.Drawing.Color.Transparent;
         cboStatus.CornerRadius = 5;
+        cboStatus.DataSource = null;
+        cboStatus.DisplayMember = "";
         cboStatus.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboStatus.Location = new System.Drawing.Point(20, 246);
         cboStatus.Name = "cboStatus";
+        cboStatus.SelectedIndex = -1;
+        cboStatus.SelectedItem = null;
+        cboStatus.SelectedValue = null;
         cboStatus.Size = new System.Drawing.Size(472, 36);
         cboStatus.TabIndex = 4;
+        cboStatus.ValueMember = "";
         // 
         // lblStatus
         // 
         lblStatus.AutoSize = true;
         lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblStatus.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblStatus.Location = new System.Drawing.Point(20, 224);
         lblStatus.Name = "lblStatus";
-        lblStatus.Size = new System.Drawing.Size(95, 20);
+        lblStatus.Size = new System.Drawing.Size(91, 20);
         lblStatus.TabIndex = 8;
         lblStatus.Text = "Trạng thái *";
         // 
@@ -193,10 +190,10 @@ partial class EditRoomDialog
         // 
         lblNotes.AutoSize = true;
         lblNotes.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblNotes.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblNotes.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblNotes.Location = new System.Drawing.Point(20, 290);
         lblNotes.Name = "lblNotes";
-        lblNotes.Size = new System.Drawing.Size(139, 20);
+        lblNotes.Size = new System.Drawing.Size(127, 20);
         lblNotes.TabIndex = 6;
         lblNotes.Text = "Ghi chú & Thiết bị:";
         // 
@@ -219,10 +216,10 @@ partial class EditRoomDialog
         // 
         lblCapacity.AutoSize = true;
         lblCapacity.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblCapacity.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblCapacity.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblCapacity.Location = new System.Drawing.Point(20, 158);
         lblCapacity.Name = "lblCapacity";
-        lblCapacity.Size = new System.Drawing.Size(138, 20);
+        lblCapacity.Size = new System.Drawing.Size(159, 20);
         lblCapacity.TabIndex = 4;
         lblCapacity.Text = "Sức chứa (chỗ ngồi) *";
         // 
@@ -245,10 +242,10 @@ partial class EditRoomDialog
         // 
         lblRoomName.AutoSize = true;
         lblRoomName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblRoomName.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRoomName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRoomName.Location = new System.Drawing.Point(20, 92);
         lblRoomName.Name = "lblRoomName";
-        lblRoomName.Size = new System.Drawing.Size(95, 20);
+        lblRoomName.Size = new System.Drawing.Size(94, 20);
         lblRoomName.TabIndex = 2;
         lblRoomName.Text = "Tên phòng *";
         // 
@@ -271,10 +268,10 @@ partial class EditRoomDialog
         // 
         lblRoomCode.AutoSize = true;
         lblRoomCode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblRoomCode.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRoomCode.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRoomCode.Location = new System.Drawing.Point(20, 26);
         lblRoomCode.Name = "lblRoomCode";
-        lblRoomCode.Size = new System.Drawing.Size(92, 20);
+        lblRoomCode.Size = new System.Drawing.Size(91, 20);
         lblRoomCode.TabIndex = 0;
         lblRoomCode.Text = "Mã phòng *";
         // 
@@ -282,7 +279,7 @@ partial class EditRoomDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(560, 540);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
@@ -290,7 +287,6 @@ partial class EditRoomDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "EditRoomDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Quản lý phòng học · ECMS";
         pnlHeader.ResumeLayout(false);
@@ -306,7 +302,6 @@ partial class EditRoomDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlFooter;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnSave;

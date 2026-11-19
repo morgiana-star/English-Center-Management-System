@@ -84,7 +84,7 @@ partial class ReceiptPrintPreviewDialog
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 12);
-        pnlHeader.Size = new System.Drawing.Size(1200, 78);
+        pnlHeader.Size = new System.Drawing.Size(1200, 72);
         pnlHeader.TabIndex = 0;
         // 
         // pnlTopActions
@@ -133,7 +133,7 @@ partial class ReceiptPrintPreviewDialog
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(24, 28);
+        lblTitle.Location = new System.Drawing.Point(17, 20);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(409, 35);
         lblTitle.TabIndex = 1;
@@ -147,12 +147,12 @@ partial class ReceiptPrintPreviewDialog
         pnlBody.Controls.Add(pnlReceiptWrapper, 0, 0);
         pnlBody.Controls.Add(cardPrintSettings, 1, 0);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 78);
+        pnlBody.Location = new System.Drawing.Point(0, 72);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
         pnlBody.RowCount = 1;
         pnlBody.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-        pnlBody.Size = new System.Drawing.Size(1200, 662);
+        pnlBody.Size = new System.Drawing.Size(1200, 668);
         pnlBody.TabIndex = 1;
         // 
         // pnlReceiptWrapper
@@ -164,7 +164,7 @@ partial class ReceiptPrintPreviewDialog
         pnlReceiptWrapper.Location = new System.Drawing.Point(23, 15);
         pnlReceiptWrapper.Name = "pnlReceiptWrapper";
         pnlReceiptWrapper.Padding = new System.Windows.Forms.Padding(24);
-        pnlReceiptWrapper.Size = new System.Drawing.Size(736, 628);
+        pnlReceiptWrapper.Size = new System.Drawing.Size(736, 634);
         pnlReceiptWrapper.TabIndex = 0;
         // 
         // pnlA5Sheet
@@ -485,7 +485,7 @@ partial class ReceiptPrintPreviewDialog
         cardPrintSettings.Location = new System.Drawing.Point(765, 15);
         cardPrintSettings.Name = "cardPrintSettings";
         cardPrintSettings.Padding = new System.Windows.Forms.Padding(20);
-        cardPrintSettings.Size = new System.Drawing.Size(412, 628);
+        cardPrintSettings.Size = new System.Drawing.Size(412, 634);
         cardPrintSettings.TabIndex = 1;
         // 
         // lblSettingsCardTitle

@@ -20,7 +20,6 @@ partial class ApproveCertificateDialog
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardCertificateDetails = new ECMS.UI.Controls.AppCard();
@@ -72,25 +71,13 @@ partial class ApproveCertificateDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 10);
-        pnlHeader.Size = new System.Drawing.Size(850, 93);
+        pnlHeader.Size = new System.Drawing.Size(850, 67);
         pnlHeader.TabIndex = 0;
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblSubtitle.Location = new System.Drawing.Point(26, 44);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(484, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Khóa học: IELTS Foundation · Lớp: IELTS-F02 (Đã hoàn thành 24/24 buổi)";
         // 
         // lblTitle
         // 
@@ -109,10 +96,10 @@ partial class ApproveCertificateDialog
         pnlBody.Controls.Add(cardCertificateDetails);
         pnlBody.Controls.Add(cardStudentProfile);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 93);
+        pnlBody.Location = new System.Drawing.Point(0, 67);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(24, 12, 24, 8);
-        pnlBody.Size = new System.Drawing.Size(850, 433);
+        pnlBody.Size = new System.Drawing.Size(850, 459);
         pnlBody.TabIndex = 1;
         // 
         // cardCertificateDetails
@@ -213,7 +200,7 @@ partial class ApproveCertificateDialog
         // 
         lblCertSerialVal.AutoSize = true;
         lblCertSerialVal.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Bold);
-        lblCertSerialVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblCertSerialVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblCertSerialVal.Location = new System.Drawing.Point(135, 40);
         lblCertSerialVal.Name = "lblCertSerialVal";
         lblCertSerialVal.Size = new System.Drawing.Size(142, 23);
@@ -297,7 +284,7 @@ partial class ApproveCertificateDialog
         // 
         lblM1Val.AutoSize = true;
         lblM1Val.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblM1Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblM1Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblM1Val.Location = new System.Drawing.Point(6, 28);
         lblM1Val.Name = "lblM1Val";
         lblM1Val.Size = new System.Drawing.Size(86, 28);
@@ -367,12 +354,12 @@ partial class ApproveCertificateDialog
         // 
         lblM3Val.AutoSize = true;
         lblM3Val.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblM3Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
+        lblM3Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblM3Val.Location = new System.Drawing.Point(6, 29);
         lblM3Val.Name = "lblM3Val";
-        lblM3Val.Size = new System.Drawing.Size(154, 25);
+        lblM3Val.Size = new System.Drawing.Size(137, 25);
         lblM3Val.TabIndex = 1;
-        lblM3Val.Text = "22/24 b (91,7%)";
+        lblM3Val.Text = "22/24 (91,7%)";
         // 
         // lblM3Title
         // 
@@ -402,12 +389,12 @@ partial class ApproveCertificateDialog
         // 
         lblM4Val.AutoSize = true;
         lblM4Val.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblM4Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
+        lblM4Val.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblM4Val.Location = new System.Drawing.Point(6, 29);
         lblM4Val.Name = "lblM4Val";
-        lblM4Val.Size = new System.Drawing.Size(158, 25);
+        lblM4Val.Size = new System.Drawing.Size(115, 25);
         lblM4Val.TabIndex = 1;
-        lblM4Val.Text = "0 đ · Đã hoàn tất";
+        lblM4Val.Text = "Đã hoàn tất";
         // 
         // lblM4Title
         // 
@@ -464,7 +451,7 @@ partial class ApproveCertificateDialog
         // 
         lblStudentNameVal.AutoSize = true;
         lblStudentNameVal.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblStudentNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblStudentNameVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblStudentNameVal.Location = new System.Drawing.Point(83, 36);
         lblStudentNameVal.Name = "lblStudentNameVal";
         lblStudentNameVal.Size = new System.Drawing.Size(143, 25);
@@ -501,7 +488,7 @@ partial class ApproveCertificateDialog
         pnlActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
         pnlActions.Location = new System.Drawing.Point(0, 526);
         pnlActions.Name = "pnlActions";
-        pnlActions.Padding = new System.Windows.Forms.Padding(24, 8, 24, 8);
+        pnlActions.Padding = new System.Windows.Forms.Padding(24, 8, 0, 8);
         pnlActions.Size = new System.Drawing.Size(850, 54);
         pnlActions.TabIndex = 3;
         // 
@@ -512,7 +499,7 @@ partial class ApproveCertificateDialog
         btnConfirmIssue.Cursor = System.Windows.Forms.Cursors.Hand;
         btnConfirmIssue.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnConfirmIssue.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnConfirmIssue.Location = new System.Drawing.Point(619, 11);
+        btnConfirmIssue.Location = new System.Drawing.Point(643, 11);
         btnConfirmIssue.Name = "btnConfirmIssue";
         btnConfirmIssue.Size = new System.Drawing.Size(180, 36);
         btnConfirmIssue.TabIndex = 0;
@@ -527,7 +514,7 @@ partial class ApproveCertificateDialog
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnCancel.Location = new System.Drawing.Point(513, 11);
+        btnCancel.Location = new System.Drawing.Point(537, 11);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(100, 36);
         btnCancel.TabIndex = 1;
@@ -572,7 +559,6 @@ partial class ApproveCertificateDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlBody;
 
     private ECMS.UI.Controls.AppCard cardStudentProfile;

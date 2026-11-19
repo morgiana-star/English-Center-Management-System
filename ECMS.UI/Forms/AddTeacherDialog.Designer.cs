@@ -15,6 +15,10 @@ partial class AddTeacherDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
@@ -23,24 +27,6 @@ partial class AddTeacherDialog
         cardTeacherInfo = new ECMS.UI.Controls.AppCard();
         btnSave = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
-        pnlScheduleBox = new System.Windows.Forms.Panel();
-        chkSun = new System.Windows.Forms.CheckBox();
-        chkSat = new System.Windows.Forms.CheckBox();
-        chkFri = new System.Windows.Forms.CheckBox();
-        chkThu = new System.Windows.Forms.CheckBox();
-        chkWed = new System.Windows.Forms.CheckBox();
-        chkTue = new System.Windows.Forms.CheckBox();
-        chkMon = new System.Windows.Forms.CheckBox();
-        lblDaysTitle = new System.Windows.Forms.Label();
-        chkEvening = new System.Windows.Forms.CheckBox();
-        chkAfternoon = new System.Windows.Forms.CheckBox();
-        chkMorning = new System.Windows.Forms.CheckBox();
-        lblPreferredSlotTitle = new System.Windows.Forms.Label();
-        lblMaxHoursNote = new System.Windows.Forms.Label();
-        lblHourUnit = new System.Windows.Forms.Label();
-        txtMaxHours = new ECMS.UI.Controls.AppTextBox();
-        lblMaxHoursTitle = new System.Windows.Forms.Label();
-        lblScheduleBoxTitle = new System.Windows.Forms.Label();
         txtBio = new ECMS.UI.Controls.AppTextBox();
         lblBio = new System.Windows.Forms.Label();
         cboStatus = new ECMS.UI.Controls.AppComboBox();
@@ -58,6 +44,24 @@ partial class AddTeacherDialog
         txtTeacherCode = new ECMS.UI.Controls.AppTextBox();
         lblTeacherCode = new System.Windows.Forms.Label();
         lblTeacherInfoTitle = new System.Windows.Forms.Label();
+        lblScheduleBoxTitle = new System.Windows.Forms.Label();
+        lblMaxHoursTitle = new System.Windows.Forms.Label();
+        txtMaxHours = new ECMS.UI.Controls.AppTextBox();
+        lblHourUnit = new System.Windows.Forms.Label();
+        lblMaxHoursNote = new System.Windows.Forms.Label();
+        lblPreferredSlotTitle = new System.Windows.Forms.Label();
+        chkMorning = new System.Windows.Forms.CheckBox();
+        chkAfternoon = new System.Windows.Forms.CheckBox();
+        chkEvening = new System.Windows.Forms.CheckBox();
+        lblDaysTitle = new System.Windows.Forms.Label();
+        chkMon = new System.Windows.Forms.CheckBox();
+        chkTue = new System.Windows.Forms.CheckBox();
+        chkWed = new System.Windows.Forms.CheckBox();
+        chkThu = new System.Windows.Forms.CheckBox();
+        chkFri = new System.Windows.Forms.CheckBox();
+        chkSat = new System.Windows.Forms.CheckBox();
+        chkSun = new System.Windows.Forms.CheckBox();
+        pnlScheduleBox = new System.Windows.Forms.Panel();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
         cardTeacherInfo.SuspendLayout();
@@ -79,17 +83,17 @@ partial class AddTeacherDialog
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTitle.Location = new System.Drawing.Point(24, 18);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(236, 32);
+        lblTitle.Size = new System.Drawing.Size(240, 32);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Thêm giáo viên mới";
         // 
         // pnlContent
         // 
         pnlContent.AutoScroll = true;
-        pnlContent.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlContent.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         pnlContent.Controls.Add(cardTeacherInfo);
         pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlContent.Location = new System.Drawing.Point(0, 68);
@@ -100,9 +104,9 @@ partial class AddTeacherDialog
         // 
         // cardTeacherInfo
         // 
-        cardTeacherInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        cardTeacherInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardTeacherInfo.BackColor = System.Drawing.Color.White;
-        cardTeacherInfo.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardTeacherInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardTeacherInfo.BorderWidth = 1;
         cardTeacherInfo.Controls.Add(btnSave);
         cardTeacherInfo.Controls.Add(btnCancel);
@@ -131,233 +135,299 @@ partial class AddTeacherDialog
         cardTeacherInfo.Size = new System.Drawing.Size(812, 730);
         cardTeacherInfo.TabIndex = 0;
         // 
-        // lblTeacherInfoTitle
+        // btnSave
         // 
-        lblTeacherInfoTitle.AutoSize = true;
-        lblTeacherInfoTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-        lblTeacherInfoTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        lblTeacherInfoTitle.Location = new System.Drawing.Point(16, 16);
-        lblTeacherInfoTitle.Name = "lblTeacherInfoTitle";
-        lblTeacherInfoTitle.Size = new System.Drawing.Size(185, 25);
-        lblTeacherInfoTitle.TabIndex = 0;
-        lblTeacherInfoTitle.Text = "Thông tin giáo viên";
+        btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnSave.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        btnSave.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnSave.CornerRadius = 6;
+        btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnSave.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnSave.ForeColor = System.Drawing.Color.White;
+        btnSave.Location = new System.Drawing.Point(650, 665);
+        btnSave.Name = "btnSave";
+        btnSave.Size = new System.Drawing.Size(140, 42);
+        btnSave.TabIndex = 19;
+        btnSave.Text = "Lưu giáo viên";
+        btnSave.UseVisualStyleBackColor = false;
+        btnSave.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
-        // lblTeacherCode
+        // btnCancel
         // 
-        lblTeacherCode.AutoSize = true;
-        lblTeacherCode.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblTeacherCode.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblTeacherCode.Location = new System.Drawing.Point(16, 50);
-        lblTeacherCode.Name = "lblTeacherCode";
-        lblTeacherCode.Size = new System.Drawing.Size(107, 20);
-        lblTeacherCode.TabIndex = 1;
-        lblTeacherCode.Text = "Mã giáo viên *";
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnCancel.BackColor = System.Drawing.Color.White;
+        btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnCancel.CornerRadius = 6;
+        btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnCancel.Location = new System.Drawing.Point(525, 665);
+        btnCancel.Name = "btnCancel";
+        btnCancel.Size = new System.Drawing.Size(115, 42);
+        btnCancel.TabIndex = 18;
+        btnCancel.Text = "Hủy bỏ";
+        btnCancel.UseVisualStyleBackColor = false;
+        btnCancel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
-        // txtTeacherCode
+        // txtBio
         // 
-        txtTeacherCode.Location = new System.Drawing.Point(16, 74);
-        txtTeacherCode.Name = "txtTeacherCode";
-        txtTeacherCode.Placeholder = "GV-00xx";
-        txtTeacherCode.Size = new System.Drawing.Size(160, 36);
-        txtTeacherCode.TabIndex = 2;
-        // 
-        // lblFullName
-        // 
-        lblFullName.AutoSize = true;
-        lblFullName.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblFullName.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblFullName.Location = new System.Drawing.Point(195, 50);
-        lblFullName.Name = "lblFullName";
-        lblFullName.Size = new System.Drawing.Size(86, 20);
-        lblFullName.TabIndex = 3;
-        lblFullName.Text = "Họ và tên *";
-        // 
-        // txtFullName
-        // 
-        txtFullName.Location = new System.Drawing.Point(195, 74);
-        txtFullName.Name = "txtFullName";
-        txtFullName.Placeholder = "Nhập đầy đủ họ và tên giáo viên...";
-        txtFullName.Size = new System.Drawing.Size(340, 36);
-        txtFullName.TabIndex = 4;
-        // 
-        // lblSpecialty
-        // 
-        lblSpecialty.AutoSize = true;
-        lblSpecialty.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSpecialty.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSpecialty.Location = new System.Drawing.Point(555, 50);
-        lblSpecialty.Name = "lblSpecialty";
-        lblSpecialty.Size = new System.Drawing.Size(102, 20);
-        lblSpecialty.TabIndex = 5;
-        lblSpecialty.Text = "Chuyên môn *";
-        // 
-        // cboSpecialty
-        // 
-        cboSpecialty.Location = new System.Drawing.Point(555, 74);
-        cboSpecialty.Name = "cboSpecialty";
-        cboSpecialty.Size = new System.Drawing.Size(235, 36);
-        cboSpecialty.TabIndex = 6;
-        // 
-        // lblPhone
-        // 
-        lblPhone.AutoSize = true;
-        lblPhone.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPhone.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblPhone.Location = new System.Drawing.Point(16, 120);
-        lblPhone.Name = "lblPhone";
-        lblPhone.Size = new System.Drawing.Size(108, 20);
-        lblPhone.TabIndex = 7;
-        lblPhone.Text = "Số điện thoại *";
-        // 
-        // txtPhone
-        // 
-        txtPhone.Location = new System.Drawing.Point(16, 144);
-        txtPhone.Name = "txtPhone";
-        txtPhone.Placeholder = "VD: 0912 334 556";
-        txtPhone.Size = new System.Drawing.Size(240, 36);
-        txtPhone.TabIndex = 8;
-        // 
-        // lblEmail
-        // 
-        lblEmail.AutoSize = true;
-        lblEmail.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblEmail.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblEmail.Location = new System.Drawing.Point(275, 120);
-        lblEmail.Name = "lblEmail";
-        lblEmail.Size = new System.Drawing.Size(46, 20);
-        lblEmail.TabIndex = 9;
-        lblEmail.Text = "Email";
-        // 
-        // txtEmail
-        // 
-        txtEmail.Location = new System.Drawing.Point(275, 144);
-        txtEmail.Name = "txtEmail";
-        txtEmail.Placeholder = "VD: teacher@ecms.edu.vn";
-        txtEmail.Size = new System.Drawing.Size(260, 36);
-        txtEmail.TabIndex = 10;
-        // 
-        // lblStatus
-        // 
-        lblStatus.AutoSize = true;
-        lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatus.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblStatus.Location = new System.Drawing.Point(555, 120);
-        lblStatus.Name = "lblStatus";
-        lblStatus.Size = new System.Drawing.Size(86, 20);
-        lblStatus.TabIndex = 11;
-        lblStatus.Text = "Trạng thái *";
-        // 
-        // cboStatus
-        // 
-        cboStatus.Location = new System.Drawing.Point(555, 144);
-        cboStatus.Name = "cboStatus";
-        cboStatus.Size = new System.Drawing.Size(235, 36);
-        cboStatus.TabIndex = 12;
-        // 
-        // lblCert
-        // 
-        lblCert.AutoSize = true;
-        lblCert.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblCert.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblCert.Location = new System.Drawing.Point(16, 190);
-        lblCert.Name = "lblCert";
-        lblCert.Size = new System.Drawing.Size(147, 20);
-        lblCert.TabIndex = 13;
-        lblCert.Text = "Bằng cấp / Chứng chỉ";
-        // 
-        // txtCert
-        // 
-        txtCert.Location = new System.Drawing.Point(16, 214);
-        txtCert.Name = "txtCert";
-        txtCert.Placeholder = "VD: IELTS 8.5, Thạc sĩ TESOL ĐH Sư Phạm, Cử nhân Ngôn ngữ Anh...";
-        txtCert.Size = new System.Drawing.Size(774, 36);
-        txtCert.TabIndex = 14;
+        txtBio.BackColor = System.Drawing.Color.Transparent;
+        txtBio.CornerRadius = 5;
+        txtBio.ErrorMessage = "";
+        txtBio.HasError = false;
+        txtBio.Location = new System.Drawing.Point(16, 284);
+        txtBio.Name = "txtBio";
+        txtBio.Placeholder = "Kinh nghiệm giảng dạy, phong cách sư phạm...";
+        txtBio.ReadOnly = false;
+        txtBio.Size = new System.Drawing.Size(774, 48);
+        txtBio.TabIndex = 16;
+        txtBio.UseSystemPasswordChar = false;
         // 
         // lblBio
         // 
         lblBio.AutoSize = true;
         lblBio.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblBio.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblBio.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblBio.Location = new System.Drawing.Point(16, 260);
         lblBio.Name = "lblBio";
         lblBio.Size = new System.Drawing.Size(155, 20);
         lblBio.TabIndex = 15;
         lblBio.Text = "Ghi chú / Kinh nghiệm";
         // 
-        // txtBio
+        // cboStatus
         // 
-        txtBio.Location = new System.Drawing.Point(16, 284);
-        txtBio.Name = "txtBio";
-        txtBio.Placeholder = "Kinh nghiệm giảng dạy, phong cách sư phạm...";
-        txtBio.Size = new System.Drawing.Size(774, 48);
-        txtBio.TabIndex = 16;
+        cboStatus.BackColor = System.Drawing.Color.Transparent;
+        cboStatus.CornerRadius = 5;
+        cboStatus.DataSource = null;
+        cboStatus.DisplayMember = "";
+        cboStatus.Location = new System.Drawing.Point(555, 144);
+        cboStatus.Name = "cboStatus";
+        cboStatus.SelectedIndex = -1;
+        cboStatus.SelectedItem = null;
+        cboStatus.SelectedValue = null;
+        cboStatus.Size = new System.Drawing.Size(235, 36);
+        cboStatus.TabIndex = 12;
+        cboStatus.ValueMember = "";
         // 
-        // pnlScheduleBox
+        // lblStatus
         // 
-        pnlScheduleBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-        pnlScheduleBox.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        pnlScheduleBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        pnlScheduleBox.Controls.Add(chkSun);
-        pnlScheduleBox.Controls.Add(chkSat);
-        pnlScheduleBox.Controls.Add(chkFri);
-        pnlScheduleBox.Controls.Add(chkThu);
-        pnlScheduleBox.Controls.Add(chkWed);
-        pnlScheduleBox.Controls.Add(chkTue);
-        pnlScheduleBox.Controls.Add(chkMon);
-        pnlScheduleBox.Controls.Add(lblDaysTitle);
-        pnlScheduleBox.Controls.Add(chkEvening);
-        pnlScheduleBox.Controls.Add(chkAfternoon);
-        pnlScheduleBox.Controls.Add(chkMorning);
-        pnlScheduleBox.Controls.Add(lblPreferredSlotTitle);
-        pnlScheduleBox.Controls.Add(lblMaxHoursNote);
-        pnlScheduleBox.Controls.Add(lblHourUnit);
-        pnlScheduleBox.Controls.Add(txtMaxHours);
-        pnlScheduleBox.Controls.Add(lblMaxHoursTitle);
-        pnlScheduleBox.Controls.Add(lblScheduleBoxTitle);
-        pnlScheduleBox.Location = new System.Drawing.Point(16, 345);
-        pnlScheduleBox.Name = "pnlScheduleBox";
-        pnlScheduleBox.Padding = new System.Windows.Forms.Padding(16);
-        pnlScheduleBox.Size = new System.Drawing.Size(774, 305);
-        pnlScheduleBox.TabIndex = 17;
+        lblStatus.AutoSize = true;
+        lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblStatus.Location = new System.Drawing.Point(555, 120);
+        lblStatus.Name = "lblStatus";
+        lblStatus.Size = new System.Drawing.Size(85, 20);
+        lblStatus.TabIndex = 11;
+        lblStatus.Text = "Trạng thái *";
+        // 
+        // txtCert
+        // 
+        txtCert.BackColor = System.Drawing.Color.Transparent;
+        txtCert.CornerRadius = 5;
+        txtCert.ErrorMessage = "";
+        txtCert.HasError = false;
+        txtCert.Location = new System.Drawing.Point(16, 214);
+        txtCert.Name = "txtCert";
+        txtCert.Placeholder = "VD: IELTS 8.5, Thạc sĩ TESOL ĐH Sư Phạm, Cử nhân Ngôn ngữ Anh...";
+        txtCert.ReadOnly = false;
+        txtCert.Size = new System.Drawing.Size(774, 36);
+        txtCert.TabIndex = 14;
+        txtCert.UseSystemPasswordChar = false;
+        // 
+        // lblCert
+        // 
+        lblCert.AutoSize = true;
+        lblCert.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblCert.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblCert.Location = new System.Drawing.Point(16, 190);
+        lblCert.Name = "lblCert";
+        lblCert.Size = new System.Drawing.Size(151, 20);
+        lblCert.TabIndex = 13;
+        lblCert.Text = "Bằng cấp / Chứng chỉ";
+        // 
+        // cboSpecialty
+        // 
+        cboSpecialty.BackColor = System.Drawing.Color.Transparent;
+        cboSpecialty.CornerRadius = 5;
+        cboSpecialty.DataSource = null;
+        cboSpecialty.DisplayMember = "";
+        cboSpecialty.Location = new System.Drawing.Point(555, 74);
+        cboSpecialty.Name = "cboSpecialty";
+        cboSpecialty.SelectedIndex = -1;
+        cboSpecialty.SelectedItem = null;
+        cboSpecialty.SelectedValue = null;
+        cboSpecialty.Size = new System.Drawing.Size(235, 36);
+        cboSpecialty.TabIndex = 6;
+        cboSpecialty.ValueMember = "";
+        // 
+        // lblSpecialty
+        // 
+        lblSpecialty.AutoSize = true;
+        lblSpecialty.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblSpecialty.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblSpecialty.Location = new System.Drawing.Point(555, 50);
+        lblSpecialty.Name = "lblSpecialty";
+        lblSpecialty.Size = new System.Drawing.Size(101, 20);
+        lblSpecialty.TabIndex = 5;
+        lblSpecialty.Text = "Chuyên môn *";
+        // 
+        // txtEmail
+        // 
+        txtEmail.BackColor = System.Drawing.Color.Transparent;
+        txtEmail.CornerRadius = 5;
+        txtEmail.ErrorMessage = "";
+        txtEmail.HasError = false;
+        txtEmail.Location = new System.Drawing.Point(275, 144);
+        txtEmail.Name = "txtEmail";
+        txtEmail.Placeholder = "VD: teacher@ecms.edu.vn";
+        txtEmail.ReadOnly = false;
+        txtEmail.Size = new System.Drawing.Size(260, 36);
+        txtEmail.TabIndex = 10;
+        txtEmail.UseSystemPasswordChar = false;
+        // 
+        // lblEmail
+        // 
+        lblEmail.AutoSize = true;
+        lblEmail.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblEmail.Location = new System.Drawing.Point(275, 120);
+        lblEmail.Name = "lblEmail";
+        lblEmail.Size = new System.Drawing.Size(46, 20);
+        lblEmail.TabIndex = 9;
+        lblEmail.Text = "Email";
+        // 
+        // txtPhone
+        // 
+        txtPhone.BackColor = System.Drawing.Color.Transparent;
+        txtPhone.CornerRadius = 5;
+        txtPhone.ErrorMessage = "";
+        txtPhone.HasError = false;
+        txtPhone.Location = new System.Drawing.Point(16, 144);
+        txtPhone.Name = "txtPhone";
+        txtPhone.Placeholder = "VD: 0912 334 556";
+        txtPhone.ReadOnly = false;
+        txtPhone.Size = new System.Drawing.Size(240, 36);
+        txtPhone.TabIndex = 8;
+        txtPhone.UseSystemPasswordChar = false;
+        // 
+        // lblPhone
+        // 
+        lblPhone.AutoSize = true;
+        lblPhone.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblPhone.Location = new System.Drawing.Point(16, 120);
+        lblPhone.Name = "lblPhone";
+        lblPhone.Size = new System.Drawing.Size(107, 20);
+        lblPhone.TabIndex = 7;
+        lblPhone.Text = "Số điện thoại *";
+        // 
+        // txtFullName
+        // 
+        txtFullName.BackColor = System.Drawing.Color.Transparent;
+        txtFullName.CornerRadius = 5;
+        txtFullName.ErrorMessage = "";
+        txtFullName.HasError = false;
+        txtFullName.Location = new System.Drawing.Point(195, 74);
+        txtFullName.Name = "txtFullName";
+        txtFullName.Placeholder = "Nhập đầy đủ họ và tên giáo viên...";
+        txtFullName.ReadOnly = false;
+        txtFullName.Size = new System.Drawing.Size(340, 36);
+        txtFullName.TabIndex = 4;
+        txtFullName.UseSystemPasswordChar = false;
+        // 
+        // lblFullName
+        // 
+        lblFullName.AutoSize = true;
+        lblFullName.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblFullName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblFullName.Location = new System.Drawing.Point(195, 50);
+        lblFullName.Name = "lblFullName";
+        lblFullName.Size = new System.Drawing.Size(83, 20);
+        lblFullName.TabIndex = 3;
+        lblFullName.Text = "Họ và tên *";
+        // 
+        // txtTeacherCode
+        // 
+        txtTeacherCode.BackColor = System.Drawing.Color.Transparent;
+        txtTeacherCode.CornerRadius = 5;
+        txtTeacherCode.ErrorMessage = "";
+        txtTeacherCode.HasError = false;
+        txtTeacherCode.Location = new System.Drawing.Point(16, 74);
+        txtTeacherCode.Name = "txtTeacherCode";
+        txtTeacherCode.Placeholder = "GV-00xx";
+        txtTeacherCode.ReadOnly = false;
+        txtTeacherCode.Size = new System.Drawing.Size(160, 36);
+        txtTeacherCode.TabIndex = 2;
+        txtTeacherCode.UseSystemPasswordChar = false;
+        // 
+        // lblTeacherCode
+        // 
+        lblTeacherCode.AutoSize = true;
+        lblTeacherCode.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblTeacherCode.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblTeacherCode.Location = new System.Drawing.Point(16, 50);
+        lblTeacherCode.Name = "lblTeacherCode";
+        lblTeacherCode.Size = new System.Drawing.Size(105, 20);
+        lblTeacherCode.TabIndex = 1;
+        lblTeacherCode.Text = "Mã giáo viên *";
+        // 
+        // lblTeacherInfoTitle
+        // 
+        lblTeacherInfoTitle.AutoSize = true;
+        lblTeacherInfoTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+        lblTeacherInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblTeacherInfoTitle.Location = new System.Drawing.Point(16, 16);
+        lblTeacherInfoTitle.Name = "lblTeacherInfoTitle";
+        lblTeacherInfoTitle.Size = new System.Drawing.Size(185, 25);
+        lblTeacherInfoTitle.TabIndex = 0;
+        lblTeacherInfoTitle.Text = "Thông tin giáo viên";
         // 
         // lblScheduleBoxTitle
         // 
         lblScheduleBoxTitle.AutoSize = true;
         lblScheduleBoxTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblScheduleBoxTitle.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblScheduleBoxTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblScheduleBoxTitle.Location = new System.Drawing.Point(12, 12);
         lblScheduleBoxTitle.Name = "lblScheduleBoxTitle";
-        lblScheduleBoxTitle.Size = new System.Drawing.Size(325, 25);
+        lblScheduleBoxTitle.Size = new System.Drawing.Size(167, 25);
         lblScheduleBoxTitle.TabIndex = 0;
-        lblScheduleBoxTitle.Text = "📅 Thiết lập lịch rảnh & tải công việc";
+        lblScheduleBoxTitle.Text = "Thời gian làm việc";
         // 
         // lblMaxHoursTitle
         // 
         lblMaxHoursTitle.AutoSize = true;
         lblMaxHoursTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblMaxHoursTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblMaxHoursTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblMaxHoursTitle.Location = new System.Drawing.Point(14, 45);
         lblMaxHoursTitle.Name = "lblMaxHoursTitle";
-        lblMaxHoursTitle.Size = new System.Drawing.Size(142, 20);
+        lblMaxHoursTitle.Size = new System.Drawing.Size(136, 20);
         lblMaxHoursTitle.TabIndex = 1;
         lblMaxHoursTitle.Text = "Số giờ dạy tối đa *";
         // 
         // txtMaxHours
         // 
+        txtMaxHours.BackColor = System.Drawing.Color.Transparent;
+        txtMaxHours.CornerRadius = 5;
+        txtMaxHours.ErrorMessage = "";
+        txtMaxHours.HasError = false;
         txtMaxHours.Location = new System.Drawing.Point(14, 68);
         txtMaxHours.Name = "txtMaxHours";
         txtMaxHours.Placeholder = "VD: 12";
+        txtMaxHours.ReadOnly = false;
         txtMaxHours.Size = new System.Drawing.Size(200, 36);
         txtMaxHours.TabIndex = 2;
+        txtMaxHours.UseSystemPasswordChar = false;
         // 
         // lblHourUnit
         // 
         lblHourUnit.AutoSize = true;
         lblHourUnit.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblHourUnit.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblHourUnit.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblHourUnit.Location = new System.Drawing.Point(220, 76);
         lblHourUnit.Name = "lblHourUnit";
-        lblHourUnit.Size = new System.Drawing.Size(73, 21);
+        lblHourUnit.Size = new System.Drawing.Size(78, 21);
         lblHourUnit.TabIndex = 3;
         lblHourUnit.Text = "giờ / tuần";
         // 
@@ -365,10 +435,10 @@ partial class AddTeacherDialog
         // 
         lblMaxHoursNote.AutoSize = true;
         lblMaxHoursNote.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic);
-        lblMaxHoursNote.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblMaxHoursNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblMaxHoursNote.Location = new System.Drawing.Point(14, 108);
         lblMaxHoursNote.Name = "lblMaxHoursNote";
-        lblMaxHoursNote.Size = new System.Drawing.Size(306, 19);
+        lblMaxHoursNote.Size = new System.Drawing.Size(328, 19);
         lblMaxHoursNote.TabIndex = 4;
         lblMaxHoursNote.Text = "Hệ thống sẽ cảnh báo nếu xếp lịch vượt số giờ này.";
         // 
@@ -376,10 +446,10 @@ partial class AddTeacherDialog
         // 
         lblPreferredSlotTitle.AutoSize = true;
         lblPreferredSlotTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPreferredSlotTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblPreferredSlotTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblPreferredSlotTitle.Location = new System.Drawing.Point(14, 135);
         lblPreferredSlotTitle.Name = "lblPreferredSlotTitle";
-        lblPreferredSlotTitle.Size = new System.Drawing.Size(350, 20);
+        lblPreferredSlotTitle.Size = new System.Drawing.Size(349, 20);
         lblPreferredSlotTitle.TabIndex = 5;
         lblPreferredSlotTitle.Text = "Khung giờ ưu tiên giảng dạy (Có thể chọn nhiều)";
         // 
@@ -417,7 +487,7 @@ partial class AddTeacherDialog
         chkEvening.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkEvening.Location = new System.Drawing.Point(425, 160);
         chkEvening.Name = "chkEvening";
-        chkEvening.Size = new System.Drawing.Size(169, 24);
+        chkEvening.Size = new System.Drawing.Size(171, 24);
         chkEvening.TabIndex = 8;
         chkEvening.Text = "Ca Tối (18:00 - 21:00)";
         chkEvening.UseVisualStyleBackColor = true;
@@ -426,10 +496,10 @@ partial class AddTeacherDialog
         // 
         lblDaysTitle.AutoSize = true;
         lblDaysTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDaysTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblDaysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblDaysTitle.Location = new System.Drawing.Point(14, 195);
         lblDaysTitle.Name = "lblDaysTitle";
-        lblDaysTitle.Size = new System.Drawing.Size(187, 20);
+        lblDaysTitle.Size = new System.Drawing.Size(201, 20);
         lblDaysTitle.TabIndex = 9;
         lblDaysTitle.Text = "Các ngày có thể giảng dạy *";
         // 
@@ -441,7 +511,7 @@ partial class AddTeacherDialog
         chkMon.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkMon.Location = new System.Drawing.Point(16, 222);
         chkMon.Name = "chkMon";
-        chkMon.Size = new System.Drawing.Size(85, 24);
+        chkMon.Size = new System.Drawing.Size(83, 24);
         chkMon.TabIndex = 10;
         chkMon.Text = "Thứ Hai";
         chkMon.UseVisualStyleBackColor = true;
@@ -452,7 +522,7 @@ partial class AddTeacherDialog
         chkTue.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkTue.Location = new System.Drawing.Point(160, 222);
         chkTue.Name = "chkTue";
-        chkTue.Size = new System.Drawing.Size(78, 24);
+        chkTue.Size = new System.Drawing.Size(77, 24);
         chkTue.TabIndex = 11;
         chkTue.Text = "Thứ Ba";
         chkTue.UseVisualStyleBackColor = true;
@@ -465,7 +535,7 @@ partial class AddTeacherDialog
         chkWed.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkWed.Location = new System.Drawing.Point(280, 222);
         chkWed.Name = "chkWed";
-        chkWed.Size = new System.Drawing.Size(78, 24);
+        chkWed.Size = new System.Drawing.Size(77, 24);
         chkWed.TabIndex = 12;
         chkWed.Text = "Thứ Tư";
         chkWed.UseVisualStyleBackColor = true;
@@ -478,7 +548,7 @@ partial class AddTeacherDialog
         chkThu.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkThu.Location = new System.Drawing.Point(400, 222);
         chkThu.Name = "chkThu";
-        chkThu.Size = new System.Drawing.Size(94, 24);
+        chkThu.Size = new System.Drawing.Size(92, 24);
         chkThu.TabIndex = 13;
         chkThu.Text = "Thứ Năm";
         chkThu.UseVisualStyleBackColor = true;
@@ -489,7 +559,7 @@ partial class AddTeacherDialog
         chkFri.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkFri.Location = new System.Drawing.Point(16, 258);
         chkFri.Name = "chkFri";
-        chkFri.Size = new System.Drawing.Size(85, 24);
+        chkFri.Size = new System.Drawing.Size(84, 24);
         chkFri.TabIndex = 14;
         chkFri.Text = "Thứ Sáu";
         chkFri.UseVisualStyleBackColor = true;
@@ -500,7 +570,7 @@ partial class AddTeacherDialog
         chkSat.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkSat.Location = new System.Drawing.Point(160, 258);
         chkSat.Name = "chkSat";
-        chkSat.Size = new System.Drawing.Size(83, 24);
+        chkSat.Size = new System.Drawing.Size(84, 24);
         chkSat.TabIndex = 15;
         chkSat.Text = "Thứ Bảy";
         chkSat.UseVisualStyleBackColor = true;
@@ -516,47 +586,39 @@ partial class AddTeacherDialog
         chkSun.Text = "Chủ Nhật";
         chkSun.UseVisualStyleBackColor = true;
         // 
-        // btnCancel
+        // pnlScheduleBox
         // 
-        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        btnCancel.BackColor = System.Drawing.Color.White;
-        btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnCancel.CornerRadius = 6;
-        btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnCancel.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
-        btnCancel.Location = new System.Drawing.Point(525, 665);
-        btnCancel.Name = "btnCancel";
-        btnCancel.Size = new System.Drawing.Size(115, 42);
-        btnCancel.TabIndex = 18;
-        btnCancel.Text = "Hủy bỏ";
-        btnCancel.UseVisualStyleBackColor = false;
-        btnCancel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // btnSave
-        // 
-        btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-        btnSave.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        btnSave.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
-        btnSave.CornerRadius = 6;
-        btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnSave.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnSave.ForeColor = System.Drawing.Color.White;
-        btnSave.Location = new System.Drawing.Point(650, 665);
-        btnSave.Name = "btnSave";
-        btnSave.Size = new System.Drawing.Size(140, 42);
-        btnSave.TabIndex = 19;
-        btnSave.Text = "Lưu giáo viên";
-        btnSave.UseVisualStyleBackColor = false;
-        btnSave.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        pnlScheduleBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        pnlScheduleBox.BackColor = System.Drawing.Color.White;
+        pnlScheduleBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        pnlScheduleBox.Controls.Add(chkSun);
+        pnlScheduleBox.Controls.Add(chkSat);
+        pnlScheduleBox.Controls.Add(chkFri);
+        pnlScheduleBox.Controls.Add(chkThu);
+        pnlScheduleBox.Controls.Add(chkWed);
+        pnlScheduleBox.Controls.Add(chkTue);
+        pnlScheduleBox.Controls.Add(chkMon);
+        pnlScheduleBox.Controls.Add(lblDaysTitle);
+        pnlScheduleBox.Controls.Add(chkEvening);
+        pnlScheduleBox.Controls.Add(chkAfternoon);
+        pnlScheduleBox.Controls.Add(chkMorning);
+        pnlScheduleBox.Controls.Add(lblPreferredSlotTitle);
+        pnlScheduleBox.Controls.Add(lblMaxHoursNote);
+        pnlScheduleBox.Controls.Add(lblHourUnit);
+        pnlScheduleBox.Controls.Add(txtMaxHours);
+        pnlScheduleBox.Controls.Add(lblMaxHoursTitle);
+        pnlScheduleBox.Controls.Add(lblScheduleBoxTitle);
+        pnlScheduleBox.Location = new System.Drawing.Point(16, 345);
+        pnlScheduleBox.Name = "pnlScheduleBox";
+        pnlScheduleBox.Padding = new System.Windows.Forms.Padding(16);
+        pnlScheduleBox.Size = new System.Drawing.Size(774, 305);
+        pnlScheduleBox.TabIndex = 17;
         // 
         // AddTeacherDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(860, 840);
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);

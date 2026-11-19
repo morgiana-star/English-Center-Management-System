@@ -15,11 +15,16 @@ partial class ScheduleManagementView
 
     #region Component Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnCreateSession = new ECMS.UI.Controls.AppButton();
         btnManageRooms = new ECMS.UI.Controls.AppButton();
@@ -59,8 +64,8 @@ partial class ScheduleManagementView
         // 
         // btnCreateSession
         // 
-        btnCreateSession.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnCreateSession.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnCreateSession.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnCreateSession.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnCreateSession.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnCreateSession.CornerRadius = 5;
         btnCreateSession.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -77,14 +82,14 @@ partial class ScheduleManagementView
         // 
         // btnManageRooms
         // 
-        btnManageRooms.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnManageRooms.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnManageRooms.BackColor = System.Drawing.Color.White;
         btnManageRooms.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnManageRooms.CornerRadius = 5;
         btnManageRooms.Cursor = System.Windows.Forms.Cursors.Hand;
         btnManageRooms.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnManageRooms.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnManageRooms.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnManageRooms.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnManageRooms.Location = new System.Drawing.Point(850, 18);
         btnManageRooms.Name = "btnManageRooms";
         btnManageRooms.Size = new System.Drawing.Size(135, 36);
@@ -97,16 +102,15 @@ partial class ScheduleManagementView
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(288, 37);
+        lblTitle.Size = new System.Drawing.Size(271, 37);
         lblTitle.TabIndex = 1;
         lblTitle.Text = "Lịch học & phòng học";
         // 
         // pnlBody
         // 
-        pnlBody.AutoScroll = false;
         pnlBody.Controls.Add(cardCalendar);
         pnlBody.Controls.Add(pnlFilterBar);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -119,7 +123,7 @@ partial class ScheduleManagementView
         // cardCalendar
         // 
         cardCalendar.BackColor = System.Drawing.Color.White;
-        cardCalendar.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardCalendar.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardCalendar.BorderWidth = 1;
         cardCalendar.Controls.Add(dgvScheduleMatrix);
         cardCalendar.CornerRadius = 8;
@@ -140,15 +144,14 @@ partial class ScheduleManagementView
         dgvScheduleMatrix.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvScheduleMatrix.BackgroundColor = System.Drawing.Color.White;
         dgvScheduleMatrix.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        dgvScheduleMatrix.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Single;
         dgvScheduleMatrix.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(4);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvScheduleMatrix.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvScheduleMatrix.ColumnHeadersHeight = 44;
@@ -156,22 +159,29 @@ partial class ScheduleManagementView
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(241, 245, 249);
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)241)), ((int)((byte)245)), ((int)((byte)249)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvScheduleMatrix.DefaultCellStyle = dataGridViewCellStyle3;
         dgvScheduleMatrix.EnableHeadersVisualStyles = false;
-        dgvScheduleMatrix.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        dgvScheduleMatrix.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvScheduleMatrix.Location = new System.Drawing.Point(12, 12);
         dgvScheduleMatrix.MultiSelect = false;
         dgvScheduleMatrix.Name = "dgvScheduleMatrix";
         dgvScheduleMatrix.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvScheduleMatrix.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvScheduleMatrix.RowHeadersVisible = false;
         dgvScheduleMatrix.RowHeadersWidth = 51;
         dgvScheduleMatrix.RowTemplate.Height = 150;
-        dgvScheduleMatrix.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvScheduleMatrix.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
         dgvScheduleMatrix.Size = new System.Drawing.Size(1088, 522);
         dgvScheduleMatrix.TabIndex = 0;
@@ -197,11 +207,11 @@ partial class ScheduleManagementView
         // lblSemester
         // 
         lblSemester.AutoSize = true;
-        lblSemester.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular);
-        lblSemester.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblSemester.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblSemester.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblSemester.Location = new System.Drawing.Point(12, 10);
         lblSemester.Name = "lblSemester";
-        lblSemester.Size = new System.Drawing.Size(124, 20);
+        lblSemester.Size = new System.Drawing.Size(125, 20);
         lblSemester.TabIndex = 0;
         lblSemester.Text = "Học kỳ & Năm học:";
         // 
@@ -218,11 +228,11 @@ partial class ScheduleManagementView
         // lblScheduleType
         // 
         lblScheduleType.AutoSize = true;
-        lblScheduleType.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular);
-        lblScheduleType.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblScheduleType.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblScheduleType.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblScheduleType.Location = new System.Drawing.Point(455, 10);
         lblScheduleType.Name = "lblScheduleType";
-        lblScheduleType.Size = new System.Drawing.Size(107, 20);
+        lblScheduleType.Size = new System.Drawing.Size(110, 20);
         lblScheduleType.TabIndex = 2;
         lblScheduleType.Text = "Thời khóa biểu:";
         // 
@@ -248,11 +258,11 @@ partial class ScheduleManagementView
         // 
         // btnPrevWeek
         // 
-        btnPrevWeek.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        btnPrevWeek.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(203, 213, 225);
+        btnPrevWeek.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        btnPrevWeek.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)203)), ((int)((byte)213)), ((int)((byte)225)));
         btnPrevWeek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPrevWeek.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnPrevWeek.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        btnPrevWeek.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         btnPrevWeek.Location = new System.Drawing.Point(12, 48);
         btnPrevWeek.Name = "btnPrevWeek";
         btnPrevWeek.Size = new System.Drawing.Size(42, 32);
@@ -272,11 +282,11 @@ partial class ScheduleManagementView
         // 
         // btnNextWeek
         // 
-        btnNextWeek.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        btnNextWeek.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(203, 213, 225);
+        btnNextWeek.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        btnNextWeek.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)203)), ((int)((byte)213)), ((int)((byte)225)));
         btnNextWeek.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNextWeek.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnNextWeek.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        btnNextWeek.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         btnNextWeek.Location = new System.Drawing.Point(448, 48);
         btnNextWeek.Name = "btnNextWeek";
         btnNextWeek.Size = new System.Drawing.Size(42, 32);
@@ -288,26 +298,25 @@ partial class ScheduleManagementView
         // 
         btnPrint.BackColor = System.Drawing.Color.White;
         btnPrint.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnPrint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(34, 197, 94);
+        btnPrint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)34)), ((int)((byte)197)), ((int)((byte)94)));
         btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPrint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnPrint.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
+        btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
         btnPrint.Location = new System.Drawing.Point(510, 48);
         btnPrint.Name = "btnPrint";
         btnPrint.Size = new System.Drawing.Size(95, 32);
         btnPrint.TabIndex = 8;
-        btnPrint.Text = "🖨 In lịch";
+        btnPrint.Text = "In lịch";
         btnPrint.UseVisualStyleBackColor = false;
         // 
         // ScheduleManagementView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        Name = "ScheduleManagementView";
         Size = new System.Drawing.Size(1160, 760);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();

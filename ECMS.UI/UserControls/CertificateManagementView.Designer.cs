@@ -15,11 +15,16 @@ partial class CertificateManagementView
 
     #region Component Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         cboSigner = new System.Windows.Forms.ComboBox();
         lblSigner = new System.Windows.Forms.Label();
@@ -68,31 +73,31 @@ partial class CertificateManagementView
         // 
         // cboSigner
         // 
-        cboSigner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboSigner.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboSigner.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboSigner.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboSigner.FormattingEnabled = true;
-        cboSigner.Location = new System.Drawing.Point(545, 22);
+        cboSigner.Location = new System.Drawing.Point(523, 22);
         cboSigner.Name = "cboSigner";
         cboSigner.Size = new System.Drawing.Size(265, 29);
         cboSigner.TabIndex = 4;
         // 
         // lblSigner
         // 
-        lblSigner.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        lblSigner.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblSigner.AutoSize = true;
         lblSigner.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSigner.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSigner.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSigner.Location = new System.Drawing.Point(440, 26);
         lblSigner.Name = "lblSigner";
-        lblSigner.Size = new System.Drawing.Size(102, 20);
+        lblSigner.Size = new System.Drawing.Size(77, 20);
         lblSigner.TabIndex = 3;
-        lblSigner.Text = "✍️ Người ký:";
+        lblSigner.Text = "Người ký:";
         // 
         // btnIssueSelectedTop
         // 
-        btnIssueSelectedTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnIssueSelectedTop.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnIssueSelectedTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnIssueSelectedTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnIssueSelectedTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnIssueSelectedTop.CornerRadius = 5;
         btnIssueSelectedTop.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -109,19 +114,19 @@ partial class CertificateManagementView
         // 
         // btnIssuedRegistryTop
         // 
-        btnIssuedRegistryTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnIssuedRegistryTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnIssuedRegistryTop.BackColor = System.Drawing.Color.White;
         btnIssuedRegistryTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnIssuedRegistryTop.CornerRadius = 5;
         btnIssuedRegistryTop.Cursor = System.Windows.Forms.Cursors.Hand;
         btnIssuedRegistryTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnIssuedRegistryTop.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnIssuedRegistryTop.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnIssuedRegistryTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnIssuedRegistryTop.Location = new System.Drawing.Point(825, 18);
         btnIssuedRegistryTop.Name = "btnIssuedRegistryTop";
         btnIssuedRegistryTop.Size = new System.Drawing.Size(168, 38);
         btnIssuedRegistryTop.TabIndex = 1;
-        btnIssuedRegistryTop.Text = "📜 Sổ chứng chỉ đã cấp";
+        btnIssuedRegistryTop.Text = "Sổ chứng chỉ đã cấp";
         btnIssuedRegistryTop.UseVisualStyleBackColor = false;
         btnIssuedRegistryTop.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -129,16 +134,15 @@ partial class CertificateManagementView
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(378, 37);
+        lblTitle.Size = new System.Drawing.Size(391, 37);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Quản lý Chứng chỉ tốt nghiệp";
         // 
         // pnlBody
         // 
-        pnlBody.AutoScroll = false;
         pnlBody.Controls.Add(cardStudentList);
         pnlBody.Controls.Add(pnlFilterBar);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -151,7 +155,7 @@ partial class CertificateManagementView
         // cardStudentList
         // 
         cardStudentList.BackColor = System.Drawing.Color.White;
-        cardStudentList.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardStudentList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStudentList.BorderWidth = 1;
         cardStudentList.Controls.Add(dgvEligible);
         cardStudentList.Controls.Add(pnlCardHeader);
@@ -169,7 +173,7 @@ partial class CertificateManagementView
         dgvEligible.AllowUserToDeleteRows = false;
         dgvEligible.AllowUserToResizeColumns = false;
         dgvEligible.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         dgvEligible.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
         dgvEligible.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvEligible.BackgroundColor = System.Drawing.Color.White;
@@ -177,12 +181,12 @@ partial class CertificateManagementView
         dgvEligible.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         dgvEligible.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvEligible.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvEligible.ColumnHeadersHeight = 38;
@@ -190,22 +194,30 @@ partial class CertificateManagementView
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         dgvEligible.DefaultCellStyle = dataGridViewCellStyle3;
         dgvEligible.Dock = System.Windows.Forms.DockStyle.Fill;
         dgvEligible.EnableHeadersVisualStyles = false;
-        dgvEligible.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        dgvEligible.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvEligible.Location = new System.Drawing.Point(16, 50);
         dgvEligible.MultiSelect = false;
         dgvEligible.Name = "dgvEligible";
+        dgvEligible.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvEligible.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvEligible.RowHeadersVisible = false;
         dgvEligible.RowHeadersWidth = 51;
         dgvEligible.RowTemplate.Height = 42;
-        dgvEligible.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvEligible.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvEligible.Size = new System.Drawing.Size(1120, 527);
         dgvEligible.TabIndex = 1;
@@ -222,9 +234,9 @@ partial class CertificateManagementView
         // 
         // lblSelectedSummary
         // 
-        lblSelectedSummary.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        lblSelectedSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblSelectedSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSelectedSummary.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblSelectedSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         lblSelectedSummary.Location = new System.Drawing.Point(740, 6);
         lblSelectedSummary.Name = "lblSelectedSummary";
         lblSelectedSummary.Size = new System.Drawing.Size(370, 20);
@@ -236,10 +248,10 @@ partial class CertificateManagementView
         // 
         lblTableTitle.AutoSize = true;
         lblTableTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblTableTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblTableTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTableTitle.Location = new System.Drawing.Point(2, 6);
         lblTableTitle.Name = "lblTableTitle";
-        lblTableTitle.Size = new System.Drawing.Size(534, 23);
+        lblTableTitle.Size = new System.Drawing.Size(596, 23);
         lblTableTitle.TabIndex = 0;
         lblTableTitle.Text = "DANH SÁCH HỌC VIÊN HOÀN THÀNH KHÓA HỌC CHỜ CẤP CHỨNG CHỈ";
         // 
@@ -256,12 +268,12 @@ partial class CertificateManagementView
         // 
         lblFooterNote.AutoSize = true;
         lblFooterNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblFooterNote.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblFooterNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblFooterNote.Location = new System.Drawing.Point(4, 7);
         lblFooterNote.Name = "lblFooterNote";
-        lblFooterNote.Size = new System.Drawing.Size(860, 20);
+        lblFooterNote.Size = new System.Drawing.Size(676, 20);
         lblFooterNote.TabIndex = 0;
-        lblFooterNote.Text = "📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học phí hoàn thành 100%  |  Người ký duyệt: Trần Minh Quân (Admin · Giám đốc)";
+        lblFooterNote.Text = ("Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học ph" + "í hoàn thành 100%");
         // 
         // pnlFilterBar
         // 
@@ -281,14 +293,14 @@ partial class CertificateManagementView
         // 
         // btnDeselectAll
         // 
-        btnDeselectAll.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnDeselectAll.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnDeselectAll.BackColor = System.Drawing.Color.White;
         btnDeselectAll.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnDeselectAll.CornerRadius = 4;
         btnDeselectAll.Cursor = System.Windows.Forms.Cursors.Hand;
         btnDeselectAll.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnDeselectAll.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnDeselectAll.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        btnDeselectAll.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         btnDeselectAll.Location = new System.Drawing.Point(1065, 8);
         btnDeselectAll.Name = "btnDeselectAll";
         btnDeselectAll.Size = new System.Drawing.Size(75, 30);
@@ -299,53 +311,53 @@ partial class CertificateManagementView
         // 
         // btnSelectAllEligible
         // 
-        btnSelectAllEligible.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnSelectAllEligible.BackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        btnSelectAllEligible.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnSelectAllEligible.BackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         btnSelectAllEligible.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnSelectAllEligible.CornerRadius = 4;
         btnSelectAllEligible.Cursor = System.Windows.Forms.Cursors.Hand;
         btnSelectAllEligible.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSelectAllEligible.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-        btnSelectAllEligible.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
-        btnSelectAllEligible.Location = new System.Drawing.Point(920, 8);
+        btnSelectAllEligible.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        btnSelectAllEligible.Location = new System.Drawing.Point(873, 8);
         btnSelectAllEligible.Name = "btnSelectAllEligible";
-        btnSelectAllEligible.Size = new System.Drawing.Size(140, 30);
+        btnSelectAllEligible.Size = new System.Drawing.Size(186, 30);
         btnSelectAllEligible.TabIndex = 5;
-        btnSelectAllEligible.Text = "✓ Chọn tất cả đủ ĐK";
+        btnSelectAllEligible.Text = "Chọn tất cả đủ điều kiện";
         btnSelectAllEligible.UseVisualStyleBackColor = false;
         btnSelectAllEligible.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // cboConditionFilter
         // 
-        cboConditionFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboConditionFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboConditionFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboConditionFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboConditionFilter.FormattingEnabled = true;
-        cboConditionFilter.Location = new System.Drawing.Point(750, 9);
+        cboConditionFilter.Location = new System.Drawing.Point(690, 9);
         cboConditionFilter.Name = "cboConditionFilter";
         cboConditionFilter.Size = new System.Drawing.Size(160, 29);
         cboConditionFilter.TabIndex = 4;
         // 
         // cboClassFilter
         // 
-        cboClassFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboClassFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboClassFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboClassFilter.FormattingEnabled = true;
-        cboClassFilter.Location = new System.Drawing.Point(605, 9);
+        cboClassFilter.Location = new System.Drawing.Point(565, 9);
         cboClassFilter.Name = "cboClassFilter";
-        cboClassFilter.Size = new System.Drawing.Size(138, 29);
+        cboClassFilter.Size = new System.Drawing.Size(119, 29);
         cboClassFilter.TabIndex = 3;
         // 
         // cboCourseFilter
         // 
-        cboCourseFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        cboCourseFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboCourseFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboCourseFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboCourseFilter.FormattingEnabled = true;
         cboCourseFilter.Location = new System.Drawing.Point(430, 9);
         cboCourseFilter.Name = "cboCourseFilter";
-        cboCourseFilter.Size = new System.Drawing.Size(168, 29);
+        cboCourseFilter.Size = new System.Drawing.Size(129, 29);
         cboCourseFilter.TabIndex = 2;
         // 
         // txtSearch
@@ -361,22 +373,21 @@ partial class CertificateManagementView
         // 
         lblSearch.AutoSize = true;
         lblSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSearch.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSearch.Location = new System.Drawing.Point(12, 13);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new System.Drawing.Size(87, 20);
+        lblSearch.Size = new System.Drawing.Size(78, 20);
         lblSearch.TabIndex = 0;
-        lblSearch.Text = "🔍 Tìm kiếm:";
+        lblSearch.Text = "Tìm kiếm:";
         // 
         // CertificateManagementView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        Name = "CertificateManagementView";
         Size = new System.Drawing.Size(1200, 800);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();

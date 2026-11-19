@@ -32,7 +32,7 @@ partial class LogoutConfirmDialog
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblTitle.Location = new System.Drawing.Point(172, 35);
+        lblTitle.Location = new System.Drawing.Point(169, 27);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(227, 30);
         lblTitle.TabIndex = 1;
@@ -49,9 +49,9 @@ partial class LogoutConfirmDialog
         btnStay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnStay.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnStay.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnStay.Location = new System.Drawing.Point(69, 144);
+        btnStay.Location = new System.Drawing.Point(81, 125);
         btnStay.Name = "btnStay";
-        btnStay.Size = new System.Drawing.Size(196, 44);
+        btnStay.Size = new System.Drawing.Size(187, 46);
         btnStay.TabIndex = 4;
         btnStay.Text = "Ở lại";
         btnStay.UseVisualStyleBackColor = false;
@@ -68,9 +68,9 @@ partial class LogoutConfirmDialog
         btnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogout.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnLogout.ForeColor = System.Drawing.Color.White;
-        btnLogout.Location = new System.Drawing.Point(271, 144);
+        btnLogout.Location = new System.Drawing.Point(289, 125);
         btnLogout.Name = "btnLogout";
-        btnLogout.Size = new System.Drawing.Size(281, 44);
+        btnLogout.Size = new System.Drawing.Size(204, 46);
         btnLogout.TabIndex = 5;
         btnLogout.Text = "Đăng xuất";
         btnLogout.UseVisualStyleBackColor = false;
@@ -81,7 +81,7 @@ partial class LogoutConfirmDialog
         label1.AutoSize = true;
         label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
         label1.ForeColor = System.Drawing.Color.Gray;
-        label1.Location = new System.Drawing.Point(69, 85);
+        label1.Location = new System.Drawing.Point(60, 73);
         label1.Name = "label1";
         label1.Size = new System.Drawing.Size(449, 23);
         label1.TabIndex = 6;
@@ -94,7 +94,7 @@ partial class LogoutConfirmDialog
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.White;
         CancelButton = btnStay;
-        ClientSize = new System.Drawing.Size(606, 227);
+        ClientSize = new System.Drawing.Size(587, 209);
         Controls.Add(label1);
         Controls.Add(btnLogout);
         Controls.Add(btnStay);

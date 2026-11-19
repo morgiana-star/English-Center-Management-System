@@ -29,15 +29,13 @@ partial class TeacherAttendanceSummaryView
         btnBackAttendance = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
-        btnRecordTracking = new ECMS.UI.Controls.AppButton();
         cardSummary = new ECMS.UI.Controls.AppCard();
+        btnRecordTracking = new ECMS.UI.Controls.AppButton();
         btnExportSummary = new ECMS.UI.Controls.AppButton();
         lblFinalCondition = new System.Windows.Forms.Label();
-        lblFormula = new System.Windows.Forms.Label();
         lblClassTotal = new System.Windows.Forms.Label();
         dgvSummary = new ECMS.UI.Controls.AppDataGrid();
         lblSummaryTitle = new System.Windows.Forms.Label();
-        bannerSuccessSaved = new ECMS.UI.Controls.AppBanner();
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
         cardSummary.SuspendLayout();
@@ -71,7 +69,7 @@ partial class TeacherAttendanceSummaryView
         btnBackAttendance.Name = "btnBackAttendance";
         btnBackAttendance.Size = new System.Drawing.Size(160, 36);
         btnBackAttendance.TabIndex = 3;
-        btnBackAttendance.Text = "← Quay lại điểm danh";
+        btnBackAttendance.Text = "Quay lại điểm danh";
         btnBackAttendance.UseVisualStyleBackColor = false;
         btnBackAttendance.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -90,7 +88,6 @@ partial class TeacherAttendanceSummaryView
         // 
         pnlBody.AutoScroll = true;
         pnlBody.Controls.Add(cardSummary);
-        pnlBody.Controls.Add(bannerSuccessSaved);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlBody.Location = new System.Drawing.Point(0, 75);
         pnlBody.Name = "pnlBody";
@@ -100,22 +97,21 @@ partial class TeacherAttendanceSummaryView
         // 
         // cardSummary
         // 
-        cardSummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        cardSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardSummary.BackColor = System.Drawing.Color.White;
         cardSummary.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardSummary.BorderWidth = 1;
         cardSummary.Controls.Add(btnRecordTracking);
         cardSummary.Controls.Add(btnExportSummary);
         cardSummary.Controls.Add(lblFinalCondition);
-        cardSummary.Controls.Add(lblFormula);
         cardSummary.Controls.Add(lblClassTotal);
         cardSummary.Controls.Add(dgvSummary);
         cardSummary.Controls.Add(lblSummaryTitle);
         cardSummary.CornerRadius = 6;
-        cardSummary.Location = new System.Drawing.Point(24, 95);
+        cardSummary.Location = new System.Drawing.Point(24, 22);
         cardSummary.Name = "cardSummary";
         cardSummary.Padding = new System.Windows.Forms.Padding(20);
-        cardSummary.Size = new System.Drawing.Size(1112, 560);
+        cardSummary.Size = new System.Drawing.Size(1112, 633);
         cardSummary.TabIndex = 1;
         // 
         // btnRecordTracking
@@ -129,7 +125,7 @@ partial class TeacherAttendanceSummaryView
         btnRecordTracking.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnRecordTracking.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnRecordTracking.ForeColor = System.Drawing.Color.White;
-        btnRecordTracking.Location = new System.Drawing.Point(230, 505);
+        btnRecordTracking.Location = new System.Drawing.Point(230, 578);
         btnRecordTracking.Name = "btnRecordTracking";
         btnRecordTracking.Size = new System.Drawing.Size(250, 32);
         btnRecordTracking.TabIndex = 8;
@@ -148,7 +144,7 @@ partial class TeacherAttendanceSummaryView
         btnExportSummary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnExportSummary.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnExportSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnExportSummary.Location = new System.Drawing.Point(20, 505);
+        btnExportSummary.Location = new System.Drawing.Point(20, 578);
         btnExportSummary.Name = "btnExportSummary";
         btnExportSummary.Size = new System.Drawing.Size(190, 32);
         btnExportSummary.TabIndex = 7;
@@ -162,23 +158,11 @@ partial class TeacherAttendanceSummaryView
         lblFinalCondition.AutoSize = true;
         lblFinalCondition.Font = new System.Drawing.Font("Segoe UI", 8.25F);
         lblFinalCondition.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblFinalCondition.Location = new System.Drawing.Point(20, 475);
+        lblFinalCondition.Location = new System.Drawing.Point(20, 548);
         lblFinalCondition.Name = "lblFinalCondition";
         lblFinalCondition.Size = new System.Drawing.Size(273, 19);
         lblFinalCondition.TabIndex = 6;
         lblFinalCondition.Text = "Điều kiện cuối khóa: ≥80% trên đủ 24 buổi";
-        // 
-        // lblFormula
-        // 
-        lblFormula.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left));
-        lblFormula.AutoSize = true;
-        lblFormula.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-        lblFormula.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblFormula.Location = new System.Drawing.Point(20, 455);
-        lblFormula.Name = "lblFormula";
-        lblFormula.Size = new System.Drawing.Size(305, 19);
-        lblFormula.TabIndex = 5;
-        lblFormula.Text = "Công thức: (Có mặt + đi muộn) / số buổi đã học";
         // 
         // lblClassTotal
         // 
@@ -186,7 +170,7 @@ partial class TeacherAttendanceSummaryView
         lblClassTotal.AutoSize = true;
         lblClassTotal.Font = new System.Drawing.Font("Segoe UI", 8.75F, System.Drawing.FontStyle.Bold);
         lblClassTotal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblClassTotal.Location = new System.Drawing.Point(20, 430);
+        lblClassTotal.Location = new System.Drawing.Point(20, 516);
         lblClassTotal.Name = "lblClassTotal";
         lblClassTotal.Size = new System.Drawing.Size(299, 20);
         lblClassTotal.TabIndex = 4;
@@ -203,7 +187,7 @@ partial class TeacherAttendanceSummaryView
         dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dgvSummary.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvSummary.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        dgvSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         dgvSummary.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvSummary.BackgroundColor = System.Drawing.Color.White;
         dgvSummary.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -244,9 +228,8 @@ partial class TeacherAttendanceSummaryView
         dgvSummary.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvSummary.RowHeadersVisible = false;
         dgvSummary.RowHeadersWidth = 51;
-        dgvSummary.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvSummary.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvSummary.Size = new System.Drawing.Size(1072, 360);
+        dgvSummary.Size = new System.Drawing.Size(1072, 433);
         dgvSummary.TabIndex = 1;
         // 
         // lblSummaryTitle
@@ -259,20 +242,6 @@ partial class TeacherAttendanceSummaryView
         lblSummaryTitle.Size = new System.Drawing.Size(223, 25);
         lblSummaryTitle.TabIndex = 0;
         lblSummaryTitle.Text = "Tổng hợp theo học viên";
-        // 
-        // bannerSuccessSaved
-        // 
-        bannerSuccessSaved.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        bannerSuccessSaved.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
-        bannerSuccessSaved.BannerType = ECMS.UI.Controls.BannerType.Success;
-        bannerSuccessSaved.Location = new System.Drawing.Point(24, 20);
-        bannerSuccessSaved.Message = "Có mặt 15 + đi muộn 1; vắng 2. Tỷ lệ tham dự buổi: 16/18 = 88,9%.";
-        bannerSuccessSaved.Name = "bannerSuccessSaved";
-        bannerSuccessSaved.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-        bannerSuccessSaved.Size = new System.Drawing.Size(1112, 60);
-        bannerSuccessSaved.TabIndex = 0;
-        bannerSuccessSaved.Title = "✓ Đã lưu điểm danh buổi 08.";
-        bannerSuccessSaved.Variant = ECMS.UI.Controls.BannerVariant.Success;
         // 
         // TeacherAttendanceSummaryView
         // 
@@ -299,12 +268,10 @@ partial class TeacherAttendanceSummaryView
     private ECMS.UI.Controls.AppButton btnBackAttendance;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Panel pnlBody;
-    private ECMS.UI.Controls.AppBanner bannerSuccessSaved;
     private ECMS.UI.Controls.AppCard cardSummary;
     private System.Windows.Forms.Label lblSummaryTitle;
     private ECMS.UI.Controls.AppDataGrid dgvSummary;
     private System.Windows.Forms.Label lblClassTotal;
-    private System.Windows.Forms.Label lblFormula;
     private System.Windows.Forms.Label lblFinalCondition;
     private ECMS.UI.Controls.AppButton btnExportSummary;
     private ECMS.UI.Controls.AppButton btnRecordTracking;

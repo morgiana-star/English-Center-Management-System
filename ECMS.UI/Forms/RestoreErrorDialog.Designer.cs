@@ -34,8 +34,8 @@ partial class RestoreErrorDialog
         lblDetailKey = new System.Windows.Forms.Label();
         lblFileVal = new System.Windows.Forms.Label();
         lblFileKey = new System.Windows.Forms.Label();
-        bannerError = new ECMS.UI.Controls.AppBanner();
         lblDialogSubtitle = new System.Windows.Forms.Label();
+        bannerError = new ECMS.UI.Controls.AppBanner();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
         SuspendLayout();
@@ -213,6 +213,17 @@ partial class RestoreErrorDialog
         lblFileKey.TabIndex = 1;
         lblFileKey.Text = "Tệp kiểm tra";
         // 
+        // lblDialogSubtitle
+        // 
+        lblDialogSubtitle.AutoSize = true;
+        lblDialogSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+        lblDialogSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblDialogSubtitle.Location = new System.Drawing.Point(24, 42);
+        lblDialogSubtitle.Name = "lblDialogSubtitle";
+        lblDialogSubtitle.Size = new System.Drawing.Size(271, 19);
+        lblDialogSubtitle.TabIndex = 1;
+        lblDialogSubtitle.Text = "Không thể áp dụng bản sao lưu được chọn";
+        // 
         // bannerError
         // 
         bannerError.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
@@ -226,17 +237,6 @@ partial class RestoreErrorDialog
         bannerError.TabIndex = 0;
         bannerError.Title = "Mã lỗi: DB-RESTORE-02";
         bannerError.Variant = ECMS.UI.Controls.BannerVariant.Danger;
-        // 
-        // lblDialogSubtitle
-        // 
-        lblDialogSubtitle.AutoSize = true;
-        lblDialogSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-        lblDialogSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDialogSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblDialogSubtitle.Name = "lblDialogSubtitle";
-        lblDialogSubtitle.Size = new System.Drawing.Size(271, 19);
-        lblDialogSubtitle.TabIndex = 1;
-        lblDialogSubtitle.Text = "Không thể áp dụng bản sao lưu được chọn";
         // 
         // RestoreErrorDialog
         // 

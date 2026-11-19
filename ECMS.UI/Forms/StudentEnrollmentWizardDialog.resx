@@ -58,12 +58,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblSuccessDesc.Text" xml:space="preserve">
-    <value>• Đã cấp mã học viên chính thức: HV-0242
-• Đã ghi danh vào lớp: IELTS-F01 (Khai giảng 02/11/2026)
-• Đã thu đợt 1 thành công: 3.400.000 VNĐ (Phiếu thu số: PT-261030-025)
-• Ghi nhận công nợ đợt 2: 3.400.000 VNĐ (Hạn thanh toán: 30/11/2026)
-
-Hồ sơ đã được đồng bộ vào hệ thống và hiển thị trên danh sách học viên!</value>
+  <data name="lblSlipDetails.Text" xml:space="preserve">
+    <value>• Họ và tên: Võ Trường Giang (0363833630)
+• Lớp ghi danh: IELTS-F01 · IELTS Foundation
+• Khai giảng: 01/12/2026 · Phòng P201 (GV: Nguyễn Hoàng Anh)
+• Đã thu đợt 1 thành công: 3.400.000 VNĐ (Mã phiếu: PT-20261116-0042)
+• Tình trạng công nợ còn lại: 3.400.000 VNĐ (Đợt 2 hẹn thanh toán: 30/11/2026)</value>
   </data>
 </root>

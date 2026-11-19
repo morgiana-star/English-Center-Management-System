@@ -38,7 +38,6 @@ public partial class EditRoomDialog : Form
         if (_isEditMode)
         {
             lblTitle.Text = "Chỉnh sửa phòng học";
-            lblSubtitle.Text = $"Cập nhật thông tin phòng {roomCode}";
             txtRoomCode.Text = roomCode;
             txtRoomCode.ReadOnly = true;
             txtRoomName.Text = roomName;
@@ -52,7 +51,6 @@ public partial class EditRoomDialog : Form
         else
         {
             lblTitle.Text = "Thêm phòng học mới";
-            lblSubtitle.Text = "Tạo phòng học mới trong hệ thống cơ sở vật chất";
             txtRoomCode.Text = "P204";
             txtRoomName.Text = "Phòng học mới";
             txtCapacity.Text = "24";

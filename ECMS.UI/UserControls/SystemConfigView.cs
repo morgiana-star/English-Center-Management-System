@@ -166,13 +166,13 @@ public partial class SystemConfigView : UserControl
 
         if (total == 100)
         {
-            lblTotalWeightValidation.Text = $"✓ Tổng trọng số = {w1}% + {w2}% + {w3}% = 100% (Đạt tiêu chuẩn)";
-            lblTotalWeightValidation.ForeColor = Color.FromArgb(22, 163, 74);
+            // lblTotalWeightValidation.Text = $"✓ Tổng trọng số = {w1}% + {w2}% + {w3}% = 100% (Đạt tiêu chuẩn)";
+            // lblTotalWeightValidation.ForeColor = Color.FromArgb(22, 163, 74);
         }
         else
         {
-            lblTotalWeightValidation.Text = $"✕ Tổng trọng số = {w1}% + {w2}% + {w3}% = {total}% (Bắt buộc phải đúng 100%)";
-            lblTotalWeightValidation.ForeColor = Color.FromArgb(220, 38, 38);
+            // lblTotalWeightValidation.Text = $"✕ Tổng trọng số = {w1}% + {w2}% + {w3}% = {total}% (Bắt buộc phải đúng 100%)";
+            // lblTotalWeightValidation.ForeColor = Color.FromArgb(220, 38, 38);
         }
     }
 
@@ -483,7 +483,7 @@ public partial class SystemConfigView : UserControl
                 AppSession.SignerTitle = txtDirectorTitle.Text.Trim();
             }
 
-            bannerCenterSuccess.Visible = true;
+            // bannerCenterSuccess.Visible = true;
             AppDialog.ShowSuccess(ParentForm, "Lưu cấu hình hệ thống",
                 "Toàn bộ cấu hình hệ thống (Thông tin trung tâm, Quy tắc đánh giá & Chuyên cần, Lịch sao lưu) đã được lưu thành công vào CSDL SQLite.");
         }

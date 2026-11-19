@@ -81,7 +81,7 @@ partial class TeacherGradeEntryView
         btnBackToList.Name = "btnBackToList";
         btnBackToList.Size = new System.Drawing.Size(160, 36);
         btnBackToList.TabIndex = 3;
-        btnBackToList.Text = "← Danh sách bài thi";
+        btnBackToList.Text = "Danh sách bài thi";
         btnBackToList.UseVisualStyleBackColor = false;
         btnBackToList.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -209,11 +209,11 @@ partial class TeacherGradeEntryView
         lblScoreError.AutoSize = true;
         lblScoreError.Font = new System.Drawing.Font("Segoe UI", 8F);
         lblScoreError.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
-        lblScoreError.Location = new System.Drawing.Point(0, 60);
+        lblScoreError.Location = new System.Drawing.Point(15, 60);
         lblScoreError.Name = "lblScoreError";
-        lblScoreError.Size = new System.Drawing.Size(227, 19);
+        lblScoreError.Size = new System.Drawing.Size(102, 19);
         lblScoreError.TabIndex = 2;
-        lblScoreError.Text = "Chỉ nhận 0–10. Nhập 8,0 để sửa lỗi.";
+        lblScoreError.Text = "Chỉ nhận 0–10.";
         // 
         // txtCurrentScore
         // 
@@ -221,11 +221,11 @@ partial class TeacherGradeEntryView
         txtCurrentScore.CornerRadius = 5;
         txtCurrentScore.ErrorMessage = "";
         txtCurrentScore.HasError = false;
-        txtCurrentScore.Location = new System.Drawing.Point(0, 24);
+        txtCurrentScore.Location = new System.Drawing.Point(14, 24);
         txtCurrentScore.Name = "txtCurrentScore";
         txtCurrentScore.Placeholder = "11";
         txtCurrentScore.ReadOnly = false;
-        txtCurrentScore.Size = new System.Drawing.Size(360, 32);
+        txtCurrentScore.Size = new System.Drawing.Size(346, 32);
         txtCurrentScore.TabIndex = 1;
         txtCurrentScore.UseSystemPasswordChar = false;
         // 
@@ -234,7 +234,7 @@ partial class TeacherGradeEntryView
         lblCurrentStudentTitle.AutoSize = true;
         lblCurrentStudentTitle.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblCurrentStudentTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCurrentStudentTitle.Location = new System.Drawing.Point(0, 4);
+        lblCurrentStudentTitle.Location = new System.Drawing.Point(15, 4);
         lblCurrentStudentTitle.Name = "lblCurrentStudentTitle";
         lblCurrentStudentTitle.Size = new System.Drawing.Size(225, 20);
         lblCurrentStudentTitle.TabIndex = 0;
@@ -292,7 +292,7 @@ partial class TeacherGradeEntryView
         dgvGrades.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvGrades.RowHeadersVisible = false;
         dgvGrades.RowHeadersWidth = 51;
-        dgvGrades.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+        dgvGrades.ScrollBars = System.Windows.Forms.ScrollBars.None;
         dgvGrades.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvGrades.Size = new System.Drawing.Size(1072, 335);
         dgvGrades.TabIndex = 1;
@@ -304,9 +304,9 @@ partial class TeacherGradeEntryView
         lblGridTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblGridTitle.Location = new System.Drawing.Point(20, 16);
         lblGridTitle.Name = "lblGridTitle";
-        lblGridTitle.Size = new System.Drawing.Size(151, 25);
+        lblGridTitle.Size = new System.Drawing.Size(109, 25);
         lblGridTitle.TabIndex = 0;
-        lblGridTitle.Text = "Lưới nhập điểm";
+        lblGridTitle.Text = "Nhập điểm";
         // 
         // pnlStats
         // 

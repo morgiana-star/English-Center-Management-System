@@ -15,20 +15,17 @@ public partial class QuickDetailGridDialog : Form
     public QuickDetailGridDialog()
     {
         InitializeComponent();
-        btnClose.Click += (s, e) => Close();
     }
 
     public QuickDetailGridDialog(string title, string subtitle) : this()
     {
         lblTitle.Text = title;
-        lblSubtitle.Text = subtitle;
         Text = title;
     }
 
     public void SetGridData(Action<AppDataGrid> configureGrid)
     {
         configureGrid?.Invoke(dgvGrid);
-        lblCount.Text = $"Tổng cộng: {dgvGrid.Rows.Count} mục dữ liệu";
     }
 
     public static void ShowDialog(IWin32Window? owner, string title, string subtitle, Action<AppDataGrid> configureGrid)

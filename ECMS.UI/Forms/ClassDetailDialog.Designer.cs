@@ -84,9 +84,9 @@ partial class ClassDetailDialog
         btnAddStudent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnAddStudent.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnAddStudent.ForeColor = System.Drawing.Color.White;
-        btnAddStudent.Location = new System.Drawing.Point(945, 18);
+        btnAddStudent.Location = new System.Drawing.Point(927, 18);
         btnAddStudent.Name = "btnAddStudent";
-        btnAddStudent.Size = new System.Drawing.Size(135, 36);
+        btnAddStudent.Size = new System.Drawing.Size(153, 36);
         btnAddStudent.TabIndex = 4;
         btnAddStudent.Text = "+ Thêm học viên";
         btnAddStudent.UseVisualStyleBackColor = false;
@@ -102,7 +102,7 @@ partial class ClassDetailDialog
         btnEditClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnEditClass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnEditClass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnEditClass.Location = new System.Drawing.Point(830, 18);
+        btnEditClass.Location = new System.Drawing.Point(816, 18);
         btnEditClass.Name = "btnEditClass";
         btnEditClass.Size = new System.Drawing.Size(105, 36);
         btnEditClass.TabIndex = 3;
@@ -188,12 +188,11 @@ partial class ClassDetailDialog
         btnTabStudents.Name = "btnTabStudents";
         btnTabStudents.Size = new System.Drawing.Size(110, 42);
         btnTabStudents.TabIndex = 0;
-        btnTabStudents.Text = "▬ Học viên";
+        btnTabStudents.Text = "Học viên";
         btnTabStudents.UseVisualStyleBackColor = true;
         // 
         // pnlBody
         // 
-        pnlBody.AutoScroll = false;
         pnlBody.Controls.Add(cardStudentList);
         pnlBody.Controls.Add(cardStatAttendance);
         pnlBody.Controls.Add(cardStatStatus);
@@ -275,7 +274,6 @@ partial class ClassDetailDialog
         dgvClassStudents.RowHeadersVisible = false;
         dgvClassStudents.RowHeadersWidth = 51;
         dgvClassStudents.RowTemplate.Height = 40;
-        dgvClassStudents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvClassStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvClassStudents.Size = new System.Drawing.Size(1012, 400);
         dgvClassStudents.TabIndex = 1;
@@ -287,7 +285,7 @@ partial class ClassDetailDialog
         lblStudentListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStudentListTitle.Location = new System.Drawing.Point(20, 16);
         lblStudentListTitle.Name = "lblStudentListTitle";
-        lblStudentListTitle.Size = new System.Drawing.Size(190, 25);
+        lblStudentListTitle.Size = new System.Drawing.Size(180, 25);
         lblStudentListTitle.TabIndex = 0;
         lblStudentListTitle.Text = "Học viên trong lớp";
         // 
@@ -345,7 +343,7 @@ partial class ClassDetailDialog
         // 
         lblStatStatusVal.AutoSize = true;
         lblStatStatusVal.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatStatusVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
+        lblStatStatusVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblStatStatusVal.Location = new System.Drawing.Point(16, 38);
         lblStatStatusVal.Name = "lblStatStatusVal";
         lblStatStatusVal.Size = new System.Drawing.Size(151, 41);

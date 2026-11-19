@@ -15,10 +15,16 @@ partial class SelectStudentsForClassDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlFilter = new System.Windows.Forms.Panel();
         txtSearch = new ECMS.UI.Controls.AppTextBox();
@@ -26,7 +32,6 @@ partial class SelectStudentsForClassDialog
         pnlFooter = new System.Windows.Forms.Panel();
         btnConfirm = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
-        lblSelectedCount = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardGrid = new ECMS.UI.Controls.AppCard();
         dgvStudents = new ECMS.UI.Controls.AppDataGrid();
@@ -47,7 +52,6 @@ partial class SelectStudentsForClassDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -56,25 +60,14 @@ partial class SelectStudentsForClassDialog
         pnlHeader.Size = new System.Drawing.Size(860, 72);
         pnlHeader.TabIndex = 0;
         // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(370, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Chọn học viên từ danh sách trung tâm để xếp vào lớp";
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
-        lblTitle.Location = new System.Drawing.Point(22, 12);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
+        lblTitle.Location = new System.Drawing.Point(24, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(306, 31);
+        lblTitle.Size = new System.Drawing.Size(300, 31);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Thêm học viên vào lớp học";
         // 
@@ -98,11 +91,11 @@ partial class SelectStudentsForClassDialog
         txtSearch.ErrorMessage = "";
         txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtSearch.HasError = false;
-        txtSearch.Location = new System.Drawing.Point(90, 8);
+        txtSearch.Location = new System.Drawing.Point(114, 8);
         txtSearch.Name = "txtSearch";
         txtSearch.Placeholder = "Nhập mã học viên, họ và tên, hoặc số điện thoại để tìm...";
         txtSearch.ReadOnly = false;
-        txtSearch.Size = new System.Drawing.Size(746, 36);
+        txtSearch.Size = new System.Drawing.Size(722, 36);
         txtSearch.TabIndex = 1;
         txtSearch.UseSystemPasswordChar = false;
         // 
@@ -110,10 +103,10 @@ partial class SelectStudentsForClassDialog
         // 
         lblSearch.Dock = System.Windows.Forms.DockStyle.Left;
         lblSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblSearch.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblSearch.Location = new System.Drawing.Point(24, 8);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new System.Drawing.Size(66, 36);
+        lblSearch.Size = new System.Drawing.Size(90, 36);
         lblSearch.TabIndex = 0;
         lblSearch.Text = "Tìm kiếm:";
         lblSearch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -123,7 +116,6 @@ partial class SelectStudentsForClassDialog
         pnlFooter.BackColor = System.Drawing.Color.White;
         pnlFooter.Controls.Add(btnConfirm);
         pnlFooter.Controls.Add(btnCancel);
-        pnlFooter.Controls.Add(lblSelectedCount);
         pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         pnlFooter.Location = new System.Drawing.Point(0, 520);
         pnlFooter.Name = "pnlFooter";
@@ -133,7 +125,7 @@ partial class SelectStudentsForClassDialog
         // 
         // btnConfirm
         // 
-        btnConfirm.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnConfirm.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnConfirm.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnConfirm.CornerRadius = 5;
         btnConfirm.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -149,7 +141,7 @@ partial class SelectStudentsForClassDialog
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -163,21 +155,9 @@ partial class SelectStudentsForClassDialog
         btnCancel.UseVisualStyleBackColor = true;
         btnCancel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
-        // lblSelectedCount
-        // 
-        lblSelectedCount.Dock = System.Windows.Forms.DockStyle.Left;
-        lblSelectedCount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-        lblSelectedCount.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSelectedCount.Location = new System.Drawing.Point(24, 10);
-        lblSelectedCount.Name = "lblSelectedCount";
-        lblSelectedCount.Size = new System.Drawing.Size(300, 40);
-        lblSelectedCount.TabIndex = 0;
-        lblSelectedCount.Text = "Đã chọn 0 học viên";
-        lblSelectedCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        // 
         // pnlBody
         // 
-        pnlBody.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         pnlBody.Controls.Add(cardGrid);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlBody.Location = new System.Drawing.Point(0, 128);
@@ -189,7 +169,7 @@ partial class SelectStudentsForClassDialog
         // cardGrid
         // 
         cardGrid.BackColor = System.Drawing.Color.White;
-        cardGrid.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardGrid.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardGrid.BorderWidth = 1;
         cardGrid.Controls.Add(dgvStudents);
         cardGrid.CornerRadius = 6;
@@ -204,15 +184,50 @@ partial class SelectStudentsForClassDialog
         // 
         dgvStudents.AllowUserToAddRows = false;
         dgvStudents.AllowUserToDeleteRows = false;
+        dgvStudents.AllowUserToResizeColumns = false;
+        dgvStudents.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvStudents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvStudents.BackgroundColor = System.Drawing.Color.White;
         dgvStudents.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvStudents.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvStudents.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvStudents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvStudents.ColumnHeadersHeight = 36;
+        dgvStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgvStudents.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { colSelect, colCode, colName, colPhone, colEmail, colStatus });
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvStudents.DefaultCellStyle = dataGridViewCellStyle3;
         dgvStudents.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvStudents.EnableHeadersVisualStyles = false;
+        dgvStudents.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvStudents.Location = new System.Drawing.Point(1, 1);
+        dgvStudents.MultiSelect = false;
         dgvStudents.Name = "dgvStudents";
+        dgvStudents.ReadOnly = true;
         dgvStudents.RowHeadersVisible = false;
+        dgvStudents.RowHeadersWidth = 51;
         dgvStudents.RowTemplate.Height = 34;
+        dgvStudents.ScrollBars = System.Windows.Forms.ScrollBars.None;
         dgvStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvStudents.Size = new System.Drawing.Size(810, 366);
         dgvStudents.TabIndex = 0;
@@ -220,49 +235,51 @@ partial class SelectStudentsForClassDialog
         // colSelect
         // 
         colSelect.HeaderText = "Chọn";
+        colSelect.MinimumWidth = 6;
         colSelect.Name = "colSelect";
-        colSelect.Width = 60;
+        colSelect.ReadOnly = true;
         // 
         // colCode
         // 
         colCode.HeaderText = "Mã HV";
+        colCode.MinimumWidth = 6;
         colCode.Name = "colCode";
         colCode.ReadOnly = true;
-        colCode.Width = 110;
         // 
         // colName
         // 
         colName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
         colName.HeaderText = "Họ và tên";
+        colName.MinimumWidth = 6;
         colName.Name = "colName";
         colName.ReadOnly = true;
         // 
         // colPhone
         // 
         colPhone.HeaderText = "Số điện thoại";
+        colPhone.MinimumWidth = 6;
         colPhone.Name = "colPhone";
         colPhone.ReadOnly = true;
-        colPhone.Width = 130;
         // 
         // colEmail
         // 
         colEmail.HeaderText = "Email";
+        colEmail.MinimumWidth = 6;
         colEmail.Name = "colEmail";
         colEmail.ReadOnly = true;
-        colEmail.Width = 180;
         // 
         // colStatus
         // 
         colStatus.HeaderText = "Trạng thái";
+        colStatus.MinimumWidth = 6;
         colStatus.Name = "colStatus";
         colStatus.ReadOnly = true;
-        colStatus.Width = 120;
         // 
         // SelectStudentsForClassDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(860, 580);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
@@ -271,7 +288,6 @@ partial class SelectStudentsForClassDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "SelectStudentsForClassDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thêm học viên vào lớp · ECMS";
         pnlHeader.ResumeLayout(false);
@@ -288,12 +304,10 @@ partial class SelectStudentsForClassDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlFilter;
     private System.Windows.Forms.Label lblSearch;
     private ECMS.UI.Controls.AppTextBox txtSearch;
     private System.Windows.Forms.Panel pnlFooter;
-    private System.Windows.Forms.Label lblSelectedCount;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnConfirm;
     private System.Windows.Forms.Panel pnlBody;

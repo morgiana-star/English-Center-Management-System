@@ -285,7 +285,6 @@ public partial class CertificateRegistryDialog : Form
         gridRegistry.DataSource = null;
         gridRegistry.DataSource = displayList;
 
-        lblGridFooter.Text = $"📌 Tổng số: {displayList.Count} chứng chỉ đã cấp | Nhấn đúp chuột hoặc ấn '🖨️ Xem & In' để mở phôi chứng chỉ in ấn.";
     }
 
     private void HighlightCertificate(string serial)

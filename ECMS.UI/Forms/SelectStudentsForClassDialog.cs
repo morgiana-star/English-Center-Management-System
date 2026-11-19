@@ -22,7 +22,6 @@ public partial class SelectStudentsForClassDialog : Form
             return;
 
         _classCode = classCode;
-        lblSubtitle.Text = $"Chọn học viên từ danh sách trung tâm để xếp vào lớp {_classCode}";
 
         LoadData();
         WireEvents();
@@ -129,7 +128,6 @@ public partial class SelectStudentsForClassDialog : Form
                 count++;
             }
         }
-        lblSelectedCount.Text = $"Đã chọn {count} học viên";
         btnConfirm.Text = $"Xác nhận thêm ({count})";
         btnConfirm.Enabled = count > 0;
     }

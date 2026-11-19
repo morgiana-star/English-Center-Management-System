@@ -15,10 +15,13 @@ partial class CreateAssessmentDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
         btnSave = new ECMS.UI.Controls.AppButton();
@@ -48,34 +51,22 @@ partial class CreateAssessmentDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 12);
-        pnlHeader.Size = new System.Drawing.Size(680, 75);
+        pnlHeader.Size = new System.Drawing.Size(680, 56);
         pnlHeader.TabIndex = 0;
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 44);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(378, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Thiết lập cấu hình bài thi và chọn các lớp học áp dụng";
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(22, 12);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(248, 32);
+        lblTitle.Size = new System.Drawing.Size(250, 32);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Tạo bài kiểm tra mới";
         // 
@@ -93,8 +84,8 @@ partial class CreateAssessmentDialog
         // 
         // btnSave
         // 
-        btnSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
-        btnSave.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnSave.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnSave.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnSave.CornerRadius = 5;
         btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -111,14 +102,14 @@ partial class CreateAssessmentDialog
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.BackColor = System.Drawing.Color.White;
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnCancel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnCancel.Location = new System.Drawing.Point(395, 12);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(95, 36);
@@ -129,19 +120,18 @@ partial class CreateAssessmentDialog
         // 
         // pnlBody
         // 
-        pnlBody.AutoScroll = false;
         pnlBody.Controls.Add(cardForm);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 75);
+        pnlBody.Location = new System.Drawing.Point(0, 56);
         pnlBody.Name = "pnlBody";
         pnlBody.Padding = new System.Windows.Forms.Padding(20);
-        pnlBody.Size = new System.Drawing.Size(680, 500);
+        pnlBody.Size = new System.Drawing.Size(680, 519);
         pnlBody.TabIndex = 1;
         // 
         // cardForm
         // 
         cardForm.BackColor = System.Drawing.Color.White;
-        cardForm.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardForm.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardForm.BorderWidth = 1;
         cardForm.Controls.Add(btnClearClasses);
         cardForm.Controls.Add(btnSelectAllClasses);
@@ -162,16 +152,16 @@ partial class CreateAssessmentDialog
         cardForm.Location = new System.Drawing.Point(20, 20);
         cardForm.Name = "cardForm";
         cardForm.Padding = new System.Windows.Forms.Padding(20);
-        cardForm.Size = new System.Drawing.Size(640, 460);
+        cardForm.Size = new System.Drawing.Size(640, 479);
         cardForm.TabIndex = 0;
         // 
         // btnClearClasses
         // 
-        btnClearClasses.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        btnClearClasses.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(203, 213, 225);
+        btnClearClasses.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        btnClearClasses.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)203)), ((int)((byte)213)), ((int)((byte)225)));
         btnClearClasses.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnClearClasses.Font = new System.Drawing.Font("Segoe UI", 8F);
-        btnClearClasses.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        btnClearClasses.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         btnClearClasses.Location = new System.Drawing.Point(540, 206);
         btnClearClasses.Name = "btnClearClasses";
         btnClearClasses.Size = new System.Drawing.Size(75, 26);
@@ -181,11 +171,11 @@ partial class CreateAssessmentDialog
         // 
         // btnSelectAllClasses
         // 
-        btnSelectAllClasses.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        btnSelectAllClasses.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(203, 213, 225);
+        btnSelectAllClasses.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        btnSelectAllClasses.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)203)), ((int)((byte)213)), ((int)((byte)225)));
         btnSelectAllClasses.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSelectAllClasses.Font = new System.Drawing.Font("Segoe UI", 8F);
-        btnSelectAllClasses.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        btnSelectAllClasses.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         btnSelectAllClasses.Location = new System.Drawing.Point(445, 206);
         btnSelectAllClasses.Name = "btnSelectAllClasses";
         btnSelectAllClasses.Size = new System.Drawing.Size(90, 26);
@@ -207,10 +197,10 @@ partial class CreateAssessmentDialog
         // 
         lblAssignedClass.AutoSize = true;
         lblAssignedClass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblAssignedClass.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblAssignedClass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblAssignedClass.Location = new System.Drawing.Point(20, 209);
         lblAssignedClass.Name = "lblAssignedClass";
-        lblAssignedClass.Size = new System.Drawing.Size(309, 20);
+        lblAssignedClass.Size = new System.Drawing.Size(308, 20);
         lblAssignedClass.TabIndex = 10;
         lblAssignedClass.Text = "Lớp học áp dụng * (Có thể chọn nhiều lớp):";
         // 
@@ -227,7 +217,7 @@ partial class CreateAssessmentDialog
         // 
         lblWeight.AutoSize = true;
         lblWeight.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblWeight.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblWeight.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblWeight.Location = new System.Drawing.Point(340, 137);
         lblWeight.Name = "lblWeight";
         lblWeight.Size = new System.Drawing.Size(91, 20);
@@ -247,10 +237,10 @@ partial class CreateAssessmentDialog
         // 
         lblScale.AutoSize = true;
         lblScale.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblScale.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblScale.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblScale.Location = new System.Drawing.Point(20, 137);
         lblScale.Name = "lblScale";
-        lblScale.Size = new System.Drawing.Size(89, 20);
+        lblScale.Size = new System.Drawing.Size(96, 20);
         lblScale.TabIndex = 6;
         lblScale.Text = "Thang điểm:";
         // 
@@ -268,10 +258,10 @@ partial class CreateAssessmentDialog
         // 
         lblExamDate.AutoSize = true;
         lblExamDate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblExamDate.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblExamDate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblExamDate.Location = new System.Drawing.Point(340, 73);
         lblExamDate.Name = "lblExamDate";
-        lblExamDate.Size = new System.Drawing.Size(107, 20);
+        lblExamDate.Size = new System.Drawing.Size(112, 20);
         lblExamDate.TabIndex = 4;
         lblExamDate.Text = "Ngày kiểm tra:";
         // 
@@ -289,10 +279,10 @@ partial class CreateAssessmentDialog
         // 
         lblAssessmentType.AutoSize = true;
         lblAssessmentType.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblAssessmentType.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblAssessmentType.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblAssessmentType.Location = new System.Drawing.Point(20, 73);
         lblAssessmentType.Name = "lblAssessmentType";
-        lblAssessmentType.Size = new System.Drawing.Size(130, 20);
+        lblAssessmentType.Size = new System.Drawing.Size(136, 20);
         lblAssessmentType.TabIndex = 2;
         lblAssessmentType.Text = "Loại bài kiểm tra *";
         // 
@@ -309,10 +299,10 @@ partial class CreateAssessmentDialog
         // 
         lblAssessmentName.AutoSize = true;
         lblAssessmentName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblAssessmentName.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblAssessmentName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblAssessmentName.Location = new System.Drawing.Point(20, 11);
         lblAssessmentName.Name = "lblAssessmentName";
-        lblAssessmentName.Size = new System.Drawing.Size(134, 20);
+        lblAssessmentName.Size = new System.Drawing.Size(132, 20);
         lblAssessmentName.TabIndex = 0;
         lblAssessmentName.Text = "Tên bài kiểm tra *";
         // 
@@ -320,7 +310,7 @@ partial class CreateAssessmentDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         ClientSize = new System.Drawing.Size(680, 635);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
@@ -329,7 +319,6 @@ partial class CreateAssessmentDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "CreateAssessmentDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Tạo bài kiểm tra mới";
         pnlHeader.ResumeLayout(false);
@@ -345,7 +334,6 @@ partial class CreateAssessmentDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlFooter;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnSave;

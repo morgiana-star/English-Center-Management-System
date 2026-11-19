@@ -22,8 +22,6 @@ partial class RestoreDatabaseDialog
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        btnCloseTop = new System.Windows.Forms.Label();
-        lblDialogSubtitle = new System.Windows.Forms.Label();
         lblDialogTitle = new System.Windows.Forms.Label();
         pnlContent = new System.Windows.Forms.Panel();
         btnConfirmRestore = new ECMS.UI.Controls.AppButton();
@@ -44,8 +42,6 @@ partial class RestoreDatabaseDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(btnCloseTop);
-        pnlHeader.Controls.Add(lblDialogSubtitle);
         pnlHeader.Controls.Add(lblDialogTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -53,30 +49,6 @@ partial class RestoreDatabaseDialog
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
         pnlHeader.Size = new System.Drawing.Size(650, 70);
         pnlHeader.TabIndex = 0;
-        // 
-        // btnCloseTop
-        // 
-        btnCloseTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnCloseTop.AutoSize = true;
-        btnCloseTop.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnCloseTop.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        btnCloseTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnCloseTop.Location = new System.Drawing.Point(606, 16);
-        btnCloseTop.Name = "btnCloseTop";
-        btnCloseTop.Size = new System.Drawing.Size(29, 28);
-        btnCloseTop.TabIndex = 2;
-        btnCloseTop.Text = "✕";
-        // 
-        // lblDialogSubtitle
-        // 
-        lblDialogSubtitle.AutoSize = true;
-        lblDialogSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-        lblDialogSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDialogSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblDialogSubtitle.Name = "lblDialogSubtitle";
-        lblDialogSubtitle.Size = new System.Drawing.Size(266, 19);
-        lblDialogSubtitle.TabIndex = 1;
-        lblDialogSubtitle.Text = "Admin · Khôi phục từ bản sao lưu đã chọn";
         // 
         // lblDialogTitle
         // 
@@ -163,12 +135,12 @@ partial class RestoreDatabaseDialog
         // 
         lblIntegrityVal.AutoSize = true;
         lblIntegrityVal.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblIntegrityVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
+        lblIntegrityVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblIntegrityVal.Location = new System.Drawing.Point(180, 135);
         lblIntegrityVal.Name = "lblIntegrityVal";
-        lblIntegrityVal.Size = new System.Drawing.Size(336, 20);
+        lblIntegrityVal.Size = new System.Drawing.Size(321, 20);
         lblIntegrityVal.TabIndex = 7;
-        lblIntegrityVal.Text = "✓ Tệp tồn tại, kích thước 18,2 MB, hợp lệ SQLite 3";
+        lblIntegrityVal.Text = "Tệp tồn tại, kích thước 18,2 MB, hợp lệ SQLite 3";
         // 
         // lblIntegrityKey
         // 
@@ -221,15 +193,15 @@ partial class RestoreDatabaseDialog
         lblPreBackupKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblPreBackupKey.Location = new System.Drawing.Point(24, 58);
         lblPreBackupKey.Name = "lblPreBackupKey";
-        lblPreBackupKey.Size = new System.Drawing.Size(144, 20);
+        lblPreBackupKey.Size = new System.Drawing.Size(59, 20);
         lblPreBackupKey.TabIndex = 2;
-        lblPreBackupKey.Text = "Sao lưu phòng ngừa";
+        lblPreBackupKey.Text = "Sao lưu";
         // 
         // lblSourceBackupVal
         // 
         lblSourceBackupVal.AutoSize = true;
         lblSourceBackupVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSourceBackupVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblSourceBackupVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblSourceBackupVal.Location = new System.Drawing.Point(180, 20);
         lblSourceBackupVal.Name = "lblSourceBackupVal";
         lblSourceBackupVal.Size = new System.Drawing.Size(312, 20);
@@ -274,8 +246,6 @@ partial class RestoreDatabaseDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblDialogTitle;
-    private System.Windows.Forms.Label lblDialogSubtitle;
-    private System.Windows.Forms.Label btnCloseTop;
     private System.Windows.Forms.Panel pnlContent;
     private System.Windows.Forms.Label lblSourceBackupKey;
     private System.Windows.Forms.Label lblSourceBackupVal;

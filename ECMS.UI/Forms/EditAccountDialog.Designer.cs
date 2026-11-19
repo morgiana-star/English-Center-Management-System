@@ -15,10 +15,13 @@ partial class EditAccountDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
         btnSave = new ECMS.UI.Controls.AppButton();
@@ -26,7 +29,6 @@ partial class EditAccountDialog
         pnlBody = new System.Windows.Forms.Panel();
         cardForm = new ECMS.UI.Controls.AppCard();
         chkRequirePassChange = new System.Windows.Forms.CheckBox();
-        chkActive = new System.Windows.Forms.CheckBox();
         cboRole = new ECMS.UI.Controls.AppComboBox();
         lblRole = new System.Windows.Forms.Label();
         cboProfile = new ECMS.UI.Controls.AppComboBox();
@@ -44,7 +46,6 @@ partial class EditAccountDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -53,25 +54,14 @@ partial class EditAccountDialog
         pnlHeader.Size = new System.Drawing.Size(560, 72);
         pnlHeader.TabIndex = 0;
         // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblSubtitle.Location = new System.Drawing.Point(24, 42);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(286, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Cập nhật thông tin vai trò và phân quyền";
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(24, 14);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(252, 31);
+        lblTitle.Size = new System.Drawing.Size(227, 31);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Chỉnh sửa tài khoản";
         // 
@@ -89,8 +79,8 @@ partial class EditAccountDialog
         // 
         // btnSave
         // 
-        btnSave.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnSave.BackColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnSave.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnSave.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnSave.CornerRadius = 5;
         btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -108,15 +98,15 @@ partial class EditAccountDialog
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.BackColor = System.Drawing.Color.White;
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnCancel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(203, 213, 225);
+        btnCancel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)203)), ((int)((byte)213)), ((int)((byte)225)));
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnCancel.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         btnCancel.Location = new System.Drawing.Point(324, 12);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(84, 36);
@@ -138,12 +128,11 @@ partial class EditAccountDialog
         // 
         // cardForm
         // 
-        cardForm.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cardForm.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardForm.BackColor = System.Drawing.Color.White;
-        cardForm.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardForm.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardForm.BorderWidth = 1;
         cardForm.Controls.Add(chkRequirePassChange);
-        cardForm.Controls.Add(chkActive);
         cardForm.Controls.Add(cboRole);
         cardForm.Controls.Add(lblRole);
         cardForm.Controls.Add(cboProfile);
@@ -163,73 +152,73 @@ partial class EditAccountDialog
         // 
         chkRequirePassChange.AutoSize = true;
         chkRequirePassChange.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkRequirePassChange.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
-        chkRequirePassChange.Location = new System.Drawing.Point(240, 320);
+        chkRequirePassChange.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        chkRequirePassChange.Location = new System.Drawing.Point(20, 315);
         chkRequirePassChange.Name = "chkRequirePassChange";
-        chkRequirePassChange.Size = new System.Drawing.Size(242, 24);
+        chkRequirePassChange.Size = new System.Drawing.Size(270, 24);
         chkRequirePassChange.TabIndex = 9;
-        chkRequirePassChange.Text = "Yêu cầu đổi MK khi đăng nhập";
+        chkRequirePassChange.Text = "Yêu cầu đổi mật khẩu khi đăng nhập";
         chkRequirePassChange.UseVisualStyleBackColor = true;
-        // 
-        // chkActive
-        // 
-        chkActive.AutoSize = true;
-        chkActive.Checked = true;
-        chkActive.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkActive.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        chkActive.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
-        chkActive.Location = new System.Drawing.Point(20, 320);
-        chkActive.Name = "chkActive";
-        chkActive.Size = new System.Drawing.Size(183, 24);
-        chkActive.TabIndex = 8;
-        chkActive.Text = "Tài khoản hoạt động";
-        chkActive.UseVisualStyleBackColor = true;
         // 
         // cboRole
         // 
-        cboRole.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cboRole.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        cboRole.BackColor = System.Drawing.Color.Transparent;
         cboRole.CornerRadius = 5;
+        cboRole.DataSource = null;
+        cboRole.DisplayMember = "";
         cboRole.Font = new System.Drawing.Font("Segoe UI", 9F);
         cboRole.Location = new System.Drawing.Point(20, 260);
         cboRole.Name = "cboRole";
+        cboRole.SelectedIndex = -1;
+        cboRole.SelectedItem = null;
+        cboRole.SelectedValue = null;
         cboRole.Size = new System.Drawing.Size(472, 36);
         cboRole.TabIndex = 7;
+        cboRole.ValueMember = "";
         // 
         // lblRole
         // 
         lblRole.AutoSize = true;
         lblRole.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblRole.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblRole.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblRole.Location = new System.Drawing.Point(20, 236);
         lblRole.Name = "lblRole";
-        lblRole.Size = new System.Drawing.Size(68, 20);
+        lblRole.Size = new System.Drawing.Size(66, 20);
         lblRole.TabIndex = 6;
         lblRole.Text = "Vai trò *";
         // 
         // cboProfile
         // 
-        cboProfile.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        cboProfile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        cboProfile.BackColor = System.Drawing.Color.Transparent;
         cboProfile.CornerRadius = 5;
+        cboProfile.DataSource = null;
+        cboProfile.DisplayMember = "";
         cboProfile.Font = new System.Drawing.Font("Segoe UI", 9F);
         cboProfile.Location = new System.Drawing.Point(20, 186);
         cboProfile.Name = "cboProfile";
+        cboProfile.SelectedIndex = -1;
+        cboProfile.SelectedItem = null;
+        cboProfile.SelectedValue = null;
         cboProfile.Size = new System.Drawing.Size(472, 36);
         cboProfile.TabIndex = 5;
+        cboProfile.ValueMember = "";
         // 
         // lblProfile
         // 
         lblProfile.AutoSize = true;
         lblProfile.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblProfile.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblProfile.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblProfile.Location = new System.Drawing.Point(20, 162);
         lblProfile.Name = "lblProfile";
-        lblProfile.Size = new System.Drawing.Size(117, 20);
+        lblProfile.Size = new System.Drawing.Size(115, 20);
         lblProfile.TabIndex = 4;
         lblProfile.Text = "Hồ sơ liên kết *";
         // 
         // txtFullName
         // 
-        txtFullName.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        txtFullName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtFullName.BackColor = System.Drawing.Color.Transparent;
         txtFullName.CornerRadius = 5;
         txtFullName.ErrorMessage = "";
@@ -247,16 +236,16 @@ partial class EditAccountDialog
         // 
         lblFullName.AutoSize = true;
         lblFullName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblFullName.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblFullName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblFullName.Location = new System.Drawing.Point(20, 90);
         lblFullName.Name = "lblFullName";
-        lblFullName.Size = new System.Drawing.Size(90, 20);
+        lblFullName.Size = new System.Drawing.Size(87, 20);
         lblFullName.TabIndex = 2;
         lblFullName.Text = "Họ và tên *";
         // 
         // txtUsername
         // 
-        txtUsername.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+        txtUsername.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtUsername.BackColor = System.Drawing.Color.Transparent;
         txtUsername.CornerRadius = 5;
         txtUsername.ErrorMessage = "";
@@ -274,10 +263,10 @@ partial class EditAccountDialog
         // 
         lblUsername.AutoSize = true;
         lblUsername.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblUsername.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        lblUsername.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblUsername.Location = new System.Drawing.Point(20, 18);
         lblUsername.Name = "lblUsername";
-        lblUsername.Size = new System.Drawing.Size(126, 20);
+        lblUsername.Size = new System.Drawing.Size(123, 20);
         lblUsername.TabIndex = 0;
         lblUsername.Text = "Tên đăng nhập *";
         // 
@@ -285,7 +274,7 @@ partial class EditAccountDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(560, 540);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
@@ -294,7 +283,6 @@ partial class EditAccountDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "EditAccountDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Chỉnh sửa tài khoản";
@@ -310,7 +298,6 @@ partial class EditAccountDialog
     #endregion
 
     private System.Windows.Forms.Panel pnlHeader;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Panel pnlFooter;
     private ECMS.UI.Controls.AppButton btnSave;
@@ -325,6 +312,5 @@ partial class EditAccountDialog
     private System.Windows.Forms.Label lblProfile;
     private ECMS.UI.Controls.AppComboBox cboRole;
     private System.Windows.Forms.Label lblRole;
-    private System.Windows.Forms.CheckBox chkActive;
     private System.Windows.Forms.CheckBox chkRequirePassChange;
 }

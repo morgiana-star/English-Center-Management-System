@@ -15,13 +15,17 @@ partial class TuitionDetailDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        btnClose = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardInstallments = new ECMS.UI.Controls.AppCard();
@@ -56,7 +60,6 @@ partial class TuitionDetailDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -65,38 +68,20 @@ partial class TuitionDetailDialog
         pnlHeader.Size = new System.Drawing.Size(860, 68);
         pnlHeader.TabIndex = 0;
         // 
-        // btnClose
-        // 
-        btnClose.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnClose.BackColor = System.Drawing.Color.White;
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnClose.CornerRadius = 5;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnClose.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
-        btnClose.Location = new System.Drawing.Point(745, 15);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(90, 36);
-        btnClose.TabIndex = 1;
-        btnClose.Text = "Đóng";
-        btnClose.UseVisualStyleBackColor = false;
-        btnClose.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 13.5F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(22, 17);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(390, 31);
+        lblTitle.Size = new System.Drawing.Size(489, 31);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Chi tiết học phí học viên · Nguyễn Minh Anh";
         // 
         // pnlBody
         // 
-        pnlBody.BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        pnlBody.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         pnlBody.Controls.Add(cardInstallments);
         pnlBody.Controls.Add(cardSummary);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -109,7 +94,7 @@ partial class TuitionDetailDialog
         // cardInstallments
         // 
         cardInstallments.BackColor = System.Drawing.Color.White;
-        cardInstallments.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardInstallments.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardInstallments.BorderWidth = 1;
         cardInstallments.Controls.Add(dgvInstallments);
         cardInstallments.Controls.Add(lblInstallmentsTitle);
@@ -127,7 +112,7 @@ partial class TuitionDetailDialog
         dgvInstallments.AllowUserToDeleteRows = false;
         dgvInstallments.AllowUserToResizeColumns = false;
         dgvInstallments.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         dgvInstallments.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
         dgvInstallments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvInstallments.BackgroundColor = System.Drawing.Color.White;
@@ -135,12 +120,12 @@ partial class TuitionDetailDialog
         dgvInstallments.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         dgvInstallments.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvInstallments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvInstallments.ColumnHeadersHeight = 36;
@@ -148,23 +133,30 @@ partial class TuitionDetailDialog
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(6, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         dgvInstallments.DefaultCellStyle = dataGridViewCellStyle3;
         dgvInstallments.Dock = System.Windows.Forms.DockStyle.Fill;
         dgvInstallments.EnableHeadersVisualStyles = false;
-        dgvInstallments.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        dgvInstallments.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvInstallments.Location = new System.Drawing.Point(16, 42);
         dgvInstallments.MultiSelect = false;
         dgvInstallments.Name = "dgvInstallments";
         dgvInstallments.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvInstallments.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvInstallments.RowHeadersVisible = false;
         dgvInstallments.RowHeadersWidth = 51;
         dgvInstallments.RowTemplate.Height = 38;
-        dgvInstallments.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvInstallments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvInstallments.Size = new System.Drawing.Size(788, 226);
         dgvInstallments.TabIndex = 1;
@@ -173,7 +165,7 @@ partial class TuitionDetailDialog
         // 
         lblInstallmentsTitle.Dock = System.Windows.Forms.DockStyle.Top;
         lblInstallmentsTitle.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblInstallmentsTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblInstallmentsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblInstallmentsTitle.Location = new System.Drawing.Point(16, 16);
         lblInstallmentsTitle.Name = "lblInstallmentsTitle";
         lblInstallmentsTitle.Size = new System.Drawing.Size(788, 26);
@@ -183,7 +175,7 @@ partial class TuitionDetailDialog
         // cardSummary
         // 
         cardSummary.BackColor = System.Drawing.Color.White;
-        cardSummary.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
+        cardSummary.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardSummary.BorderWidth = 1;
         cardSummary.Controls.Add(lblRemainingVal);
         cardSummary.Controls.Add(lblRemainingTitle);
@@ -210,7 +202,7 @@ partial class TuitionDetailDialog
         // lblRemainingVal
         // 
         lblRemainingVal.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold);
-        lblRemainingVal.ForeColor = System.Drawing.Color.FromArgb(220, 38, 38);
+        lblRemainingVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
         lblRemainingVal.Location = new System.Drawing.Point(540, 120);
         lblRemainingVal.Name = "lblRemainingVal";
         lblRemainingVal.Size = new System.Drawing.Size(250, 26);
@@ -220,7 +212,7 @@ partial class TuitionDetailDialog
         // lblRemainingTitle
         // 
         lblRemainingTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblRemainingTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblRemainingTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblRemainingTitle.Location = new System.Drawing.Point(400, 124);
         lblRemainingTitle.Name = "lblRemainingTitle";
         lblRemainingTitle.Size = new System.Drawing.Size(130, 20);
@@ -230,7 +222,7 @@ partial class TuitionDetailDialog
         // lblPaidVal
         // 
         lblPaidVal.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblPaidVal.ForeColor = System.Drawing.Color.FromArgb(22, 163, 74);
+        lblPaidVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
         lblPaidVal.Location = new System.Drawing.Point(145, 120);
         lblPaidVal.Name = "lblPaidVal";
         lblPaidVal.Size = new System.Drawing.Size(230, 24);
@@ -240,7 +232,7 @@ partial class TuitionDetailDialog
         // lblPaidTitle
         // 
         lblPaidTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPaidTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblPaidTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblPaidTitle.Location = new System.Drawing.Point(18, 124);
         lblPaidTitle.Name = "lblPaidTitle";
         lblPaidTitle.Size = new System.Drawing.Size(120, 20);
@@ -250,7 +242,7 @@ partial class TuitionDetailDialog
         // lblTotalVal
         // 
         lblTotalVal.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblTotalVal.ForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
+        lblTotalVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         lblTotalVal.Location = new System.Drawing.Point(540, 85);
         lblTotalVal.Name = "lblTotalVal";
         lblTotalVal.Size = new System.Drawing.Size(250, 22);
@@ -260,7 +252,7 @@ partial class TuitionDetailDialog
         // lblTotalTitle
         // 
         lblTotalTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblTotalTitle.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblTotalTitle.Location = new System.Drawing.Point(400, 87);
         lblTotalTitle.Name = "lblTotalTitle";
         lblTotalTitle.Size = new System.Drawing.Size(130, 20);
@@ -270,7 +262,7 @@ partial class TuitionDetailDialog
         // lblDiscountVal
         // 
         lblDiscountVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblDiscountVal.ForeColor = System.Drawing.Color.FromArgb(16, 185, 129);
+        lblDiscountVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)16)), ((int)((byte)185)), ((int)((byte)129)));
         lblDiscountVal.Location = new System.Drawing.Point(145, 85);
         lblDiscountVal.Name = "lblDiscountVal";
         lblDiscountVal.Size = new System.Drawing.Size(230, 22);
@@ -280,7 +272,7 @@ partial class TuitionDetailDialog
         // lblDiscountTitle
         // 
         lblDiscountTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblDiscountTitle.Location = new System.Drawing.Point(18, 87);
         lblDiscountTitle.Name = "lblDiscountTitle";
         lblDiscountTitle.Size = new System.Drawing.Size(120, 20);
@@ -290,7 +282,7 @@ partial class TuitionDetailDialog
         // lblOriginalVal
         // 
         lblOriginalVal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblOriginalVal.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblOriginalVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblOriginalVal.Location = new System.Drawing.Point(540, 50);
         lblOriginalVal.Name = "lblOriginalVal";
         lblOriginalVal.Size = new System.Drawing.Size(250, 22);
@@ -300,7 +292,7 @@ partial class TuitionDetailDialog
         // lblOriginalTitle
         // 
         lblOriginalTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblOriginalTitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblOriginalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblOriginalTitle.Location = new System.Drawing.Point(400, 52);
         lblOriginalTitle.Name = "lblOriginalTitle";
         lblOriginalTitle.Size = new System.Drawing.Size(130, 20);
@@ -310,7 +302,7 @@ partial class TuitionDetailDialog
         // lblClassVal
         // 
         lblClassVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblClassVal.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblClassVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblClassVal.Location = new System.Drawing.Point(145, 50);
         lblClassVal.Name = "lblClassVal";
         lblClassVal.Size = new System.Drawing.Size(230, 22);
@@ -320,7 +312,7 @@ partial class TuitionDetailDialog
         // lblClassTitle
         // 
         lblClassTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblClassTitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblClassTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblClassTitle.Location = new System.Drawing.Point(18, 52);
         lblClassTitle.Name = "lblClassTitle";
         lblClassTitle.Size = new System.Drawing.Size(120, 20);
@@ -330,7 +322,7 @@ partial class TuitionDetailDialog
         // lblStudentVal
         // 
         lblStudentVal.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblStudentVal.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        lblStudentVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblStudentVal.Location = new System.Drawing.Point(145, 14);
         lblStudentVal.Name = "lblStudentVal";
         lblStudentVal.Size = new System.Drawing.Size(640, 26);
@@ -340,7 +332,7 @@ partial class TuitionDetailDialog
         // lblStudentTitle
         // 
         lblStudentTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStudentTitle.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
+        lblStudentTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         lblStudentTitle.Location = new System.Drawing.Point(18, 18);
         lblStudentTitle.Name = "lblStudentTitle";
         lblStudentTitle.Size = new System.Drawing.Size(120, 20);
@@ -361,8 +353,8 @@ partial class TuitionDetailDialog
         // 
         // btnCollectNow
         // 
-        btnCollectNow.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-        btnCollectNow.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        btnCollectNow.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnCollectNow.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
         btnCollectNow.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnCollectNow.CornerRadius = 5;
         btnCollectNow.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -373,20 +365,20 @@ partial class TuitionDetailDialog
         btnCollectNow.Name = "btnCollectNow";
         btnCollectNow.Size = new System.Drawing.Size(145, 38);
         btnCollectNow.TabIndex = 1;
-        btnCollectNow.Text = "💵 Thu học phí";
+        btnCollectNow.Text = "Thu học phí";
         btnCollectNow.UseVisualStyleBackColor = false;
         btnCollectNow.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.BackColor = System.Drawing.Color.White;
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
         btnCancel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnCancel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         btnCancel.Location = new System.Drawing.Point(595, 11);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(90, 38);
@@ -399,7 +391,7 @@ partial class TuitionDetailDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
+        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         ClientSize = new System.Drawing.Size(860, 610);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
@@ -408,7 +400,6 @@ partial class TuitionDetailDialog
         FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-        Name = "TuitionDetailDialog";
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Chi tiết học phí · ECMS";
@@ -426,7 +417,6 @@ partial class TuitionDetailDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private ECMS.UI.Controls.AppButton btnClose;
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppCard cardSummary;
     private System.Windows.Forms.Label lblStudentTitle;

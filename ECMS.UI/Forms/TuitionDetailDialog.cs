@@ -193,7 +193,7 @@ public partial class TuitionDetailDialog : Form
 
     private void WireEvents()
     {
-        btnClose.Click += (s, e) => Close();
+        
         btnCancel.Click += (s, e) => Close();
 
         btnCollectNow.Click += (s, e) =>
