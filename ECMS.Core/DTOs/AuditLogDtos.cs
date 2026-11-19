@@ -9,7 +9,7 @@ public class AuditLogListItemDto
     public string RoleName { get; set; } = string.Empty;
     public string ActionName { get; set; } = string.Empty;
     public string TableName { get; set; } = string.Empty;
-    public string? RecordId { get; set; }
+    public string? RecordId { get; set; }//fffff
     public string? OldValues { get; set; }
     public string? NewValues { get; set; }
     public string Timestamp { get; set; } = string.Empty;
