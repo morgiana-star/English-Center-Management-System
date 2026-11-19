@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dapper;
+using ECMS.Business.Services;
+using ECMS.Core.Enums;
 using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
@@ -466,20 +469,87 @@ public partial class ClassAttendanceDialog : Form
             }
         };
 
-        btnSaveAttendance.Click += (s, e) =>
+        btnSaveAttendance.Click += async (s, e) =>
         {
-            lblSaveStatus.Visible = true;
-            MessageBox.Show($"Đã lưu kết quả điểm danh thành công cho lớp {_classCode}!", "Lưu điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (_currentScheduleId <= 0)
+            {
+                MessageBox.Show("Vui lòng chọn một buổi học hợp lệ trước khi lưu điểm danh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var records = new List<(int StudentId, AttendanceStatus Status, string? Note)>();
+            foreach (DataGridViewRow row in dgvStudentCheck.Rows)
+            {
+                if (row.IsNewRow) continue;
+                if (row.Cells["colStudentId"].Value == null) continue;
+
+                if (!int.TryParse(row.Cells["colStudentId"].Value.ToString(), out int studentId))
+                    continue;
+
+                string statusVn = row.Cells["colStatus"].Value?.ToString() ?? "Có mặt";
+                string? note = row.Cells["colNote"].Value?.ToString()?.Trim();
+                if (string.IsNullOrWhiteSpace(note)) note = null;
+
+                AttendanceStatus status = statusVn switch
+                {
+                    "Có mặt" => AttendanceStatus.Present,
+                    "Vắng có phép" => AttendanceStatus.Excused,
+                    "Vắng không phép" => AttendanceStatus.Absent,
+                    _ => AttendanceStatus.Present
+                };
+
+                records.Add((studentId, status, note));
+            }
+
+            if (records.Count == 0)
+            {
+                MessageBox.Show("Không có học viên nào để lưu điểm danh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                btnSaveAttendance.Enabled = false;
+                var service = new AttendanceService();
+                bool ok = await service.SaveAttendanceBatchAsync(_currentScheduleId, records);
+
+                if (ok)
+                {
+                    lblSaveStatus.Text = "✓ Đã lưu thay đổi";
+                    lblSaveStatus.Visible = true;
+                    MessageBox.Show($"Đã lưu kết quả điểm danh cho {records.Count} học viên thành công!", "Lưu điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await LoadSessionsDataAsync();
+                }
+                else
+                {
+                    MessageBox.Show("Không thể lưu điểm danh vào cơ sở dữ liệu. Vui lòng thử lại.", "Lỗi lưu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi lưu điểm danh: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnSaveAttendance.Enabled = true;
+            }
         };
     }
 
     private void OpenSessionCheck(int rowIndex)
     {
         var row = dgvSessions.Rows[rowIndex];
-        string sessionNum = row.Cells["colSessionNum"].Value?.ToString() ?? "Buổi 8";
-        string sessionDate = row.Cells["colDate"].Value?.ToString() ?? "30/10/2026";
+        int scheduleId = 1;
+        if (row.Cells["colScheduleId"].Value != null)
+        {
+            int.TryParse(row.Cells["colScheduleId"].Value.ToString(), out scheduleId);
+        }
+        _currentScheduleId = scheduleId;
 
-        LoadStudentCheckData(sessionNum, sessionDate);
+        string sessionNum = row.Cells["colSessionNum"].Value?.ToString() ?? "Buổi 1";
+        string sessionDate = row.Cells["colDate"].Value?.ToString() ?? "";
+
+        _ = LoadStudentCheckDataAsync(scheduleId, sessionNum, sessionDate);
 
         pnlSessionsList.Visible = false;
         pnlCheckSession.Visible = true;
