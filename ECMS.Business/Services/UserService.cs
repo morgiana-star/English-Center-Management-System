@@ -98,7 +98,7 @@ public class UserService : IUserService
         // 5. Validate Phone
         if (!string.IsNullOrWhiteSpace(dto.Phone))
         {
-            string phone = dto.Phone.Trim();
+            string phone = dto.Phone.Replace(" ", "").Replace(".", "").Replace("-", "").Trim();
             if (phone.Length < 9 || phone.Length > 12 || !phone.All(char.IsDigit))
             {
                 return (false, "Số điện thoại chỉ được chứa các chữ số và độ dài từ 9 đến 12 ký tự.", 0);
@@ -148,7 +148,7 @@ public class UserService : IUserService
         // 3. Validate Phone
         if (!string.IsNullOrWhiteSpace(dto.Phone))
         {
-            string phone = dto.Phone.Trim();
+            string phone = dto.Phone.Replace(" ", "").Replace(".", "").Replace("-", "").Trim();
             if (phone.Length < 9 || phone.Length > 12 || !phone.All(char.IsDigit))
             {
                 return (false, "Số điện thoại chỉ được chứa các chữ số và độ dài từ 9 đến 12 ký tự.");
@@ -317,6 +317,24 @@ public class UserService : IUserService
         }
 
         return (true, "Đổi mật khẩu thành công. Vui lòng ghi nhớ mật khẩu mới cho các lần đăng nhập sau.");
+    }
+
+    public async Task<(bool Success, string Message)> UpdateOwnProfileAsync(int userId, string fullName, string? email, string? phone)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+            return (false, "Họ và tên không được để trống.");
+
+        if (!string.IsNullOrWhiteSpace(phone))
+        {
+            string cleanPhone = phone.Replace(" ", "").Replace(".", "").Replace("-", "").Trim();
+            if (cleanPhone.Length < 9 || cleanPhone.Length > 12 || !cleanPhone.All(char.IsDigit))
+                return (false, "Số điện thoại không hợp lệ.");
+        }
+
+        bool ok = await _userRepo.UpdateOwnProfileAsync(userId, fullName, email, phone);
+        return ok
+            ? (true, "Đã cập nhật hồ sơ cá nhân vào cơ sở dữ liệu SQLite thành công.")
+            : (false, "Cập nhật hồ sơ thất bại.");
     }
 
     public async Task<AdminTelemetryDto> GetTelemetryAsync()

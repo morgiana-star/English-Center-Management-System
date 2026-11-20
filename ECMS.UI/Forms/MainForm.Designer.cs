@@ -63,13 +63,6 @@ partial class MainForm
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        var pnlHeaderBorder = new System.Windows.Forms.Panel
-        {
-            Dock = System.Windows.Forms.DockStyle.Bottom,
-            Height = 1,
-            BackColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)))
-        };
-        pnlHeader.Controls.Add(pnlHeaderBorder);
         pnlHeader.Controls.Add(btnLogoutTop);
         pnlHeader.Controls.Add(lblUser);
         pnlHeader.Controls.Add(lblHeaderCenter);
@@ -187,13 +180,6 @@ partial class MainForm
         // pnlSidebar
         // 
         pnlSidebar.BackColor = System.Drawing.Color.White;
-        var pnlSidebarBorder = new System.Windows.Forms.Panel
-        {
-            Dock = System.Windows.Forms.DockStyle.Right,
-            Width = 1,
-            BackColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)))
-        };
-        pnlSidebar.Controls.Add(pnlSidebarBorder);
         pnlSidebar.Controls.Add(pnlSidebarMenu);
         pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
         pnlSidebar.Location = new System.Drawing.Point(0, 0);

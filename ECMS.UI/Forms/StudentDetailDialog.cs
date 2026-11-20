@@ -90,14 +90,18 @@ public partial class StudentDetailDialog : Form
             }
         };
 
-        // Sửa hồ sơ
+        // Sửa hồ sơ (Nạp dữ liệu thật từ _detail và lưu thật vào SQLite)
         btnEditProfile.Click += async (s, e) =>
         {
-            using var editDlg = new AddStudentDialog(true, _studentName);
+            using var editDlg = _detail != null
+                ? new AddStudentDialog(_detail)
+                : new AddStudentDialog(true, _studentName);
+
             if (editDlg.ShowDialog(this) == DialogResult.OK)
             {
                 await LoadStudentDataAsync();
-                AppDialog.ShowSuccess(this, "Thành công", "Đã cập nhật hồ sơ học viên thành công!");
+                AppDialog.ShowSuccess(this, "Thành công", "Đã cập nhật hồ sơ học viên vào cơ sở dữ liệu SQLite thành công!");
+                DialogResult = DialogResult.OK;
             }
         };
     }
@@ -121,12 +125,12 @@ public partial class StudentDetailDialog : Form
             }
             else
             {
-                PopulateDefaultMockData();
+                dgvLearningPath.Rows.Clear();
             }
         }
-        catch
+        catch (Exception ex)
         {
-            PopulateDefaultMockData();
+            AppDialog.ShowError(this, "Lỗi nạp hồ sơ học viên", ex.Message);
         }
     }
 
@@ -174,32 +178,6 @@ public partial class StudentDetailDialog : Form
                 item.TuitionStatus
             );
         }
-        dgvLearningPath.ClearSelection();
-        dgvLearningPath.CurrentCell = null;
-    }
-
-    private void PopulateDefaultMockData()
-    {
-        dgvLearningPath.Rows.Clear();
-        dgvLearningPath.Rows.Add(
-            "IELTS-F01 · IELTS Foundation",
-            "Đang học",
-            "8 / 24",
-            "7.0 / 10",
-            "Chưa kiểm tra",
-            "Chưa kiểm tra",
-            "Còn nợ 1.900.000đ"
-        );
-        dgvLearningPath.Rows.Add(
-            "ENG-B01 · Tiếng Anh Cơ Bản",
-            "Hoàn thành",
-            "16 / 16",
-            "8.0 / 10",
-            "7.5 / 10",
-            "8.5 / 10",
-            "✓ Đã hoàn thành"
-        );
-
         dgvLearningPath.ClearSelection();
         dgvLearningPath.CurrentCell = null;
     }

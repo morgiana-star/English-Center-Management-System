@@ -17,8 +17,11 @@ public interface IStudentService
     Task<StudentDetailDto?> GetStudentDetailByCodeAsync(string studentCode);
     Task<(bool Success, string Message)> UpdateStudentProfileAsync(UpdateStudentProfileDto dto);
     Task<(bool Success, string Message)> ArchiveStudentAsync(ArchiveStudentDto dto);
+    Task<(bool Success, string Message)> RestoreStudentAsync(int studentId);
     Task<StudentOverviewStatsDto> GetStudentStatsAsync();
     Task<string> GenerateNextStudentCodeAsync();
+    Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync();
+    Task<IEnumerable<OpenClassOptionDto>> GetOpenClassesByCourseAsync(int courseId);
 
     // 2. Nghiệp vụ Entity tương thích ngược
     Task<IEnumerable<Student>> GetAllStudentsAsync();
@@ -83,6 +86,17 @@ public class StudentService : IStudentService
             : (false, "Lưu trữ hồ sơ học viên thất bại.");
     }
 
+    public async Task<(bool Success, string Message)> RestoreStudentAsync(int studentId)
+    {
+        if (studentId <= 0)
+            return (false, "Mã học viên không hợp lệ.");
+
+        bool restored = await _studentRepo.RestoreStudentAsync(studentId);
+        return restored
+            ? (true, "Đã khôi phục học viên về danh sách đang học thành công!")
+            : (false, "Không thể khôi phục hồ sơ học viên.");
+    }
+
     public async Task<StudentOverviewStatsDto> GetStudentStatsAsync()
     {
         return await _studentRepo.GetStudentStatsAsync();
@@ -92,6 +106,12 @@ public class StudentService : IStudentService
     {
         return await _studentRepo.GenerateNextStudentCodeAsync();
     }
+
+    public Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync()
+        => _studentRepo.GetActiveCoursesForEnrollmentAsync();
+
+    public Task<IEnumerable<OpenClassOptionDto>> GetOpenClassesByCourseAsync(int courseId)
+        => _studentRepo.GetOpenClassesByCourseAsync(courseId);
 
     #endregion
 

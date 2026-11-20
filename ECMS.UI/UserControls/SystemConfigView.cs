@@ -27,6 +27,7 @@ public partial class SystemConfigView : UserControl
     public SystemConfigView()
     {
         InitializeComponent();
+        SimplifyLayoutControls();
 
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
@@ -35,6 +36,33 @@ public partial class SystemConfigView : UserControl
         InitComboBoxes();
         WireEvents();
         _ = LoadAllConfigsAsync();
+    }
+
+    private void SimplifyLayoutControls()
+    {
+        // Tab 1 - cardCenterInfo: ẩn Người đại diện/Ký duyệt và Chức vụ người ký
+        lblDirector.Visible = false;
+        txtDirector.Visible = false;
+        lblDirectorTitle.Visible = false;
+        txtDirectorTitle.Visible = false;
+        cardCenterInfo.Size = new Size(cardCenterInfo.Width, 250);
+
+        // Tab 1 - cardDbInfo: đổi tiêu đề thành "Cơ sở dữ liệu", ẩn thư mục lưu tài liệu học tập
+        cardDbInfo.Location = new Point(cardDbInfo.Location.X, 270);
+        lblDbInfoTitle.Text = "Cơ sở dữ liệu";
+        lblStoragePath.Visible = false;
+        txtStoragePath.Visible = false;
+        btnBrowseStorage.Visible = false;
+        lblBackupDir.Location = new Point(20, 122);
+        txtBackupDir.Location = new Point(20, 145);
+        btnBrowseBackup.Location = new Point(btnBrowseBackup.Location.X, 145);
+        cardDbInfo.Size = new Size(cardDbInfo.Width, 205);
+
+        // Tab 2 - cardAttendanceRules: ẩn 3 checkbox tùy chọn nâng cao
+        chkLateCounted.Visible = false;
+        chkDebtCertRule.Visible = false;
+        chkAutoLockAttendance.Visible = false;
+        cardAttendanceRules.Size = new Size(cardAttendanceRules.Width, 160);
     }
 
     private void InitComboBoxes()
@@ -406,14 +434,6 @@ public partial class SystemConfigView : UserControl
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(txtDirector.Text))
-        {
-            tabMainConfig.SelectedTab = tabCenter;
-            AppDialog.ShowError(ParentForm, "Thiếu thông tin", "Vui lòng nhập tên người đại diện ký duyệt.");
-            txtDirector.Focus();
-            return;
-        }
-
         // 2. Kiểm tra trọng số điểm Tab 2
         int ParseWeight(string text)
         {
@@ -476,8 +496,11 @@ public partial class SystemConfigView : UserControl
             await _configService.SaveAcademicRulesAsync(ruleDto, AppSession.UserId);
             await _configService.SaveBackupScheduleConfigAsync(schedDto, AppSession.UserId);
 
-            // Đồng bộ AppSession
-            AppSession.FullName = txtDirector.Text.Trim();
+            // Đồng bộ AppSession nếu có thông tin người đại diện
+            if (!string.IsNullOrWhiteSpace(txtDirector.Text))
+            {
+                AppSession.FullName = txtDirector.Text.Trim();
+            }
             if (!string.IsNullOrWhiteSpace(txtDirectorTitle.Text))
             {
                 AppSession.SignerTitle = txtDirectorTitle.Text.Trim();

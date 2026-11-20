@@ -467,28 +467,27 @@ public static class DatabaseInitializer
 
         foreach (var u in sampleUsers)
         {
-            string hash = BCrypt.Net.BCrypt.HashPassword(u.Password);
-            
-            // Insert or Update User
-            conn.Execute(@"
-                INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, StudentId, ParentId, IsActive)
-                VALUES (@Username, @Hash, 'salt', @EmpId, @TeaId, @StuId, @ParId, 1)
-                ON CONFLICT(Username) DO UPDATE SET 
-                    PasswordHash = excluded.PasswordHash,
-                    EmployeeId = excluded.EmployeeId,
-                    TeacherId = excluded.TeacherId,
-                    StudentId = excluded.StudentId,
-                    ParentId = excluded.ParentId,
-                    IsActive = 1;",
-                new { u.Username, Hash = hash, u.EmpId, u.TeaId, u.StuId, u.ParId });
+            // Chỉ seed tài khoản nếu chưa tồn tại (tránh ghi đè mật khẩu đã đổi hoặc trạng thái khóa khi khởi động lại)
+            int existingUserId = conn.ExecuteScalar<int>("SELECT UserId FROM Users WHERE Username = @Username;", new { u.Username });
+            if (existingUserId == 0)
+            {
+                string hash = BCrypt.Net.BCrypt.HashPassword(u.Password);
+                conn.Execute(@"
+                    INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, StudentId, ParentId, IsActive)
+                    VALUES (@Username, @Hash, 'salt', @EmpId, @TeaId, @StuId, @ParId, 1);",
+                    new { u.Username, Hash = hash, u.EmpId, u.TeaId, u.StuId, u.ParId });
 
-            // Assign Role
-            int userId = conn.ExecuteScalar<int>("SELECT UserId FROM Users WHERE Username = @Username;", new { u.Username });
+                existingUserId = conn.ExecuteScalar<int>("SELECT UserId FROM Users WHERE Username = @Username;", new { u.Username });
+            }
+
+            // Assign Role if missing
             int roleId = conn.ExecuteScalar<int>("SELECT RoleId FROM Roles WHERE RoleCode = @Role;", new { u.Role });
-
-            conn.Execute(@"
-                INSERT OR IGNORE INTO UserRoles (UserId, RoleId) 
-                VALUES (@UserId, @RoleId);", new { UserId = userId, RoleId = roleId });
+            if (existingUserId > 0 && roleId > 0)
+            {
+                conn.Execute(@"
+                    INSERT OR IGNORE INTO UserRoles (UserId, RoleId) 
+                    VALUES (@UserId, @RoleId);", new { UserId = existingUserId, RoleId = roleId });
+            }
         }
 
         // 4. Seed Academic Data (Courses, ClassRooms, Classes, Schedules, Enrollments, Attendance, Exams, Scores)

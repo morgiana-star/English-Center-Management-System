@@ -8,6 +8,38 @@ using Dapper;
 
 namespace ECMS.Business.Services;
 
+public class TuitionProfileItemDto
+{
+    public int InvoiceId { get; set; }
+    public int EnrollmentId { get; set; }
+    public string InvoiceCode { get; set; } = string.Empty;
+    public string StudentCode { get; set; } = string.Empty;
+    public string StudentName { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public decimal OriginalFee { get; set; }
+    public decimal Discount { get; set; }
+    public decimal TotalFee { get; set; }
+    public decimal Paid { get; set; }
+    public decimal Remaining { get; set; }
+    public string DueDate { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+}
+
+public class PaymentReceiptItemDto
+{
+    public string ReceiptCode { get; set; } = string.Empty;
+    public string PaymentDate { get; set; } = string.Empty;
+    public string StudentCode { get; set; } = string.Empty;
+    public string StudentName { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+    public decimal Amount { get; set; }
+    public string Method { get; set; } = string.Empty;
+    public string Collector { get; set; } = string.Empty;
+}
+
 public interface IFinanceService
 {
     Task<Invoice?> GetInvoiceByEnrollmentAsync(int enrollmentId);
@@ -15,6 +47,8 @@ public interface IFinanceService
         int invoiceId, decimal paidAmount, PaymentMethod method, int cashierId, string? note = null);
     Task<IEnumerable<dynamic>> GetOutstandingInvoicesAsync();
     Task<decimal> GetTotalRevenueThisMonthAsync();
+    Task<IEnumerable<TuitionProfileItemDto>> GetTuitionProfilesAsync();
+    Task<IEnumerable<PaymentReceiptItemDto>> GetPaymentReceiptsHistoryAsync();
 }
 
 public class FinanceService : IFinanceService
@@ -64,6 +98,13 @@ public class FinanceService : IFinanceService
                 new { Prefix = prefix + "%" }, transaction);
             string paymentCode = $"{prefix}{(countToday + 1):D4}";
 
+            string methodVi = method switch
+            {
+                PaymentMethod.Cash => "Tiền mặt",
+                PaymentMethod.POS => "POS",
+                _ => "Chuyển khoản"
+            };
+
             // 2. Insert Payment
             string insertSql = @"
                 INSERT INTO Payments (PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note)
@@ -75,8 +116,8 @@ public class FinanceService : IFinanceService
                 PaymentCode = paymentCode,
                 InvoiceId = invoiceId,
                 PaidAmount = paidAmount,
-                Method = method.ToString(),
-                CashierId = cashierId,
+                Method = methodVi,
+                CashierId = cashierId > 0 ? cashierId : 1,
                 Note = note
             }, transaction);
 
@@ -127,5 +168,64 @@ public class FinanceService : IFinanceService
             WHERE Status = 'Valid' AND PaymentDate LIKE @Prefix;";
 
         return await conn.ExecuteScalarAsync<decimal>(sql, new { Prefix = monthPrefix + "%" });
+    }
+
+    public async Task<IEnumerable<TuitionProfileItemDto>> GetTuitionProfilesAsync()
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        const string sql = @"
+            SELECT 
+                inv.InvoiceId,
+                inv.EnrollmentId,
+                inv.InvoiceCode,
+                s.StudentCode,
+                s.FullName AS StudentName,
+                co.CourseName,
+                c.ClassCode AS ClassName,
+                inv.OriginalAmount AS OriginalFee,
+                inv.DiscountAmount AS Discount,
+                inv.FinalAmount AS TotalFee,
+                (inv.FinalAmount - inv.BalanceDue) AS Paid,
+                inv.BalanceDue AS Remaining,
+                inv.DueDate,
+                inv.Status
+            FROM Invoices inv
+            JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId
+            JOIN Students s ON e.StudentId = s.StudentId
+            JOIN Classes c ON e.ClassId = c.ClassId
+            JOIN Courses co ON c.CourseId = co.CourseId
+            WHERE inv.Status != 'Cancelled'
+            ORDER BY inv.InvoiceId DESC;";
+
+        return await conn.QueryAsync<TuitionProfileItemDto>(sql);
+    }
+
+    public async Task<IEnumerable<PaymentReceiptItemDto>> GetPaymentReceiptsHistoryAsync()
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        const string sql = @"
+            SELECT 
+                p.PaymentCode AS ReceiptCode,
+                p.PaymentDate,
+                s.StudentCode,
+                s.FullName AS StudentName,
+                c.ClassCode AS ClassName,
+                co.CourseName,
+                COALESCE(p.Note, 'Thu học phí') AS Content,
+                p.PaidAmount AS Amount,
+                p.PaymentMethod AS Method,
+                COALESCE(emp.FullName, u.Username, 'Quản trị viên') AS Collector
+            FROM Payments p
+            JOIN Invoices inv ON p.InvoiceId = inv.InvoiceId
+            JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId
+            JOIN Students s ON e.StudentId = s.StudentId
+            JOIN Classes c ON e.ClassId = c.ClassId
+            JOIN Courses co ON c.CourseId = co.CourseId
+            LEFT JOIN Users u ON p.CashierId = u.UserId
+            LEFT JOIN Employees emp ON u.EmployeeId = emp.EmployeeId
+            WHERE p.Status = 'Valid'
+            ORDER BY p.PaymentId DESC;";
+
+        return await conn.QueryAsync<PaymentReceiptItemDto>(sql);
     }
 }

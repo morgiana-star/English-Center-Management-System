@@ -108,4 +108,54 @@ public class RbacService : IRbacService
 
         return (true, $"Đã khôi phục phân quyền mặc định thành công cho vai trò '{role.RoleName}'.");
     }
+
+    public Task<List<RbacMatrixRowDto>> GetSidebarMatrixAsync()
+        => _rbacRepo.GetSidebarMatrixAsync();
+
+    public async Task<List<RbacMatrixRowDto>> ResetSidebarMatrixToDefaultAsync()
+    {
+        var defaults = RbacRepository.GetDefaultSidebarMatrix();
+        int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
+        await _rbacRepo.SaveSidebarMatrixAsync(defaults, currentAdminId);
+        return defaults;
+    }
+
+    public async Task<(bool Success, string Message)> SaveSidebarMatrixAsync(List<RbacMatrixRowDto> rows, int currentAdminId)
+    {
+        foreach (var r in rows)
+        {
+            r.AdminAccess = "Toàn quyền";
+        }
+        bool ok = await _rbacRepo.SaveSidebarMatrixAsync(rows, currentAdminId);
+        return ok
+            ? (true, "Đã lưu ma trận phân quyền vào cơ sở dữ liệu. Thay đổi sẽ có hiệu lực ngay khi đăng nhập.")
+            : (false, "Lưu ma trận phân quyền thất bại.");
+    }
+
+    public async Task<HashSet<string>> GetAllowedModuleKeysForRoleAsync(string roleCode)
+    {
+        var rows = await _rbacRepo.GetSidebarMatrixAsync();
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var r in rows)
+        {
+            string val = roleCode switch
+            {
+                "ROLE_ADMIN" => r.AdminAccess,
+                "ROLE_MGR" => r.ManagerAccess,
+                "ROLE_AA" => r.AcademicAccess,
+                "ROLE_EC" => r.CounselorAccess,
+                "ROLE_ACC" => r.AccountantAccess,
+                "ROLE_TEA" => r.TeacherAccess,
+                _ => "Không có quyền"
+            };
+
+            if (!string.IsNullOrWhiteSpace(val) && !val.Contains("Không", StringComparison.OrdinalIgnoreCase))
+            {
+                allowed.Add(r.ModuleKey);
+            }
+        }
+
+        return allowed;
+    }
 }

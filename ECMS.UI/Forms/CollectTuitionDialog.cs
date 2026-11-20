@@ -1,43 +1,29 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace ECMS.UI.Forms;
 
 public partial class CollectTuitionDialog : Form
 {
-    private class DebtorOption
-    {
-        public string Code { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
-        public string ClassName { get; set; } = string.Empty;
-        public string CourseName { get; set; } = string.Empty;
-        public decimal TotalFee { get; set; }
-        public decimal Paid { get; set; }
-        public decimal Remaining { get; set; }
-        public string DisplayText => $"{Name} · {Code} ({ClassName}) · Nợ: {Remaining:N0}đ";
-    }
-
-    private readonly List<DebtorOption> _debtors = new();
-    private DebtorOption _selectedDebtor = null!;
     private decimal _initialTotalFee = 3400000;
+    private decimal _initialPaid = 0;
     private decimal _initialRemaining = 3400000;
+    private Label _lblStudentDisplay = null!;
 
-    public string StudentCode { get; private set; } = "HV-0241";
-    public string StudentName { get; private set; } = "Nguyễn Minh Anh";
-    public string ClassName { get; private set; } = "IELTS-F01";
-    public string CourseName { get; private set; } = "IELTS Foundation";
-    public decimal CollectedAmount { get; private set; } = 3400000;
-    public decimal RemainingDebt { get; private set; } = 0;
-    public string PaymentMethod { get; private set; } = "Chuyển khoản VietQR";
+    public string StudentCode { get; private set; } = string.Empty;
+    public string StudentName { get; private set; } = string.Empty;
+    public string ClassName { get; private set; } = string.Empty;
+    public string CourseName { get; private set; } = string.Empty;
+    public decimal CollectedAmount { get; private set; }
+    public decimal RemainingDebt { get; private set; }
+    public string PaymentMethod { get; private set; } = "Chuyển khoản";
     public string ReceiptCode { get; private set; } = string.Empty;
     public string ContentNote { get; private set; } = string.Empty;
     public bool ShouldPrintReceipt { get; private set; } = true;
 
-    public CollectTuitionDialog() : this("Nguyễn Minh Anh", "IELTS-F01", 3400000, "HV-0241")
+    public CollectTuitionDialog() : this("Nguyễn Minh Anh", "IELTS-F01", 6800000, "HV-0241")
     {
     }
 
@@ -58,33 +44,37 @@ public partial class CollectTuitionDialog : Form
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
-        StudentName = string.IsNullOrEmpty(studentName) ? "Nguyễn Minh Anh" : studentName;
-        ClassName = string.IsNullOrEmpty(className) ? "IELTS-F01" : className;
-        StudentCode = string.IsNullOrEmpty(studentCode) ? "HV-0241" : studentCode;
-        CourseName = string.IsNullOrEmpty(courseName) ? "IELTS Foundation" : courseName;
+        StudentName = string.IsNullOrWhiteSpace(studentName) ? "Học viên mới" : studentName.Trim();
+        ClassName = string.IsNullOrWhiteSpace(className) ? "IELTS-F01" : className.Trim();
+        StudentCode = string.IsNullOrWhiteSpace(studentCode) ? "HV-2026-0001" : studentCode.Trim();
+        CourseName = string.IsNullOrWhiteSpace(courseName) ? "IELTS Foundation" : courseName.Trim();
+
         _initialTotalFee = totalFee > 0 ? totalFee : 3400000;
-        _initialRemaining = remainingDebt > 0 ? remainingDebt : _initialTotalFee;
+        _initialRemaining = remainingDebt >= 0 ? remainingDebt : _initialTotalFee;
+        _initialPaid = Math.Max(0, _initialTotalFee - _initialRemaining);
 
         ReceiptCode = $"PT-{DateTime.Now:yyMMdd}-{new Random().Next(100, 999)}";
         lblReceiptNo.Text = $"Mã phiếu: {ReceiptCode}";
 
-        InitDebtorsList();
         SetupForm();
         WireEvents();
     }
 
-    private void InitDebtorsList()
-    {
-        _debtors.Clear();
-        _debtors.Add(new DebtorOption { Code = "HV-0241", Name = "Nguyễn Minh Anh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 5400000, Paid = 2000000, Remaining = 3400000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0238", Name = "Phạm Khánh Linh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 3600000, Remaining = 2400000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0239", Name = "Đỗ Thanh Tâm", ClassName = "COM-B01", CourseName = "Tiếng Anh Giao tiếp Cơ bản", TotalFee = 3200000, Paid = 0, Remaining = 3200000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0215", Name = "Trần Thảo Nhi", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 5500000, Remaining = 500000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0235", Name = "Nguyễn Tiến Đạt", ClassName = "IELTS-F02", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 4800000, Remaining = 1200000 });
-    }
-
     private void SetupForm()
     {
+        // Thay ComboBox chọn học viên bằng Label chỉ chứa Tên học viên & Mã học viên
+        cboStudentSelect.Visible = false;
+        lblStudentTitle.Text = "Học viên:";
+        _lblStudentDisplay = new Label
+        {
+            AutoSize = true,
+            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(15, 23, 42),
+            Location = new Point(145, 46),
+            Text = $"{StudentName}  ·  {StudentCode}"
+        };
+        cardStudentSummary.Controls.Add(_lblStudentDisplay);
+        _lblStudentDisplay.BringToFront();
 
         cboPaymentType.Items.Clear();
         cboPaymentType.Items.AddRange(new object[]
@@ -95,81 +85,39 @@ public partial class CollectTuitionDialog : Form
             "Phí giáo trình & tài liệu",
             "Thu phụ phí khác"
         });
-        cboPaymentType.SelectedIndex = 0;
+        cboPaymentType.SelectedIndex = _initialPaid > 0 ? 1 : 0;
 
         // ComboBox kế hoạch đóng học phí (Tối đa 3 đợt)
         cboInstallmentPlan.Items.Clear();
         cboInstallmentPlan.Items.AddRange(new object[]
         {
-            "Đóng trọn gói 1 lần (100% - Đóng hết)",
-            "Chia làm 2 đợt (Đợt 1: 50% - Đợt 2: 50%)",
-            "Chia làm 3 đợt (Đợt 1: 40% - Đợt 2: 30% - Đợt 3: 30%)"
+            "Đóng trọn gói 1 lần (100% số tiền còn lại)",
+            "Chia làm 2 đợt (Đợt này 50%)",
+            "Chia làm 3 đợt (Đợt này 40%)"
         });
         cboInstallmentPlan.SelectedIndex = 0;
 
-        cboStudentSelect.Items.Clear();
-        foreach (var d in _debtors)
-        {
-            cboStudentSelect.Items.Add(d.DisplayText);
-        }
+        lblClassInfo.Text = $"Khóa / Lớp: {CourseName} · {ClassName}";
+        lblTotalVal.Text = $"{_initialTotalFee:N0} đ";
+        txtNote.Text = $"Thu học phí - {StudentName} ({StudentCode}) - Lớp {ClassName}";
 
-        int targetIdx = _debtors.FindIndex(d => d.Code == StudentCode || d.Name == StudentName);
-        if (targetIdx >= 0)
-        {
-            cboStudentSelect.SelectedIndex = targetIdx;
-            _selectedDebtor = _debtors[targetIdx];
-        }
-        else
-        {
-            _selectedDebtor = new DebtorOption
-            {
-                Code = StudentCode,
-                Name = StudentName,
-                ClassName = ClassName,
-                CourseName = CourseName,
-                TotalFee = _initialTotalFee,
-                Paid = _initialTotalFee - _initialRemaining,
-                Remaining = _initialRemaining
-            };
-            _debtors.Insert(0, _selectedDebtor);
-            cboStudentSelect.Items.Insert(0, _selectedDebtor.DisplayText);
-            cboStudentSelect.SelectedIndex = 0;
-        }
-
-        ApplyDebtorData(_selectedDebtor);
-    }
-
-    private void ApplyDebtorData(DebtorOption debtor)
-    {
-        _selectedDebtor = debtor;
-        StudentCode = debtor.Code;
-        StudentName = debtor.Name;
-        ClassName = debtor.ClassName;
-        CourseName = debtor.CourseName;
-
-        lblClassInfo.Text = $"Khóa / Lớp: {debtor.CourseName} · {debtor.ClassName}";
-        lblTotalVal.Text = $"{debtor.TotalFee:N0} đ";
-
-        txtNote.Text = $"Thu học phí - {debtor.Name} ({debtor.Code}) - Lớp {debtor.ClassName}";
         ApplyInstallmentSelection();
     }
 
     private void ApplyInstallmentSelection()
     {
-        if (_selectedDebtor == null) return;
-
-        decimal baseAmount = _selectedDebtor.Paid == 0 ? _selectedDebtor.TotalFee : _selectedDebtor.Remaining;
+        decimal baseAmount = _initialRemaining > 0 ? _initialRemaining : _initialTotalFee;
         decimal amountToPay = baseAmount;
 
         switch (cboInstallmentPlan.SelectedIndex)
         {
-            case 0: // 100%
+            case 0:
                 amountToPay = baseAmount;
                 break;
-            case 1: // 50%
+            case 1:
                 amountToPay = Math.Round(baseAmount * 0.5m, 0);
                 break;
-            case 2: // 40%
+            case 2:
                 amountToPay = Math.Round(baseAmount * 0.4m, 0);
                 break;
         }
@@ -177,8 +125,8 @@ public partial class CollectTuitionDialog : Form
         txtAmount.Text = $"{amountToPay:N0} đ";
         UpdateWordsLabel(amountToPay);
 
-        decimal simulatedPaid = _selectedDebtor.Paid + amountToPay;
-        decimal simulatedRemaining = Math.Max(0, _selectedDebtor.TotalFee - simulatedPaid);
+        decimal simulatedPaid = _initialPaid + amountToPay;
+        decimal simulatedRemaining = Math.Max(0, _initialTotalFee - simulatedPaid);
 
         lblPaidVal.Text = $"{simulatedPaid:N0} đ";
         lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
@@ -189,31 +137,17 @@ public partial class CollectTuitionDialog : Form
     {
         btnCancel.Click += (s, e) => Close();
 
-        cboStudentSelect.SelectedIndexChanged += (s, e) =>
-        {
-            if (cboStudentSelect.SelectedIndex >= 0 && cboStudentSelect.SelectedIndex < _debtors.Count)
-            {
-                ApplyDebtorData(_debtors[cboStudentSelect.SelectedIndex]);
-            }
-        };
-
-        cboInstallmentPlan.SelectedIndexChanged += (s, e) =>
-        {
-            ApplyInstallmentSelection();
-        };
+        cboInstallmentPlan.SelectedIndexChanged += (s, e) => ApplyInstallmentSelection();
 
         txtAmount.TextChanged += (s, e) =>
         {
             decimal amt = ParseAmount();
             UpdateWordsLabel(amt);
-            if (_selectedDebtor != null)
-            {
-                decimal simulatedPaid = _selectedDebtor.Paid + amt;
-                decimal simulatedRemaining = Math.Max(0, _selectedDebtor.TotalFee - simulatedPaid);
-                lblPaidVal.Text = $"{simulatedPaid:N0} đ";
-                lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
-                RemainingDebt = simulatedRemaining;
-            }
+            decimal simulatedPaid = _initialPaid + amt;
+            decimal simulatedRemaining = Math.Max(0, _initialTotalFee - simulatedPaid);
+            lblPaidVal.Text = $"{simulatedPaid:N0} đ";
+            lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
+            RemainingDebt = simulatedRemaining;
         };
 
         rbVietQR.CheckedChanged += (s, e) => ToggleMethod();
@@ -230,10 +164,10 @@ public partial class CollectTuitionDialog : Form
                 return;
             }
 
-            if (_selectedDebtor != null && amount > _selectedDebtor.Remaining && _selectedDebtor.Remaining > 0)
+            if (_initialRemaining > 0 && amount > _initialRemaining)
             {
                 var askOver = MessageBox.Show(
-                    $"Số tiền thu ({amount:N0}đ) lớn hơn số dư nợ hiện tại ({_selectedDebtor.Remaining:N0}đ).\nBạn có chắc chắn muốn tiếp tục ghi nhận dư tiền?",
+                    $"Số tiền thu ({amount:N0}đ) lớn hơn số dư nợ hiện tại ({_initialRemaining:N0}đ).\nBạn có chắc chắn muốn tiếp tục ghi nhận?",
                     "Cảnh báo số tiền vượt nợ",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning
@@ -242,13 +176,10 @@ public partial class CollectTuitionDialog : Form
             }
 
             CollectedAmount = amount;
-            PaymentMethod = rbVietQR.Checked ? "Chuyển khoản VietQR" : (rbCash.Checked ? "Tiền mặt (quầy)" : "Thẻ POS / Quẹt thẻ");
+            PaymentMethod = rbVietQR.Checked ? "Chuyển khoản" : (rbCash.Checked ? "Tiền mặt" : "POS");
             ContentNote = txtNote.Text.Trim();
             ShouldPrintReceipt = chkPrintReceipt.Checked;
-            if (_selectedDebtor != null)
-            {
-                RemainingDebt = Math.Max(0, _selectedDebtor.TotalFee - (_selectedDebtor.Paid + amount));
-            }
+            RemainingDebt = Math.Max(0, _initialTotalFee - (_initialPaid + amount));
 
             DialogResult = DialogResult.OK;
             Close();
@@ -299,7 +230,6 @@ public partial class CollectTuitionDialog : Form
         if (amount == 2720000) return "Hai triệu bảy trăm hai mươi nghìn đồng chẵn";
         if (amount == 8500000) return "Tám triệu năm trăm nghìn đồng chẵn";
         if (amount == 4250000) return "Bốn triệu hai trăm năm mươi nghìn đồng chẵn";
-        if (amount == 3400000) return "Ba triệu bốn trăm nghìn đồng chẵn";
         if (amount == 4800000) return "Bốn triệu tám trăm nghìn đồng chẵn";
         if (amount == 2400000) return "Hai triệu bốn trăm nghìn đồng chẵn";
         if (amount == 1920000) return "Một triệu chín trăm hai mươi nghìn đồng chẵn";

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 using ECMS.UI.Services;
@@ -22,12 +25,18 @@ public partial class CertificateManagementView : UserControl
         public string ScoreText { get; set; } = string.Empty;
         public string AttendanceText { get; set; } = string.Empty;
         public string TuitionText { get; set; } = string.Empty;
+        public double NumericScore { get; set; }
+        public double NumericAttendanceRate { get; set; }
+        public bool HasTuitionDebt { get; set; }
         public bool IsEligible { get; set; }
         public string StatusText { get; set; } = string.Empty;
         public string GradeRank { get; set; } = "Giỏi";
     }
 
+    private readonly ISystemConfigService _configService = new SystemConfigService();
     private readonly List<EligibleStudentItem> _students = new();
+    private double _minPassingScore = 6.5;
+    private double _minAttendanceRate = 80.0;
 
     public CertificateManagementView()
     {
@@ -38,6 +47,11 @@ public partial class CertificateManagementView : UserControl
         LoadSampleData();
         WireEvents();
         UpdateSignerNote();
+
+        if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+        {
+            _ = LoadAcademicRulesAndRefreshAsync();
+        }
     }
 
     protected override void OnLoad(EventArgs e)
@@ -92,10 +106,60 @@ public partial class CertificateManagementView : UserControl
         }
     }
 
+    private async Task LoadAcademicRulesAndRefreshAsync()
+    {
+        try
+        {
+            var rules = await _configService.GetAcademicRulesAsync();
+            _minPassingScore = rules.PassingScore > 0 ? rules.PassingScore : 6.5;
+            _minAttendanceRate = rules.MinAttendanceRate > 0 ? rules.MinAttendanceRate : 80.0;
+
+            ReevaluateEligibility();
+            UpdateSignerNote();
+            ApplyFilter();
+        }
+        catch
+        {
+            // Giữ ngưỡng mặc định nếu chưa truy cập được cấu hình CSDL
+        }
+    }
+
+    private void ReevaluateEligibility()
+    {
+        foreach (var student in _students)
+        {
+            if (student.NumericScore < _minPassingScore)
+            {
+                student.IsEligible = false;
+                student.IsChecked = false;
+                student.StatusText = $"✕ TB < {_minPassingScore.ToString("0.0", CultureInfo.InvariantCulture)} (Chưa đạt)";
+            }
+            else if (student.NumericAttendanceRate < _minAttendanceRate)
+            {
+                student.IsEligible = false;
+                student.IsChecked = false;
+                student.StatusText = $"⚠️ Chuyên cần < {_minAttendanceRate.ToString("0", CultureInfo.InvariantCulture)}%";
+            }
+            else if (student.HasTuitionDebt)
+            {
+                student.IsEligible = false;
+                student.IsChecked = false;
+                student.StatusText = "⚠️ Còn nợ học phí";
+            }
+            else
+            {
+                student.IsEligible = true;
+                student.StatusText = "✓ Đủ điều kiện";
+            }
+        }
+    }
+
     private void UpdateSignerNote()
     {
         string signer = cboSigner.SelectedItem?.ToString() ?? $"{AppSession.FullName} · {AppSession.GetSignerRoleTitle()}";
-        lblFooterNote.Text = $"📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học phí 100%  |  Người ký duyệt: {signer}";
+        string scoreReq = _minPassingScore.ToString("0.0", CultureInfo.InvariantCulture);
+        string attReq = _minAttendanceRate.ToString("0", CultureInfo.InvariantCulture);
+        lblFooterNote.Text = $"📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ {scoreReq}  |  Chuyên cần ≥ {attReq}%  |  Học phí 100%  |  Người ký duyệt: {signer}";
     }
 
     private void SetupFilters()
@@ -345,8 +409,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.7 · Khá",
             AttendanceText = "22/24 (91.7%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 7.7,
+            NumericAttendanceRate = 91.7,
+            HasTuitionDebt = false,
             GradeRank = "Khá"
         });
 
@@ -360,8 +425,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.4 · Giỏi",
             AttendanceText = "24/24 (100%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 8.4,
+            NumericAttendanceRate = 100.0,
+            HasTuitionDebt = false,
             GradeRank = "Giỏi"
         });
 
@@ -375,8 +441,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.8 · Xuất sắc",
             AttendanceText = "23/24 (95.8%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 8.8,
+            NumericAttendanceRate = 95.8,
+            HasTuitionDebt = false,
             GradeRank = "Xuất sắc"
         });
 
@@ -390,8 +457,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.9 · Khá",
             AttendanceText = "21/24 (87.5%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 7.9,
+            NumericAttendanceRate = 87.5,
+            HasTuitionDebt = false,
             GradeRank = "Khá"
         });
 
@@ -405,8 +473,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "5.9 · Yếu",
             AttendanceText = "22/24 (91.7%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = false,
-            StatusText = "✕ TB < 6.5 (Chưa đạt)",
+            NumericScore = 5.9,
+            NumericAttendanceRate = 91.7,
+            HasTuitionDebt = false,
             GradeRank = "Chưa đạt"
         });
 
@@ -420,8 +489,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.2 · Khá",
             AttendanceText = "18/24 (75.0%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = false,
-            StatusText = "⚠️ Chuyên cần < 80%",
+            NumericScore = 7.2,
+            NumericAttendanceRate = 75.0,
+            HasTuitionDebt = false,
             GradeRank = "Khá"
         });
 
@@ -435,8 +505,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.0 · Khá",
             AttendanceText = "21/24 (87.5%)",
             TuitionText = "Nợ 500.000đ",
-            IsEligible = false,
-            StatusText = "⚠️ Còn nợ học phí",
+            NumericScore = 7.0,
+            NumericAttendanceRate = 87.5,
+            HasTuitionDebt = true,
             GradeRank = "Khá"
         });
 
@@ -450,8 +521,9 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.1 · Giỏi",
             AttendanceText = "24/24 (100%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 8.1,
+            NumericAttendanceRate = 100.0,
+            HasTuitionDebt = false,
             GradeRank = "Giỏi"
         });
 
@@ -465,11 +537,13 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.5 · Giỏi",
             AttendanceText = "23/24 (95.8%)",
             TuitionText = "Đã hoàn tất",
-            IsEligible = true,
-            StatusText = "✓ Đủ điều kiện",
+            NumericScore = 8.5,
+            NumericAttendanceRate = 95.8,
+            HasTuitionDebt = false,
             GradeRank = "Giỏi"
         });
 
+        ReevaluateEligibility();
         ApplyFilter();
     }
 

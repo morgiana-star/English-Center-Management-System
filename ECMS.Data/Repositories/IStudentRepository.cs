@@ -14,7 +14,10 @@ public interface IStudentRepository
     Task<StudentDetailDto?> GetStudentDetailByCodeAsync(string studentCode);
     Task<bool> UpdateStudentProfileAsync(UpdateStudentProfileDto dto);
     Task<bool> ArchiveStudentAsync(ArchiveStudentDto dto);
+    Task<bool> RestoreStudentAsync(int studentId);
     Task<StudentOverviewStatsDto> GetStudentStatsAsync();
     Task<string> GenerateNextStudentCodeAsync();
+    Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync();
+    Task<IEnumerable<OpenClassOptionDto>> GetOpenClassesByCourseAsync(int courseId);
     Task EnsureStudentSeedDataAsync();
 }

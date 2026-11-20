@@ -107,7 +107,12 @@ public class AppTextBox : UserControl
 
         _innerBox.GotFocus += (s, e) => { _isFocused = true; Invalidate(); };
         _innerBox.LostFocus += (s, e) => { _isFocused = false; Invalidate(); };
-        _innerBox.TextChanged += (s, e) => Invalidate();
+        _innerBox.TextChanged += (s, e) =>
+        {
+            Invalidate();
+            OnTextChanged(e);
+        };
+        _innerBox.KeyDown += (s, e) => OnKeyDown(e);
         _innerBox.HandleCreated += (s, e) => UpdateCueBanner();
 
         _lblError = new Label

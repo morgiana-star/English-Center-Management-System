@@ -121,7 +121,37 @@ public class StudentOverviewStatsDto
     public int TotalStudents { get; set; } = 0;
     public int StudyingStudents { get; set; } = 0;
     public int CompletedStudents { get; set; } = 0;
+    public int ArchivedStudents { get; set; } = 0;
     public int DebtStudents { get; set; } = 0;
+}
+
+public class CourseLookupDto
+{
+    public int CourseId { get; set; }
+    public string CourseCode { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string Level { get; set; } = string.Empty;
+    public int TotalSessions { get; set; }
+    public decimal BaseTuitionFee { get; set; }
+    public string DisplayText => $"{CourseName} ({Level} · {TotalSessions} buổi)";
+}
+
+public class OpenClassOptionDto
+{
+    public int ClassId { get; set; }
+    public string ClassCode { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public int CourseId { get; set; }
+    public string CourseName { get; set; } = string.Empty;
+    public decimal TuitionFee { get; set; }
+    public string StartDateDisplay { get; set; } = string.Empty;
+    public string ScheduleDisplay { get; set; } = string.Empty;
+    public string StartTime { get; set; } = string.Empty;
+    public string RoomName { get; set; } = string.Empty;
+    public string TeacherName { get; set; } = string.Empty;
+    public int CurrentStudents { get; set; }
+    public int MaxStudents { get; set; }
+    public string CapacityDisplay => $"{CurrentStudents}/{MaxStudents}";
 }
 
 /// <summary>

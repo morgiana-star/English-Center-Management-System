@@ -313,11 +313,19 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
                     INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
                     VALUES (@StudentId, @ParentId, @ParentRelationship, 1);";
 
+                string normalizedRel = dto.ParentRelationship switch
+                {
+                    var r when r.Contains("Bố", StringComparison.OrdinalIgnoreCase) => "Bố",
+                    var r when r.Contains("Mẹ", StringComparison.OrdinalIgnoreCase) => "Mẹ",
+                    var r when r.Contains("Giám hộ", StringComparison.OrdinalIgnoreCase) => "Giám hộ",
+                    _ => "Khác"
+                };
+
                 await conn.ExecuteAsync(insertStudentParentSql, new
                 {
                     StudentId = studentId,
                     ParentId = parentId,
-                    dto.ParentRelationship
+                    ParentRelationship = normalizedRel
                 }, tran);
             }
 
@@ -369,16 +377,23 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
             {
                 const string insertPaymentSql = @"
                     INSERT INTO Payments (PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note, CreatedAt)
-                    VALUES (@PaymentCode, @InvoiceId, @PaidAmount, CURRENT_TIMESTAMP, @PaymentMethod, @CashierId, 'Completed', @Note, CURRENT_TIMESTAMP);
+                    VALUES (@PaymentCode, @InvoiceId, @PaidAmount, CURRENT_TIMESTAMP, @PaymentMethod, @CashierId, 'Valid', @Note, CURRENT_TIMESTAMP);
                     SELECT last_insert_rowid();";
+
+                string normalizedMethod = dto.PaymentMethod switch
+                {
+                    var m when m.Contains("Tiền mặt", StringComparison.OrdinalIgnoreCase) => "Tiền mặt",
+                    var m when m.Contains("POS", StringComparison.OrdinalIgnoreCase) => "POS",
+                    _ => "Chuyển khoản"
+                };
 
                 await conn.ExecuteAsync(insertPaymentSql, new
                 {
                     PaymentCode = receiptCode,
                     InvoiceId = invoiceId,
                     PaidAmount = dto.AmountPaidNow,
-                    PaymentMethod = dto.PaymentMethod,
-                    dto.CashierId,
+                    PaymentMethod = normalizedMethod,
+                    CashierId = dto.CashierId > 0 ? dto.CashierId : 1,
                     Note = !string.IsNullOrWhiteSpace(dto.PaymentNote) ? dto.PaymentNote : $"Thu học phí đợt 1 - {dto.FullName} ({studentCode})"
                 }, tran);
             }

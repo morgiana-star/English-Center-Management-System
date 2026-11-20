@@ -1,13 +1,17 @@
 using System;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class AddStudentDialog : Form
 {
+    private readonly IStudentService _studentService = new StudentService();
     private readonly bool _isEditMode;
     private readonly string _initialName = string.Empty;
+    private readonly StudentDetailDto? _existingDetail;
 
     public AddStudentDialog() : this(false, string.Empty)
     {
@@ -22,6 +26,22 @@ public partial class AddStudentDialog : Form
 
         _isEditMode = isEditMode;
         _initialName = studentName;
+
+        SetupDropdowns();
+        ApplyMode();
+        WireUpEvents();
+    }
+
+    public AddStudentDialog(StudentDetailDto detail)
+    {
+        InitializeComponent();
+
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
+        _isEditMode = true;
+        _existingDetail = detail;
+        _initialName = detail.FullName;
 
         SetupDropdowns();
         ApplyMode();
@@ -43,13 +63,25 @@ public partial class AddStudentDialog : Form
             Text = "Sửa học viên — ECMS";
             btnSaveStudent.Text = "Lưu thay đổi";
 
-            txtFullName.Text = string.IsNullOrEmpty(_initialName) ? "Nguyễn Minh Anh" : _initialName;
-            txtPhone.Text = "0908 123 456";
-            txtEmail.Text = "minhanh.nguyen@email.com";
-            txtAddress.Text = "124 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP.HCM";
-            txtParentName.Text = "Nguyễn Thu Hương";
-            txtParentPhone.Text = "0911 556 889";
-            txtNotes.Text = "Mục tiêu: Đạt IELTS 6.5 trong 6 tháng. Ưu tiên lớp tối T3/T6.";
+            if (_existingDetail != null)
+            {
+                txtFullName.Text = _existingDetail.FullName;
+                txtPhone.Text = _existingDetail.Phone;
+                txtEmail.Text = _existingDetail.Email ?? "";
+                txtAddress.Text = _existingDetail.Address ?? "";
+                txtParentName.Text = _existingDetail.ParentFullName;
+                txtParentPhone.Text = _existingDetail.ParentPhone;
+                dtpDob.Value = _existingDetail.DateOfBirth > new DateTime(1950, 1, 1)
+                    ? _existingDetail.DateOfBirth
+                    : new DateTime(2004, 5, 20);
+
+                int gIdx = cboGender.FindStringExact(_existingDetail.Gender);
+                if (gIdx >= 0) cboGender.SelectedIndex = gIdx;
+            }
+            else
+            {
+                txtFullName.Text = _initialName;
+            }
         }
     }
 
@@ -61,10 +93,54 @@ public partial class AddStudentDialog : Form
             Close();
         };
 
-        btnSaveStudent.Click += (s, e) =>
+        btnSaveStudent.Click += async (s, e) =>
         {
-            string actionText = _isEditMode ? "cập nhật" : "lưu mới";
-            AppDialog.ShowSuccess(this, "Hồ sơ học viên", $"Đã {actionText} thông tin học viên {txtFullName.Text.Trim()} vào cơ sở dữ liệu SQLite thành công!");
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
+            {
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập họ và tên học viên.");
+                txtFullName.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPhone.Text))
+            {
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập số điện thoại.");
+                txtPhone.Focus();
+                return;
+            }
+
+            if (_isEditMode && _existingDetail != null)
+            {
+                btnSaveStudent.Enabled = false;
+                try
+                {
+                    var updateDto = new UpdateStudentProfileDto
+                    {
+                        StudentId = _existingDetail.StudentId,
+                        FullName = txtFullName.Text.Trim(),
+                        DateOfBirth = dtpDob.Value,
+                        Gender = cboGender.SelectedItem?.ToString() ?? "Nam",
+                        Phone = txtPhone.Text.Trim(),
+                        Email = txtEmail.Text.Trim(),
+                        Address = txtAddress.Text.Trim(),
+                        ParentFullName = txtParentName.Text.Trim(),
+                        ParentPhone = txtParentPhone.Text.Trim(),
+                        ParentRelationship = _existingDetail.ParentRelationship
+                    };
+
+                    var res = await _studentService.UpdateStudentProfileAsync(updateDto);
+                    if (!res.Success)
+                    {
+                        AppDialog.ShowError(this, "Lỗi cập nhật", res.Message);
+                        return;
+                    }
+                }
+                finally
+                {
+                    btnSaveStudent.Enabled = true;
+                }
+            }
+
             DialogResult = DialogResult.OK;
             Close();
         };

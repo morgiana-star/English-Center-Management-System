@@ -1,10 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Business.Session;
 
 namespace ECMS.UI.Forms;
 
 public partial class LoginForm : Form
 {
+    private readonly IAuthService _authService = new AuthService();
+    private readonly IUserService _userService = new UserService();
+
+    private static readonly Dictionary<string, string> UsernameAliases = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["minhquan.admin"] = "admin",
+        ["hoanganh.gv"] = "teacher",
+        ["thao.kt"] = "accountant",
+        ["academic.aa"] = "academic"
+    };
+
     public LoginForm()
     {
         InitializeComponent();
@@ -12,7 +26,6 @@ public partial class LoginForm : Form
 
     private void LoginForm_Load(object sender, EventArgs e)
     {
-        // Đảm bảo không bị dính chữ mặc định khi kéo thả
         if (txtUsername.Text == "appTextBox1") txtUsername.Text = "";
         if (txtPassword.Text == "appTextBox2") txtPassword.Text = "";
     }
@@ -22,7 +35,7 @@ public partial class LoginForm : Form
         txtPassword.UseSystemPasswordChar = !chkShowPass.Checked;
     }
 
-    private void btnLogin_Click(object sender, EventArgs e)
+    private async void btnLogin_Click(object sender, EventArgs e)
     {
         string username = txtUsername.Text.Trim();
         string password = txtPassword.Text;
@@ -34,104 +47,83 @@ public partial class LoginForm : Form
             return;
         }
 
-        // Kiểm tra đăng nhập (Hỗ trợ Admin, Giáo viên, Học viên, Kế toán, Quản lý, Tư vấn, Phụ huynh)
-        bool loginSuccess = false;
-        string u = username.ToLowerInvariant();
+        btnLogin.Enabled = false;
+        Cursor = Cursors.WaitCursor;
 
-        if ((u == "admin" || u == "minhquan.admin") && (password == "admin123" || password == "Admin@123"))
+        try
         {
-            AppSession.Username = "minhquan.admin";
-            AppSession.FullName = "Trần Minh Quân";
-            AppSession.RoleCode = "ROLE_ADMIN";
-            AppSession.RoleName = "Admin";
-            AppSession.SignerTitle = "GIÁM ĐỐC TRUNG TÂM";
-            AppSession.Email = "minhquan@ecms.edu.vn";
-            AppSession.Phone = "0912 345 678";
-            loginSuccess = true;
-        }
-        else if ((u == "teacher" || u == "hoanganh.gv") && (password == "teacher123" || password == "Teacher@123"))
-        {
-            AppSession.Username = "hoanganh.gv";
-            AppSession.FullName = "Nguyễn Hoàng Anh";
-            AppSession.RoleCode = "ROLE_TEA";
-            AppSession.RoleName = "Giáo viên";
-            AppSession.SignerTitle = "GIÁO VIÊN PHỤ TRÁCH";
-            AppSession.Email = "hoanganh.gv@ecms.edu.vn";
-            AppSession.Phone = "0903 112 233";
-            loginSuccess = true;
-        }
-        else if ((u == "student" || u == "minhanh.hv") && (password == "student123" || password == "Student@123"))
-        {
-            AppSession.Username = "minhanh.hv";
-            AppSession.FullName = "Nguyễn Minh Anh";
-            AppSession.RoleCode = "ROLE_STU";
-            AppSession.RoleName = "Học viên";
-            AppSession.SignerTitle = "HỌC VIÊN";
-            AppSession.Email = "minhanh.hv@gmail.com";
-            AppSession.Phone = "0934 998 877";
-            loginSuccess = true;
-        }
-        else if ((u == "accountant" || u == "thao.kt") && (password == "accountant123" || password == "Accountant@123"))
-        {
-            AppSession.Username = "thao.kt";
-            AppSession.FullName = "Lê Phương Thảo";
-            AppSession.RoleCode = "ROLE_ACC";
-            AppSession.RoleName = "Kế toán";
-            AppSession.SignerTitle = "KẾ TOÁN TRƯỞNG";
-            AppSession.Email = "thao.kt@ecms.edu.vn";
-            AppSession.Phone = "0988 556 778";
-            loginSuccess = true;
-        }
-        else if (u == "counselor" && (password == "counselor123" || password == "Counselor@123"))
-        {
-            AppSession.Username = "counselor";
-            AppSession.FullName = "Vũ Mai Phương";
-            AppSession.RoleCode = "ROLE_EC";
-            AppSession.RoleName = "Tư vấn";
-            AppSession.SignerTitle = "TƯ VẤN TUYỂN SINH";
-            AppSession.Email = "phuong.tv@ecms.edu.vn";
-            AppSession.Phone = "0977 443 322";
-            loginSuccess = true;
-        }
-        else if (u == "manager" && (password == "manager123" || password == "Manager@123"))
-        {
-            AppSession.Username = "manager";
-            AppSession.FullName = "Phạm Thu Trang";
-            AppSession.RoleCode = "ROLE_MGR";
-            AppSession.RoleName = "Quản lý";
-            AppSession.SignerTitle = "QUẢN LÝ ĐIỀU HÀNH";
-            AppSession.Email = "manager@ecms.edu.vn";
-            AppSession.Phone = "0915 223 344";
-            loginSuccess = true;
-        }
-        else if ((u == "academic" || u == "academic.aa") && (password == "academic123" || password == "Academic@123"))
-        {
-            AppSession.Username = "academic.aa";
-            AppSession.FullName = "Trần Đức Duy";
-            AppSession.RoleCode = "ROLE_AA";
-            AppSession.RoleName = "Đào tạo";
-            AppSession.SignerTitle = "TRƯỞNG BỘ PHẬN ĐÀO TẠO";
-            AppSession.Email = "ducduy.aa@ecms.edu.vn";
-            AppSession.Phone = "0918 889 900";
-            loginSuccess = true;
-        }
+            var result = await _authService.LoginAsync(username, password);
 
-        if (loginSuccess)
-        {
+            // Hỗ trợ tên đăng nhập tắt quen thuộc nếu tài khoản gõ chưa tồn tại trực tiếp
+            if (!result.Success && UsernameAliases.TryGetValue(username, out string? mappedUsername))
+            {
+                var retryResult = await _authService.LoginAsync(mappedUsername, password);
+                if (retryResult.Success || !retryResult.Message.Contains("không chính xác"))
+                {
+                    result = retryResult;
+                }
+            }
+
+            if (!result.Success || result.Session == null)
+            {
+                lblError.Text = $"* {result.Message}";
+                lblError.Visible = true;
+                txtPassword.Focus();
+                txtPassword.SelectAll();
+                return;
+            }
+
+            var session = result.Session;
+
+            // Đã loại bỏ vai trò Học viên & Phụ huynh khỏi cổng nội bộ
+            if (session.RoleCode is "ROLE_STU" or "ROLE_PAR")
+            {
+                lblError.Text = "* Tài khoản Học viên / Phụ huynh không có quyền truy cập hệ thống quản trị nội bộ!";
+                lblError.Visible = true;
+                return;
+            }
+
+            // Đồng bộ phiên đăng nhập tầng Business và tầng UI
+            SessionManager.SetSession(session);
+
+            var detail = await _userService.GetUserByIdAsync(session.UserId);
+            string displayName = session.FullName;
+            if (string.IsNullOrWhiteSpace(displayName) || displayName.Equals(session.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                displayName = session.RoleCode == "ROLE_ADMIN"
+                    ? "Trần Minh Quân"
+                    : (detail?.FullName ?? session.Username);
+            }
+
+            AppSession.UserId = session.UserId;
+            AppSession.Username = session.Username;
+            AppSession.FullName = displayName;
+            AppSession.RoleCode = session.RoleCode;
+            AppSession.RoleName = detail?.RoleName ?? session.RoleName;
+            AppSession.Email = !string.IsNullOrWhiteSpace(detail?.Email) ? detail.Email! : $"{session.Username}@ecms.edu.vn";
+            AppSession.Phone = !string.IsNullOrWhiteSpace(detail?.Phone) ? detail.Phone! : "0912 345 678";
+            AppSession.SignerTitle = AppSession.GetSignerRoleTitle();
+            AppSession.JobTitle = AppSession.RoleName;
+            AppSession.CreatedDate = detail?.CreatedAt.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy");
+            AppSession.LastLogin = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            AppSession.Permissions = session.Permissions;
+
             lblError.Visible = false;
 
-            // Mở MainForm và ẩn LoginForm
             Hide();
             var mainForm = new MainForm();
             mainForm.FormClosed += (s, args) => Close();
             mainForm.Show();
         }
-        else
+        catch (Exception ex)
         {
-            lblError.Text = "* Tên đăng nhập hoặc mật khẩu không chính xác!";
+            lblError.Text = $"* Lỗi kết nối cơ sở dữ liệu: {ex.Message}";
             lblError.Visible = true;
-            txtPassword.Focus();
-            txtPassword.SelectAll();
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+            btnLogin.Enabled = true;
         }
     }
 }

@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
 using ECMS.UI.Controls;
 using ECMS.UI.UserControls;
 
@@ -9,12 +12,30 @@ namespace ECMS.UI.Forms;
 
 public partial class MainForm : Form
 {
+    private readonly IRbacService _rbacService = new RbacService();
     private UserControl? _currentView;
     private Button? _activeNavButton;
 
     public MainForm()
     {
         InitializeComponent();
+
+        // Thêm đường viền mảnh 1px ở runtime để Rider Designer mở được bình thường
+        var pnlHeaderBorder = new Panel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 1,
+            BackColor = Color.FromArgb(226, 232, 240)
+        };
+        pnlHeader.Controls.Add(pnlHeaderBorder);
+
+        var pnlSidebarBorder = new Panel
+        {
+            Dock = DockStyle.Right,
+            Width = 1,
+            BackColor = Color.FromArgb(226, 232, 240)
+        };
+        pnlSidebar.Controls.Add(pnlSidebarBorder);
 
         // Xử lý phím tắt F1
         KeyPreview = true;
@@ -30,11 +51,13 @@ public partial class MainForm : Form
         WireUpNavigationEvents();
     }
 
-    private void MainForm_Load(object sender, EventArgs e)
+    private async void MainForm_Load(object sender, EventArgs e)
     {
-        // Áp dụng phân quyền hiển thị Sidebar theo vai trò đang đăng nhập
-        ApplyRoleBasedAccessControl();
+        // Áp dụng phân quyền hiển thị Sidebar theo vai trò đang đăng nhập từ DB
+        await ApplyRoleBasedAccessControlAsync(navigateDefault: true);
     }
+
+    public Task RefreshSidebarPermissionsAsync() => ApplyRoleBasedAccessControlAsync(navigateDefault: false);
 
     /// <summary>
     /// Gắn sự kiện click cho toàn bộ danh mục Menu Sidebar (A, B, C, D) và Header
@@ -68,113 +91,85 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// Áp dụng ma trận phân quyền RBAC: Ẩn/Hiện Menu Sidebar tự động theo vai trò người dùng
+    /// Áp dụng ma trận phân quyền RBAC từ CSDL: Ẩn/Hiện Menu Sidebar tự động theo vai trò người dùng
     /// </summary>
-    private void ApplyRoleBasedAccessControl()
+    private async Task ApplyRoleBasedAccessControlAsync(bool navigateDefault = true)
     {
         lblUser.Text = $"{AppSession.FullName} · {AppSession.RoleName} ▾";
 
         string role = AppSession.RoleCode;
-
-        switch (role)
+        HashSet<string> allowed;
+        try
         {
-            case "ROLE_ADMIN":
-                // 1. Quản trị viên: Toàn quyền tất cả
-                SetMenuVisibility(
-                    dashboard: true,
-                    student: true, teacher: true, course: true, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: true,
-                    tuition: true,
-                    accounts: true, settings: true
-                );
-                NavigateToDashboard();
-                break;
+            allowed = await _rbacService.GetAllowedModuleKeysForRoleAsync(role);
+        }
+        catch
+        {
+            allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        }
 
-            case "ROLE_MGR":
-                // 2. Quản lý: Xem và duyệt toàn bộ, không sửa cấu hình hệ thống
-                SetMenuVisibility(
-                    dashboard: true,
-                    student: true, teacher: true, course: true, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: true,
-                    tuition: true,
-                    accounts: true, settings: false
-                );
-                NavigateToDashboard();
-                break;
-
-            case "ROLE_AA":
-                // 3. Đào tạo: Trọng tâm phân hệ B (Đào tạo), xem công nợ học phí
-                SetMenuVisibility(
-                    dashboard: true,
-                    student: true, teacher: true, course: true, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: true,
-                    tuition: true,
-                    accounts: false, settings: false
-                );
-                NavigateToClasses();
-                break;
-
-            case "ROLE_EC":
-                // 4. Tư vấn / Tuyển sinh: Hồ sơ học viên, xem khóa/lớp/lịch để tư vấn
-                SetMenuVisibility(
-                    dashboard: false,
-                    student: true, teacher: false, course: true, @class: true,
-                    schedule: true, attendance: false, grades: false, materials: false, certificates: false,
-                    tuition: false,
-                    accounts: false, settings: false
-                );
-                NavigateToStudents();
-                break;
-
-            case "ROLE_ACC":
-                // 5. Kế toán: Trọng tâm phân hệ C (Học phí, công nợ, phiếu thu) & đối soát
-                SetMenuVisibility(
-                    dashboard: true,
-                    student: true, teacher: false, course: true, @class: true,
-                    schedule: false, attendance: false, grades: false, materials: false, certificates: false,
-                    tuition: true,
-                    accounts: false, settings: false
-                );
-                NavigateToTuition();
-                break;
-
-            case "ROLE_TEA":
-                // 6. Giáo viên: Lớp dạy, Lịch dạy, Điểm danh, Điểm số, Tài liệu
-                SetMenuVisibility(
-                    dashboard: false,
-                    student: false, teacher: false, course: false, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: false,
-                    tuition: false,
-                    accounts: false, settings: false
-                );
-                NavigateToSchedule();
-                break;
-
-            case "ROLE_STU":
-                // 7. Học viên: Cổng thông tin tự phục vụ cá nhân
-                SetMenuVisibility(
-                    dashboard: false,
-                    student: false, teacher: false, course: false, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: true,
-                    tuition: true,
-                    accounts: false, settings: false
-                );
-                NavigateToSchedule();
-                break;
-
-            default:
-                SetMenuVisibility(
-                    dashboard: false,
-                    student: false, teacher: false, course: false, @class: true,
-                    schedule: true, attendance: true, grades: true, materials: true, certificates: false,
-                    tuition: false,
-                    accounts: false, settings: false
-                );
-                NavigateToSchedule();
-                break;
+        if (role == "ROLE_ADMIN" || allowed.Count == 0)
+        {
+            // Fallback chuẩn nếu chưa đọc được hoặc là Admin
+            if (role == "ROLE_ADMIN")
+            {
+                SetMenuVisibility(true, true, true, true, true, true, true, true, true, true, true, true, true);
+            }
+            else if (role == "ROLE_MGR")
+            {
+                SetMenuVisibility(true, true, true, true, true, true, true, true, true, true, true, true, false);
+            }
+            else if (role == "ROLE_AA")
+            {
+                SetMenuVisibility(true, true, true, true, true, true, true, true, true, true, true, false, false);
+            }
+            else if (role == "ROLE_EC")
+            {
+                SetMenuVisibility(false, true, false, true, true, true, false, false, false, false, false, false, false);
+            }
+            else if (role == "ROLE_ACC")
+            {
+                SetMenuVisibility(true, true, false, true, true, false, false, false, false, false, true, false, false);
+            }
+            else
+            {
+                SetMenuVisibility(false, false, false, false, true, true, true, true, true, false, false, false, false);
+            }
+        }
+        else
+        {
+            SetMenuVisibility(
+                dashboard: allowed.Contains("Dashboard"),
+                student: allowed.Contains("Student"),
+                teacher: allowed.Contains("Teacher"),
+                course: allowed.Contains("Course"),
+                @class: allowed.Contains("Class"),
+                schedule: allowed.Contains("Schedule"),
+                attendance: allowed.Contains("Attendance"),
+                grades: allowed.Contains("Grades"),
+                materials: allowed.Contains("Materials"),
+                certificates: allowed.Contains("Certificates"),
+                tuition: allowed.Contains("Tuition"),
+                accounts: allowed.Contains("Accounts"),
+                settings: allowed.Contains("Settings")
+            );
         }
 
         LayoutSidebarMenu();
+
+        if (navigateDefault)
+        {
+            if (role == "ROLE_EC" && btnNavStudent.Visible) NavigateToStudents();
+            else if (role == "ROLE_ACC" && btnNavTuition.Visible) NavigateToTuition();
+            else if (role == "ROLE_TEA" && btnNavSchedule.Visible) NavigateToSchedule();
+            else if (role == "ROLE_AA" && btnNavClass.Visible) NavigateToClasses();
+            else if (btnNavDashboard.Visible) NavigateToDashboard();
+            else if (btnNavStudent.Visible) NavigateToStudents();
+            else if (btnNavClass.Visible) NavigateToClasses();
+            else if (btnNavSchedule.Visible) NavigateToSchedule();
+            else if (btnNavTuition.Visible) NavigateToTuition();
+            else if (btnNavAccounts.Visible) NavigateToAccounts();
+        }
     }
 
     private void SetMenuVisibility(
@@ -280,20 +275,6 @@ public partial class MainForm : Form
                 }
             }
         }
-        {
-            currentY += 8;
-            lblGroupD.Location = new Point(28, currentY);
-            currentY += 28;
-            foreach (var btn in groupDControls)
-            {
-                if (btn.Visible)
-                {
-                    btn.Location = new Point(0, currentY);
-                    currentY += 42;
-                }
-            }
-        }
-
         pnlSidebarMenu.ResumeLayout();
     }
 
@@ -385,8 +366,8 @@ public partial class MainForm : Form
         if (_activeNavButton != null && _activeNavButton != button)
         {
             _activeNavButton.BackColor = Color.White;
-            _activeNavButton.ForeColor = Color.FromArgb(51, 65, 85);
-            _activeNavButton.Font = new Font("Segoe UI", 9.25f, FontStyle.Bold);
+            _activeNavButton.ForeColor = Color.FromArgb(100, 116, 139);
+            _activeNavButton.Font = new Font("Segoe UI", 9.25f, FontStyle.Regular);
             if (_activeNavButton.Text.StartsWith("•  "))
             {
                 _activeNavButton.Text = _activeNavButton.Text[3..];

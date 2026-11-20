@@ -19,5 +19,6 @@ public interface IUserRepository
     Task<IEnumerable<UserListItemDto>> GetLockedUsersAsync();
     Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason);
     Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
+    Task<bool> UpdateOwnProfileAsync(int userId, string fullName, string? email, string? phone);
     Task<AdminTelemetryDto> GetTelemetryAsync();
 }

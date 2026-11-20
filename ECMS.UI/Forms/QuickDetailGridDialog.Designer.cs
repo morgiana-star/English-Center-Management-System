@@ -86,7 +86,7 @@ partial class QuickDetailGridDialog
         // 
         dgvGrid.AllowUserToAddRows = false;
         dgvGrid.AllowUserToDeleteRows = false;
-        dgvGrid.AllowUserToResizeColumns = false;
+        dgvGrid.AllowUserToResizeColumns = true;
         dgvGrid.AllowUserToResizeRows = false;
         dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
@@ -123,7 +123,7 @@ partial class QuickDetailGridDialog
         dgvGrid.Location = new System.Drawing.Point(12, 12);
         dgvGrid.MultiSelect = false;
         dgvGrid.Name = "dgvGrid";
-        dgvGrid.ReadOnly = true;
+        dgvGrid.ReadOnly = false;
         dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
         dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -134,9 +134,9 @@ partial class QuickDetailGridDialog
         dgvGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvGrid.RowHeadersVisible = false;
         dgvGrid.RowHeadersWidth = 51;
-        dgvGrid.ScrollBars = System.Windows.Forms.ScrollBars.None;
+        dgvGrid.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvGrid.Size = new System.Drawing.Size(756, 422);
+        dgvGrid.Size = new System.Drawing.Size(1056, 556);
         dgvGrid.TabIndex = 0;
         // 
         // QuickDetailGridDialog
@@ -144,7 +144,7 @@ partial class QuickDetailGridDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        ClientSize = new System.Drawing.Size(820, 546);
+        ClientSize = new System.Drawing.Size(1120, 680);
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);

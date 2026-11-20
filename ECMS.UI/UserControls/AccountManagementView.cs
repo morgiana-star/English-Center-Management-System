@@ -6,23 +6,23 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
 using ECMS.Core.DTOs;
-using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
 namespace ECMS.UI.UserControls;
 
 /// <summary>
-/// UserControl Quản trị Tài khoản & Phân quyền gồm 3 Tab:
-/// 1. Tài khoản người dùng (Danh sách từ SQLite, tìm kiếm, lọc, thêm/sửa/đặt lại MK/khóa)
-/// 2. Vai trò & Phân quyền (Ma trận phân quyền trực quan tương tác đổi quyền nhanh)
-/// 3. Tài khoản cá nhân (Hồ sơ cá nhân & Đổi mật khẩu bảo mật)
+/// UserControl Quản trị Tài khoản & Phân quyền gồm 3 Tab (100% SQLite):
+/// 1. Tài khoản người dùng (Danh sách nội bộ, bỏ Học viên/Phụ huynh, bỏ Xuất danh sách)
+/// 2. Vai trò & Phân quyền (Ma trận trực quan đồng bộ thẳng với Sidebar MainForm)
+/// 3. Tài khoản cá nhân (Hồ sơ thật từ SQLite & Đổi mật khẩu bảo mật)
 /// </summary>
 public partial class AccountManagementView : UserControl
 {
     private readonly IUserService _userService = new UserService();
     private readonly IRbacService _rbacService = new RbacService();
     private List<UserListItemDto> _accounts = new();
+    private List<RbacMatrixRowDto> _matrixRows = new();
     private bool _isMatrixInitialized = false;
 
     public AccountManagementView()
@@ -34,15 +34,16 @@ public partial class AccountManagementView : UserControl
 
         SetupFilters();
         SetupAccountsGrid();
-        _ = LoadAccountsAsync();
         SetupPermissionsMatrix();
-        LoadUserProfile();
+        ConfigurePersonalTabUi();
+
+        _ = LoadAccountsAsync();
+        _ = LoadMatrixFromDbAsync();
+        _ = LoadUserProfileAsync();
+
         WireUpEvents();
     }
 
-    /// <summary>
-    /// Cho phép Form chính mở thẳng vào Tab nào (0: Tài khoản, 1: Phân quyền, 2: Cá nhân)
-    /// </summary>
     public void SelectTab(int index)
     {
         if (index >= 0 && index < tabMain.TabCount)
@@ -53,13 +54,42 @@ public partial class AccountManagementView : UserControl
 
     private void SetupFilters()
     {
+        // Bỏ nút Xuất danh sách & dồn nút Thêm tài khoản gọn sang phải
+        btnExportAccounts.Visible = false;
+        btnAddAccount.Location = new Point(pnlToolbarAccounts.Width - btnAddAccount.Width - 10, 4);
+        pnlToolbarAccounts.Resize += (s, e) =>
+        {
+            if (btnAddAccount != null && pnlToolbarAccounts != null)
+            {
+                btnAddAccount.Location = new Point(pnlToolbarAccounts.Width - btnAddAccount.Width - 10, 4);
+            }
+        };
+
+        // Bỏ Học viên, Phụ huynh khỏi bộ lọc
         cboRoleFilter.Items.Clear();
-        cboRoleFilter.Items.AddRange(new object[] { "Tất cả vai trò", "Admin", "Quản lý", "Tư vấn", "Kế toán", "Đào tạo", "Giáo viên", "Học viên", "Phụ huynh" });
+        cboRoleFilter.Items.AddRange(new object[]
+        {
+            "Tất cả vai trò",
+            "Admin",
+            "Quản lý",
+            "Đào tạo",
+            "Tư vấn",
+            "Kế toán",
+            "Giáo viên"
+        });
         cboRoleFilter.SelectedIndex = 0;
 
         cboStatusFilter.Items.Clear();
         cboStatusFilter.Items.AddRange(new object[] { "Tất cả trạng thái", "Đang hoạt động", "Đã khóa" });
         cboStatusFilter.SelectedIndex = 0;
+    }
+
+    private void ConfigurePersonalTabUi()
+    {
+        // Tab 3.1: Bỏ dòng Quyền và Chi nhánh bên panel trái; đổi nhãn thành "Vai trò"
+        lblSummaryPerm.Visible = false;
+        lblSummaryBranch.Visible = false;
+        lblRole.Text = "Vai trò";
     }
 
     private void SetupAccountsGrid()
@@ -69,7 +99,7 @@ public partial class AccountManagementView : UserControl
         var colUser = new DataGridViewTextBoxColumn { HeaderText = "Tên đăng nhập", FillWeight = 16, ReadOnly = true };
         var colName = new DataGridViewTextBoxColumn { HeaderText = "Họ và tên", FillWeight = 20, ReadOnly = true };
         var colContact = new DataGridViewTextBoxColumn { HeaderText = "Email & Số ĐT", FillWeight = 24, ReadOnly = true };
-        var colRole = new DataGridViewTextBoxColumn { HeaderText = "Vai trò", FillWeight = 14, ReadOnly = true };
+        var colRole = new DataGridViewTextBoxColumn { HeaderText = "Vai trò", FillWeight = 16, ReadOnly = true };
         var colCode = new DataGridViewTextBoxColumn { HeaderText = "Mã vai trò", FillWeight = 12, ReadOnly = true };
         var colStatus = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true };
 
@@ -116,9 +146,9 @@ public partial class AccountManagementView : UserControl
             lblStatLocked.Text = $"🔴 Đã khóa: {telemetry.LockedUsers}";
             lblStatAdmin.Text = $"🛡️ Quản trị viên: {admins}";
         }
-        catch
+        catch (Exception ex)
         {
-            // Dự phòng
+            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách tài khoản", ex.Message);
         }
     }
 
@@ -136,9 +166,11 @@ public partial class AccountManagementView : UserControl
                            a.Username.ToLowerInvariant().Contains(kw) ||
                            a.FullName.ToLowerInvariant().Contains(kw) ||
                            (a.Email != null && a.Email.ToLowerInvariant().Contains(kw)) ||
-                           (a.Phone != null && a.Phone.Contains(kw));
+                           (a.Phone != null && a.Phone.ToLowerInvariant().Contains(kw));
 
-            bool matchRole = roleFilter == "Tất cả vai trò" || a.RoleName.Contains(roleFilter);
+            bool matchRole = roleFilter == "Tất cả vai trò" ||
+                             a.RoleName.Contains(roleFilter, StringComparison.OrdinalIgnoreCase) ||
+                             (roleFilter == "Đào tạo" && a.RoleCode == "ROLE_AA");
 
             bool matchStatus = statusFilter == "Tất cả trạng thái" ||
                                (statusFilter == "Đang hoạt động" && a.IsActive && !a.IsLocked) ||
@@ -165,51 +197,94 @@ public partial class AccountManagementView : UserControl
 
         dgvAccounts.ClearSelection();
         dgvAccounts.CurrentCell = null;
-
-        // lblAccountCountBadge.Text = $"(Hiển thị: {filtered.Count} / {_accounts.Count} tài khoản)";
     }
 
     private void SetupPermissionsMatrix()
     {
         if (_isMatrixInitialized) return;
 
+        // Bỏ cột Học viên & Phụ huynh; chuẩn hóa tên cột & phân hệ rõ ràng dễ hiểu
         dgvPermissions.Columns.Clear();
-        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phân hệ / Mô-đun chức năng", FillWeight = 26, ReadOnly = true });
-        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Admin", FillWeight = 10, ReadOnly = true });
+        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phân hệ chức năng (Menu Sidebar)", FillWeight = 32, ReadOnly = true });
+        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Admin", FillWeight = 11, ReadOnly = true });
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Quản lý", FillWeight = 11, ReadOnly = true });
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đào tạo", FillWeight = 11, ReadOnly = true });
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tư vấn", FillWeight = 11, ReadOnly = true });
-        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Kế toán", FillWeight = 11, ReadOnly = true });
+        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Kế toán", FillWeight = 12, ReadOnly = true });
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 12, ReadOnly = true });
-        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học viên", FillWeight = 11, ReadOnly = true });
-        dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phụ huynh", FillWeight = 11, ReadOnly = true });
 
-        LoadDefaultMatrixData();
+        if (lblMatrixSub != null)
+        {
+            lblMatrixSub.Text = "Nhấp vào từng ô để chuyển đổi quyền hạn: Toàn quyền ↔ Chỉ xem ↔ Không có quyền (Áp dụng trực tiếp khi đăng nhập theo vai trò)";
+        }
+
         _isMatrixInitialized = true;
     }
 
-    private void LoadDefaultMatrixData()
+    private async Task LoadMatrixFromDbAsync()
     {
-        dgvPermissions.Rows.Clear();
-        dgvPermissions.Rows.Add("Tổng quan / Báo cáo", "Q", "Q", "X", "—", "X", "—", "—", "—");
-        dgvPermissions.Rows.Add("Học viên & Phụ huynh", "Q", "Q", "Q", "S", "X", "X", "—", "—");
-        dgvPermissions.Rows.Add("Khách hàng Tiềm năng (Leads)", "Q", "Q", "X", "Q", "—", "—", "—", "—");
-        dgvPermissions.Rows.Add("Giáo viên & Phân công", "Q", "Q", "Q", "—", "—", "X", "—", "—");
-        dgvPermissions.Rows.Add("Khóa học & Phòng học", "Q", "Q", "Q", "X", "X", "X", "X", "—");
-        dgvPermissions.Rows.Add("Lớp học & Đào tạo", "Q", "Q", "Q", "X", "—", "X", "X", "—");
-        dgvPermissions.Rows.Add("Chuyên cần & Điểm số", "Q", "Q", "Q", "—", "—", "S", "X", "X");
-        dgvPermissions.Rows.Add("Tài chính & Thu phí", "Q", "Q", "X", "—", "Q", "—", "X", "X");
-        dgvPermissions.Rows.Add("Phân quyền RBAC", "Q", "X", "—", "—", "—", "—", "—", "—");
-        dgvPermissions.Rows.Add("Quản trị Tài khoản & Bảo mật", "Q", "—", "—", "—", "—", "—", "—", "—");
-        dgvPermissions.Rows.Add("Hạ tầng Hệ thống & Kiểm toán", "Q", "—", "—", "—", "—", "—", "—", "—");
+        try
+        {
+            _matrixRows = await _rbacService.GetSidebarMatrixAsync();
+            BindMatrixGrid();
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi nạp ma trận phân quyền", ex.Message);
+        }
     }
 
-    private void LoadUserProfile()
+    private void BindMatrixGrid()
+    {
+        dgvPermissions.Rows.Clear();
+        foreach (var r in _matrixRows)
+        {
+            int idx = dgvPermissions.Rows.Add(
+                r.ModuleDisplayName,
+                r.AdminAccess,
+                r.ManagerAccess,
+                r.AcademicAccess,
+                r.CounselorAccess,
+                r.AccountantAccess,
+                r.TeacherAccess
+            );
+            dgvPermissions.Rows[idx].Tag = r;
+        }
+        dgvPermissions.ClearSelection();
+        dgvPermissions.CurrentCell = null;
+    }
+
+    private async Task LoadUserProfileAsync()
+    {
+        try
+        {
+            var userDetail = await _userService.GetUserByIdAsync(AppSession.UserId);
+            if (userDetail != null)
+            {
+                if (!string.IsNullOrWhiteSpace(userDetail.FullName) && !userDetail.FullName.Equals("Quản trị viên", StringComparison.OrdinalIgnoreCase))
+                {
+                    AppSession.FullName = userDetail.FullName;
+                }
+                if (!string.IsNullOrWhiteSpace(userDetail.Email)) AppSession.Email = userDetail.Email!;
+                if (!string.IsNullOrWhiteSpace(userDetail.Phone)) AppSession.Phone = userDetail.Phone!;
+                AppSession.RoleName = userDetail.RoleName;
+                AppSession.CreatedDate = userDetail.CreatedAt.ToString("dd/MM/yyyy");
+            }
+        }
+        catch
+        {
+            // Giữ AppSession hiện tại nếu bận
+        }
+
+        BindUserProfileToUi();
+    }
+
+    private void BindUserProfileToUi()
     {
         txtFullName.Text = AppSession.FullName;
         txtEmail.Text = AppSession.Email;
         txtPhone.Text = AppSession.Phone;
-        txtJobTitle.Text = AppSession.JobTitle;
+        txtJobTitle.Text = string.IsNullOrWhiteSpace(AppSession.JobTitle) ? AppSession.RoleName : AppSession.JobTitle;
         txtUserRole.Text = AppSession.RoleName;
 
         lblSummaryName.Text = AppSession.FullName;
@@ -223,27 +298,22 @@ public partial class AccountManagementView : UserControl
 
     private void WireUpEvents()
     {
-        // 1. Tab 1 Events (Tài khoản)
+        // 1. Tab 1 Events (Tìm kiếm realtime, Lọc, Thêm, Sửa, Đặt lại MK, Khóa/Mở)
         txtSearch.TextChanged += (s, e) => RefreshAccountsGrid();
         cboRoleFilter.SelectedIndexChanged += (s, e) => RefreshAccountsGrid();
         cboStatusFilter.SelectedIndexChanged += (s, e) => RefreshAccountsGrid();
 
         btnAddAccount.Click += async (s, e) =>
         {
-            using var dlg = new EditAccountDialog(isCreateMode: true, 0, "", "", "Học viên", true);
+            using var dlg = new EditAccountDialog(isCreateMode: true, 0, "", "", "Giáo viên", true);
             if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 await LoadAccountsAsync();
-                AppDialog.ShowSuccess(ParentForm, "Thêm tài khoản thành công", $"Tài khoản '{dlg.Username}' ({dlg.FullName}) với vai trò '{dlg.Role}' đã được tạo thành công.");
+                AppDialog.ShowSuccess(ParentForm, "Thêm tài khoản thành công",
+                    $"Tài khoản '{dlg.Username}' ({dlg.FullName}) với vai trò '{dlg.Role}' đã được tạo thành công (Mật khẩu mặc định: User@2026).");
             }
         };
 
-        btnExportAccounts.Click += (s, e) =>
-        {
-            AppDialog.ShowSuccess(ParentForm, "Xuất danh sách tài khoản", "Đã xuất danh sách tài khoản người dùng ra file Excel thành công.");
-        };
-
-        // Click trên DataGridView Tài khoản
         dgvAccounts.CellContentClick += async (s, e) =>
         {
             if (e.RowIndex < 0) return;
@@ -251,7 +321,7 @@ public partial class AccountManagementView : UserControl
             var item = row.Tag as UserListItemDto;
             if (item == null) return;
 
-            // Nút Sửa (col index 6)
+            // Nút Sửa (col 6)
             if (e.ColumnIndex == 6)
             {
                 using var dlg = new EditAccountDialog(isCreateMode: false, item.UserId, item.Username, item.FullName, item.RoleName, item.IsActive);
@@ -261,13 +331,18 @@ public partial class AccountManagementView : UserControl
                     AppDialog.ShowSuccess(ParentForm, "Cập nhật tài khoản", $"Đã cập nhật thông tin tài khoản '{item.Username}' thành công.");
                 }
             }
-            // Nút Đặt lại MK (col index 7)
+            // Nút Đặt lại MK (col 7)
             else if (e.ColumnIndex == 7)
             {
                 using var dlg = new ResetPasswordDialog(item.UserId, item.Username, item.FullName);
                 if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
                 {
                     var resetRes = await _userService.ResetPasswordByAdminAsync(item.UserId, dlg.TempPassword);
+                    if (!resetRes.Success)
+                    {
+                        AppDialog.ShowError(ParentForm, "Lỗi đặt lại mật khẩu", resetRes.Message);
+                        return;
+                    }
                     if (dlg.UnlockAccount)
                     {
                         await _userService.UnlockUserAsync(item.UserId);
@@ -277,7 +352,7 @@ public partial class AccountManagementView : UserControl
                     AppDialog.ShowSuccess(ParentForm, "Đặt lại mật khẩu", $"Mật khẩu của tài khoản '{item.Username}' đã được đặt lại thành công: {dlg.TempPassword}");
                 }
             }
-            // Nút Khóa / Mở (col index 8)
+            // Nút Khóa / Mở (col 8)
             else if (e.ColumnIndex == 8)
             {
                 if (item.UserId == AppSession.UserId || item.Username == AppSession.Username)
@@ -299,11 +374,9 @@ public partial class AccountManagementView : UserControl
             }
         };
 
-        // Format màu cho dgvAccounts
         dgvAccounts.CellFormatting += (s, e) =>
         {
             if (e.RowIndex < 0) return;
-            // Cột Trạng thái (col 5)
             if (e.ColumnIndex == 5 && e.Value != null)
             {
                 string text = e.Value.ToString() ?? "";
@@ -318,7 +391,6 @@ public partial class AccountManagementView : UserControl
                     e.CellStyle.Font = new Font(dgvAccounts.Font, FontStyle.Bold);
                 }
             }
-            // Cột Vai trò (col 3)
             else if (e.ColumnIndex == 3 && e.Value != null)
             {
                 string role = e.Value.ToString() ?? "";
@@ -330,7 +402,7 @@ public partial class AccountManagementView : UserControl
             }
         };
 
-        // 2. Tab 2 Events (Ma trận phân quyền)
+        // 2. Tab 2 Events (Ma trận phân quyền lưu SQLite & áp dụng lên MainForm Sidebar)
         dgvPermissions.CellFormatting += (s, e) =>
         {
             if (e.RowIndex < 0) return;
@@ -345,71 +417,90 @@ public partial class AccountManagementView : UserControl
             if (e.Value == null) return;
             string val = e.Value.ToString()?.Trim() ?? "";
 
-            if (val == "Q" || val.StartsWith("Q"))
+            if (val.Contains("Toàn quyền"))
             {
-                e.CellStyle.BackColor = Color.FromArgb(220, 252, 231); // Light green
-                e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52);   // Dark green
+                e.CellStyle.BackColor = Color.FromArgb(220, 252, 231);
+                e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52);
                 e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
             }
-            else if (val == "S" || val.StartsWith("S"))
+            else if (val.Contains("Chỉ xem"))
             {
-                e.CellStyle.BackColor = Color.FromArgb(219, 234, 254); // Light blue
-                e.CellStyle.ForeColor = Color.FromArgb(30, 64, 175);   // Dark blue
+                e.CellStyle.BackColor = Color.FromArgb(219, 234, 254);
+                e.CellStyle.ForeColor = Color.FromArgb(30, 64, 175);
                 e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
             }
-            else if (val == "X" || val.StartsWith("X"))
+            else
             {
-                e.CellStyle.BackColor = Color.FromArgb(254, 243, 199); // Light amber
-                e.CellStyle.ForeColor = Color.FromArgb(146, 64, 14);   // Dark amber
-                e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
-            }
-            else if (val == "—")
-            {
-                e.CellStyle.BackColor = Color.FromArgb(241, 245, 249); // Light slate
-                e.CellStyle.ForeColor = Color.FromArgb(148, 163, 184); // Slate
+                e.CellStyle.BackColor = Color.FromArgb(241, 245, 249);
+                e.CellStyle.ForeColor = Color.FromArgb(148, 163, 184);
             }
         };
 
-        // Click đổi quyền nhanh trên ô ma trận
         dgvPermissions.CellClick += (s, e) =>
         {
             if (e.RowIndex < 0 || e.ColumnIndex <= 0) return;
 
-            // Cột 1 là Admin -> luôn Q
             if (e.ColumnIndex == 1)
             {
-                AppDialog.ShowInfo(ParentForm, "Quyền Admin cố định", "Vai trò Quản trị viên (Admin) luôn sở hữu toàn quyền quản trị (Q) đối với tất cả phân hệ.");
+                AppDialog.ShowInfo(ParentForm, "Quyền Admin cố định", "Vai trò Admin luôn có Toàn quyền trên toàn bộ các phân hệ của hệ thống.");
                 return;
             }
 
             var cell = dgvPermissions.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            string cur = cell.Value?.ToString()?.Trim() ?? "—";
+            string cur = cell.Value?.ToString()?.Trim() ?? "Không có quyền";
 
-            // Chu trình chuyển đổi: Q -> S -> X -> — -> Q
             string nextVal = cur switch
             {
-                "Q" => "S",
-                "S" => "X",
-                "X" => "—",
-                _ => "Q"
+                "Toàn quyền" => "Chỉ xem",
+                "Chỉ xem" => "Không có quyền",
+                _ => "Toàn quyền"
             };
 
             cell.Value = nextVal;
+
+            if (dgvPermissions.Rows[e.RowIndex].Tag is RbacMatrixRowDto model)
+            {
+                switch (e.ColumnIndex)
+                {
+                    case 2: model.ManagerAccess = nextVal; break;
+                    case 3: model.AcademicAccess = nextVal; break;
+                    case 4: model.CounselorAccess = nextVal; break;
+                    case 5: model.AccountantAccess = nextVal; break;
+                    case 6: model.TeacherAccess = nextVal; break;
+                }
+            }
         };
 
-        btnResetMatrix.Click += (s, e) =>
+        btnResetMatrix.Click += async (s, e) =>
         {
-            LoadDefaultMatrixData();
-            AppDialog.ShowInfo(ParentForm, "Khôi phục phân quyền", "Đã khôi phục ma trận phân quyền về trạng thái mặc định của hệ thống.");
+            _matrixRows = await _rbacService.ResetSidebarMatrixToDefaultAsync();
+            BindMatrixGrid();
+            if (FindForm() is MainForm mf)
+            {
+                await mf.RefreshSidebarPermissionsAsync();
+            }
+            AppDialog.ShowInfo(ParentForm, "Khôi phục phân quyền", "Đã khôi phục ma trận phân quyền về mặc định trong cơ sở dữ liệu.");
         };
 
-        btnSaveRoles.Click += (s, e) =>
+        btnSaveRoles.Click += async (s, e) =>
         {
-            AppDialog.ShowSuccess(ParentForm, "Lưu phân quyền thành công", "Đã lưu ma trận phân quyền mới vào cơ sở dữ liệu hệ thống.");
+            var res = await _rbacService.SaveSidebarMatrixAsync(_matrixRows, AppSession.UserId);
+            if (res.Success)
+            {
+                if (FindForm() is MainForm mf)
+                {
+                    await mf.RefreshSidebarPermissionsAsync();
+                }
+                AppDialog.ShowSuccess(ParentForm, "Lưu phân quyền thành công", res.Message);
+            }
+            else
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi lưu phân quyền", res.Message);
+            }
         };
 
-        // 3. Tab 3 Events (Hồ sơ cá nhân & Đổi mật khẩu)
-        btnSaveProf.Click += (s, e) =>
+        // 3. Tab 3 Events (Cập nhật hồ sơ cá nhân xuống SQLite & Đổi mật khẩu DB thật)
+        btnSaveProf.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtFullName.Text))
             {
@@ -425,19 +516,31 @@ public partial class AccountManagementView : UserControl
                 return;
             }
 
+            var res = await _userService.UpdateOwnProfileAsync(
+                AppSession.UserId,
+                txtFullName.Text.Trim(),
+                txtEmail.Text.Trim(),
+                txtPhone.Text.Trim());
+
+            if (!res.Success)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi cập nhật hồ sơ", res.Message);
+                return;
+            }
+
             AppSession.FullName = txtFullName.Text.Trim();
             AppSession.Phone = txtPhone.Text.Trim();
             AppSession.Email = txtEmail.Text.Trim();
             AppSession.JobTitle = txtJobTitle.Text.Trim();
 
-            LoadUserProfile();
+            BindUserProfileToUi();
             bannerProfileSuccess.Visible = true;
-            AppDialog.ShowSuccess(ParentForm, "Cập nhật hồ sơ", "Thông tin tài khoản cá nhân đã được lưu thành công.");
+            AppDialog.ShowSuccess(ParentForm, "Cập nhật hồ sơ", res.Message);
         };
 
         btnCancelProf.Click += (s, e) =>
         {
-            LoadUserProfile();
+            BindUserProfileToUi();
             bannerProfileSuccess.Visible = false;
         };
 
