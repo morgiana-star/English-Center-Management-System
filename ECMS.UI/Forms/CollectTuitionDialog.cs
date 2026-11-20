@@ -4,11 +4,14 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using ECMS.Business.Services;
 
 namespace ECMS.UI.Forms;
 
 public partial class CollectTuitionDialog : Form
 {
+    private readonly IFinanceService _financeService = new FinanceService();
+
     private class DebtorOption
     {
         public string Code { get; set; } = string.Empty;
@@ -76,11 +79,37 @@ public partial class CollectTuitionDialog : Form
     private void InitDebtorsList()
     {
         _debtors.Clear();
-        _debtors.Add(new DebtorOption { Code = "HV-0241", Name = "Nguyễn Minh Anh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 5400000, Paid = 2000000, Remaining = 3400000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0238", Name = "Phạm Khánh Linh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 3600000, Remaining = 2400000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0239", Name = "Đỗ Thanh Tâm", ClassName = "COM-B01", CourseName = "Tiếng Anh Giao tiếp Cơ bản", TotalFee = 3200000, Paid = 0, Remaining = 3200000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0215", Name = "Trần Thảo Nhi", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 5500000, Remaining = 500000 });
-        _debtors.Add(new DebtorOption { Code = "HV-0235", Name = "Nguyễn Tiến Đạt", ClassName = "IELTS-F02", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 4800000, Remaining = 1200000 });
+        try
+        {
+            var task = _financeService.GetTuitionProfilesAsync();
+            var profiles = task.GetAwaiter().GetResult();
+            foreach (var p in profiles.Where(x => x.Remaining > 0))
+            {
+                _debtors.Add(new DebtorOption
+                {
+                    Code = p.StudentCode,
+                    Name = p.StudentName,
+                    ClassName = p.ClassName,
+                    CourseName = p.CourseName,
+                    TotalFee = p.TotalFee,
+                    Paid = p.Paid,
+                    Remaining = p.Remaining
+                });
+            }
+        }
+        catch
+        {
+            // Fallback nếu CSDL chưa kịp nạp
+        }
+
+        if (_debtors.Count == 0)
+        {
+            _debtors.Add(new DebtorOption { Code = "HV-0241", Name = "Nguyễn Minh Anh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 5400000, Paid = 2000000, Remaining = 3400000 });
+            _debtors.Add(new DebtorOption { Code = "HV-0238", Name = "Phạm Khánh Linh", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 3600000, Remaining = 2400000 });
+            _debtors.Add(new DebtorOption { Code = "HV-0239", Name = "Đỗ Thanh Tâm", ClassName = "COM-B01", CourseName = "Tiếng Anh Giao tiếp Cơ bản", TotalFee = 3200000, Paid = 0, Remaining = 3200000 });
+            _debtors.Add(new DebtorOption { Code = "HV-0215", Name = "Trần Thảo Nhi", ClassName = "IELTS-F01", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 5500000, Remaining = 500000 });
+            _debtors.Add(new DebtorOption { Code = "HV-0235", Name = "Nguyễn Tiến Đạt", ClassName = "IELTS-F02", CourseName = "IELTS Foundation", TotalFee = 6000000, Paid = 4800000, Remaining = 1200000 });
+        }
     }
 
     private void SetupForm()
