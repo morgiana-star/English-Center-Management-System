@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Services;
 
 namespace ECMS.UI.Forms;
@@ -9,6 +12,7 @@ namespace ECMS.UI.Forms;
 public partial class CertificateRegistryDialog : Form
 {
     private IssuedCertificateModel? _selectedCert;
+    private readonly ICertificateService _certService = new ECMS.Business.Services.CertificateService();
 
     public CertificateRegistryDialog()
     {
@@ -249,13 +253,44 @@ public partial class CertificateRegistryDialog : Form
         public IssuedCertificateModel OriginalCert { get; set; } = null!;
     }
 
-    private void LoadCertificates()
+    private async void LoadCertificates()
     {
         string q = txtSearch.Text?.Trim().ToLowerInvariant() ?? "";
         string selectedCourse = cboCourseFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
         string selectedYear = cboYearFilter.SelectedItem?.ToString() ?? "Tất cả các năm";
 
-        var certs = CertificateService.GetIssuedCertificates();
+        List<IssuedCertificateModel> certs = new();
+        try
+        {
+            var dbCerts = await _certService.GetIssuedCertificatesAsync();
+            foreach (var c in dbCerts)
+            {
+                certs.Add(new IssuedCertificateModel
+                {
+                    SerialNumber = c.SerialNumber,
+                    StudentCode = c.StudentCode,
+                    StudentName = c.StudentName,
+                    CourseName = c.CourseName,
+                    ClassName = c.ClassName,
+                    IssueDate = c.IssueDate,
+                    Approver = c.Approver,
+                    Status = c.Status,
+                    Score = c.Score,
+                    GradeRank = c.GradeRank,
+                    Attendance = c.Attendance
+                });
+            }
+        }
+        catch
+        {
+            certs = CertificateService.GetIssuedCertificates();
+        }
+
+        if (certs.Count == 0)
+        {
+            certs = CertificateService.GetIssuedCertificates();
+        }
+
         var filtered = certs.Where(c =>
             (string.IsNullOrEmpty(q) ||
              c.SerialNumber.ToLowerInvariant().Contains(q) ||
@@ -285,7 +320,7 @@ public partial class CertificateRegistryDialog : Form
         gridRegistry.DataSource = null;
         gridRegistry.DataSource = displayList;
 
-        lblGridFooter.Text = $"📌 Tổng số: {displayList.Count} chứng chỉ đã cấp | Nhấn đúp chuột hoặc ấn '🖨️ Xem & In' để mở phôi chứng chỉ in ấn.";
+        lblGridFooter.Text = $"📌 Tổng số: {displayList.Count} chứng chỉ trong CSDL SQLite | Nhấn đúp chuột hoặc ấn '🖨️ Xem & In' để mở phôi chứng chỉ in ấn.";
     }
 
     private void HighlightCertificate(string serial)
