@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 using ECMS.UI.Services;
@@ -11,10 +13,14 @@ namespace ECMS.UI.UserControls;
 
 public partial class CertificateManagementView : UserControl
 {
+    private readonly ICertificateService _certService = new ECMS.Business.Services.CertificateService();
+
     private class EligibleStudentItem
     {
         public bool IsChecked { get; set; }
         public int Stt { get; set; }
+        public int EnrollmentId { get; set; }
+        public int StudentId { get; set; }
         public string StudentCode { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string CourseName { get; set; } = string.Empty;
@@ -35,7 +41,7 @@ public partial class CertificateManagementView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadSampleData();
+        LoadRealEligibleStudentsAsync();
         WireEvents();
         UpdateSignerNote();
     }
@@ -331,6 +337,40 @@ public partial class CertificateManagementView : UserControl
         };
     }
 
+    private async void LoadRealEligibleStudentsAsync()
+    {
+        try
+        {
+            var dtoList = await _certService.GetEligibleStudentsAsync();
+            _students.Clear();
+            int stt = 1;
+            foreach (var s in dtoList)
+            {
+                _students.Add(new EligibleStudentItem
+                {
+                    Stt = stt++,
+                    StudentCode = s.StudentCode,
+                    FullName = s.FullName,
+                    CourseName = s.CourseName,
+                    ClassName = s.ClassName,
+                    ScoreText = s.ScoreText,
+                    AttendanceText = s.AttendanceText,
+                    TuitionText = s.TuitionText,
+                    IsEligible = s.IsEligible,
+                    StatusText = s.StatusText,
+                    GradeRank = s.GradeRank,
+                    EnrollmentId = s.EnrollmentId,
+                    StudentId = s.StudentId
+                });
+            }
+            ApplyFilter();
+        }
+        catch
+        {
+            LoadSampleData();
+        }
+    }
+
     private void LoadSampleData()
     {
         _students.Clear();
@@ -510,7 +550,7 @@ public partial class CertificateManagementView : UserControl
             dlg.ShowDialog(ParentForm);
         };
 
-        btnIssueSelectedTop.Click += (s, e) =>
+        btnIssueSelectedTop.Click += async (s, e) =>
         {
             var selected = _students.Where(s => s.IsChecked).ToList();
 
@@ -556,7 +596,8 @@ public partial class CertificateManagementView : UserControl
             var newlyIssuedSerials = new List<string>();
             foreach (var student in selected)
             {
-                string serial = CertificateService.GenerateNextSerial();
+                var issueRes = await _certService.IssueCertificateAsync(student.EnrollmentId, student.StudentId, student.GradeRank, $"{signerName} ({signerRole})");
+                string serial = issueRes.Success ? issueRes.SerialNumber : CertificateService.GenerateNextSerial();
                 newlyIssuedSerials.Add(serial);
 
                 CertificateService.AddIssuedCertificate(new IssuedCertificateModel
