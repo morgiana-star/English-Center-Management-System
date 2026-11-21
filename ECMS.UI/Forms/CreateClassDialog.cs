@@ -199,7 +199,7 @@ public partial class CreateClassDialog : Form
         {
             if (string.IsNullOrWhiteSpace(txtClassCode.Text))
             {
-                MessageBox.Show("Vui lòng nhập Mã lớp học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập Mã lớp học.");
                 txtClassCode.Focus();
                 return;
             }
@@ -207,9 +207,18 @@ public partial class CreateClassDialog : Form
             int.TryParse(txtCapacity.Text, out int capacity);
             if (capacity <= 0) capacity = 20;
 
+            var selectedRoom = cboRoom.SelectedItem as RoomComboItem;
+            if (selectedRoom != null && selectedRoom.Capacity > 0 && capacity > selectedRoom.Capacity)
+            {
+                AppDialog.ShowWarning(this, "Vượt quá sức chứa phòng",
+                    $"Sĩ số tối đa ({capacity} học viên) vượt quá sức chứa của {selectedRoom.RoomName} ({selectedRoom.Capacity} chỗ).\n\nVui lòng điều chỉnh lại sĩ số hoặc chuyển sang phòng học lớn hơn!");
+                txtCapacity.Focus();
+                return;
+            }
+
             int selectedCourseId = (cboCourse.SelectedItem as CourseComboItem)?.CourseId ?? 1;
             int selectedTeacherId = (cboTeacher.SelectedItem as TeacherComboItem)?.TeacherId ?? 1;
-            int selectedRoomId = (cboRoom.SelectedItem as RoomComboItem)?.RoomId ?? 1;
+            int selectedRoomId = selectedRoom?.RoomId ?? 1;
             string courseName = (cboCourse.SelectedItem as CourseComboItem)?.CourseName ?? cboCourse.SelectedItem?.ToString() ?? "IELTS";
 
             var newClass = new Class
@@ -228,12 +237,12 @@ public partial class CreateClassDialog : Form
             var res = await _classService.CreateClassAsync(newClass);
             if (!res.Success)
             {
-                MessageBox.Show(res.Message, "Lỗi lưu CSDL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppDialog.ShowError(this, "Lỗi lưu CSDL", res.Message);
                 return;
             }
 
             string actionMsg = _isEditMode ? "cập nhật" : "lưu mới";
-            MessageBox.Show($"Đã {actionMsg} lớp học '{txtClassCode.Text}' thành công vào hệ thống!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AppDialog.ShowSuccess(this, "Lưu lớp học thành công", $"Đã {actionMsg} lớp học '{txtClassCode.Text}' thành công vào hệ thống CSDL SQLite!");
             DialogResult = DialogResult.OK;
             Close();
         };
