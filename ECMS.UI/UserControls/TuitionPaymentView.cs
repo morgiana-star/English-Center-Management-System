@@ -8,6 +8,7 @@ using ECMS.Core.DTOs;
 using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
+using ECMS.UI.Services;
 
 namespace ECMS.UI.UserControls;
 
@@ -648,13 +649,22 @@ public partial class TuitionPaymentView : UserControl
         {
             using var sfd = new SaveFileDialog
             {
-                Title = "Xuất báo cáo tài chính & công nợ",
-                Filter = "Tệp Excel (*.xlsx)|*.xlsx|Tệp CSV (*.csv)|*.csv",
-                FileName = $"BaoCao_TaiChinh_ECMS_{DateTime.Now:yyyyMMdd}.xlsx"
+                Title = "Xuất báo cáo tài chính & theo dõi công nợ",
+                Filter = "Tệp Excel (*.xlsx)|*.xlsx",
+                FileName = $"BaoCao_CongNo_ECMS_{DateTime.Now:yyyyMMdd_HHmm}.xlsx"
             };
             if (sfd.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                AppDialog.ShowSuccess(ParentForm, "Xuất báo cáo", $"Đã xuất thành công báo cáo tài chính ra tệp:\n{sfd.FileName}");
+                try
+                {
+                    ExcelExportService.ExportTuitionDebtReport(sfd.FileName, _profiles);
+                    AppDialog.ShowSuccess(ParentForm, "Xuất báo cáo thành công", 
+                        $"Đã xuất thành công báo cáo theo dõi công nợ ra tệp Excel:\n{sfd.FileName}");
+                }
+                catch (Exception ex)
+                {
+                    AppDialog.ShowError(ParentForm, "Lỗi xuất Excel", $"Không thể xuất tệp Excel: {ex.Message}");
+                }
             }
         };
 
