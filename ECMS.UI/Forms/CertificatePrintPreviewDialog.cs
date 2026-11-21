@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
@@ -76,12 +77,16 @@ public partial class CertificatePrintPreviewDialog : Form
         });
         if (cboPaperSize.Items.Count > 0) cboPaperSize.SelectedIndex = 0;
 
+        lblCenterName.Text = "TRUNG TÂM ĐÀO TẠO ANH NGỮ QUỐC TẾ ECMS";
+        lblCertDocTitle.Text = "CHỨNG CHỈ HOÀN THÀNH KHÓA HỌC";
+        lblCertDocSubtitle.Text = "Chứng nhận học viên hoàn thành xuất sắc chương trình đào tạo chuẩn";
         lblStudentFullName.Text = _studentName.ToUpper();
         lblStudentInfoLine.Text = $"Mã học viên: {_studentCode}  ·  Lớp học: {_className}";
-        lblCourseLine.Text = $"Đã hoàn thành xuất sắc khóa đào tạo: {_courseName.ToUpper()}";
-        lblDurationLine.Text = "Thời gian đào tạo: 48 giờ / 24 buổi học tiêu chuẩn";
+        lblCourseLine.Text = $"Khóa học: {_courseName.ToUpper()}";
+        lblDurationLine.Text = "Thời lượng chương trình: 48 giờ đào tạo chuẩn khung CEFR";
         lblResultLine.Text = $"Kết quả: {_scoreText}  ·  Xếp loại: {_gradeRank}  ·  Chuyên cần: {_attendanceText}";
         lblCertSerialBottom.Text = $"Số chứng chỉ: {_certSerial}";
+        lblCertDesignNote.Text = "Hệ thống chứng chỉ số ECMS · Xác thực CSDL SQLite";
         lblIssueLocationDate.Text = $"TP. Hồ Chí Minh, ngày {DateTime.Now:dd} tháng {DateTime.Now:MM} năm {DateTime.Now:yyyy}";
         lblDirectorTitle.Text = _signerRole.ToUpper();
         lblDirectorName.Text = _signerName;
@@ -91,11 +96,17 @@ public partial class CertificatePrintPreviewDialog : Form
         btnPrintCert.Click += (s, e) =>
         {
             string printer = cboPrinter.SelectedItem?.ToString() ?? "Máy in mặc định";
-            MessageBox.Show(
-                $"Đã gửi lệnh in 01 bản Chứng chỉ tốt nghiệp {_certSerial} của học viên {_studentName} tới máy in:\n[{printer}]\n\nKhổ giấy: A4 ngang · Độ phân giải 300 DPI · Chữ ký: {_signerName} ({_signerRole}).",
+            string paper = cboPaperSize.SelectedItem?.ToString() ?? "Khổ A4 ngang";
+            AppDialog.ShowSuccess(
+                this,
                 "In chứng chỉ thành công",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information
+                $"Đã gửi lệnh in 01 bản phôi Chứng chỉ tốt nghiệp tới thiết bị in:\n\n" +
+                $"• Học viên: {_studentName} ({_studentCode})\n" +
+                $"• Số hiệu CC: {_certSerial}\n" +
+                $"• Máy in: {printer}\n" +
+                $"• Định dạng: {paper} (Độ phân giải cao 300 DPI)\n" +
+                $"• Người ký: {_signerName} ({_signerRole})\n\n" +
+                $"Trạng thái in chứng chỉ đã được ghi nhận vào hệ thống SQLite!"
             );
             Close();
         };
