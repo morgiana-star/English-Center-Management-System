@@ -1,14 +1,41 @@
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Dapper;
 using ECMS.Business.Services;
 using ECMS.Core.Entities;
 using ECMS.Core.Enums;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class CreateClassDialog : Form
 {
+    private class CourseComboItem
+    {
+        public int CourseId { get; set; }
+        public string CourseName { get; set; } = string.Empty;
+        public override string ToString() => CourseName;
+    }
+
+    private class TeacherComboItem
+    {
+        public int TeacherId { get; set; }
+        public string TeacherName { get; set; } = string.Empty;
+        public override string ToString() => TeacherName;
+    }
+
+    private class RoomComboItem
+    {
+        public int RoomId { get; set; }
+        public string RoomName { get; set; } = string.Empty;
+        public int Capacity { get; set; }
+        public override string ToString() => $"{RoomName} · {Capacity} chỗ";
+    }
+
     private readonly IClassService _classService = new ClassService();
     private readonly bool _isEditMode;
     private readonly string _initialClassCode = string.Empty;
@@ -53,27 +80,70 @@ public partial class CreateClassDialog : Form
 
     private void SetupDropdowns()
     {
+        // 1. Nạp Khóa học từ CSDL SQLite
         cboCourse.Items.Clear();
-        cboCourse.Items.AddRange(new object[]
+        try
         {
-            "IELTS Foundation",
-            "IELTS 5.0–6.5",
-            "TOEIC 500+",
-            "TOEIC 650+",
-            "English Communication Basic"
-        });
-        if (cboCourse.Items.Count > 0) cboCourse.SelectedIndex = 0;
+            using var conn = DatabaseConfig.CreateOpenConnection();
+            var courses = conn.Query<CourseComboItem>("SELECT CourseId, CourseName FROM Courses WHERE IsActive = 1 ORDER BY CourseId;");
+            foreach (var c in courses)
+            {
+                cboCourse.Items.Add(c);
+            }
+        }
+        catch { }
 
+        if (cboCourse.Items.Count == 0)
+        {
+            cboCourse.Items.Add(new CourseComboItem { CourseId = 1, CourseName = "IELTS Foundation" });
+            cboCourse.Items.Add(new CourseComboItem { CourseId = 2, CourseName = "IELTS 5.0–6.5" });
+            cboCourse.Items.Add(new CourseComboItem { CourseId = 3, CourseName = "TOEIC 500+" });
+        }
+        cboCourse.SelectedIndex = 0;
+
+        // 2. Nạp Giảng viên từ CSDL SQLite
         cboTeacher.Items.Clear();
-        cboTeacher.Items.AddRange(new object[]
+        try
         {
-            "Nguyễn Hoàng Anh",
-            "Trần Minh Tuấn",
-            "Lê Thu Hà",
-            "Phạm Quốc Hùng"
-        });
-        if (cboTeacher.Items.Count > 0) cboTeacher.SelectedIndex = 0;
+            using var conn = DatabaseConfig.CreateOpenConnection();
+            var teachers = conn.Query<TeacherComboItem>("SELECT TeacherId, FullName AS TeacherName FROM Teachers WHERE IsActive = 1 ORDER BY TeacherId;");
+            foreach (var t in teachers)
+            {
+                cboTeacher.Items.Add(t);
+            }
+        }
+        catch { }
 
+        if (cboTeacher.Items.Count == 0)
+        {
+            cboTeacher.Items.Add(new TeacherComboItem { TeacherId = 1, TeacherName = "Thầy John Smith (GV Bản ngữ)" });
+            cboTeacher.Items.Add(new TeacherComboItem { TeacherId = 2, TeacherName = "Nguyễn Hoàng Anh" });
+            cboTeacher.Items.Add(new TeacherComboItem { TeacherId = 3, TeacherName = "Lê Thu Hà" });
+        }
+        cboTeacher.SelectedIndex = 0;
+
+        // 3. Nạp Phòng học từ CSDL SQLite
+        cboRoom.Items.Clear();
+        try
+        {
+            using var conn = DatabaseConfig.CreateOpenConnection();
+            var rooms = conn.Query<RoomComboItem>("SELECT RoomId, RoomName, Capacity FROM ClassRooms WHERE IsActive = 1 ORDER BY RoomId;");
+            foreach (var r in rooms)
+            {
+                cboRoom.Items.Add(r);
+            }
+        }
+        catch { }
+
+        if (cboRoom.Items.Count == 0)
+        {
+            cboRoom.Items.Add(new RoomComboItem { RoomId = 1, RoomName = "P201", Capacity = 24 });
+            cboRoom.Items.Add(new RoomComboItem { RoomId = 2, RoomName = "P202", Capacity = 20 });
+            cboRoom.Items.Add(new RoomComboItem { RoomId = 3, RoomName = "P101", Capacity = 30 });
+        }
+        cboRoom.SelectedIndex = 0;
+
+        // 4. Lịch học & Ca học
         cboDaysOfWeek.Items.Clear();
         cboDaysOfWeek.Items.AddRange(new object[]
         {
@@ -93,16 +163,6 @@ public partial class CreateClassDialog : Form
             "14:00–16:00"
         });
         if (cboTimeSlot.Items.Count > 0) cboTimeSlot.SelectedIndex = 0;
-
-        cboRoom.Items.Clear();
-        cboRoom.Items.AddRange(new object[]
-        {
-            "P201 · 24 chỗ",
-            "P202 · 20 chỗ",
-            "P203 · 18 chỗ",
-            "P101 · 30 chỗ"
-        });
-        if (cboRoom.Items.Count > 0) cboRoom.SelectedIndex = 0;
 
         cboStatus.Items.Clear();
         cboStatus.Items.AddRange(new object[]
@@ -127,6 +187,14 @@ public partial class CreateClassDialog : Form
             Close();
         };
 
+        cboRoom.SelectedIndexChanged += (s, e) =>
+        {
+            if (cboRoom.SelectedItem is RoomComboItem room && room.Capacity > 0)
+            {
+                txtCapacity.Text = room.Capacity.ToString();
+            }
+        };
+
         btnSaveDraft.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtClassCode.Text))
@@ -139,13 +207,18 @@ public partial class CreateClassDialog : Form
             int.TryParse(txtCapacity.Text, out int capacity);
             if (capacity <= 0) capacity = 20;
 
+            int selectedCourseId = (cboCourse.SelectedItem as CourseComboItem)?.CourseId ?? 1;
+            int selectedTeacherId = (cboTeacher.SelectedItem as TeacherComboItem)?.TeacherId ?? 1;
+            int selectedRoomId = (cboRoom.SelectedItem as RoomComboItem)?.RoomId ?? 1;
+            string courseName = (cboCourse.SelectedItem as CourseComboItem)?.CourseName ?? cboCourse.SelectedItem?.ToString() ?? "IELTS";
+
             var newClass = new Class
             {
                 ClassCode = txtClassCode.Text.Trim(),
-                ClassName = $"Lớp {txtClassCode.Text.Trim()} ({cboCourse.SelectedItem ?? "IELTS"})",
-                CourseId = 1,
-                MainTeacherId = 1,
-                DefaultRoomId = 1,
+                ClassName = $"Lớp {txtClassCode.Text.Trim()} ({courseName})",
+                CourseId = selectedCourseId,
+                MainTeacherId = selectedTeacherId,
+                DefaultRoomId = selectedRoomId,
                 StartDate = dtpStartDate.Value,
                 EndDate = dtpEndDate.Value,
                 MaxStudents = capacity,
