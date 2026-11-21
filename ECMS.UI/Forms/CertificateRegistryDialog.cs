@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using ECMS.Business.Services;
 using ECMS.Core.DTOs;
+using ECMS.UI.Controls;
 using ECMS.UI.Services;
 
 namespace ECMS.UI.Forms;
@@ -13,6 +14,7 @@ public partial class CertificateRegistryDialog : Form
 {
     private IssuedCertificateModel? _selectedCert;
     private readonly ICertificateService _certService = new ECMS.Business.Services.CertificateService();
+    private List<IssuedCertificateModel> _loadedCerts = new();
 
     public CertificateRegistryDialog()
     {
@@ -224,6 +226,55 @@ public partial class CertificateRegistryDialog : Form
 
         btnClose.Click += (s, e) => Close();
 
+        btnExportExcel.Click += async (s, e) =>
+        {
+            using var sfd = new SaveFileDialog
+            {
+                Title = "Xuất sổ cấp chứng chỉ tốt nghiệp ra Excel",
+                Filter = "Tệp Excel (*.xlsx)|*.xlsx",
+                FileName = $"So_ChungChi_ECMS_{DateTime.Now:yyyyMMdd_HHmm}.xlsx"
+            };
+            if (sfd.ShowDialog(this) == DialogResult.OK)
+            {
+                try
+                {
+                    List<IssuedCertificateModel> certsToExport;
+                    if (_loadedCerts.Count > 0)
+                    {
+                        certsToExport = _loadedCerts;
+                    }
+                    else
+                    {
+                        var dbCerts = await _certService.GetIssuedCertificatesAsync();
+                        certsToExport = dbCerts.Select(c => new IssuedCertificateModel
+                        {
+                            SerialNumber = c.SerialNumber,
+                            StudentCode = c.StudentCode,
+                            StudentName = c.StudentName,
+                            CourseName = c.CourseName,
+                            ClassName = c.ClassName,
+                            IssueDate = c.IssueDate,
+                            Approver = c.Approver,
+                            Status = c.Status,
+                            Score = c.Score,
+                            GradeRank = c.GradeRank,
+                            Attendance = c.Attendance
+                        }).ToList();
+                        if (certsToExport.Count == 0)
+                            certsToExport = CertificateService.GetIssuedCertificates();
+                    }
+
+                    ExcelExportService.ExportCertificateRegistryReport(sfd.FileName, certsToExport);
+                    AppDialog.ShowSuccess(this, "Xuất sổ chứng chỉ thành công",
+                        $"Đã xuất thành công {certsToExport.Count} bản ghi sổ chứng chỉ ra tệp Excel:\n{sfd.FileName}");
+                }
+                catch (Exception ex)
+                {
+                    AppDialog.ShowError(this, "Lỗi xuất Excel", $"Không thể xuất tệp Excel: {ex.Message}");
+                }
+            }
+        };
+
         btnPreviewPrint.Click += (s, e) =>
         {
             if (gridRegistry.CurrentRow != null && gridRegistry.CurrentRow.Index >= 0)
@@ -300,6 +351,8 @@ public partial class CertificateRegistryDialog : Form
             (selectedCourse == "Tất cả khóa học" || c.CourseName.Contains(selectedCourse.Replace("Tất cả khóa học", ""))) &&
             (selectedYear == "Tất cả các năm" || c.IssueDate.Contains(selectedYear.Replace("Năm ", "")))
         ).ToList();
+
+        _loadedCerts = filtered;
 
         var displayList = filtered.Select((c, idx) => new RegistryDisplayRow
         {
