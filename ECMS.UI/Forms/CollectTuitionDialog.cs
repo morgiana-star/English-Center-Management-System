@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using ECMS.Business.Services;
+using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
@@ -245,31 +246,52 @@ public partial class CollectTuitionDialog : Form
                 lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
                 RemainingDebt = simulatedRemaining;
             }
+            UpdateCashChangeDisplay();
         };
 
         rbVietQR.CheckedChanged += (s, e) => ToggleMethod();
         rbCash.CheckedChanged += (s, e) => ToggleMethod();
         rbPos.CheckedChanged += (s, e) => ToggleMethod();
 
+        txtReference.TextChanged += (s, e) =>
+        {
+            UpdateCashChangeDisplay();
+        };
+
         btnConfirm.Click += (s, e) =>
         {
             decimal amount = ParseAmount();
             if (amount <= 0)
             {
-                MessageBox.Show("Vui lòng nhập số tiền thu hợp lệ lớn hơn 0đ.", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Số tiền không hợp lệ", "Vui lòng nhập số tiền thu lớn hơn 0 đ.");
                 txtAmount.Focus();
                 return;
             }
 
             if (_selectedDebtor != null && amount > _selectedDebtor.Remaining && _selectedDebtor.Remaining > 0)
             {
-                var askOver = MessageBox.Show(
-                    $"Số tiền thu ({amount:N0}đ) lớn hơn số dư nợ hiện tại ({_selectedDebtor.Remaining:N0}đ).\nBạn có chắc chắn muốn tiếp tục ghi nhận dư tiền?",
-                    "Cảnh báo số tiền vượt nợ",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning
-                );
-                if (askOver != DialogResult.Yes) return;
+                var askOver = AppDialog.ShowConfirm(this, "Cảnh báo thu vượt nợ",
+                    $"Số tiền thu ({amount:N0} đ) lớn hơn số dư nợ hiện tại ({_selectedDebtor.Remaining:N0} đ).\nBạn có chắc chắn muốn ghi nhận khoản thu vượt nợ này?",
+                    "Vẫn thu tiền", "Điều chỉnh lại");
+                if (askOver != DialogResult.OK)
+                {
+                    txtAmount.Text = $"{_selectedDebtor.Remaining:N0} đ";
+                    txtAmount.Focus();
+                    return;
+                }
+            }
+
+            // Chặn thu thiếu tiền mặt
+            if (rbCash.Checked)
+            {
+                string rawRef = txtReference.Text.Replace(".", "").Replace(",", "").Replace("đ", "").Replace(" ", "").Trim();
+                if (decimal.TryParse(rawRef, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal received) && received > 0 && received < amount)
+                {
+                    AppDialog.ShowWarning(this, "Chưa đủ tiền thanh toán",
+                        $"Số tiền khách đưa ({received:N0} đ) còn thiếu {amount - received:N0} đ so với số tiền cần thu ({amount:N0} đ).\n\nVui lòng nhận đủ tiền trước khi xác nhận lập phiếu thu!");
+                    txtReference.Focus();
+                    return;
+                }
             }
 
             CollectedAmount = amount;
@@ -288,22 +310,55 @@ public partial class CollectTuitionDialog : Form
 
     private void ToggleMethod()
     {
+        lblRefTitle.ForeColor = Color.FromArgb(100, 116, 139);
         if (rbVietQR.Checked)
         {
             lblRefTitle.Text = "Mã GD VietQR:";
             txtReference.PlaceholderText = "Nhập mã giao dịch ngân hàng / biên nhận VietQR";
             txtReference.Enabled = true;
+            txtReference.Text = "";
         }
         else if (rbPos.Checked)
         {
             lblRefTitle.Text = "Số POS / Trace:";
             txtReference.PlaceholderText = "Nhập số hóa đơn POS / mã giao dịch quẹt thẻ";
             txtReference.Enabled = true;
+            txtReference.Text = "";
         }
         else
         {
-            lblRefTitle.Text = "Mã tham chiếu:";
-            txtReference.PlaceholderText = "Ghi chú thu tiền mặt tại quầy (tùy chọn)";
+            lblRefTitle.Text = "Tiền khách đưa:";
+            txtReference.PlaceholderText = "Nhập số tiền mặt khách đưa (vd: 3500000)";
+            txtReference.Enabled = true;
+            txtReference.Text = "";
+        }
+        UpdateCashChangeDisplay();
+    }
+
+    private void UpdateCashChangeDisplay()
+    {
+        if (!rbCash.Checked) return;
+
+        decimal amount = ParseAmount();
+        string rawRef = txtReference.Text.Replace(".", "").Replace(",", "").Replace("đ", "").Replace(" ", "").Trim();
+        if (decimal.TryParse(rawRef, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal received) && received > 0)
+        {
+            decimal change = received - amount;
+            if (change >= 0)
+            {
+                lblRefTitle.Text = $"Tiền thối: {change:N0} đ";
+                lblRefTitle.ForeColor = Color.FromArgb(22, 163, 74);
+            }
+            else
+            {
+                lblRefTitle.Text = $"Thiếu: {Math.Abs(change):N0} đ";
+                lblRefTitle.ForeColor = Color.FromArgb(220, 38, 38);
+            }
+        }
+        else
+        {
+            lblRefTitle.Text = "Tiền khách đưa:";
+            lblRefTitle.ForeColor = Color.FromArgb(100, 116, 139);
         }
     }
 
