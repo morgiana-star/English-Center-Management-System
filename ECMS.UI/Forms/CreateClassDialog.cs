@@ -195,12 +195,48 @@ public partial class CreateClassDialog : Form
             }
         };
 
+        // Tự động tính toán ngày bế giảng khi đổi ngày khai giảng
+        dtpStartDate.ValueChanged += (s, e) =>
+        {
+            if (dtpEndDate.Value <= dtpStartDate.Value)
+            {
+                dtpEndDate.Value = dtpStartDate.Value.AddMonths(3);
+            }
+        };
+
+        cboCourse.SelectedIndexChanged += (s, e) =>
+        {
+            if (dtpEndDate.Value <= dtpStartDate.Value)
+            {
+                dtpEndDate.Value = dtpStartDate.Value.AddMonths(3);
+            }
+        };
+
         btnSaveDraft.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtClassCode.Text))
             {
                 AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập Mã lớp học.");
                 txtClassCode.Focus();
+                return;
+            }
+
+            // Ràng buộc logic 1: Ngày kết thúc phải sau ngày bắt đầu
+            if (dtpEndDate.Value.Date <= dtpStartDate.Value.Date)
+            {
+                AppDialog.ShowWarning(this, "Thời gian không hợp lệ",
+                    "Ngày bế giảng (kết thúc) phải sau Ngày khai giảng (bắt đầu). Vui lòng chọn lại khoảng thời gian!");
+                dtpEndDate.Focus();
+                return;
+            }
+
+            // Ràng buộc logic 2: Thời lượng khóa học tối thiểu 21 ngày (đảm bảo đủ số buổi đào tạo)
+            int totalDays = (int)(dtpEndDate.Value.Date - dtpStartDate.Value.Date).TotalDays;
+            if (totalDays < 21)
+            {
+                AppDialog.ShowWarning(this, "Thời lượng khóa học quá ngắn",
+                    $"Khoảng thời gian đào tạo ({dtpStartDate.Value:dd/MM/yyyy} – {dtpEndDate.Value:dd/MM/yyyy}) chỉ có {totalDays} ngày, không đủ khung thời lượng tối thiểu 24 buổi học tiêu chuẩn.\n\nVui lòng điều chỉnh ngày bế giảng cách ngày khai giảng ít nhất 1 tháng!");
+                dtpEndDate.Focus();
                 return;
             }
 
