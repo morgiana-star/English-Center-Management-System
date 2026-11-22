@@ -170,14 +170,22 @@ public partial class TuitionPaymentView : UserControl
             }
             else if (gridProfiles.Columns[e.ColumnIndex].DataPropertyName == "PaymentStatus")
             {
-                if (item.PaymentStatus.Contains("✓"))
+                if (item.PaymentStatus.Contains("✓") || item.PaymentStatus.Contains("Đã đóng đủ"))
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
+                    e.CellStyle!.BackColor = Color.FromArgb(240, 253, 244);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else if (item.PaymentStatus.Contains("Chưa đóng") || item.DebtStatus.Contains("Quá hạn"))
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(220, 38, 38);
+                    e.CellStyle!.BackColor = Color.FromArgb(254, 242, 242);
                     e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
                 }
                 else
                 {
-                    e.CellStyle!.ForeColor = Color.FromArgb(234, 88, 12);
+                    e.CellStyle!.ForeColor = Color.FromArgb(194, 65, 12);
+                    e.CellStyle!.BackColor = Color.FromArgb(255, 247, 237);
                     e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
                 }
             }
@@ -229,14 +237,20 @@ public partial class TuitionPaymentView : UserControl
                 if (item.DebtStatus.Contains("Quá hạn"))
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(220, 38, 38);
+                    e.CellStyle!.BackColor = Color.FromArgb(254, 242, 242);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
                 }
                 else if (item.DebtStatus.Contains("7 ngày"))
                 {
-                    e.CellStyle!.ForeColor = Color.FromArgb(234, 88, 12);
+                    e.CellStyle!.ForeColor = Color.FromArgb(194, 65, 12);
+                    e.CellStyle!.BackColor = Color.FromArgb(255, 247, 237);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
                 }
                 else
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(37, 99, 235);
+                    e.CellStyle!.BackColor = Color.FromArgb(239, 246, 255);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
                 }
             }
         };
@@ -280,6 +294,21 @@ public partial class TuitionPaymentView : UserControl
             if (gridHistory.Columns[e.ColumnIndex].Name == "colHistAmountVal")
             {
                 e.Value = $"{item.Amount:N0} đ";
+            }
+            else if (gridHistory.Columns[e.ColumnIndex].DataPropertyName == "Method")
+            {
+                if (item.Method.Contains("Chuyển khoản"))
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(37, 99, 235);
+                    e.CellStyle!.BackColor = Color.FromArgb(239, 246, 255);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
+                    e.CellStyle!.BackColor = Color.FromArgb(240, 253, 244);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
             }
         };
     }
