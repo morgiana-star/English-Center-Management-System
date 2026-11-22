@@ -282,6 +282,20 @@ public partial class CertificateManagementView : UserControl
         {
             if (e.RowIndex >= 0 && dgvEligible.Columns[e.ColumnIndex].Name == "colCheck")
             {
+                if (dgvEligible.Rows[e.RowIndex].DataBoundItem is EligibleStudentItem student)
+                {
+                    if (student.IsChecked && !student.IsEligible)
+                    {
+                        student.IsChecked = false;
+                        dgvEligible.Refresh();
+                        AppDialog.ShowWarning(ParentForm, "Học viên chưa đủ điều kiện",
+                            $"Học viên {student.FullName} ({student.StudentCode}) chưa đủ điều kiện tốt nghiệp:\n\n" +
+                            $"• Trạng thái: {student.StatusText}\n" +
+                            $"• Điểm tổng kết: {student.ScoreText}\n" +
+                            $"• Chuyên cần: {student.AttendanceText}\n\n" +
+                            $"Theo quy chế đào tạo của trung tâm, chỉ học viên có Điểm >= 5.0 và Chuyên cần >= 80% mới được cấp chứng chỉ!");
+                    }
+                }
                 UpdateSelectedSummary();
             }
         };
@@ -556,41 +570,30 @@ public partial class CertificateManagementView : UserControl
 
             if (selected.Count == 0)
             {
-                MessageBox.Show(
-                    "Vui lòng tick chọn ít nhất một học viên đủ điều kiện để cấp chứng chỉ tốt nghiệp.",
-                    "Chưa chọn học viên",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                AppDialog.ShowWarning(ParentForm, "Chưa chọn học viên",
+                    "Vui lòng tick chọn ít nhất một học viên đủ điều kiện để cấp chứng chỉ tốt nghiệp.");
                 return;
             }
 
             var ineligibles = selected.Where(s => !s.IsEligible).ToList();
             if (ineligibles.Count > 0)
             {
-                MessageBox.Show(
+                AppDialog.ShowWarning(ParentForm, "Có học viên chưa đủ điều kiện",
                     $"Danh sách bạn chọn có {ineligibles.Count} học viên chưa đủ điều kiện (ví dụ: {ineligibles[0].FullName} - {ineligibles[0].StatusText}).\n\n" +
-                    "Vui lòng chỉ tick chọn các học viên có nhãn '✓ Đủ điều kiện' để tiến hành cấp chứng chỉ.",
-                    "Có học viên chưa đủ điều kiện",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                    "Theo quy chế đào tạo, chỉ học viên có Điểm >= 5.0 và Chuyên cần >= 80% mới được cấp chứng chỉ!");
                 return;
             }
 
             var (signerName, signerRole) = GetSelectedSigner();
 
             // Confirm issue
-            var confirm = MessageBox.Show(
+            var confirm = AppDialog.ShowConfirm(ParentForm, "Xác nhận cấp chứng chỉ",
                 $"Bạn có chắc chắn muốn cấp chứng chỉ tốt nghiệp cho {selected.Count} học viên đã chọn?\n\n" +
-                $"Người ký tên: {signerName} ({signerRole})\n" +
-                $"Hệ thống sẽ tự động sinh số hiệu chứng chỉ và chuyển vào 'Sổ chứng chỉ đã cấp'.",
-                "Xác nhận cấp chứng chỉ",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+                $"• Người ký duyệt: {signerName} ({signerRole})\n" +
+                $"• Hệ thống sẽ tự động sinh số hiệu chứng chỉ và lưu trữ vào 'Sổ chứng chỉ đã cấp' trong SQLite.",
+                "Đồng ý cấp", "Hủy bỏ");
 
-            if (confirm != DialogResult.Yes) return;
+            if (confirm != DialogResult.OK) return;
 
             // Generate certs
             var newlyIssuedSerials = new List<string>();
@@ -627,17 +630,14 @@ public partial class CertificateManagementView : UserControl
 
             ApplyFilter();
 
-            var viewNow = MessageBox.Show(
-                $"Đã cấp thành công {selected.Count} chứng chỉ tốt nghiệp!\n\n" +
-                $"Các số hiệu vừa cấp: {string.Join(", ", newlyIssuedSerials)}\n" +
-                $"Người ký xác nhận: {signerName} ({signerRole})\n\n" +
+            var viewNow = AppDialog.ShowConfirm(ParentForm, "Cấp chứng chỉ thành công",
+                $"Đã cấp thành công {selected.Count} chứng chỉ tốt nghiệp vào CSDL SQLite!\n\n" +
+                $"• Các số hiệu vừa cấp: {string.Join(", ", newlyIssuedSerials)}\n" +
+                $"• Người ký xác nhận: {signerName} ({signerRole})\n\n" +
                 "Bạn có muốn mở ngay 'Sổ chứng chỉ đã cấp' để xem hoặc in ấn không?",
-                "Cấp chứng chỉ thành công",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Information
-            );
+                "Mở sổ chứng chỉ", "Đóng");
 
-            if (viewNow == DialogResult.Yes)
+            if (viewNow == DialogResult.OK)
             {
                 using var dlg = new CertificateRegistryDialog();
                 dlg.ShowDialog(ParentForm);
