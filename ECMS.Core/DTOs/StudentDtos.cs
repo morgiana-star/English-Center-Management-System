@@ -191,3 +191,35 @@ public class StudentEnrollmentWithTuitionDto
     public string? PaymentNote { get; set; }
     public int? CashierId { get; set; }
 }
+
+/// <summary>
+/// DTO đại diện cho 1 dòng dữ liệu đọc từ tệp Excel/CSV nhập học viên hàng loạt
+/// </summary>
+public class StudentImportRowDto
+{
+    public int RowIndex { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public DateTime? DateOfBirth { get; set; }
+    public string DateOfBirthDisplay => DateOfBirth.HasValue ? DateOfBirth.Value.ToString("dd/MM/yyyy") : "—";
+    public string Gender { get; set; } = "Nam";
+    public string Phone { get; set; } = string.Empty;
+    public string? Email { get; set; }
+    public string? Address { get; set; }
+    public string? ParentName { get; set; }
+    public string? ParentPhone { get; set; }
+    public string? ParentRelationship { get; set; } = "Bố";
+    public bool IsValid { get; set; } = true;
+    public string ValidationMessage { get; set; } = "✓ Hợp lệ";
+}
+
+/// <summary>
+/// DTO kết quả thực thi nhập học viên hàng loạt
+/// </summary>
+public class StudentImportResultDto
+{
+    public int TotalRows { get; set; }
+    public int SuccessCount { get; set; }
+    public int ErrorCount { get; set; }
+    public List<string> InsertedStudentCodes { get; set; } = new();
+    public List<string> ErrorMessages { get; set; } = new();
+}

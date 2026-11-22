@@ -62,6 +62,7 @@ Hệ thống được khởi tạo sẵn các tài khoản nhân sự với đ�
 | **STU-04** | Lưu trữ và Khôi phục hồ sơ | 1. Trong dialog chi tiết, bấm **Lưu trữ**.<br>2. Ra ngoài bấm **Xem hồ sơ lưu trữ** -> bấm **Khôi phục**. | Học viên chuyển sang trạng thái lưu trữ (`Reserved/Dropped`); nút khôi phục đưa học viên quay lại danh sách hoạt động. | Đạt (Pass) |
 | **STU-05** | Quy trình thêm học viên & xếp lớp | 1. Bấm **Thêm học viên**.<br>2. Bước 1: Nhập thông tin cá nhân.<br>3. Bước 2: Chọn Khóa học -> chọn Lớp theo ca học. | Bước 2 lọc lớp theo khóa học và ca học (Sáng/Chiều/Tối); sinh mã học viên tự động chuẩn `HV-yyyy-xxxx`. | Đạt (Pass) |
 | **STU-06** | Thu học phí & Xem trước phiếu thu | 1. Bước 3: Nhập số tiền đóng đợt 1 -> Lưu.<br>2. Kiểm tra cửa sổ xem trước in phiếu thu. | Nhãn học viên cố định dạng `Tên · Mã`; số tiền bằng chữ được đọc chuẩn tiếng Việt; phiếu thu hiển thị đúng thông tin trung tâm. | Đạt (Pass) |
+| **STU-07** | Nhập danh sách học viên từ Excel / CSV | 1. Bấm nút **Nhập Excel** trên thanh tiêu đề.<br>2. Thử nút **Tải tệp mẫu (.xlsx)**.<br>3. Chọn tệp dữ liệu -> Kiểm tra validation -> Bấm **Tiến hành nhập**. | Đọc được cả định dạng `.xlsx` và `.csv`; tự động kiểm tra định dạng và trùng SĐT; chỉ import các dòng hợp lệ vào SQLite; sinh mã `HV-yyyy-xxxx` tự động và reload danh sách. | Đạt (Pass) |
 
 ---
 

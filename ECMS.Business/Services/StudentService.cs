@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using ECMS.Core.DTOs;
 using ECMS.Core.Entities;
 using ECMS.Data.Database;
@@ -22,6 +26,9 @@ public interface IStudentService
     Task<string> GenerateNextStudentCodeAsync();
     Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync();
     Task<IEnumerable<OpenClassOptionDto>> GetOpenClassesByCourseAsync(int courseId);
+    byte[] GenerateStudentImportTemplate();
+    Task<List<StudentImportRowDto>> ParseAndValidateStudentFileAsync(Stream fileStream, string fileName);
+    Task<StudentImportResultDto> ExecuteImportStudentsAsync(List<StudentImportRowDto> items);
 
     // 2. Nghiệp vụ Entity tương thích ngược
     Task<IEnumerable<Student>> GetAllStudentsAsync();
@@ -227,6 +234,221 @@ public class StudentService : IStudentService
 
         await conn.ExecuteAsync("DELETE FROM Students WHERE StudentId = @Id;", new { Id = studentId });
         return (true, "Đã xóa hồ sơ học viên thành công.");
+    }
+
+    #endregion
+
+    #region Nghiệp vụ Nhập danh sách học viên từ Excel / CSV
+
+    public byte[] GenerateStudentImportTemplate()
+    {
+        using var workbook = new XLWorkbook();
+        var ws = workbook.Worksheets.Add("DanhSachHocVien");
+
+        string[] headers = new[]
+        {
+            "STT",
+            "Họ và tên (*)",
+            "Ngày sinh (dd/MM/yyyy)",
+            "Giới tính (Nam/Nữ)",
+            "Số điện thoại (*)",
+            "Email",
+            "Địa chỉ",
+            "Họ tên phụ huynh",
+            "SĐT phụ huynh",
+            "Mối quan hệ (Bố/Mẹ/Giám hộ)"
+        };
+
+        for (int i = 0; i < headers.Length; i++)
+        {
+            var cell = ws.Cell(1, i + 1);
+            cell.Value = headers[i];
+            cell.Style.Font.Bold = true;
+            cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#2563EB");
+            cell.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+        }
+
+        var sampleRows = new List<object[]>
+        {
+            new object[] { 1, "Trần Văn An", "15/06/2006", "Nam", "0901234567", "an.tran@gmail.com", "123 Lê Lợi, Q.1", "Trần Văn Hùng", "0912345678", "Bố" },
+            new object[] { 2, "Nguyễn Thị Mai", "20/09/2005", "Nữ", "0902345678", "mai.nguyen@gmail.com", "456 Nguyễn Huệ, Q.1", "Lê Thị Thảo", "0918765432", "Mẹ" },
+            new object[] { 3, "Lê Hoàng Long", "10/02/2007", "Nam", "0903456789", "long.le@gmail.com", "789 CMT8, Q.3", "Lê Văn Tuấn", "0919876543", "Bố" }
+        };
+
+        for (int r = 0; r < sampleRows.Count; r++)
+        {
+            for (int c = 0; c < sampleRows[r].Length; c++)
+            {
+                var cell = ws.Cell(r + 2, c + 1);
+                cell.Value = sampleRows[r][c]?.ToString() ?? "";
+                cell.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+            }
+        }
+
+        ws.Columns().AdjustToContents();
+
+        using var ms = new MemoryStream();
+        workbook.SaveAs(ms);
+        return ms.ToArray();
+    }
+
+    public async Task<List<StudentImportRowDto>> ParseAndValidateStudentFileAsync(Stream fileStream, string fileName)
+    {
+        var result = new List<StudentImportRowDto>();
+        var existingPhones = await _studentRepo.GetExistingStudentPhonesAsync();
+        var filePhones = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        bool isCsv = fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase);
+        if (isCsv)
+        {
+            using var reader = new StreamReader(fileStream);
+            string? headerLine = await reader.ReadLineAsync();
+            int rowIdx = 1;
+
+            string? line;
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                rowIdx++;
+
+                var parts = line.Split(',');
+                if (parts.Length < 2) continue;
+
+                int start = int.TryParse(parts[0].Trim(), out _) ? 1 : 0;
+                string fullName = parts.Length > start ? parts[start].Trim().Trim('"') : "";
+                string dobRaw = parts.Length > start + 1 ? parts[start + 1].Trim().Trim('"') : "";
+                string gender = parts.Length > start + 2 ? parts[start + 2].Trim().Trim('"') : "Nam";
+                string phone = parts.Length > start + 3 ? parts[start + 3].Trim().Trim('"') : "";
+                string email = parts.Length > start + 4 ? parts[start + 4].Trim().Trim('"') : "";
+                string address = parts.Length > start + 5 ? parts[start + 5].Trim().Trim('"') : "";
+                string parentName = parts.Length > start + 6 ? parts[start + 6].Trim().Trim('"') : "";
+                string parentPhone = parts.Length > start + 7 ? parts[start + 7].Trim().Trim('"') : "";
+                string parentRel = parts.Length > start + 8 ? parts[start + 8].Trim().Trim('"') : "Bố";
+
+                var item = ValidateAndCreateRow(rowIdx, fullName, dobRaw, gender, phone, email, address, parentName, parentPhone, parentRel, existingPhones, filePhones);
+                result.Add(item);
+            }
+        }
+        else
+        {
+            using var workbook = new XLWorkbook(fileStream);
+            var ws = workbook.Worksheets.FirstOrDefault() ?? workbook.Worksheet(1);
+            var lastRow = ws.LastRowUsed()?.RowNumber() ?? 1;
+
+            for (int r = 2; r <= lastRow; r++)
+            {
+                var row = ws.Row(r);
+                if (row.IsEmpty()) continue;
+
+                string col1 = row.Cell(1).GetString().Trim();
+                int startCol = 1;
+                if (int.TryParse(col1, out _) && ws.Cell(1, 1).GetString().Contains("STT", StringComparison.OrdinalIgnoreCase))
+                {
+                    startCol = 2;
+                }
+
+                string fullName = row.Cell(startCol).GetString().Trim();
+                if (string.IsNullOrWhiteSpace(fullName)) continue;
+
+                string dobRaw = row.Cell(startCol + 1).GetString().Trim();
+                if (string.IsNullOrWhiteSpace(dobRaw) && row.Cell(startCol + 1).DataType == XLDataType.DateTime)
+                {
+                    dobRaw = row.Cell(startCol + 1).GetDateTime().ToString("dd/MM/yyyy");
+                }
+
+                string gender = row.Cell(startCol + 2).GetString().Trim();
+                string phone = row.Cell(startCol + 3).GetString().Trim();
+                string email = row.Cell(startCol + 4).GetString().Trim();
+                string address = row.Cell(startCol + 5).GetString().Trim();
+                string parentName = row.Cell(startCol + 6).GetString().Trim();
+                string parentPhone = row.Cell(startCol + 7).GetString().Trim();
+                string parentRel = row.Cell(startCol + 8).GetString().Trim();
+
+                var item = ValidateAndCreateRow(r, fullName, dobRaw, gender, phone, email, address, parentName, parentPhone, parentRel, existingPhones, filePhones);
+                result.Add(item);
+            }
+        }
+
+        return result;
+    }
+
+    private static StudentImportRowDto ValidateAndCreateRow(
+        int rowIdx, string fullName, string dobRaw, string gender, string phone,
+        string email, string address, string parentName, string parentPhone, string parentRel,
+        HashSet<string> existingPhones, HashSet<string> filePhones)
+    {
+        var dto = new StudentImportRowDto
+        {
+            RowIndex = rowIdx,
+            FullName = fullName,
+            Gender = string.Equals(gender, "Nữ", StringComparison.OrdinalIgnoreCase) ? "Nữ" : "Nam",
+            Phone = phone.Replace(" ", "").Replace(".", "").Replace("-", ""),
+            Email = email,
+            Address = address,
+            ParentName = parentName,
+            ParentPhone = parentPhone?.Replace(" ", "").Replace(".", "").Replace("-", ""),
+            ParentRelationship = string.IsNullOrWhiteSpace(parentRel) ? "Bố" : parentRel
+        };
+
+        if (DateTime.TryParseExact(dobRaw, new[] { "dd/MM/yyyy", "d/M/yyyy", "yyyy-MM-dd", "dd-MM-yyyy" },
+            System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out var dob))
+        {
+            dto.DateOfBirth = dob;
+        }
+        else if (DateTime.TryParse(dobRaw, out var dobAuto))
+        {
+            dto.DateOfBirth = dobAuto;
+        }
+
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(dto.FullName))
+        {
+            errors.Add("Thiếu họ tên");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Phone))
+        {
+            errors.Add("Thiếu số điện thoại");
+        }
+        else if (!Regex.IsMatch(dto.Phone, @"^0\d{8,10}$"))
+        {
+            errors.Add("SĐT không hợp lệ (cần 10 số bắt đầu bằng 0)");
+        }
+        else if (existingPhones.Contains(dto.Phone))
+        {
+            errors.Add("SĐT đã tồn tại trong hệ thống");
+        }
+        else if (!filePhones.Add(dto.Phone))
+        {
+            errors.Add("SĐT bị trùng lặp trong tệp");
+        }
+
+        if (!string.IsNullOrWhiteSpace(dto.ParentPhone) && !Regex.IsMatch(dto.ParentPhone, @"^0\d{8,10}$"))
+        {
+            errors.Add("SĐT phụ huynh không đúng định dạng");
+        }
+
+        if (errors.Count > 0)
+        {
+            dto.IsValid = false;
+            dto.ValidationMessage = "✕ " + string.Join("; ", errors);
+        }
+        else
+        {
+            dto.IsValid = true;
+            dto.ValidationMessage = "✓ Hợp lệ";
+        }
+
+        return dto;
+    }
+
+    public async Task<StudentImportResultDto> ExecuteImportStudentsAsync(List<StudentImportRowDto> items)
+    {
+        var validItems = items.Where(x => x.IsValid).ToList();
+        return await _studentRepo.ImportStudentsBatchAsync(validItems);
     }
 
     #endregion

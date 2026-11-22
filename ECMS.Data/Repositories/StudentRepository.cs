@@ -680,6 +680,116 @@ public class StudentRepository : BaseRepository, IStudentRepository
         return result;
     }
 
+    public async Task<HashSet<string>> GetExistingStudentPhonesAsync()
+    {
+        await EnsureStudentSeedDataAsync();
+        using var conn = CreateConnection();
+        var phones = await conn.QueryAsync<string>("SELECT Phone FROM Students WHERE Phone IS NOT NULL AND Phone != '';");
+        return new HashSet<string>(phones, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public async Task<StudentImportResultDto> ImportStudentsBatchAsync(List<StudentImportRowDto> validStudents)
+    {
+        var result = new StudentImportResultDto
+        {
+            TotalRows = validStudents.Count
+        };
+
+        if (validStudents.Count == 0) return result;
+
+        await EnsureStudentSeedDataAsync();
+        using var conn = CreateConnection();
+        using var tran = conn.BeginTransaction();
+
+        try
+        {
+            string yearPrefix = $"HV-{DateTime.Now.Year}-";
+            string? latestCode = await conn.ExecuteScalarAsync<string>(
+                "SELECT StudentCode FROM Students WHERE StudentCode LIKE @Pattern ORDER BY StudentId DESC LIMIT 1;",
+                new { Pattern = yearPrefix + "%" }, tran);
+
+            int nextNum = 1;
+            if (!string.IsNullOrWhiteSpace(latestCode) && latestCode.Contains('-'))
+            {
+                string numberPart = latestCode.Substring(latestCode.LastIndexOf('-') + 1);
+                if (int.TryParse(numberPart, out int currentNum))
+                {
+                    nextNum = currentNum + 1;
+                }
+            }
+
+            foreach (var s in validStudents)
+            {
+                string studentCode = $"{yearPrefix}{nextNum:D4}";
+                nextNum++;
+
+                string gender = string.Equals(s.Gender?.Trim(), "Nữ", StringComparison.OrdinalIgnoreCase) ? "Nữ" : "Nam";
+                string dobStr = s.DateOfBirth?.ToString("yyyy-MM-dd") ?? DateTime.Today.AddYears(-18).ToString("yyyy-MM-dd");
+
+                int studentId = await conn.ExecuteScalarAsync<int>(@"
+                    INSERT INTO Students (StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt)
+                    VALUES (@Code, @FullName, @Dob, @Gender, @Phone, @Email, @Address, 'Active', CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();",
+                    new
+                    {
+                        Code = studentCode,
+                        FullName = s.FullName.Trim(),
+                        Dob = dobStr,
+                        Gender = gender,
+                        Phone = s.Phone?.Trim() ?? "",
+                        Email = s.Email?.Trim() ?? "",
+                        Address = s.Address?.Trim() ?? ""
+                    }, tran);
+
+                if (!string.IsNullOrWhiteSpace(s.ParentName) || !string.IsNullOrWhiteSpace(s.ParentPhone))
+                {
+                    string parentCode = $"PH-{DateTime.Now.Year}-{new Random().Next(1000, 9999)}";
+                    int parentId = await conn.ExecuteScalarAsync<int>(@"
+                        INSERT INTO Parents (ParentCode, FullName, Phone, Email, CreatedAt)
+                        VALUES (@PCode, @PName, @PPhone, '', CURRENT_TIMESTAMP);
+                        SELECT last_insert_rowid();",
+                        new
+                        {
+                            PCode = parentCode,
+                            PName = string.IsNullOrWhiteSpace(s.ParentName) ? "Phụ huynh" : s.ParentName.Trim(),
+                            PPhone = s.ParentPhone?.Trim() ?? ""
+                        }, tran);
+
+                    string rel = NormalizeRelationship(s.ParentRelationship);
+                    await conn.ExecuteAsync(@"
+                        INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
+                        VALUES (@StudentId, @ParentId, @Rel, 1);",
+                        new { StudentId = studentId, ParentId = parentId, Rel = rel }, tran);
+                }
+
+                result.InsertedStudentCodes.Add(studentCode);
+                result.SuccessCount++;
+            }
+
+            // Ghi AuditLog
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
+                VALUES ('IMPORT_STUDENTS_EXCEL', 'Students', @Count, @Desc, CURRENT_TIMESTAMP);",
+                new
+                {
+                    Count = result.SuccessCount.ToString(),
+                    Desc = $"Nhập thành công {result.SuccessCount} học viên mới từ tệp Excel/CSV"
+                }, tran);
+
+            tran.Commit();
+        }
+        catch (Exception ex)
+        {
+            tran.Rollback();
+            result.ErrorCount = validStudents.Count;
+            result.SuccessCount = 0;
+            result.InsertedStudentCodes.Clear();
+            result.ErrorMessages.Add($"Lỗi ghi dữ liệu SQLite: {ex.Message}");
+        }
+
+        return result;
+    }
+
     private static string NormalizeRelationship(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw)) return "Khác";

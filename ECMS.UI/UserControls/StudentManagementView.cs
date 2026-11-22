@@ -23,6 +23,7 @@ public partial class StudentManagementView : UserControl
     private readonly IEnrollmentService _enrollmentService = new EnrollmentService();
     private List<StudentListItemDto> _allStudents = new();
     private AppButton _btnViewArchived = null!;
+    private AppButton _btnImport = null!;
 
     public StudentManagementView()
     {
@@ -67,6 +68,20 @@ public partial class StudentManagementView : UserControl
                 txtSearchStudent.Size = new Size(Math.Max(260, _btnViewArchived.Left - 24), 34);
             }
         };
+
+        // Thêm nút "Nhập Excel" ngay cạnh nút Xuất danh sách
+        _btnImport = new AppButton
+        {
+            Text = "📥 Nhập Excel",
+            Size = new Size(130, 36),
+            Variant = ButtonVariant.Secondary,
+            ButtonStyle = AppButtonStyle.Secondary,
+            CornerRadius = 6,
+            Cursor = Cursors.Hand,
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Location = new Point(btnExport.Left - 142, 20)
+        };
+        pnlHeader.Controls.Add(_btnImport);
     }
 
     private void SetupGridColumns()
@@ -215,6 +230,16 @@ public partial class StudentManagementView : UserControl
 
         // 3. Nút "Xuất danh sách" ra tệp CSV chuẩn UTF-8 BOM (mở được ngay ngoài Excel)
         btnExport.Click += async (s, e) => await ExportStudentsCsvAsync();
+
+        // 3.1 Nút "Nhập Excel" mở hộp thoại import hàng loạt từ Excel / CSV
+        _btnImport.Click += async (s, e) =>
+        {
+            using var importDlg = new ImportStudentsDialog();
+            if (importDlg.ShowDialog(ParentForm) == DialogResult.OK)
+            {
+                await LoadStudentsAsync();
+            }
+        };
 
         // 4. Khi ấn "Xem chi tiết" -> Mở StudentDetailDialog 360° từ SQLite
         dgvStudents.CellContentClick += (s, e) =>

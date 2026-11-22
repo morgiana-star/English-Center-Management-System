@@ -19,5 +19,7 @@ public interface IStudentRepository
     Task<string> GenerateNextStudentCodeAsync();
     Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync();
     Task<IEnumerable<OpenClassOptionDto>> GetOpenClassesByCourseAsync(int courseId);
+    Task<HashSet<string>> GetExistingStudentPhonesAsync();
+    Task<StudentImportResultDto> ImportStudentsBatchAsync(List<StudentImportRowDto> validStudents);
     Task EnsureStudentSeedDataAsync();
 }
