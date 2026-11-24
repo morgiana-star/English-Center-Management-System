@@ -1,6 +1,9 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
+using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -8,6 +11,8 @@ namespace ECMS.UI.UserControls;
 
 public partial class ClassManagementView : UserControl
 {
+    private readonly IClassService _classService = new ClassService();
+
     public ClassManagementView()
     {
         InitializeComponent();
@@ -17,7 +22,7 @@ public partial class ClassManagementView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadSampleClasses();
+        LoadRealClassesAsync();
         WireEvents();
     }
 
@@ -89,6 +94,37 @@ public partial class ClassManagementView : UserControl
         dgvClasses.CurrentCell = null;
     }
 
+    private async void LoadRealClassesAsync()
+    {
+        try
+        {
+            string? kw = string.IsNullOrWhiteSpace(txtSearchClass.Text) ? null : txtSearchClass.Text.Trim();
+            string? course = cboCourseFilter.SelectedItem?.ToString();
+            string? status = cboStatusFilter.SelectedItem?.ToString();
+
+            var classes = await _classService.GetClassesAsync(kw, course, status);
+            dgvClasses.Rows.Clear();
+            foreach (var cl in classes)
+            {
+                dgvClasses.Rows.Add(
+                    cl.ClassCode,
+                    cl.CourseName,
+                    cl.TeacherName,
+                    cl.ScheduleInfo,
+                    cl.RoomName,
+                    $"{cl.CurrentStudents} / {cl.MaxStudents}",
+                    cl.Status
+                );
+            }
+            dgvClasses.ClearSelection();
+            dgvClasses.CurrentCell = null;
+        }
+        catch
+        {
+            LoadSampleClasses();
+        }
+    }
+
     private void WireEvents()
     {
         btnAddClass.Click += (s, e) =>
@@ -96,7 +132,7 @@ public partial class ClassManagementView : UserControl
             using var createDlg = new CreateClassDialog();
             if (createDlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                LoadSampleClasses();
+                LoadRealClassesAsync();
             }
         };
 

@@ -28,6 +28,7 @@ partial class CertificateRegistryDialog
         pnlHeader = new System.Windows.Forms.Panel();
         pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
         btnPreviewPrint = new ECMS.UI.Controls.AppButton();
+        btnExportExcel = new ECMS.UI.Controls.AppButton();
         btnClose = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlFilterBar = new System.Windows.Forms.Panel();
@@ -62,11 +63,12 @@ partial class CertificateRegistryDialog
         // 
         pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         pnlTopActions.Controls.Add(btnPreviewPrint);
+        pnlTopActions.Controls.Add(btnExportExcel);
         pnlTopActions.Controls.Add(btnClose);
         pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlTopActions.Location = new System.Drawing.Point(920, 14);
+        pnlTopActions.Location = new System.Drawing.Point(780, 14);
         pnlTopActions.Name = "pnlTopActions";
-        pnlTopActions.Size = new System.Drawing.Size(320, 48);
+        pnlTopActions.Size = new System.Drawing.Size(460, 48);
         pnlTopActions.TabIndex = 3;
         // 
         // btnPreviewPrint
@@ -78,13 +80,30 @@ partial class CertificateRegistryDialog
         btnPreviewPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPreviewPrint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnPreviewPrint.ForeColor = System.Drawing.Color.White;
-        btnPreviewPrint.Location = new System.Drawing.Point(165, 3);
+        btnPreviewPrint.Location = new System.Drawing.Point(305, 3);
         btnPreviewPrint.Name = "btnPreviewPrint";
         btnPreviewPrint.Size = new System.Drawing.Size(152, 38);
         btnPreviewPrint.TabIndex = 0;
         btnPreviewPrint.Text = "Xem trước khi in";
         btnPreviewPrint.UseVisualStyleBackColor = false;
         btnPreviewPrint.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        // 
+        // btnExportExcel
+        // 
+        btnExportExcel.BackColor = System.Drawing.Color.White;
+        btnExportExcel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnExportExcel.CornerRadius = 5;
+        btnExportExcel.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnExportExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnExportExcel.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnExportExcel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnExportExcel.Location = new System.Drawing.Point(165, 3);
+        btnExportExcel.Name = "btnExportExcel";
+        btnExportExcel.Size = new System.Drawing.Size(134, 38);
+        btnExportExcel.TabIndex = 1;
+        btnExportExcel.Text = "📊 Xuất Excel";
+        btnExportExcel.UseVisualStyleBackColor = false;
+        btnExportExcel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnClose
         // 
@@ -283,6 +302,7 @@ partial class CertificateRegistryDialog
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.FlowLayoutPanel pnlTopActions;
     private ECMS.UI.Controls.AppButton btnPreviewPrint;
+    private ECMS.UI.Controls.AppButton btnExportExcel;
     private ECMS.UI.Controls.AppButton btnClose;
     private System.Windows.Forms.Panel pnlFilterBar;
     private System.Windows.Forms.Label lblSearch;

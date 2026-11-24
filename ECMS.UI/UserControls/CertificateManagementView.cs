@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 using ECMS.UI.Services;
@@ -14,10 +13,14 @@ namespace ECMS.UI.UserControls;
 
 public partial class CertificateManagementView : UserControl
 {
+    private readonly ICertificateService _certService = new ECMS.Business.Services.CertificateService();
+
     private class EligibleStudentItem
     {
         public bool IsChecked { get; set; }
         public int Stt { get; set; }
+        public int EnrollmentId { get; set; }
+        public int StudentId { get; set; }
         public string StudentCode { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string CourseName { get; set; } = string.Empty;
@@ -25,18 +28,12 @@ public partial class CertificateManagementView : UserControl
         public string ScoreText { get; set; } = string.Empty;
         public string AttendanceText { get; set; } = string.Empty;
         public string TuitionText { get; set; } = string.Empty;
-        public double NumericScore { get; set; }
-        public double NumericAttendanceRate { get; set; }
-        public bool HasTuitionDebt { get; set; }
         public bool IsEligible { get; set; }
         public string StatusText { get; set; } = string.Empty;
         public string GradeRank { get; set; } = "Giỏi";
     }
 
-    private readonly ISystemConfigService _configService = new SystemConfigService();
     private readonly List<EligibleStudentItem> _students = new();
-    private double _minPassingScore = 6.5;
-    private double _minAttendanceRate = 80.0;
 
     public CertificateManagementView()
     {
@@ -44,14 +41,9 @@ public partial class CertificateManagementView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadSampleData();
+        LoadRealEligibleStudentsAsync();
         WireEvents();
         UpdateSignerNote();
-
-        if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
-        {
-            _ = LoadAcademicRulesAndRefreshAsync();
-        }
     }
 
     protected override void OnLoad(EventArgs e)
@@ -106,60 +98,10 @@ public partial class CertificateManagementView : UserControl
         }
     }
 
-    private async Task LoadAcademicRulesAndRefreshAsync()
-    {
-        try
-        {
-            var rules = await _configService.GetAcademicRulesAsync();
-            _minPassingScore = rules.PassingScore > 0 ? rules.PassingScore : 6.5;
-            _minAttendanceRate = rules.MinAttendanceRate > 0 ? rules.MinAttendanceRate : 80.0;
-
-            ReevaluateEligibility();
-            UpdateSignerNote();
-            ApplyFilter();
-        }
-        catch
-        {
-            // Giữ ngưỡng mặc định nếu chưa truy cập được cấu hình CSDL
-        }
-    }
-
-    private void ReevaluateEligibility()
-    {
-        foreach (var student in _students)
-        {
-            if (student.NumericScore < _minPassingScore)
-            {
-                student.IsEligible = false;
-                student.IsChecked = false;
-                student.StatusText = $"✕ TB < {_minPassingScore.ToString("0.0", CultureInfo.InvariantCulture)} (Chưa đạt)";
-            }
-            else if (student.NumericAttendanceRate < _minAttendanceRate)
-            {
-                student.IsEligible = false;
-                student.IsChecked = false;
-                student.StatusText = $"⚠️ Chuyên cần < {_minAttendanceRate.ToString("0", CultureInfo.InvariantCulture)}%";
-            }
-            else if (student.HasTuitionDebt)
-            {
-                student.IsEligible = false;
-                student.IsChecked = false;
-                student.StatusText = "⚠️ Còn nợ học phí";
-            }
-            else
-            {
-                student.IsEligible = true;
-                student.StatusText = "✓ Đủ điều kiện";
-            }
-        }
-    }
-
     private void UpdateSignerNote()
     {
         string signer = cboSigner.SelectedItem?.ToString() ?? $"{AppSession.FullName} · {AppSession.GetSignerRoleTitle()}";
-        string scoreReq = _minPassingScore.ToString("0.0", CultureInfo.InvariantCulture);
-        string attReq = _minAttendanceRate.ToString("0", CultureInfo.InvariantCulture);
-        lblFooterNote.Text = $"📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ {scoreReq}  |  Chuyên cần ≥ {attReq}%  |  Học phí 100%  |  Người ký duyệt: {signer}";
+        lblFooterNote.Text = $"📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học phí 100%  |  Người ký duyệt: {signer}";
     }
 
     private void SetupFilters()
@@ -340,6 +282,20 @@ public partial class CertificateManagementView : UserControl
         {
             if (e.RowIndex >= 0 && dgvEligible.Columns[e.ColumnIndex].Name == "colCheck")
             {
+                if (dgvEligible.Rows[e.RowIndex].DataBoundItem is EligibleStudentItem student)
+                {
+                    if (student.IsChecked && !student.IsEligible)
+                    {
+                        student.IsChecked = false;
+                        dgvEligible.Refresh();
+                        AppDialog.ShowWarning(ParentForm, "Học viên chưa đủ điều kiện",
+                            $"Học viên {student.FullName} ({student.StudentCode}) chưa đủ điều kiện tốt nghiệp:\n\n" +
+                            $"• Trạng thái: {student.StatusText}\n" +
+                            $"• Điểm tổng kết: {student.ScoreText}\n" +
+                            $"• Chuyên cần: {student.AttendanceText}\n\n" +
+                            $"Theo quy chế đào tạo của trung tâm, chỉ học viên có Điểm >= 5.0 và Chuyên cần >= 80% mới được cấp chứng chỉ!");
+                    }
+                }
                 UpdateSelectedSummary();
             }
         };
@@ -395,6 +351,40 @@ public partial class CertificateManagementView : UserControl
         };
     }
 
+    private async void LoadRealEligibleStudentsAsync()
+    {
+        try
+        {
+            var dtoList = await _certService.GetEligibleStudentsAsync();
+            _students.Clear();
+            int stt = 1;
+            foreach (var s in dtoList)
+            {
+                _students.Add(new EligibleStudentItem
+                {
+                    Stt = stt++,
+                    StudentCode = s.StudentCode,
+                    FullName = s.FullName,
+                    CourseName = s.CourseName,
+                    ClassName = s.ClassName,
+                    ScoreText = s.ScoreText,
+                    AttendanceText = s.AttendanceText,
+                    TuitionText = s.TuitionText,
+                    IsEligible = s.IsEligible,
+                    StatusText = s.StatusText,
+                    GradeRank = s.GradeRank,
+                    EnrollmentId = s.EnrollmentId,
+                    StudentId = s.StudentId
+                });
+            }
+            ApplyFilter();
+        }
+        catch
+        {
+            LoadSampleData();
+        }
+    }
+
     private void LoadSampleData()
     {
         _students.Clear();
@@ -409,9 +399,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.7 · Khá",
             AttendanceText = "22/24 (91.7%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 7.7,
-            NumericAttendanceRate = 91.7,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Khá"
         });
 
@@ -425,9 +414,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.4 · Giỏi",
             AttendanceText = "24/24 (100%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 8.4,
-            NumericAttendanceRate = 100.0,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Giỏi"
         });
 
@@ -441,9 +429,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.8 · Xuất sắc",
             AttendanceText = "23/24 (95.8%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 8.8,
-            NumericAttendanceRate = 95.8,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Xuất sắc"
         });
 
@@ -457,9 +444,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.9 · Khá",
             AttendanceText = "21/24 (87.5%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 7.9,
-            NumericAttendanceRate = 87.5,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Khá"
         });
 
@@ -473,9 +459,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "5.9 · Yếu",
             AttendanceText = "22/24 (91.7%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 5.9,
-            NumericAttendanceRate = 91.7,
-            HasTuitionDebt = false,
+            IsEligible = false,
+            StatusText = "✕ TB < 6.5 (Chưa đạt)",
             GradeRank = "Chưa đạt"
         });
 
@@ -489,9 +474,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.2 · Khá",
             AttendanceText = "18/24 (75.0%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 7.2,
-            NumericAttendanceRate = 75.0,
-            HasTuitionDebt = false,
+            IsEligible = false,
+            StatusText = "⚠️ Chuyên cần < 80%",
             GradeRank = "Khá"
         });
 
@@ -505,9 +489,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "7.0 · Khá",
             AttendanceText = "21/24 (87.5%)",
             TuitionText = "Nợ 500.000đ",
-            NumericScore = 7.0,
-            NumericAttendanceRate = 87.5,
-            HasTuitionDebt = true,
+            IsEligible = false,
+            StatusText = "⚠️ Còn nợ học phí",
             GradeRank = "Khá"
         });
 
@@ -521,9 +504,8 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.1 · Giỏi",
             AttendanceText = "24/24 (100%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 8.1,
-            NumericAttendanceRate = 100.0,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Giỏi"
         });
 
@@ -537,13 +519,11 @@ public partial class CertificateManagementView : UserControl
             ScoreText = "8.5 · Giỏi",
             AttendanceText = "23/24 (95.8%)",
             TuitionText = "Đã hoàn tất",
-            NumericScore = 8.5,
-            NumericAttendanceRate = 95.8,
-            HasTuitionDebt = false,
+            IsEligible = true,
+            StatusText = "✓ Đủ điều kiện",
             GradeRank = "Giỏi"
         });
 
-        ReevaluateEligibility();
         ApplyFilter();
     }
 
@@ -584,53 +564,43 @@ public partial class CertificateManagementView : UserControl
             dlg.ShowDialog(ParentForm);
         };
 
-        btnIssueSelectedTop.Click += (s, e) =>
+        btnIssueSelectedTop.Click += async (s, e) =>
         {
             var selected = _students.Where(s => s.IsChecked).ToList();
 
             if (selected.Count == 0)
             {
-                MessageBox.Show(
-                    "Vui lòng tick chọn ít nhất một học viên đủ điều kiện để cấp chứng chỉ tốt nghiệp.",
-                    "Chưa chọn học viên",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                AppDialog.ShowWarning(ParentForm, "Chưa chọn học viên",
+                    "Vui lòng tick chọn ít nhất một học viên đủ điều kiện để cấp chứng chỉ tốt nghiệp.");
                 return;
             }
 
             var ineligibles = selected.Where(s => !s.IsEligible).ToList();
             if (ineligibles.Count > 0)
             {
-                MessageBox.Show(
+                AppDialog.ShowWarning(ParentForm, "Có học viên chưa đủ điều kiện",
                     $"Danh sách bạn chọn có {ineligibles.Count} học viên chưa đủ điều kiện (ví dụ: {ineligibles[0].FullName} - {ineligibles[0].StatusText}).\n\n" +
-                    "Vui lòng chỉ tick chọn các học viên có nhãn '✓ Đủ điều kiện' để tiến hành cấp chứng chỉ.",
-                    "Có học viên chưa đủ điều kiện",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning
-                );
+                    "Theo quy chế đào tạo, chỉ học viên có Điểm >= 5.0 và Chuyên cần >= 80% mới được cấp chứng chỉ!");
                 return;
             }
 
             var (signerName, signerRole) = GetSelectedSigner();
 
             // Confirm issue
-            var confirm = MessageBox.Show(
+            var confirm = AppDialog.ShowConfirm(ParentForm, "Xác nhận cấp chứng chỉ",
                 $"Bạn có chắc chắn muốn cấp chứng chỉ tốt nghiệp cho {selected.Count} học viên đã chọn?\n\n" +
-                $"Người ký tên: {signerName} ({signerRole})\n" +
-                $"Hệ thống sẽ tự động sinh số hiệu chứng chỉ và chuyển vào 'Sổ chứng chỉ đã cấp'.",
-                "Xác nhận cấp chứng chỉ",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-            );
+                $"• Người ký duyệt: {signerName} ({signerRole})\n" +
+                $"• Hệ thống sẽ tự động sinh số hiệu chứng chỉ và lưu trữ vào 'Sổ chứng chỉ đã cấp' trong SQLite.",
+                "Đồng ý cấp", "Hủy bỏ");
 
-            if (confirm != DialogResult.Yes) return;
+            if (confirm != DialogResult.OK) return;
 
             // Generate certs
             var newlyIssuedSerials = new List<string>();
             foreach (var student in selected)
             {
-                string serial = CertificateService.GenerateNextSerial();
+                var issueRes = await _certService.IssueCertificateAsync(student.EnrollmentId, student.StudentId, student.GradeRank, $"{signerName} ({signerRole})");
+                string serial = issueRes.Success ? issueRes.SerialNumber : CertificateService.GenerateNextSerial();
                 newlyIssuedSerials.Add(serial);
 
                 CertificateService.AddIssuedCertificate(new IssuedCertificateModel
@@ -660,17 +630,14 @@ public partial class CertificateManagementView : UserControl
 
             ApplyFilter();
 
-            var viewNow = MessageBox.Show(
-                $"Đã cấp thành công {selected.Count} chứng chỉ tốt nghiệp!\n\n" +
-                $"Các số hiệu vừa cấp: {string.Join(", ", newlyIssuedSerials)}\n" +
-                $"Người ký xác nhận: {signerName} ({signerRole})\n\n" +
+            var viewNow = AppDialog.ShowConfirm(ParentForm, "Cấp chứng chỉ thành công",
+                $"Đã cấp thành công {selected.Count} chứng chỉ tốt nghiệp vào CSDL SQLite!\n\n" +
+                $"• Các số hiệu vừa cấp: {string.Join(", ", newlyIssuedSerials)}\n" +
+                $"• Người ký xác nhận: {signerName} ({signerRole})\n\n" +
                 "Bạn có muốn mở ngay 'Sổ chứng chỉ đã cấp' để xem hoặc in ấn không?",
-                "Cấp chứng chỉ thành công",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Information
-            );
+                "Mở sổ chứng chỉ", "Đóng");
 
-            if (viewNow == DialogResult.Yes)
+            if (viewNow == DialogResult.OK)
             {
                 using var dlg = new CertificateRegistryDialog();
                 dlg.ShowDialog(ParentForm);
