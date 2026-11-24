@@ -380,9 +380,9 @@ partial class CertificatePrintPreviewDialog
         Controls.Add(pnlCanvasWrapper);
         Controls.Add(pnlSettingsBar);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = false;
+        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Xem trước chứng chỉ hoàn thành · ECMS";

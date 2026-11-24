@@ -565,6 +565,7 @@ public partial class TuitionPaymentView : UserControl
 
             var result = await _financeService.CollectTuitionAsync(targetCode, paidAmt, method, note, AppSession.UserId, dialog.DiscountAmount);
             string finalReceiptCode = !string.IsNullOrEmpty(result.ReceiptCode) ? result.ReceiptCode : dialog.ReceiptCode;
+            decimal remainingAfterPay = Math.Max(0m, item.Remaining - dialog.DiscountAmount - paidAmt);
 
             LoadRealTuitionDataAsync();
 
@@ -584,7 +585,7 @@ public partial class TuitionPaymentView : UserControl
 
             if (dialog.ShouldPrintReceipt)
             {
-                OpenReceiptPreview(receiptModel);
+                OpenReceiptPreview(receiptModel, remainingAfterPay, item.DueDate);
             }
             else
             {
@@ -607,8 +608,13 @@ public partial class TuitionPaymentView : UserControl
         OpenCollectDialog(matched);
     }
 
-    private void OpenReceiptPreview(ReceiptHistoryModel receipt)
+    private void OpenReceiptPreview(ReceiptHistoryModel receipt, decimal? remainingOverride = null, string? dueDateOverride = null)
     {
+        var prof = _profiles.FirstOrDefault(p => p.StudentCode == receipt.StudentCode && (string.IsNullOrEmpty(receipt.ClassName) || p.ClassName == receipt.ClassName))
+                   ?? _profiles.FirstOrDefault(p => p.StudentCode == receipt.StudentCode);
+        decimal remDebt = remainingOverride ?? prof?.Remaining ?? 0m;
+        string dueText = dueDateOverride ?? prof?.DueDate ?? string.Empty;
+
         using var previewDlg = new ReceiptPrintPreviewDialog(
             receipt.StudentName,
             receipt.ClassName,
@@ -617,7 +623,11 @@ public partial class TuitionPaymentView : UserControl
             receipt.StudentCode,
             receipt.Method,
             receipt.Collector,
-            receipt.CourseName
+            receipt.CourseName,
+            receipt.Content,
+            receipt.ReceiptCode,
+            remDebt,
+            dueText
         );
         previewDlg.ShowDialog(ParentForm);
     }

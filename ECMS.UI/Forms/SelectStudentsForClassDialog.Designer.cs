@@ -285,8 +285,8 @@ partial class SelectStudentsForClassDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlFilter);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thêm học viên vào lớp · ECMS";

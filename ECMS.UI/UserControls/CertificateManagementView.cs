@@ -143,7 +143,7 @@ public partial class CertificateManagementView : UserControl
         cboConditionFilter.Items.AddRange(new object[]
         {
             "Tất cả điều kiện",
-            "✓ Đủ điều kiện cấp",
+            "Đủ điều kiện",
             "Chưa đủ điều kiện"
         });
         cboConditionFilter.SelectedIndex = 0;
@@ -223,17 +223,17 @@ public partial class CertificateManagementView : UserControl
             Name = "colScore",
             DataPropertyName = "ScoreText",
             HeaderText = "Điểm tổng kết",
-            Width = 120,
+            Width = 105,
             ReadOnly = true,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
         });
 
         dgvEligible.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colAttendance",
-            DataPropertyName = "AttendanceText",
-            HeaderText = "Chuyên cần",
-            Width = 120,
+            Name = "colRank",
+            DataPropertyName = "GradeRank",
+            HeaderText = "Xếp loại",
+            Width = 95,
             ReadOnly = true,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
@@ -253,7 +253,7 @@ public partial class CertificateManagementView : UserControl
             Name = "colStatus",
             DataPropertyName = "StatusText",
             HeaderText = "Điều kiện cấp",
-            Width = 150,
+            Width = 135,
             ReadOnly = true,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
         });
@@ -262,9 +262,9 @@ public partial class CertificateManagementView : UserControl
         {
             Name = "colAction",
             HeaderText = "Thao tác",
-            Text = "👁️ Xem trước",
+            Text = "Xem trước",
             UseColumnTextForButtonValue = true,
-            Width = 105,
+            Width = 100,
             FlatStyle = FlatStyle.Flat
         };
         dgvEligible.Columns.Add(btnActionCol);
@@ -524,7 +524,7 @@ public partial class CertificateManagementView : UserControl
         int checkedCount = _students.Count(s => s.IsChecked && s.IsEligible);
         int totalEligible = _students.Count(s => s.IsEligible);
 
-        btnIssueSelectedTop.Text = $"🎓 Cấp chứng chỉ ({checkedCount})";
+        btnIssueSelectedTop.Text = $"Cấp chứng chỉ ({checkedCount})";
         lblSelectedSummary.Text = $"Đang chọn: {checkedCount} học viên đủ ĐK / Tổng {totalEligible} đủ ĐK";
     }
 
@@ -533,6 +533,7 @@ public partial class CertificateManagementView : UserControl
         if (dgvEligible.Rows[rowIndex].DataBoundItem is EligibleStudentItem student)
         {
             var (signerName, signerRole) = GetSelectedSigner();
+            string formattedScore = student.ScoreText.Contains("/") ? student.ScoreText : $"{student.ScoreText} / 10";
 
             using var previewDlg = new CertificatePrintPreviewDialog(
                 student.FullName,
@@ -541,7 +542,7 @@ public partial class CertificateManagementView : UserControl
                 student.CourseName,
                 student.ClassName,
                 student.GradeRank,
-                student.ScoreText,
+                formattedScore,
                 student.AttendanceText,
                 signerName,
                 signerRole

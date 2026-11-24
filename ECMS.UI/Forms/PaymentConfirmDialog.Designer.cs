@@ -513,9 +513,9 @@ partial class PaymentConfirmDialog
         Controls.Add(pnlCommitment);
         Controls.Add(pnlActions);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = false;
+        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Xác nhận thu học phí · ECMS";

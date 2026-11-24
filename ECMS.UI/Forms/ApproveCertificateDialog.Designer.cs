@@ -531,9 +531,9 @@ partial class ApproveCertificateDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlActions);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = false;
+        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Duyệt cấp chứng chỉ · ECMS";

@@ -222,7 +222,7 @@ public partial class MainForm : Form
         btnNavSchedule.Visible = schedule;
         btnNavAttendance.Visible = attendance;
         btnNavGrades.Visible = grades;
-        btnNavMaterials.Visible = materials;
+        btnNavMaterials.Visible = false; // Bỏ phân hệ Tài liệu học tập
         btnNavCertificates.Visible = certificates;
         btnNavTuition.Visible = tuition;
         btnNavAccounts.Visible = accounts;

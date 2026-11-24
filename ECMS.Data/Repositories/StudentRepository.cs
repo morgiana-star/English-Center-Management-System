@@ -192,13 +192,14 @@ public class StudentRepository : BaseRepository, IStudentRepository
             ? Math.Round((attStats.PresentCnt + attStats.LateCnt) * 100.0 / totalRecorded, 1)
             : 0.0;
 
-        // Truy vấn điểm thật từ bảng ExamScores JOIN Exams
+        // Truy vấn điểm thật mới nhất từ bảng ExamScores JOIN Exams
         var scoreRows = (await conn.QueryAsync<(string Type, double ScoreValue)>(@"
             SELECT ex.Type, es.ScoreValue
             FROM ExamScores es
             JOIN Exams ex ON es.ExamId = ex.ExamId
             WHERE es.StudentId = @StudentId
-              AND (@ClassId = 0 OR ex.ClassId = @ClassId OR ex.Type = 'Placement');",
+              AND (@ClassId = 0 OR ex.ClassId = @ClassId OR ex.Type = 'Placement')
+            ORDER BY ex.ExamId DESC;",
             new { StudentId = studentId, ClassId = currentClassId })).ToList();
 
         string FormatScore(string type)
@@ -265,9 +266,9 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 e.Status AS EnrollStatus,
                 COALESCE(inv.BalanceDue, 0) AS BalanceDue,
                 (SELECT COUNT(*) FROM AttendanceRecords ar JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId WHERE ar.StudentId = e.StudentId AND cs.ClassId = e.ClassId) AS RecordedCount,
-                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Regular' LIMIT 1) AS RegularVal,
-                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Midterm' LIMIT 1) AS MidtermVal,
-                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Final' LIMIT 1) AS FinalVal
+                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Regular' ORDER BY ex.ExamId DESC LIMIT 1) AS RegularVal,
+                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Midterm' ORDER BY ex.ExamId DESC LIMIT 1) AS MidtermVal,
+                (SELECT es.ScoreValue FROM ExamScores es JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = e.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Final' ORDER BY ex.ExamId DESC LIMIT 1) AS FinalVal
             FROM Enrollments e
             JOIN Classes c ON e.ClassId = c.ClassId
             JOIN Courses co ON c.CourseId = co.CourseId
@@ -279,9 +280,10 @@ public class StudentRepository : BaseRepository, IStudentRepository
         foreach (var h in historyRows)
         {
             string enStatus = (string)(h.EnrollStatus ?? "Active");
+            bool hasFinalScore = h.FinalVal != null;
             string statusVi = enStatus switch
             {
-                "Completed" => "Hoàn thành",
+                "Completed" => hasFinalScore ? "Hoàn thành" : "Đang học",
                 "Reserved" => "Bảo lưu",
                 "Dropped" => "Đã nghỉ",
                 "Transferred" => "Đã chuyển lớp",
@@ -305,7 +307,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 RegularScore = regStr,
                 MidtermScore = midStr,
                 FinalScore = finStr,
-                TuitionStatus = bal > 0 ? $"Còn nợ {bal:N0}đ" : "Đã hoàn thành"
+                TuitionStatus = bal > 0 ? $"Còn nợ {bal:N0}đ" : "Đã đóng đủ"
             });
         }
 

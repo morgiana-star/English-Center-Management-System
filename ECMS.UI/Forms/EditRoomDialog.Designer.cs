@@ -284,8 +284,8 @@ partial class EditRoomDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Quản lý phòng học · ECMS";

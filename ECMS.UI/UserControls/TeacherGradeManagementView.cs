@@ -11,13 +11,14 @@ using ECMS.UI.Forms;
 
 namespace ECMS.UI.UserControls;
 
+/// <summary>
+/// Phân hệ Điểm số (Quản lý & Nhập điểm trực tiếp theo Lớp học — 100% SQLite)
+/// </summary>
 public partial class TeacherGradeManagementView : UserControl
 {
-    private readonly IExamService _examService = new ExamService();
     private readonly IClassService _classService = new ClassService();
-    private List<ExamListItemDto> _allExams = new();
-    private AppButton _btnManageExamSchedules = null!;
-    private bool _isLoadingFilters = false;
+    private List<ClassListItemDto> _allClasses = new();
+    private bool _isLoadingFilters;
 
     public TeacherGradeManagementView()
     {
@@ -26,31 +27,20 @@ public partial class TeacherGradeManagementView : UserControl
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
-        SetupHeaderButtons();
+        ConfigureSimplifiedGradeMode();
         SetupFilters();
         SetupGrid();
         WireEvents();
         _ = LoadDataAsync();
     }
 
-    private void SetupHeaderButtons()
+    private void ConfigureSimplifiedGradeMode()
     {
-        btnCreateAssessmentTop.Text = "Tạo bài kiểm tra";
-        btnEnterGradesTop.Text = "Nhập điểm";
-
-        _btnManageExamSchedules = new AppButton
-        {
-            Name = "btnManageExamSchedules",
-            Text = "Quản lý lịch thi",
-            Size = new Size(140, 36),
-            Location = new Point(btnEnterGradesTop.Left - 150, btnEnterGradesTop.Top),
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 5,
-            Cursor = Cursors.Hand
-        };
-        pnlHeader.Controls.Add(_btnManageExamSchedules);
+        // Bỏ luồng tạo bài kiểm tra & quản lý lịch thi rườm rà; chỉ giữ Nhập điểm trực tiếp theo Lớp
+        btnCreateAssessmentTop.Visible = false;
+        cboTypeFilter.Visible = false;
+        btnEnterGradesTop.Text = "Nhập điểm theo lớp";
+        lblTitle.Text = "Quản lý điểm số";
     }
 
     protected override void OnLoad(EventArgs e)
@@ -82,15 +72,9 @@ public partial class TeacherGradeManagementView : UserControl
 
     private void SetupFilters()
     {
-        cboTypeFilter.Items.Clear();
-        cboTypeFilter.Items.AddRange(new object[]
-        {
-            "Tất cả loại bài thi",
-            "Thường xuyên (TX)",
-            "Giữa khóa (GK)",
-            "Cuối khóa (CK)"
-        });
-        cboTypeFilter.SelectedIndex = 0;
+        cboClassFilter.Items.Clear();
+        cboClassFilter.Items.Add("Tất cả khóa học");
+        cboClassFilter.SelectedIndex = 0;
     }
 
     private void SetupGrid()
@@ -105,15 +89,13 @@ public partial class TeacherGradeManagementView : UserControl
         dgvAssessments.AllowUserToAddRows = false;
         dgvAssessments.AllowUserToDeleteRows = false;
 
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 5 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTitle", HeaderText = "Tên bài kiểm tra", FillWeight = 22 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp áp dụng", FillWeight = 11 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColType", HeaderText = "Loại bài thi", FillWeight = 13 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColWeight", HeaderText = "Trọng số", FillWeight = 8 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDate", HeaderText = "Ngày & Giờ thi", FillWeight = 15 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng thi", FillWeight = 9 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColProgress", HeaderText = "Tiến độ", FillWeight = 8 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 11 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 6 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Mã lớp", FillWeight = 14 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCourse", HeaderText = "Khóa học", FillWeight = 22 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTeacher", HeaderText = "Giáo viên phụ trách", FillWeight = 20 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng", FillWeight = 10 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColSize", HeaderText = "Sĩ số", FillWeight = 10 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 12 });
 
         var colAction = new DataGridViewButtonColumn
         {
@@ -122,7 +104,7 @@ public partial class TeacherGradeManagementView : UserControl
             Text = "Nhập điểm",
             UseColumnTextForButtonValue = true,
             FlatStyle = FlatStyle.Flat,
-            FillWeight = 10
+            FillWeight = 12
         };
         colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         dgvAssessments.Columns.Add(colAction);
@@ -133,90 +115,75 @@ public partial class TeacherGradeManagementView : UserControl
         try
         {
             _isLoadingFilters = true;
-            var classes = (await _classService.GetClassesAsync()).ToList();
+            _allClasses = (await _classService.GetClassesAsync()).ToList();
+
+            var courseNames = _allClasses
+                .Select(c => c.CourseName)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(n => n)
+                .ToList();
+
             cboClassFilter.Items.Clear();
-            cboClassFilter.Items.Add("Tất cả lớp");
-            foreach (var c in classes)
+            cboClassFilter.Items.Add("Tất cả khóa học");
+            foreach (var cn in courseNames)
             {
-                cboClassFilter.Items.Add(c.ClassCode);
+                cboClassFilter.Items.Add(cn);
             }
             cboClassFilter.SelectedIndex = 0;
             _isLoadingFilters = false;
 
-            _allExams = (await _examService.GetAllExamsAsync()).ToList();
             FilterAndBind();
         }
         catch (Exception ex)
         {
             _isLoadingFilters = false;
-            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách bài kiểm tra", ex.Message);
+            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách lớp học", ex.Message);
         }
     }
 
     private void FilterAndBind()
     {
         string kw = txtSearchAssessment.Text.Trim().ToLowerInvariant();
-        string cls = cboClassFilter.SelectedItem?.ToString() ?? "Tất cả lớp";
-        string type = cboTypeFilter.SelectedItem?.ToString() ?? "Tất cả loại bài thi";
+        string course = cboClassFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
 
-        var filtered = _allExams.Where(x =>
-            (cls == "Tất cả lớp" || x.ClassCode.Equals(cls, StringComparison.OrdinalIgnoreCase)) &&
-            (type == "Tất cả loại bài thi" || x.TypeDisplay.Equals(type, StringComparison.OrdinalIgnoreCase)) &&
+        var filtered = _allClasses.Where(c =>
+            (course == "Tất cả khóa học" || c.CourseName.Equals(course, StringComparison.OrdinalIgnoreCase)) &&
             (string.IsNullOrEmpty(kw) ||
-             x.ExamName.ToLowerInvariant().Contains(kw) ||
-             x.ClassCode.ToLowerInvariant().Contains(kw) ||
-             x.RoomName.ToLowerInvariant().Contains(kw))).ToList();
+             c.ClassCode.ToLowerInvariant().Contains(kw) ||
+             c.CourseName.ToLowerInvariant().Contains(kw) ||
+             c.TeacherName.ToLowerInvariant().Contains(kw))).ToList();
 
         dgvAssessments.Rows.Clear();
         int stt = 1;
-        foreach (var ex in filtered)
+        foreach (var c in filtered)
         {
             int idx = dgvAssessments.Rows.Add(
                 stt++,
-                ex.ExamName,
-                ex.ClassCode,
-                ex.TypeDisplay,
-                $"{ex.WeightPercentage:0}%",
-                $"{ex.ExamDateDisplay} ({ex.TimeRange})",
-                ex.RoomName,
-                ex.GradedRatio,
-                ex.StatusDisplay);
-            dgvAssessments.Rows[idx].Tag = ex;
+                c.ClassCode,
+                c.CourseName,
+                c.TeacherName,
+                c.RoomName,
+                $"{c.CurrentStudents} / {c.MaxStudents}",
+                c.Status);
+            dgvAssessments.Rows[idx].Tag = c;
         }
         dgvAssessments.ClearSelection();
+        dgvAssessments.CurrentCell = null;
     }
 
     private void WireEvents()
     {
         txtSearchAssessment.TextChanged += (s, e) => FilterAndBind();
         cboClassFilter.SelectedIndexChanged += (s, e) => { if (!_isLoadingFilters) FilterAndBind(); };
-        cboTypeFilter.SelectedIndexChanged += (s, e) => { if (!_isLoadingFilters) FilterAndBind(); };
-
-        btnCreateAssessmentTop.Click += async (s, e) =>
-        {
-            string defaultCls = cboClassFilter.SelectedIndex > 0 ? (cboClassFilter.SelectedItem?.ToString() ?? "") : "";
-            using var dlg = new CreateAssessmentDialog(defaultCls);
-            if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
-            {
-                await LoadDataAsync();
-            }
-        };
 
         btnEnterGradesTop.Click += async (s, e) =>
         {
-            string defaultCls = cboClassFilter.SelectedIndex > 0 ? (cboClassFilter.SelectedItem?.ToString() ?? "") : "";
+            string defaultCls = "";
+            if (dgvAssessments.CurrentRow?.Tag is ClassListItemDto sel)
+                defaultCls = sel.ClassCode;
             using var dlg = new GradeEntryDialog(defaultCls);
             if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
-            {
-                await LoadDataAsync();
-            }
-        };
-
-        _btnManageExamSchedules.Click += async (s, e) =>
-        {
-            using var dlg = new ExamScheduleManagementDialog();
-            dlg.ShowDialog(FindForm());
-            if (dlg.HasChanged)
             {
                 await LoadDataAsync();
             }
@@ -226,13 +193,25 @@ public partial class TeacherGradeManagementView : UserControl
         {
             if (e.RowIndex >= 0 && dgvAssessments.Columns[e.ColumnIndex].Name == "ColAction")
             {
-                if (dgvAssessments.Rows[e.RowIndex].Tag is ExamListItemDto ex)
+                if (dgvAssessments.Rows[e.RowIndex].Tag is ClassListItemDto cls)
                 {
-                    using var dlg = new GradeEntryDialog(ex.ClassCode);
+                    using var dlg = new GradeEntryDialog(cls.ClassCode);
                     if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
                     {
                         await LoadDataAsync();
                     }
+                }
+            }
+        };
+
+        dgvAssessments.CellDoubleClick += async (s, e) =>
+        {
+            if (e.RowIndex >= 0 && dgvAssessments.Rows[e.RowIndex].Tag is ClassListItemDto cls)
+            {
+                using var dlg = new GradeEntryDialog(cls.ClassCode);
+                if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
+                {
+                    await LoadDataAsync();
                 }
             }
         };

@@ -44,10 +44,12 @@ public partial class ClassAttendanceDialog : Form
         SetupHeader();
         SetupSessionsGrid();
         SetupStudentCheckGrid();
-        SetupMatrixGrid();
+
+        // Ẩn tab Tổng quan chuyên cần cả lớp (chỉ giữ danh sách buổi học & điểm danh)
+        btnTabOverview.Visible = false;
+        pnlTabs.Visible = false;
 
         _ = LoadSessionsDataAsync();
-        LoadMatrixData();
 
         WireEvents();
         SwitchMainTab(0);
@@ -57,7 +59,8 @@ public partial class ClassAttendanceDialog : Form
     {
         Text = $"Điểm danh lớp · {_classCode}";
         lblTitle.Text = $"{_classCode} · {_courseName}";
-        lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: 20 học viên";
+        lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: -- học viên";
+        btnClose.Location = new Point(Math.Max(200, pnlHeader.ClientSize.Width - btnClose.Width - 24), 18);
     }
 
     private void SetupSessionsGrid()
@@ -135,7 +138,7 @@ public partial class ClassAttendanceDialog : Form
             FillWeight = 19F,
             FlatStyle = FlatStyle.Flat
         };
-        cboCol.Items.AddRange(new object[] { "Có mặt", "Vắng có phép", "Vắng không phép" });
+        cboCol.Items.AddRange(new object[] { "", "Có mặt", "Vắng có phép", "Vắng không phép" });
         dgvStudentCheck.Columns.Add(cboCol);
 
         dgvStudentCheck.Columns.Add(new DataGridViewTextBoxColumn
@@ -302,11 +305,11 @@ public partial class ClassAttendanceDialog : Form
                 string rateStr = "--";
                 string statusStr = "Chưa điểm danh";
 
-                if (totalAtt > 0 || isLocked)
+                if (totalAtt > 0)
                 {
                     double rate = totalStudents > 0 ? (present * 100.0 / totalStudents) : 0;
                     rateStr = $"{rate:0.#}%";
-                    statusStr = isLocked ? "Đã khóa sổ" : "Đã điểm danh";
+                    statusStr = "Đã điểm danh";
                 }
 
                 dgvSessions.Rows.Add(
@@ -364,7 +367,7 @@ public partial class ClassAttendanceDialog : Form
                 string name = (string)student.FullName;
                 string phone = (string?)student.Phone ?? "";
 
-                string displayStatus = "Có mặt"; // mặc định
+                string displayStatus = ""; // Mặc định trống khi chưa điểm danh
                 string? note = null;
 
                 if (existingDict.TryGetValue(sid, out var rec))
@@ -372,9 +375,10 @@ public partial class ClassAttendanceDialog : Form
                     displayStatus = rec.Status switch
                     {
                         "Present" => "Có mặt",
+                        "Late" => "Có mặt",
                         "Excused" => "Vắng có phép",
                         "Absent"  => "Vắng không phép",
-                        _         => "Có mặt"
+                        _         => ""
                     };
                     note = rec.Note;
                 }
@@ -484,7 +488,10 @@ public partial class ClassAttendanceDialog : Form
                 if (string.IsNullOrEmpty(studentIdRaw) || !int.TryParse(studentIdRaw, out int studentId))
                     continue;
 
-                string statusVn = row.Cells["colStatus"].Value?.ToString() ?? "Có mặt";
+                string statusVn = row.Cells["colStatus"].Value?.ToString()?.Trim() ?? "";
+                if (string.IsNullOrEmpty(statusVn))
+                    continue;
+
                 string? note = row.Cells["colNote"].Value?.ToString()?.Trim();
                 if (string.IsNullOrWhiteSpace(note)) note = null;
 
@@ -501,7 +508,7 @@ public partial class ClassAttendanceDialog : Form
 
             if (records.Count == 0)
             {
-                MessageBox.Show("Không có học viên nào để lưu điểm danh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Chưa chọn trạng thái", "Vui lòng chọn trạng thái điểm danh cho ít nhất một học viên trước khi lưu.");
                 return;
             }
 
@@ -595,6 +602,11 @@ public partial class ClassAttendanceDialog : Form
 
         cardSessionsView.SetBounds(margin, margin, cardWidth, cardHeight);
         cardOverviewView.SetBounds(margin, margin, cardWidth, cardHeight);
+
+        if (pnlHeader != null && btnClose != null)
+        {
+            btnClose.Location = new Point(Math.Max(200, pnlHeader.ClientSize.Width - btnClose.Width - 24), 18);
+        }
     }
 
     protected override void OnLoad(EventArgs e)

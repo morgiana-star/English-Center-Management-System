@@ -217,8 +217,8 @@ partial class LoginForm
         Controls.Add(pnlRight);
         Controls.Add(pnlLeft);
         Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
         Text = "ECMS — Đăng nhập";
         Load += LoginForm_Load;

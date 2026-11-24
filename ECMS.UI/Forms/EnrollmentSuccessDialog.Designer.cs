@@ -370,8 +370,8 @@ partial class EnrollmentSuccessDialog
         Controls.Add(bannerDoneSuccess);
         Controls.Add(pnlTop);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -310,27 +310,25 @@ public partial class ScheduleManagementView : UserControl
 
             var rect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4, e.CellBounds.Width - 9, e.CellBounds.Height - 9);
             using var bgBrush = new SolidBrush(data.BgColor);
-            using var borderPen = new Pen(data.BorderColor, 1.5f);
-            using var accentBrush = new SolidBrush(data.BorderColor);
+            using var borderPen = new Pen(data.BorderColor, 1f);
 
             g.FillRectangle(bgBrush, rect);
-            g.FillRectangle(accentBrush, rect.X, rect.Y, 4, rect.Height);
             g.DrawRectangle(borderPen, rect);
 
-            var p = data.Primary;
-            int textX = rect.X + 10;
-            int textW = Math.Max(40, rect.Width - 14);
-            using var fBold = new Font("Segoe UI", 9F, FontStyle.Bold);
-            using var fNorm = new Font("Segoe UI", 8.25F);
+            int textX = rect.X + 8;
+            int textW = Math.Max(40, rect.Width - 12);
+            using var fBold = new Font("Segoe UI", 8.75F, FontStyle.Bold);
+            using var fNorm = new Font("Segoe UI", 8F);
             using var tBrush = new SolidBrush(data.TextColor);
             using var sBrush = new SolidBrush(Color.FromArgb(51, 65, 85));
 
+            var p = data.Primary;
             string extra = data.AllInSlot.Count > 1 ? $" (+{data.AllInSlot.Count - 1})" : "";
             g.DrawString($"{p.ClassCode}{extra}", fBold, tBrush, new RectangleF(textX, rect.Y + 6, textW, 20));
-            g.DrawString(p.CourseName, fNorm, sBrush, new RectangleF(textX, rect.Y + 26, textW, 18));
-            g.DrawString($"Phòng: {p.RoomName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 44, textW, 18));
-            g.DrawString($"GV: {p.TeacherName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 62, textW, 18));
-            g.DrawString($"{p.StartTime} - {p.EndTime}", fNorm, tBrush, new RectangleF(textX, rect.Y + 80, textW, 18));
+            g.DrawString(p.CourseName, fNorm, sBrush, new RectangleF(textX, rect.Y + 25, textW, 17));
+            g.DrawString($"Phòng: {p.RoomName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 42, textW, 17));
+            g.DrawString($"GV: {p.TeacherName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 59, textW, 17));
+            g.DrawString($"{p.StartTime} - {p.EndTime}", fNorm, tBrush, new RectangleF(textX, rect.Y + 76, textW, 17));
         }
 
         e.Handled = true;
@@ -401,6 +399,10 @@ public partial class ScheduleManagementView : UserControl
             using var dlg = new CreateScheduleDialog();
             if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
+                _isUpdatingFilters = true;
+                cboScheduleType.SelectedIndex = 0;
+                _isUpdatingFilters = false;
+                await UpdateTargetFilterAsync();
                 JumpToDateOnCalendar(dlg.CreatedStartDate);
                 await RefreshScheduleAsync();
             }

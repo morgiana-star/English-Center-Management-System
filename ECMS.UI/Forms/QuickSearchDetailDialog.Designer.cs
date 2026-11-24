@@ -148,9 +148,9 @@ partial class QuickSearchDetailDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = false;
+        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

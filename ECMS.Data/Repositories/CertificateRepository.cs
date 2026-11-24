@@ -24,7 +24,7 @@ public class CertificateRepository : ICertificateRepository
                 s.StudentCode,
                 s.FullName,
                 co.CourseName,
-                cl.ClassName,
+                cl.ClassCode AS ClassName,
                 COALESCE(e.FinalGPA, 7.5) AS FinalGPA,
                 COALESCE(e.AttendanceRate, 90.0) AS AttendanceRate,
                 COALESCE(i.BalanceDue, 0) AS BalanceDue,
@@ -57,12 +57,7 @@ public class CertificateRepository : ICertificateRepository
 
             string rank = gpa >= 8.5m ? "Xuất sắc" : (gpa >= 8.0m ? "Giỏi" : (gpa >= 6.5m ? "Khá" : "Trung bình"));
             bool isEligible = gpa >= 6.5m && att >= 80m && debt <= 0;
-
-            string statusText;
-            if (gpa < 6.5m) statusText = "✕ TB < 6.5 (Chưa đạt)";
-            else if (att < 80m) statusText = "⚠️ Chuyên cần < 80%";
-            else if (debt > 0) statusText = $"⚠️ Còn nợ ({debt:N0}đ)";
-            else statusText = "✓ Đủ điều kiện";
+            string statusText = isEligible ? "Đủ điều kiện" : "Chưa đủ điều kiện";
 
             result.Add(new EligibleStudentDto
             {
@@ -78,8 +73,8 @@ public class CertificateRepository : ICertificateRepository
                 IsEligible = isEligible,
                 StatusText = statusText,
                 GradeRank = rank,
-                ScoreText = $"{gpa:N1} · {rank}",
-                AttendanceText = $"{att:N1}%",
+                ScoreText = $"{gpa:0.0}",
+                AttendanceText = $"{att:0.0}%",
                 TuitionText = debt <= 0 ? "Đã hoàn tất" : $"Nợ {debt:N0}đ"
             });
         }
@@ -99,11 +94,11 @@ public class CertificateRepository : ICertificateRepository
                 s.StudentCode,
                 s.FullName AS StudentName,
                 co.CourseName,
-                cl.ClassName,
+                cl.ClassCode AS ClassName,
                 strftime('%d/%m/%Y', c.IssueDate) AS IssueDate,
-                'Trần Minh Quân (Admin)' AS Approver,
+                'Trần Minh Quân (Giám đốc trung tâm)' AS Approver,
                 'Đã cấp · Chưa in' AS Status,
-                COALESCE(CAST(e.FinalGPA AS TEXT) || ' / 10', '8.0 / 10') AS Score,
+                COALESCE(printf('%.1f', e.FinalGPA) || ' / 10', '8.0 / 10') AS Score,
                 c.GraduationGrade AS GradeRank,
                 COALESCE(CAST(ROUND(e.AttendanceRate, 1) AS TEXT) || '%', '95%') AS Attendance
             FROM Certificates c

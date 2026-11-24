@@ -100,8 +100,8 @@ partial class LogoutConfirmDialog
         Controls.Add(btnStay);
         Controls.Add(lblTitle);
         Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -1,5 +1,7 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
@@ -46,14 +48,49 @@ public partial class CertificatePrintPreviewDialog : Form
         _studentCode = studentCode;
         _certSerial = certSerial;
         _courseName = string.IsNullOrEmpty(courseName) ? "IELTS Foundation" : courseName;
-        _className = string.IsNullOrEmpty(className) ? "IELTS-F02" : className;
+        _className = string.IsNullOrEmpty(className) ? "IELTS-F01" : className.Replace("(Sắp mở)", "", StringComparison.OrdinalIgnoreCase).Trim();
         _gradeRank = string.IsNullOrEmpty(gradeRank) ? "Khá" : gradeRank;
-        _scoreText = string.IsNullOrEmpty(scoreText) ? "8.0 / 10" : scoreText;
+        _scoreText = NormalizeScoreText(scoreText);
         _attendanceText = string.IsNullOrEmpty(attendanceText) ? "95%" : attendanceText;
         _signerName = string.IsNullOrEmpty(signerName) ? AppSession.FullName : signerName;
-        _signerRole = string.IsNullOrEmpty(signerRole) ? AppSession.GetSignerRoleTitle() : signerRole;
+        _signerRole = NormalizeSignerRole(signerRole);
 
         SetupView();
+        _ = LoadCenterHeaderAsync();
+    }
+
+    private static string NormalizeScoreText(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return "8.0 / 10";
+        string cleaned = raw.Split('·')[0].Trim();
+        return cleaned.Contains('/') ? cleaned : $"{cleaned} / 10";
+    }
+
+    private static string NormalizeSignerRole(string? role)
+    {
+        if (string.IsNullOrWhiteSpace(role) ||
+            role.Trim().Equals("ADMIN", StringComparison.OrdinalIgnoreCase) ||
+            role.Trim().Equals("QUẢN TRỊ VIÊN", StringComparison.OrdinalIgnoreCase))
+        {
+            return "GIÁM ĐỐC TRUNG TÂM";
+        }
+        return role.Trim().ToUpperInvariant();
+    }
+
+    private async Task LoadCenterHeaderAsync()
+    {
+        try
+        {
+            var center = await new SystemConfigService().GetCenterConfigAsync();
+            if (!string.IsNullOrWhiteSpace(center.CenterName))
+            {
+                lblCenterName.Text = center.CenterName.ToUpperInvariant();
+            }
+        }
+        catch
+        {
+            // Giữ giá trị mặc định nếu không đọc được cấu hình
+        }
     }
 
     private void SetupView()
@@ -84,7 +121,7 @@ public partial class CertificatePrintPreviewDialog : Form
         lblStudentInfoLine.Text = $"Mã học viên: {_studentCode}  ·  Lớp học: {_className}";
         lblCourseLine.Text = $"Khóa học: {_courseName.ToUpper()}";
         lblDurationLine.Text = "Thời lượng chương trình: 48 giờ đào tạo chuẩn khung CEFR";
-        lblResultLine.Text = $"Kết quả: {_scoreText}  ·  Xếp loại: {_gradeRank}  ·  Chuyên cần: {_attendanceText}";
+        lblResultLine.Text = $"Điểm: {_scoreText}  ·  Xếp loại: {_gradeRank}";
         lblCertSerialBottom.Text = $"Số chứng chỉ: {_certSerial}";
         lblIssueLocationDate.Text = $"TP. Hồ Chí Minh, ngày {DateTime.Now:dd} tháng {DateTime.Now:MM} năm {DateTime.Now:yyyy}";
         lblDirectorTitle.Text = _signerRole.ToUpper();
