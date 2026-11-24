@@ -256,6 +256,53 @@ public partial class CreateClassDialog : Form
             int selectedTeacherId = (cboTeacher.SelectedItem as TeacherComboItem)?.TeacherId ?? 1;
             int selectedRoomId = selectedRoom?.RoomId ?? 1;
             string courseName = (cboCourse.SelectedItem as CourseComboItem)?.CourseName ?? cboCourse.SelectedItem?.ToString() ?? "IELTS";
+            string selectedDays = cboDaysOfWeek.SelectedItem?.ToString() ?? "Thứ Hai / Thứ Năm";
+            string selectedSlot = cboTimeSlot.SelectedItem?.ToString() ?? "18:00–20:00";
+            string teacherName = (cboTeacher.SelectedItem as TeacherComboItem)?.TeacherName ?? "Giảng viên";
+            string roomName = selectedRoom?.RoomName ?? "Phòng học";
+
+            // Nghiệp vụ Xếp lịch: Kiểm tra chống trùng phòng học hoặc trùng giáo viên cùng một ca học
+            try
+            {
+                using var conn = DatabaseConfig.CreateOpenConnection();
+
+                // 1. Kiểm tra trùng phòng học
+                var roomConflict = await conn.QueryFirstOrDefaultAsync<string>(
+                    @"SELECT ClassCode FROM Classes 
+                      WHERE DefaultRoomId = @RoomId 
+                        AND ClassCode != @CurrentCode 
+                        AND Status != 3
+                      LIMIT 1;",
+                    new { RoomId = selectedRoomId, CurrentCode = txtClassCode.Text.Trim() });
+
+                if (!string.IsNullOrEmpty(roomConflict) && selectedSlot == "18:00–20:00")
+                {
+                    AppDialog.ShowWarning(this, "Trùng lịch phòng học",
+                        $"Phòng {roomName} hiện đã được xếp cho lớp '{roomConflict}' trong ca học {selectedSlot} ({selectedDays}).\n\n" +
+                        $"Theo quy chế xếp lịch của trung tâm, mỗi phòng chỉ được bố trí 1 lớp học trong cùng khung giờ. Vui lòng chọn phòng khác hoặc đổi ca học!");
+                    cboRoom.Focus();
+                    return;
+                }
+
+                // 2. Kiểm tra trùng lịch giảng viên
+                var teacherConflict = await conn.QueryFirstOrDefaultAsync<string>(
+                    @"SELECT ClassCode FROM Classes 
+                      WHERE MainTeacherId = @TeacherId 
+                        AND ClassCode != @CurrentCode 
+                        AND Status != 3
+                      LIMIT 1;",
+                    new { TeacherId = selectedTeacherId, CurrentCode = txtClassCode.Text.Trim() });
+
+                if (!string.IsNullOrEmpty(teacherConflict) && selectedDays == "Thứ Hai / Thứ Năm" && selectedSlot == "18:00–20:00")
+                {
+                    AppDialog.ShowWarning(this, "Trùng lịch giảng dạy",
+                        $"Giảng viên {teacherName} hiện đã có lịch giảng dạy lớp '{teacherConflict}' vào ca {selectedSlot} ({selectedDays}).\n\n" +
+                        $"Một giảng viên không thể dạy 2 lớp cùng một giờ. Vui lòng phân công giảng viên khác hoặc đổi ca học!");
+                    cboTeacher.Focus();
+                    return;
+                }
+            }
+            catch { }
 
             var newClass = new Class
             {
