@@ -44,6 +44,7 @@ public class CreateUserDto
     public string? Phone { get; set; }
     public int RoleId { get; set; }
     public bool IsActive { get; set; } = true;
+    public bool MustChangePassword { get; set; } = true;
 }
 
 public class UpdateUserDto

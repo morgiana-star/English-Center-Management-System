@@ -240,7 +240,7 @@ public class UserService : IUserService
         return await _userRepo.GetLockedUsersAsync();
     }
 
-    public async Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu")
+    public async Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu", bool mustChangePassword = true)
     {
         if (string.IsNullOrWhiteSpace(newPassword))
         {
@@ -261,7 +261,7 @@ public class UserService : IUserService
         string hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
 
-        bool ok = await _userRepo.ResetPasswordAsync(targetUserId, hash, currentAdminId, reason);
+        bool ok = await _userRepo.ResetPasswordAsync(targetUserId, hash, currentAdminId, reason, mustChangePassword);
         if (!ok)
         {
             return (false, "Đặt lại mật khẩu thất bại.");
@@ -335,6 +335,16 @@ public class UserService : IUserService
         return ok
             ? (true, "Đã cập nhật hồ sơ cá nhân vào cơ sở dữ liệu SQLite thành công.")
             : (false, "Cập nhật hồ sơ thất bại.");
+    }
+
+    public Task<(bool Success, string Message)> DeleteUserAsync(int targetUserId)
+    {
+        int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
+        if (targetUserId == currentAdminId)
+        {
+            return Task.FromResult((false, "Không thể xóa tài khoản đang đăng nhập hiện tại."));
+        }
+        return _userRepo.DeleteUserAsync(targetUserId, currentAdminId);
     }
 
     public async Task<AdminTelemetryDto> GetTelemetryAsync()

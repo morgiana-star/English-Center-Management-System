@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -8,9 +9,31 @@ namespace ECMS.UI.Controls;
 public class AppComboBox : UserControl
 {
     private readonly ComboBox _inner;
+    private readonly Panel _arrowOverlay;
     private bool _isFocused = false;
+    private bool _isArrowHovered = false;
 
     public int CornerRadius { get; set; } = FigmaTheme.DefaultRadius;
+
+    [DefaultValue(true)]
+    public bool AllowSearch
+    {
+        get => _inner.DropDownStyle == ComboBoxStyle.DropDown;
+        set
+        {
+            _inner.DropDownStyle = value ? ComboBoxStyle.DropDown : ComboBoxStyle.DropDownList;
+            if (value)
+            {
+                _inner.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                _inner.AutoCompleteSource = AutoCompleteSource.ListItems;
+            }
+            else
+            {
+                _inner.AutoCompleteMode = AutoCompleteMode.None;
+                _inner.AutoCompleteSource = AutoCompleteSource.None;
+            }
+        }
+    }
 
     public event EventHandler? SelectedIndexChanged;
 
@@ -22,21 +45,97 @@ public class AppComboBox : UserControl
 
         _inner = new ComboBox
         {
-            DropDownStyle = ComboBoxStyle.DropDownList,
+            DropDownStyle = ComboBoxStyle.DropDown,
+            AutoCompleteMode = AutoCompleteMode.SuggestAppend,
+            AutoCompleteSource = AutoCompleteSource.ListItems,
             FlatStyle = FlatStyle.Flat,
             Font = FigmaTheme.FontContent,
             ForeColor = FigmaTheme.TextPrimary,
             BackColor = Color.White,
-            Location = new Point(8, 7),
-            Size = new Size(Width - 16, 22),
+            Location = new Point(10, 6),
+            Size = new Size(Width - 20, 24),
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
         };
 
+        // Che khung viền xám mặc định quanh mũi tên của WinForms ComboBox và vẽ mũi tên chevron to, căn giữa
+        _arrowOverlay = new Panel
+        {
+            BackColor = Color.White,
+            Cursor = Cursors.Hand,
+            Width = 28,
+            Height = Height - 4,
+            Location = new Point(Width - 30, 2),
+            Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right
+        };
+
+        _arrowOverlay.Paint += (s, e) =>
+        {
+            var g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.Clear(Color.White);
+
+            int cx = _arrowOverlay.Width / 2;
+            int cy = _arrowOverlay.Height / 2;
+            var pts = new[]
+            {
+                new Point(cx - 5, cy - 2),
+                new Point(cx, cy + 3),
+                new Point(cx + 5, cy - 2)
+            };
+
+            Color arrowColor = _isFocused || _isArrowHovered
+                ? FigmaTheme.Primary
+                : Color.FromArgb(71, 85, 105);
+
+            using var pen = new Pen(arrowColor, 2.0f)
+            {
+                StartCap = LineCap.Round,
+                EndCap = LineCap.Round,
+                LineJoin = LineJoin.Round
+            };
+            g.DrawLines(pen, pts);
+        };
+
+        _arrowOverlay.MouseEnter += (s, e) => { _isArrowHovered = true; _arrowOverlay.Invalidate(); };
+        _arrowOverlay.MouseLeave += (s, e) => { _isArrowHovered = false; _arrowOverlay.Invalidate(); };
+        _arrowOverlay.Click += (s, e) =>
+        {
+            _inner.Focus();
+            _inner.DroppedDown = !_inner.DroppedDown;
+        };
+
         _inner.SelectedIndexChanged += (s, e) => SelectedIndexChanged?.Invoke(this, e);
-        _inner.Enter += (s, e) => { _isFocused = true; Invalidate(); };
-        _inner.Leave += (s, e) => { _isFocused = false; Invalidate(); };
+        _inner.TextChanged += (s, e) => OnTextChanged(e);
+        _inner.Enter += (s, e) => { _isFocused = true; Invalidate(); _arrowOverlay.Invalidate(); };
+        _inner.Leave += (s, e) => { _isFocused = false; Invalidate(); _arrowOverlay.Invalidate(); };
 
         Controls.Add(_inner);
+        Controls.Add(_arrowOverlay);
+        _arrowOverlay.BringToFront();
+    }
+
+    protected override void OnResize(EventArgs e)
+    {
+        base.OnResize(e);
+        if (_inner != null && _arrowOverlay != null)
+        {
+            int topY = Math.Max(4, (Height - _inner.Height) / 2);
+            _inner.Location = new Point(10, topY);
+            _inner.Width = Math.Max(40, Width - 18);
+            _arrowOverlay.Location = new Point(Width - _arrowOverlay.Width - 2, 2);
+            _arrowOverlay.Height = Math.Max(10, Height - 4);
+            _arrowOverlay.BringToFront();
+        }
+    }
+
+    [System.Diagnostics.CodeAnalysis.AllowNull]
+    public override string Text
+    {
+        get => _inner?.Text ?? string.Empty;
+        set
+        {
+            if (_inner != null) _inner.Text = value ?? string.Empty;
+        }
     }
 
     public ComboBox.ObjectCollection Items => _inner.Items;

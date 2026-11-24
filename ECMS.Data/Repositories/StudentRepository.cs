@@ -597,10 +597,8 @@ public class StudentRepository : BaseRepository, IStudentRepository
     public async Task<string> GenerateNextStudentCodeAsync()
     {
         using var conn = CreateConnection();
-        string yearPrefix = $"HV-{DateTime.Now.Year}-";
         string? latestCode = await conn.ExecuteScalarAsync<string>(
-            "SELECT StudentCode FROM Students WHERE StudentCode LIKE @Pattern ORDER BY StudentId DESC LIMIT 1;",
-            new { Pattern = yearPrefix + "%" });
+            "SELECT StudentCode FROM Students WHERE StudentCode LIKE 'HV-%' ORDER BY StudentId DESC LIMIT 1;");
 
         int nextNumber = 1;
         if (!string.IsNullOrWhiteSpace(latestCode) && latestCode.Contains('-'))
@@ -611,7 +609,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 nextNumber = currentNum + 1;
             }
         }
-        return $"{yearPrefix}{nextNumber:D4}";
+        return $"HV-{nextNumber:D4}";
     }
 
     public async Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync()
@@ -703,10 +701,9 @@ public class StudentRepository : BaseRepository, IStudentRepository
 
         try
         {
-            string yearPrefix = $"HV-{DateTime.Now.Year}-";
             string? latestCode = await conn.ExecuteScalarAsync<string>(
-                "SELECT StudentCode FROM Students WHERE StudentCode LIKE @Pattern ORDER BY StudentId DESC LIMIT 1;",
-                new { Pattern = yearPrefix + "%" }, tran);
+                "SELECT StudentCode FROM Students WHERE StudentCode LIKE 'HV-%' ORDER BY StudentId DESC LIMIT 1;",
+                transaction: tran);
 
             int nextNum = 1;
             if (!string.IsNullOrWhiteSpace(latestCode) && latestCode.Contains('-'))
@@ -720,7 +717,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
 
             foreach (var s in validStudents)
             {
-                string studentCode = $"{yearPrefix}{nextNum:D4}";
+                string studentCode = $"HV-{nextNum:D4}";
                 nextNum++;
 
                 string gender = string.Equals(s.Gender?.Trim(), "Nữ", StringComparison.OrdinalIgnoreCase) ? "Nữ" : "Nam";

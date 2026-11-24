@@ -15,6 +15,8 @@ public partial class EditAccountDialog : Form
 {
     private readonly IUserService _userService = new UserService();
     private List<Role> _rolesList = new();
+    private AppTextBox _txtEmail = null!;
+    private AppTextBox _txtPhone = null!;
 
     public int UserId { get; private set; }
     public bool IsCreateMode { get; private set; }
@@ -58,18 +60,58 @@ public partial class EditAccountDialog : Form
     {
     }
 
-    public EditAccountDialog(bool isCreateMode, int userId, string username, string fullName, string role, bool isActive)
+    public EditAccountDialog(bool isCreateMode, int userId, string username, string fullName, string role, bool isActive, string? email = null, string? phone = null)
     {
         InitializeComponent();
         IsCreateMode = isCreateMode;
         UserId = userId;
 
-        // Bỏ Liên kết hồ sơ theo yêu cầu & dồn layout vai trò lên gọn gàng
+        // Bỏ Liên kết hồ sơ & bổ sung Email, Số điện thoại tùy chọn
         lblProfile.Visible = false;
         cboProfile.Visible = false;
-        lblRole.Location = new Point(20, 162);
-        cboRole.Location = new Point(20, 186);
-        chkRequirePassChange.Location = new Point(20, 240);
+
+        var lblEmail = new Label
+        {
+            AutoSize = true,
+            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(51, 65, 85),
+            Location = new Point(20, 162),
+            Text = "Email (tùy chọn)"
+        };
+        _txtEmail = new AppTextBox
+        {
+            Location = new Point(20, 186),
+            Size = new Size(226, 36),
+            CornerRadius = 5,
+            Placeholder = "Để trống nếu chưa có",
+            Text = email ?? string.Empty
+        };
+
+        var lblPhone = new Label
+        {
+            AutoSize = true,
+            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+            ForeColor = Color.FromArgb(51, 65, 85),
+            Location = new Point(266, 162),
+            Text = "Số điện thoại (tùy chọn)"
+        };
+        _txtPhone = new AppTextBox
+        {
+            Location = new Point(266, 186),
+            Size = new Size(226, 36),
+            CornerRadius = 5,
+            Placeholder = "Để trống nếu chưa có",
+            Text = phone ?? string.Empty,
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
+        };
+
+        cardForm.Controls.AddRange(new Control[] { lblEmail, _txtEmail, lblPhone, _txtPhone });
+
+        lblRole.Location = new Point(20, 236);
+        cboRole.Location = new Point(20, 260);
+        chkRequirePassChange.Location = new Point(20, 310);
+        cardForm.Size = new Size(cardForm.Width, 355);
+        ClientSize = new Size(ClientSize.Width, 515);
 
         // Chỉ giữ 6 vai trò nội bộ (bỏ Học viên, Phụ huynh)
         cboRole.Items.Clear();
@@ -156,10 +198,11 @@ public partial class EditAccountDialog : Form
                         Username = Username,
                         FullName = FullName,
                         RoleId = SelectedRoleId,
-                        Email = $"{Username.ToLowerInvariant()}@ecms.edu.vn",
-                        Phone = "0901000000",
-                        Password = "User@2026",
-                        IsActive = true
+                        Email = _txtEmail.Text.Trim(),
+                        Phone = _txtPhone.Text.Trim(),
+                        Password = "12345678",
+                        IsActive = true,
+                        MustChangePassword = RequirePassChange
                     };
 
                     var res = await _userService.CreateUserAsync(createDto);
@@ -177,6 +220,8 @@ public partial class EditAccountDialog : Form
                     {
                         UserId = UserId,
                         FullName = FullName,
+                        Email = _txtEmail.Text.Trim(),
+                        Phone = _txtPhone.Text.Trim(),
                         RoleId = SelectedRoleId,
                         IsActive = true
                     };

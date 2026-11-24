@@ -11,12 +11,30 @@ public static class AppSession
     public static string RoleCode { get; set; } = "ROLE_ADMIN";
     public static string RoleName { get; set; } = "Admin";
     public static string SignerTitle { get; set; } = "GIÁM ĐỐC TRUNG TÂM";
-    public static string Email { get; set; } = "minhquan.admin@ecms.edu.vn";
-    public static string Phone { get; set; } = "0912 345 678";
-    public static string JobTitle { get; set; } = "Giám đốc điều hành & Quản trị hệ thống";
-    public static string CreatedDate { get; set; } = "01/01/2024";
-    public static string LastLogin { get; set; } = "16/11/2026 08:30";
+    public static string Email { get; set; } = string.Empty;
+    public static string Phone { get; set; } = string.Empty;
+    public static string JobTitle { get; set; } = string.Empty;
+    public static string CreatedDate { get; set; } = string.Empty;
+    public static string LastLogin { get; set; } = string.Empty;
     public static HashSet<string> Permissions { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public static Dictionary<string, string> ModuleAccessLevels { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public static bool IsReadOnlyModule(string moduleKey)
+    {
+        if (RoleCode == "ROLE_ADMIN") return false;
+        if (ModuleAccessLevels.TryGetValue(moduleKey, out string? access))
+        {
+            return access.Contains("Chỉ xem", StringComparison.OrdinalIgnoreCase);
+        }
+        return false;
+    }
+
+    public static bool HasFullAccountAccess()
+    {
+        if (RoleCode == "ROLE_ADMIN") return true;
+        return ModuleAccessLevels.TryGetValue("Accounts", out string? access)
+            && !access.Contains("Không", StringComparison.OrdinalIgnoreCase);
+    }
 
     public static string GetSignerRoleTitle()
     {

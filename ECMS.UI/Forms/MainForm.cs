@@ -53,8 +53,38 @@ public partial class MainForm : Form
 
     private async void MainForm_Load(object sender, EventArgs e)
     {
+        // Áp dụng cấu hình thương hiệu (Tên App, Tên viết tắt, Logo) từ SQLite
+        await ApplyBrandingAsync();
         // Áp dụng phân quyền hiển thị Sidebar theo vai trò đang đăng nhập từ DB
         await ApplyRoleBasedAccessControlAsync(navigateDefault: true);
+    }
+
+    public async Task ApplyBrandingAsync()
+    {
+        try
+        {
+            var cfg = await new SystemConfigService().GetCenterConfigAsync();
+            string appTitle = string.IsNullOrWhiteSpace(cfg.AppName) ? "ECMS — Hệ thống quản lý trung tâm Anh ngữ" : cfg.AppName.Trim();
+            string shortName = string.IsNullOrWhiteSpace(cfg.CenterShortName) ? "ECMS" : cfg.CenterShortName.Trim();
+            string fullName = string.IsNullOrWhiteSpace(cfg.CenterName) ? "Trung tâm Anh ngữ" : cfg.CenterName.Trim();
+
+            Text = appTitle;
+            lblHeaderBrand.Text = shortName;
+            lblHeaderCenter.Text = $"|  {fullName}";
+            lblHeaderCenter.Location = new Point(lblHeaderBrand.Right + 10, lblHeaderCenter.Location.Y);
+
+            if (!string.IsNullOrWhiteSpace(cfg.LogoPath) && System.IO.File.Exists(cfg.LogoPath))
+            {
+                using var fs = new System.IO.FileStream(cfg.LogoPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = Image.FromStream(fs);
+                picHeaderLogo.Image = new Bitmap(img);
+                picHeaderLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+        }
+        catch
+        {
+            // Giữ thương hiệu mặc định nếu chưa có cấu hình
+        }
     }
 
     public Task RefreshSidebarPermissionsAsync() => ApplyRoleBasedAccessControlAsync(navigateDefault: false);
@@ -101,10 +131,15 @@ public partial class MainForm : Form
         HashSet<string> allowed;
         try
         {
-            allowed = await _rbacService.GetAllowedModuleKeysForRoleAsync(role);
+            var accessMap = await _rbacService.GetModuleAccessMapForRoleAsync(role);
+            AppSession.ModuleAccessLevels = accessMap;
+            allowed = new HashSet<string>(
+                accessMap.Where(kv => !kv.Value.Contains("Không", StringComparison.OrdinalIgnoreCase)).Select(kv => kv.Key),
+                StringComparer.OrdinalIgnoreCase);
         }
         catch
         {
+            AppSession.ModuleAccessLevels = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
 
@@ -281,81 +316,88 @@ public partial class MainForm : Form
     private void NavigateToDashboard()
     {
         SetActiveButton(btnNavDashboard);
-        LoadView(new DashboardOverviewView());
+        LoadView(new DashboardOverviewView(), "Dashboard");
     }
 
     private void NavigateToAccounts(int tabIndex = 0)
     {
         SetActiveButton(btnNavAccounts);
         var view = new AccountManagementView();
-        view.SelectTab(tabIndex);
-        LoadView(view);
+        if (!AppSession.HasFullAccountAccess())
+        {
+            view.ConfigurePersonalOnlyMode();
+        }
+        else
+        {
+            view.SelectTab(tabIndex);
+        }
+        LoadView(view, "Accounts");
     }
 
     private void NavigateToStudents()
     {
         SetActiveButton(btnNavStudent);
-        LoadView(new StudentManagementView());
+        LoadView(new StudentManagementView(), "Student");
     }
 
     private void NavigateToTeachers()
     {
         SetActiveButton(btnNavTeacher);
-        LoadView(new TeacherManagementView());
+        LoadView(new TeacherManagementView(), "Teacher");
     }
 
     private void NavigateToCourse()
     {
         SetActiveButton(btnNavCourse);
-        LoadView(new CourseManagementView());
+        LoadView(new CourseManagementView(), "Course");
     }
 
     private void NavigateToClasses()
     {
         SetActiveButton(btnNavClass);
-        LoadView(new ClassManagementView());
+        LoadView(new ClassManagementView(), "Class");
     }
 
     private void NavigateToSchedule()
     {
         SetActiveButton(btnNavSchedule);
-        LoadView(new ScheduleManagementView());
+        LoadView(new ScheduleManagementView(), "Schedule");
     }
 
     private void NavigateToAttendance()
     {
         SetActiveButton(btnNavAttendance);
-        LoadView(new TeacherAttendanceCheckView());
+        LoadView(new TeacherAttendanceCheckView(), "Attendance");
     }
 
     private void NavigateToGrades()
     {
         SetActiveButton(btnNavGrades);
-        LoadView(new TeacherGradeManagementView());
+        LoadView(new TeacherGradeManagementView(), "Grades");
     }
 
     private void NavigateToTuition()
     {
         SetActiveButton(btnNavTuition);
-        LoadView(new TuitionPaymentView());
+        LoadView(new TuitionPaymentView(), "Tuition");
     }
 
     private void NavigateToCertificates()
     {
         SetActiveButton(btnNavCertificates);
-        LoadView(new CertificateManagementView());
+        LoadView(new CertificateManagementView(), "Certificates");
     }
 
     private void NavigateToMaterials()
     {
         SetActiveButton(btnNavMaterials);
-        LoadView(new StudyMaterialView());
+        LoadView(new StudyMaterialView(), "Materials");
     }
 
     private void NavigateToSettings()
     {
         SetActiveButton(btnNavSettings);
-        LoadView(new SystemConfigView());
+        LoadView(new SystemConfigView(), "Settings");
     }
 
     /// <summary>
@@ -385,9 +427,9 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// Nạp view UserControl vào khu vực pnlContent
+    /// Nạp view UserControl vào khu vực pnlContent (và tự áp dụng chế độ Chỉ xem nếu vai trò chỉ có quyền xem)
     /// </summary>
-    public void LoadView(UserControl view)
+    public void LoadView(UserControl view, string? moduleKey = null)
     {
         pnlContent.SuspendLayout();
         pnlContent.Controls.Clear();
@@ -396,7 +438,47 @@ public partial class MainForm : Form
         _currentView = view;
         _currentView.Dock = DockStyle.Fill;
         pnlContent.Controls.Add(_currentView);
+
+        if (!string.IsNullOrWhiteSpace(moduleKey) && AppSession.IsReadOnlyModule(moduleKey))
+        {
+            ApplyReadOnlyRestrictions(_currentView);
+        }
+
         pnlContent.ResumeLayout();
+    }
+
+    private static void ApplyReadOnlyRestrictions(Control root)
+    {
+        string[] writeKeywords =
+        {
+            "thêm", "đăng ký", "tạo", "sửa", "xóa", "lưu", "nhập excel",
+            "cấp chứng chỉ", "thu phí", "thu học phí", "phục hồi", "khôi phục",
+            "đặt lại", "khóa", "mở lớp", "lưu trữ"
+        };
+
+        void Walk(Control parent)
+        {
+            foreach (Control c in parent.Controls)
+            {
+                if (c is Button btn)
+                {
+                    string txt = (btn.Text ?? string.Empty).Trim().ToLowerInvariant();
+                    if (writeKeywords.Any(k => txt.Contains(k)) && !txt.Contains("xem") && !txt.Contains("tìm") && !txt.Contains("xuất"))
+                    {
+                        btn.Enabled = false;
+                        btn.Visible = false;
+                    }
+                }
+                else if (c is DataGridView dgv)
+                {
+                    dgv.ReadOnly = true;
+                }
+
+                if (c.HasChildren) Walk(c);
+            }
+        }
+
+        Walk(root);
     }
 
     private void ShowHelpDialog()
@@ -412,7 +494,16 @@ public partial class MainForm : Form
 
     private void ShowUserProfile()
     {
-        NavigateToAccounts(tabIndex: 2);
+        if (AppSession.HasFullAccountAccess())
+        {
+            NavigateToAccounts(tabIndex: 2);
+        }
+        else
+        {
+            var personalView = new AccountManagementView();
+            personalView.ConfigurePersonalOnlyMode();
+            LoadView(personalView);
+        }
     }
 
     private void ShowNotifications()

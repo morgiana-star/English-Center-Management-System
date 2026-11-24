@@ -600,10 +600,10 @@ public partial class CertificateManagementView : UserControl
             foreach (var student in selected)
             {
                 var issueRes = await _certService.IssueCertificateAsync(student.EnrollmentId, student.StudentId, student.GradeRank, $"{signerName} ({signerRole})");
-                string serial = issueRes.Success ? issueRes.SerialNumber : CertificateService.GenerateNextSerial();
+                string serial = issueRes.Success ? issueRes.SerialNumber : ECMS.UI.Services.CertificateService.GenerateNextSerial();
                 newlyIssuedSerials.Add(serial);
 
-                CertificateService.AddIssuedCertificate(new IssuedCertificateModel
+                ECMS.UI.Services.CertificateService.AddIssuedCertificate(new IssuedCertificateModel
                 {
                     SerialNumber = serial,
                     StudentCode = student.StudentCode,
@@ -679,7 +679,7 @@ public partial class CertificateManagementView : UserControl
             using var previewDlg = new CertificatePrintPreviewDialog(
                 student.FullName,
                 student.StudentCode,
-                CertificateService.GenerateNextSerial(),
+                ECMS.UI.Services.CertificateService.GenerateNextSerial(),
                 student.CourseName,
                 student.ClassName,
                 student.GradeRank,

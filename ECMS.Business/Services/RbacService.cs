@@ -132,16 +132,16 @@ public class RbacService : IRbacService
             : (false, "Lưu ma trận phân quyền thất bại.");
     }
 
-    public async Task<HashSet<string>> GetAllowedModuleKeysForRoleAsync(string roleCode)
+    public async Task<Dictionary<string, string>> GetModuleAccessMapForRoleAsync(string roleCode)
     {
         var rows = await _rbacRepo.GetSidebarMatrixAsync();
-        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var r in rows)
         {
             string val = roleCode switch
             {
-                "ROLE_ADMIN" => r.AdminAccess,
+                "ROLE_ADMIN" => "Toàn quyền",
                 "ROLE_MGR" => r.ManagerAccess,
                 "ROLE_AA" => r.AcademicAccess,
                 "ROLE_EC" => r.CounselorAccess,
@@ -149,13 +149,23 @@ public class RbacService : IRbacService
                 "ROLE_TEA" => r.TeacherAccess,
                 _ => "Không có quyền"
             };
-
-            if (!string.IsNullOrWhiteSpace(val) && !val.Contains("Không", StringComparison.OrdinalIgnoreCase))
-            {
-                allowed.Add(r.ModuleKey);
-            }
+            map[r.ModuleKey] = string.IsNullOrWhiteSpace(val) ? "Không có quyền" : val.Trim();
         }
 
+        return map;
+    }
+
+    public async Task<HashSet<string>> GetAllowedModuleKeysForRoleAsync(string roleCode)
+    {
+        var map = await GetModuleAccessMapForRoleAsync(roleCode);
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in map)
+        {
+            if (!kv.Value.Contains("Không", StringComparison.OrdinalIgnoreCase))
+            {
+                allowed.Add(kv.Key);
+            }
+        }
         return allowed;
     }
 }

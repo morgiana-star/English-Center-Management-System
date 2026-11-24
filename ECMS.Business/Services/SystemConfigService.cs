@@ -25,7 +25,10 @@ public class SystemConfigService : ISystemConfigService
 
         var dto = new CenterConfigDto
         {
+            AppName = configs.GetValueOrDefault("AppName", "ECMS — Hệ thống quản lý trung tâm Anh ngữ"),
+            CenterShortName = configs.GetValueOrDefault("CenterShortName", "ECMS"),
             CenterName = configs.GetValueOrDefault("CenterName", "Trung tâm Anh ngữ ECMS Minh Trí"),
+            LogoPath = configs.GetValueOrDefault("LogoPath", string.Empty),
             CenterPhone = configs.GetValueOrDefault("CenterPhone", "028 3822 6688"),
             CenterEmail = configs.GetValueOrDefault("CenterEmail", "contact@ecms.edu.vn"),
             CenterWebsite = configs.GetValueOrDefault("CenterWebsite", "https://ecms.edu.vn"),
@@ -57,17 +60,17 @@ public class SystemConfigService : ISystemConfigService
         if (string.IsNullOrWhiteSpace(dto.CenterPhone))
             return (false, "Số điện thoại trung tâm không được để trống.");
 
-        if (string.IsNullOrWhiteSpace(dto.DirectorName))
-            return (false, "Tên người đại diện ký duyệt không được để trống.");
-
         var dict = new Dictionary<string, string>
         {
+            ["AppName"] = string.IsNullOrWhiteSpace(dto.AppName) ? "ECMS — Hệ thống quản lý trung tâm Anh ngữ" : dto.AppName.Trim(),
+            ["CenterShortName"] = string.IsNullOrWhiteSpace(dto.CenterShortName) ? "ECMS" : dto.CenterShortName.Trim(),
             ["CenterName"] = dto.CenterName.Trim(),
+            ["LogoPath"] = dto.LogoPath?.Trim() ?? string.Empty,
             ["CenterPhone"] = dto.CenterPhone.Trim(),
             ["CenterEmail"] = dto.CenterEmail.Trim(),
             ["CenterWebsite"] = dto.CenterWebsite.Trim(),
             ["CenterAddress"] = dto.CenterAddress.Trim(),
-            ["DirectorName"] = dto.DirectorName.Trim(),
+            ["DirectorName"] = dto.DirectorName?.Trim() ?? string.Empty,
             ["DirectorTitle"] = string.IsNullOrWhiteSpace(dto.DirectorTitle) ? "Giám đốc trung tâm" : dto.DirectorTitle.Trim(),
             ["StoragePath"] = dto.StoragePath.Trim(),
             ["BackupDir"] = dto.BackupDir.Trim()

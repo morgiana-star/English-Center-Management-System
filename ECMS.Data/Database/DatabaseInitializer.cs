@@ -25,6 +25,7 @@ public static class DatabaseInitializer
             IsActive INTEGER NOT NULL DEFAULT 1 CHECK(IsActive IN (0, 1)),
             FailedLoginAttempts INTEGER NOT NULL DEFAULT 0,
             LockoutEnd TEXT,
+            MustChangePassword INTEGER NOT NULL DEFAULT 0,
             CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
             UpdatedAt TEXT
         );
@@ -380,9 +381,10 @@ public static class DatabaseInitializer
             cmd.ExecuteNonQuery();
         }
 
-        // Ensure columns StudentId, ParentId exist in Users if table existed prior
+        // Ensure columns StudentId, ParentId, MustChangePassword exist in Users if table existed prior
         try { conn.Execute("ALTER TABLE Users ADD COLUMN StudentId INTEGER;"); } catch { }
         try { conn.Execute("ALTER TABLE Users ADD COLUMN ParentId INTEGER;"); } catch { }
+        try { conn.Execute("ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 0;"); } catch { }
 
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);

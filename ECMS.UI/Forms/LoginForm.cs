@@ -24,10 +24,31 @@ public partial class LoginForm : Form
         InitializeComponent();
     }
 
-    private void LoginForm_Load(object sender, EventArgs e)
+    private async void LoginForm_Load(object sender, EventArgs e)
     {
         if (txtUsername.Text == "appTextBox1") txtUsername.Text = "";
         if (txtPassword.Text == "appTextBox2") txtPassword.Text = "";
+
+        try
+        {
+            var cfg = await new SystemConfigService().GetCenterConfigAsync();
+            if (!string.IsNullOrWhiteSpace(cfg.AppName))
+                Text = cfg.AppName;
+            if (!string.IsNullOrWhiteSpace(cfg.CenterShortName))
+                lblBrand.Text = cfg.CenterShortName;
+            if (!string.IsNullOrWhiteSpace(cfg.CenterName))
+                lblCenter.Text = $"HỆ THỐNG QUẢN LÝ ĐÀO TẠO\r\n{cfg.CenterName}";
+            if (!string.IsNullOrWhiteSpace(cfg.LogoPath) && System.IO.File.Exists(cfg.LogoPath))
+            {
+                using var fs = new System.IO.FileStream(cfg.LogoPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = System.Drawing.Image.FromStream(fs);
+                picLogo.Image = new System.Drawing.Bitmap(img);
+            }
+        }
+        catch
+        {
+            // Giữ thương hiệu mặc định nếu CSDL chưa cấu hình
+        }
     }
 
     private void chkShowPass_CheckedChanged(object sender, EventArgs e)
@@ -100,8 +121,8 @@ public partial class LoginForm : Form
             AppSession.FullName = displayName;
             AppSession.RoleCode = session.RoleCode;
             AppSession.RoleName = detail?.RoleName ?? session.RoleName;
-            AppSession.Email = !string.IsNullOrWhiteSpace(detail?.Email) ? detail.Email! : $"{session.Username}@ecms.edu.vn";
-            AppSession.Phone = !string.IsNullOrWhiteSpace(detail?.Phone) ? detail.Phone! : "0912 345 678";
+            AppSession.Email = detail?.Email?.Trim() ?? string.Empty;
+            AppSession.Phone = detail?.Phone?.Trim() ?? string.Empty;
             AppSession.SignerTitle = AppSession.GetSignerRoleTitle();
             AppSession.JobTitle = AppSession.RoleName;
             AppSession.CreatedDate = detail?.CreatedAt.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy");
@@ -109,6 +130,18 @@ public partial class LoginForm : Form
             AppSession.Permissions = session.Permissions;
 
             lblError.Visible = false;
+
+            // Nếu tài khoản được đánh dấu bắt buộc đổi mật khẩu lần đầu -> mở popup đổi mật khẩu trước khi vào hệ thống
+            if (session.MustChangePassword)
+            {
+                using var forceDlg = new ForceChangePasswordDialog(session.UserId, session.Username, displayName, password);
+                if (forceDlg.ShowDialog(this) != DialogResult.OK)
+                {
+                    lblError.Text = "* Bạn cần đổi mật khẩu mới để tiếp tục đăng nhập hệ thống.";
+                    lblError.Visible = true;
+                    return;
+                }
+            }
 
             Hide();
             var mainForm = new MainForm();

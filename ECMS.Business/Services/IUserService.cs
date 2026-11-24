@@ -15,8 +15,9 @@ public interface IUserService
     Task<(bool Success, string Message)> ToggleUserActiveAsync(int userId);
     Task<(bool Success, string Message)> UnlockUserAsync(int targetUserId);
     Task<IEnumerable<UserListItemDto>> GetLockedUsersAsync();
-    Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu");
+    Task<(bool Success, string Message)> ResetPasswordByAdminAsync(int targetUserId, string newPassword, string reason = "Quản trị viên thiết lập lại mật khẩu", bool mustChangePassword = true);
     Task<(bool Success, string Message)> ChangePasswordSelfAsync(int userId, string oldPassword, string newPassword, string confirmPassword);
     Task<(bool Success, string Message)> UpdateOwnProfileAsync(int userId, string fullName, string? email, string? phone);
+    Task<(bool Success, string Message)> DeleteUserAsync(int targetUserId);
     Task<AdminTelemetryDto> GetTelemetryAsync();
 }

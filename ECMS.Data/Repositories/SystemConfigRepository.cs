@@ -189,7 +189,12 @@ public class SystemConfigRepository : ISystemConfigRepository
             return (false, "Tệp sao lưu không tồn tại trên hệ thống đĩa.");
         }
 
-        // 1. Kiểm tra tính toàn vẹn của file backup trước khi phục hồi
+        if (new FileInfo(backupFilePath).Length == 0)
+        {
+            return (false, "Tệp sao lưu rỗng (0 byte), không thể khôi phục.");
+        }
+
+        // 1. Kiểm tra tính toàn vẹn & cấu trúc bảng ECMS của file backup trước khi phục hồi
         try
         {
             using var chkConn = new SqliteConnection($"Data Source={backupFilePath};Mode=ReadOnly;");
@@ -200,6 +205,13 @@ public class SystemConfigRepository : ISystemConfigRepository
             if (!string.Equals(res, "ok", StringComparison.OrdinalIgnoreCase))
             {
                 return (false, $"Tệp sao lưu bị lỗi cấu trúc ({res}), không thể khôi phục.");
+            }
+
+            int coreTables = await chkConn.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name IN ('Users', 'Students', 'SystemConfigs');");
+            if (coreTables < 3)
+            {
+                return (false, "Tệp được chọn không phải là cơ sở dữ liệu hợp lệ của hệ thống ECMS (thiếu bảng cốt lõi Users/Students/SystemConfigs).");
             }
         }
         catch (Exception ex)

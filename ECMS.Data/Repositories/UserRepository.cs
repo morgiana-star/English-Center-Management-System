@@ -144,7 +144,7 @@ public class UserRepository : BaseRepository, IUserRepository
             if (role != null && role.RoleCode == "ROLE_TEA")
             {
                 int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
-                string teacherCode = $"GV-{(teacherCount + 1):D4}";
+                string teacherCode = $"GV-{(teacherCount + 1):D3}";
 
                 string insTeacherSql = @"
                     INSERT INTO Teachers (TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive)
@@ -163,7 +163,7 @@ public class UserRepository : BaseRepository, IUserRepository
             else
             {
                 int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
-                string empCode = $"NV-{(empCount + 1):D4}";
+                string empCode = $"NV-{(empCount + 1):D3}";
 
                 string dept = role?.RoleCode switch
                 {
@@ -193,8 +193,8 @@ public class UserRepository : BaseRepository, IUserRepository
 
             // 2. Insert into Users
             string insUserSql = @"
-                INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, IsActive, FailedLoginAttempts)
-                VALUES (@Username, @PasswordHash, 'salt', @EmployeeId, @TeacherId, @IsActive, 0);
+                INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, IsActive, FailedLoginAttempts, MustChangePassword)
+                VALUES (@Username, @PasswordHash, 'salt', @EmployeeId, @TeacherId, @IsActive, 0, @MustChangePassword);
                 SELECT last_insert_rowid();";
 
             int newUserId = (int)await conn.ExecuteScalarAsync<long>(insUserSql, new
@@ -203,7 +203,8 @@ public class UserRepository : BaseRepository, IUserRepository
                 PasswordHash = passwordHash,
                 EmployeeId = employeeId,
                 TeacherId = teacherId,
-                IsActive = dto.IsActive ? 1 : 0
+                IsActive = dto.IsActive ? 1 : 0,
+                MustChangePassword = dto.MustChangePassword ? 1 : 0
             }, transaction: trans);
 
             // 3. Assign Role in UserRoles
@@ -507,7 +508,7 @@ public class UserRepository : BaseRepository, IUserRepository
             new { UserId = userId });
     }
 
-    public async Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason)
+    public async Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason, bool mustChangePassword = true)
     {
         using var conn = CreateConnection();
         using var trans = conn.BeginTransaction();
@@ -526,9 +527,10 @@ public class UserRepository : BaseRepository, IUserRepository
                 SET PasswordHash = @PasswordHash, 
                     FailedLoginAttempts = 0, 
                     LockoutEnd = NULL, 
+                    MustChangePassword = @MustChange,
                     UpdatedAt = CURRENT_TIMESTAMP 
                 WHERE UserId = @UserId;",
-                new { PasswordHash = newPasswordHash, UserId = targetUserId },
+                new { PasswordHash = newPasswordHash, MustChange = mustChangePassword ? 1 : 0, UserId = targetUserId },
                 transaction: trans);
 
             await conn.ExecuteAsync(@"
@@ -571,6 +573,7 @@ public class UserRepository : BaseRepository, IUserRepository
                 SET PasswordHash = @PasswordHash, 
                     FailedLoginAttempts = 0, 
                     LockoutEnd = NULL, 
+                    MustChangePassword = 0,
                     UpdatedAt = CURRENT_TIMESTAMP 
                 WHERE UserId = @UserId;",
                 new { PasswordHash = newPasswordHash, UserId = userId },
@@ -649,6 +652,93 @@ public class UserRepository : BaseRepository, IUserRepository
         {
             trans.Rollback();
             throw;
+        }
+    }
+
+    public async Task<(bool Success, string Message)> DeleteUserAsync(int targetUserId, int currentAdminId)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = targetUserId },
+                transaction: trans);
+
+            if (user == null)
+            {
+                return (false, "Không tìm thấy tài khoản cần xóa.");
+            }
+
+            if (user.Username.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, "Không thể xóa tài khoản quản trị gốc (admin).");
+            }
+
+            int paymentRefs = await conn.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM Payments WHERE CashierId = @UserId;",
+                new { UserId = targetUserId }, transaction: trans);
+
+            int teacherRefs = 0;
+            if (user.TeacherId.HasValue)
+            {
+                teacherRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM Classes WHERE MainTeacherId = @TId;",
+                    new { TId = user.TeacherId.Value }, transaction: trans);
+                teacherRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM ClassSchedules WHERE TeacherId = @TId;",
+                    new { TId = user.TeacherId.Value }, transaction: trans);
+            }
+
+            int empRefs = 0;
+            if (user.EmployeeId.HasValue)
+            {
+                empRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM Leads WHERE AssignedEmployeeId = @EId;",
+                    new { EId = user.EmployeeId.Value }, transaction: trans);
+                empRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM ConsultationLogs WHERE CounselorId = @EId;",
+                    new { EId = user.EmployeeId.Value }, transaction: trans);
+            }
+
+            if (paymentRefs > 0 || teacherRefs > 0 || empRefs > 0)
+            {
+                return (false, "Tài khoản này đã phát sinh dữ liệu nghiệp vụ (hóa đơn, lớp học, lịch dạy hoặc tư vấn). Vui lòng dùng chức năng 'Khóa' thay vì xóa vĩnh viễn.");
+            }
+
+            await conn.ExecuteAsync("UPDATE AuditLogs SET UserId = NULL WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+            await conn.ExecuteAsync("DELETE FROM UserRoles WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+            await conn.ExecuteAsync("DELETE FROM Users WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+
+            if (user.TeacherId.HasValue)
+            {
+                await conn.ExecuteAsync("DELETE FROM Teachers WHERE TeacherId = @TId;", new { TId = user.TeacherId.Value }, transaction: trans);
+            }
+            if (user.EmployeeId.HasValue)
+            {
+                await conn.ExecuteAsync("DELETE FROM Employees WHERE EmployeeId = @EId;", new { EId = user.EmployeeId.Value }, transaction: trans);
+            }
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                VALUES (@AdminId, 'DELETE_USER', 'Users', @RecordId, @NewValues);",
+                new
+                {
+                    AdminId = currentAdminId,
+                    RecordId = targetUserId.ToString(),
+                    NewValues = $"Đã xóa tài khoản '{user.Username}'"
+                },
+                transaction: trans);
+
+            trans.Commit();
+            return (true, $"Đã xóa thành công tài khoản '{user.Username}'.");
+        }
+        catch (Exception ex)
+        {
+            trans.Rollback();
+            return (false, $"Lỗi khi xóa tài khoản: {ex.Message}");
         }
     }
 

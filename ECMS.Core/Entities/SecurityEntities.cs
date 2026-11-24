@@ -15,6 +15,7 @@ public class User : BaseEntity
     public bool IsActive { get; set; } = true;
     public int FailedLoginAttempts { get; set; } = 0;
     public DateTime? LockoutEnd { get; set; }
+    public bool MustChangePassword { get; set; } = false;
 }
 
 public class Role

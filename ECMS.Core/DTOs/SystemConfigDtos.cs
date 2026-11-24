@@ -4,7 +4,10 @@ namespace ECMS.Core.DTOs;
 
 public class CenterConfigDto
 {
+    public string AppName { get; set; } = "ECMS — Hệ thống quản lý trung tâm Anh ngữ";
+    public string CenterShortName { get; set; } = "ECMS";
     public string CenterName { get; set; } = "Trung tâm Anh ngữ ECMS";
+    public string LogoPath { get; set; } = string.Empty;
     public string CenterPhone { get; set; } = "028 3822 6688";
     public string CenterEmail { get; set; } = "contact@ecms.edu.vn";
     public string CenterWebsite { get; set; } = "https://ecms.edu.vn";

@@ -25,6 +25,9 @@ public partial class ResetPasswordDialog : Form
         TargetUserId = targetUserId;
 
         txtTargetAccount.Text = $"{username} ({fullName})";
+        chkUnlockAccount.Visible = false;
+        chkUnlockAccount.Checked = false;
+        chkMustChangePass.Checked = true;
         GeneratePassword();
 
         WireEvents();
@@ -32,14 +35,7 @@ public partial class ResetPasswordDialog : Form
 
     private void GeneratePassword()
     {
-        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
-        var rnd = new Random();
-        var passChars = new char[8];
-        for (int i = 0; i < passChars.Length; i++)
-        {
-            passChars[i] = chars[rnd.Next(chars.Length)];
-        }
-        txtTempPassword.Text = new string(passChars) + "@2026";
+        txtTempPassword.Text = "12345678";
     }
 
     private void WireEvents()

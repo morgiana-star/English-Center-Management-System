@@ -86,7 +86,6 @@ public partial class CertificatePrintPreviewDialog : Form
         lblDurationLine.Text = "Thời lượng chương trình: 48 giờ đào tạo chuẩn khung CEFR";
         lblResultLine.Text = $"Kết quả: {_scoreText}  ·  Xếp loại: {_gradeRank}  ·  Chuyên cần: {_attendanceText}";
         lblCertSerialBottom.Text = $"Số chứng chỉ: {_certSerial}";
-        lblCertDesignNote.Text = "Hệ thống chứng chỉ số ECMS · Xác thực CSDL SQLite";
         lblIssueLocationDate.Text = $"TP. Hồ Chí Minh, ngày {DateTime.Now:dd} tháng {DateTime.Now:MM} năm {DateTime.Now:yyyy}";
         lblDirectorTitle.Text = _signerRole.ToUpper();
         lblDirectorName.Text = _signerName;

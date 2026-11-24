@@ -22,7 +22,7 @@ public static class AppGridHelper
         dgv.MultiSelect = false;
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgv.RowTemplate.Height = 36;
-        dgv.ScrollBars = ScrollBars.None;
+        dgv.ScrollBars = ScrollBars.Both;
 
         // Tiêu đề cột (Header) - Không bị bôi xanh khi chọn
         dgv.EnableHeadersVisualStyles = false;

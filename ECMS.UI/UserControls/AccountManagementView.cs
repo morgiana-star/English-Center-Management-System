@@ -52,6 +52,18 @@ public partial class AccountManagementView : UserControl
         }
     }
 
+    /// <summary>
+    /// Chế độ chỉ xem/sửa Tài khoản cá nhân dành cho các vai trò không có quyền Quản trị tài khoản
+    /// </summary>
+    public void ConfigurePersonalOnlyMode()
+    {
+        lblTitle.Text = "Tài khoản cá nhân";
+        tabProfile.Text = "Tài khoản cá nhân";
+        if (tabMain.TabPages.Contains(tabAccounts)) tabMain.TabPages.Remove(tabAccounts);
+        if (tabMain.TabPages.Contains(tabRoles)) tabMain.TabPages.Remove(tabRoles);
+        if (tabMain.TabCount > 0) tabMain.SelectedIndex = 0;
+    }
+
     private void SetupFilters()
     {
         // Bỏ nút Xuất danh sách & dồn nút Thêm tài khoản gọn sang phải
@@ -96,19 +108,20 @@ public partial class AccountManagementView : UserControl
     {
         dgvAccounts.Columns.Clear();
 
-        var colUser = new DataGridViewTextBoxColumn { HeaderText = "Tên đăng nhập", FillWeight = 16, ReadOnly = true };
-        var colName = new DataGridViewTextBoxColumn { HeaderText = "Họ và tên", FillWeight = 20, ReadOnly = true };
-        var colContact = new DataGridViewTextBoxColumn { HeaderText = "Email & Số ĐT", FillWeight = 24, ReadOnly = true };
-        var colRole = new DataGridViewTextBoxColumn { HeaderText = "Vai trò", FillWeight = 16, ReadOnly = true };
-        var colCode = new DataGridViewTextBoxColumn { HeaderText = "Mã vai trò", FillWeight = 12, ReadOnly = true };
-        var colStatus = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true };
+        var colUser = new DataGridViewTextBoxColumn { HeaderText = "Tên đăng nhập", FillWeight = 14, ReadOnly = true };
+        var colName = new DataGridViewTextBoxColumn { HeaderText = "Họ và tên", FillWeight = 18, ReadOnly = true };
+        var colEmail = new DataGridViewTextBoxColumn { HeaderText = "Email", FillWeight = 18, ReadOnly = true };
+        var colPhone = new DataGridViewTextBoxColumn { HeaderText = "Số điện thoại", FillWeight = 13, ReadOnly = true };
+        var colRole = new DataGridViewTextBoxColumn { HeaderText = "Vai trò", FillWeight = 14, ReadOnly = true };
+        var colCode = new DataGridViewTextBoxColumn { HeaderText = "Mã vai trò", FillWeight = 11, ReadOnly = true };
+        var colStatus = new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 12, ReadOnly = true };
 
         var colEdit = new DataGridViewButtonColumn
         {
             HeaderText = "Sửa",
             Text = "✏️ Sửa",
             UseColumnTextForButtonValue = true,
-            FillWeight = 10
+            FillWeight = 9
         };
 
         var colReset = new DataGridViewButtonColumn
@@ -116,7 +129,7 @@ public partial class AccountManagementView : UserControl
             HeaderText = "Mật khẩu",
             Text = "🔑 Đặt lại",
             UseColumnTextForButtonValue = true,
-            FillWeight = 11
+            FillWeight = 10
         };
 
         var colToggle = new DataGridViewButtonColumn
@@ -124,10 +137,18 @@ public partial class AccountManagementView : UserControl
             HeaderText = "Khóa / Mở",
             Text = "Đổi",
             UseColumnTextForButtonValue = false,
-            FillWeight = 12
+            FillWeight = 10
         };
 
-        dgvAccounts.Columns.AddRange(colUser, colName, colContact, colRole, colCode, colStatus, colEdit, colReset, colToggle);
+        var colDelete = new DataGridViewButtonColumn
+        {
+            HeaderText = "Xóa",
+            Text = "🗑️ Xóa",
+            UseColumnTextForButtonValue = true,
+            FillWeight = 9
+        };
+
+        dgvAccounts.Columns.AddRange(colUser, colName, colEmail, colPhone, colRole, colCode, colStatus, colEdit, colReset, colToggle, colDelete);
     }
 
     private async Task LoadAccountsAsync()
@@ -184,13 +205,15 @@ public partial class AccountManagementView : UserControl
             int idx = dgvAccounts.Rows.Add(
                 item.Username,
                 item.FullName,
-                $"{item.Email ?? "—"} | {item.Phone ?? "—"}",
+                item.Email ?? string.Empty,
+                item.Phone ?? string.Empty,
                 item.RoleName,
                 item.RoleCode,
                 item.StatusText,
                 "✏️ Sửa",
                 "🔑 Đặt lại",
-                item.IsActive ? "🔒 Khóa" : "🔓 Mở khóa"
+                item.IsActive ? "🔒 Khóa" : "🔓 Mở khóa",
+                "🗑️ Xóa"
             );
             dgvAccounts.Rows[idx].Tag = item;
         }
@@ -265,8 +288,8 @@ public partial class AccountManagementView : UserControl
                 {
                     AppSession.FullName = userDetail.FullName;
                 }
-                if (!string.IsNullOrWhiteSpace(userDetail.Email)) AppSession.Email = userDetail.Email!;
-                if (!string.IsNullOrWhiteSpace(userDetail.Phone)) AppSession.Phone = userDetail.Phone!;
+                AppSession.Email = userDetail.Email?.Trim() ?? string.Empty;
+                AppSession.Phone = userDetail.Phone?.Trim() ?? string.Empty;
                 AppSession.RoleName = userDetail.RoleName;
                 AppSession.CreatedDate = userDetail.CreatedAt.ToString("dd/MM/yyyy");
             }
@@ -290,8 +313,8 @@ public partial class AccountManagementView : UserControl
         lblSummaryName.Text = AppSession.FullName;
         lblSummaryUsername.Text = $"@{AppSession.Username}";
         lblSummaryRoleBadge.Text = AppSession.RoleName;
-        lblSummaryEmail.Text = $"✉️ Email: {AppSession.Email}";
-        lblSummaryPhone.Text = $"📞 Điện thoại: {AppSession.Phone}";
+        lblSummaryEmail.Text = $"✉️ Email: {(string.IsNullOrWhiteSpace(AppSession.Email) ? "Chưa cập nhật" : AppSession.Email)}";
+        lblSummaryPhone.Text = $"📞 Điện thoại: {(string.IsNullOrWhiteSpace(AppSession.Phone) ? "Chưa cập nhật" : AppSession.Phone)}";
         lblSummaryCreated.Text = $"📅 Ngày tạo: {AppSession.CreatedDate}";
         lblSummaryLastLogin.Text = $"🕒 Lần đăng nhập cuối: {AppSession.LastLogin}";
     }
@@ -310,7 +333,7 @@ public partial class AccountManagementView : UserControl
             {
                 await LoadAccountsAsync();
                 AppDialog.ShowSuccess(ParentForm, "Thêm tài khoản thành công",
-                    $"Tài khoản '{dlg.Username}' ({dlg.FullName}) với vai trò '{dlg.Role}' đã được tạo thành công (Mật khẩu mặc định: User@2026).");
+                    $"Tài khoản '{dlg.Username}' ({dlg.FullName}) với vai trò '{dlg.Role}' đã được tạo thành công (Mật khẩu mặc định: 12345678).");
             }
         };
 
@@ -321,39 +344,39 @@ public partial class AccountManagementView : UserControl
             var item = row.Tag as UserListItemDto;
             if (item == null) return;
 
-            // Nút Sửa (col 6)
-            if (e.ColumnIndex == 6)
+            // Nút Sửa (col 7)
+            if (e.ColumnIndex == 7)
             {
-                using var dlg = new EditAccountDialog(isCreateMode: false, item.UserId, item.Username, item.FullName, item.RoleName, item.IsActive);
+                using var dlg = new EditAccountDialog(isCreateMode: false, item.UserId, item.Username, item.FullName, item.RoleName, item.IsActive, item.Email, item.Phone);
                 if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
                 {
                     await LoadAccountsAsync();
                     AppDialog.ShowSuccess(ParentForm, "Cập nhật tài khoản", $"Đã cập nhật thông tin tài khoản '{item.Username}' thành công.");
                 }
             }
-            // Nút Đặt lại MK (col 7)
-            else if (e.ColumnIndex == 7)
+            // Nút Đặt lại MK (col 8)
+            else if (e.ColumnIndex == 8)
             {
                 using var dlg = new ResetPasswordDialog(item.UserId, item.Username, item.FullName);
                 if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
                 {
-                    var resetRes = await _userService.ResetPasswordByAdminAsync(item.UserId, dlg.TempPassword);
+                    var resetRes = await _userService.ResetPasswordByAdminAsync(
+                        item.UserId,
+                        dlg.TempPassword,
+                        "Quản trị viên đặt lại mật khẩu",
+                        dlg.MustChangePassword);
                     if (!resetRes.Success)
                     {
                         AppDialog.ShowError(ParentForm, "Lỗi đặt lại mật khẩu", resetRes.Message);
                         return;
-                    }
-                    if (dlg.UnlockAccount)
-                    {
-                        await _userService.UnlockUserAsync(item.UserId);
                     }
 
                     await LoadAccountsAsync();
                     AppDialog.ShowSuccess(ParentForm, "Đặt lại mật khẩu", $"Mật khẩu của tài khoản '{item.Username}' đã được đặt lại thành công: {dlg.TempPassword}");
                 }
             }
-            // Nút Khóa / Mở (col 8)
-            else if (e.ColumnIndex == 8)
+            // Nút Khóa / Mở (col 9)
+            else if (e.ColumnIndex == 9)
             {
                 if (item.UserId == AppSession.UserId || item.Username == AppSession.Username)
                 {
@@ -372,12 +395,36 @@ public partial class AccountManagementView : UserControl
                     AppDialog.ShowError(ParentForm, "Lỗi thay đổi trạng thái", toggleRes.Message);
                 }
             }
+            // Nút Xóa tài khoản (col 10)
+            else if (e.ColumnIndex == 10)
+            {
+                if (item.UserId == AppSession.UserId || item.Username == AppSession.Username)
+                {
+                    AppDialog.ShowWarning(ParentForm, "Không thể xóa", "Bạn không thể xóa tài khoản đang đăng nhập.");
+                    return;
+                }
+
+                if (AppDialog.ShowConfirm(ParentForm, "Xác nhận xóa tài khoản",
+                    $"Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản '{item.Username}' ({item.FullName}) khỏi hệ thống không?") == DialogResult.OK)
+                {
+                    var delRes = await _userService.DeleteUserAsync(item.UserId);
+                    if (delRes.Success)
+                    {
+                        await LoadAccountsAsync();
+                        AppDialog.ShowSuccess(ParentForm, "Đã xóa tài khoản", delRes.Message);
+                    }
+                    else
+                    {
+                        AppDialog.ShowWarning(ParentForm, "Không thể xóa tài khoản", delRes.Message);
+                    }
+                }
+            }
         };
 
         dgvAccounts.CellFormatting += (s, e) =>
         {
             if (e.RowIndex < 0) return;
-            if (e.ColumnIndex == 5 && e.Value != null)
+            if (e.ColumnIndex == 6 && e.Value != null)
             {
                 string text = e.Value.ToString() ?? "";
                 if (text.Contains("Hoạt động"))
@@ -391,7 +438,7 @@ public partial class AccountManagementView : UserControl
                     e.CellStyle.Font = new Font(dgvAccounts.Font, FontStyle.Bold);
                 }
             }
-            else if (e.ColumnIndex == 3 && e.Value != null)
+            else if (e.ColumnIndex == 4 && e.Value != null)
             {
                 string role = e.Value.ToString() ?? "";
                 if (role.Contains("Admin"))

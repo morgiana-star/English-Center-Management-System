@@ -17,4 +17,5 @@ public interface IRbacService
     Task<List<RbacMatrixRowDto>> ResetSidebarMatrixToDefaultAsync();
     Task<(bool Success, string Message)> SaveSidebarMatrixAsync(List<RbacMatrixRowDto> rows, int currentAdminId);
     Task<HashSet<string>> GetAllowedModuleKeysForRoleAsync(string roleCode);
+    Task<Dictionary<string, string>> GetModuleAccessMapForRoleAsync(string roleCode);
 }

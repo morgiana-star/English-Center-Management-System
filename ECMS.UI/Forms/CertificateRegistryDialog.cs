@@ -30,7 +30,7 @@ public partial class CertificateRegistryDialog : Form
 
     public CertificateRegistryDialog(string studentName, string studentCode, string certSerial) : this()
     {
-        var certs = CertificateService.GetIssuedCertificates();
+        var certs = ECMS.UI.Services.CertificateService.GetIssuedCertificates();
         var match = certs.FirstOrDefault(c => c.SerialNumber == certSerial || c.StudentCode == studentCode);
         if (match != null)
         {
@@ -261,7 +261,7 @@ public partial class CertificateRegistryDialog : Form
                             Attendance = c.Attendance
                         }).ToList();
                         if (certsToExport.Count == 0)
-                            certsToExport = CertificateService.GetIssuedCertificates();
+                            certsToExport = ECMS.UI.Services.CertificateService.GetIssuedCertificates();
                     }
 
                     ExcelExportService.ExportCertificateRegistryReport(sfd.FileName, certsToExport);
@@ -334,12 +334,12 @@ public partial class CertificateRegistryDialog : Form
         }
         catch
         {
-            certs = CertificateService.GetIssuedCertificates();
+            certs = ECMS.UI.Services.CertificateService.GetIssuedCertificates();
         }
 
         if (certs.Count == 0)
         {
-            certs = CertificateService.GetIssuedCertificates();
+            certs = ECMS.UI.Services.CertificateService.GetIssuedCertificates();
         }
 
         var filtered = certs.Where(c =>
@@ -372,8 +372,6 @@ public partial class CertificateRegistryDialog : Form
 
         gridRegistry.DataSource = null;
         gridRegistry.DataSource = displayList;
-
-        lblGridFooter.Text = $"📌 Tổng số: {displayList.Count} chứng chỉ trong CSDL SQLite | Nhấn đúp chuột hoặc ấn '🖨️ Xem & In' để mở phôi chứng chỉ in ấn.";
     }
 
     private void HighlightCertificate(string serial)

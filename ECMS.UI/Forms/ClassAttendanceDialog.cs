@@ -174,6 +174,7 @@ public partial class ClassAttendanceDialog : Form
     private void SetupMatrixGrid()
     {
         dgvMatrix.AutoGenerateColumns = false;
+        dgvMatrix.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
         dgvMatrix.Columns.Clear();
         dgvMatrix.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvMatrix.MultiSelect = false;
