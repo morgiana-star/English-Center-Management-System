@@ -429,4 +429,124 @@ public class ClassRepository : IClassRepository
         using var conn = DatabaseConfig.CreateOpenConnection();
         return await conn.QueryAsync("SELECT CourseId, CourseName FROM Courses WHERE IsActive = 1;");
     }
+
+    public async Task<IEnumerable<ClassRoom>> GetAllRoomsAsync(string? keyword = null, string? status = null, string? capacityFilter = null)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        string sql = @"
+            SELECT
+                RoomId,
+                RoomName,
+                Floor,
+                Capacity,
+                HasProjector,
+                IsActive,
+                COALESCE(Equipment, CASE WHEN HasProjector = 1 THEN 'Máy chiếu, Bảng từ, Điều hòa' ELSE 'Bảng từ, Điều hòa' END) AS Equipment,
+                COALESCE(NULLIF(RoomStatus, ''), CASE WHEN IsActive = 1 THEN 'Đang sử dụng' ELSE 'Ngừng sử dụng' END) AS RoomStatus
+            FROM ClassRooms
+            WHERE (@Kw IS NULL OR RoomName LIKE @Kw OR COALESCE(Equipment, '') LIKE @Kw)
+              AND (@Status IS NULL OR COALESCE(NULLIF(RoomStatus, ''), CASE WHEN IsActive = 1 THEN 'Đang sử dụng' ELSE 'Ngừng sử dụng' END) = @Status)
+              AND (
+                    @Cap IS NULL
+                    OR (@Cap = 'Dưới 20 chỗ' AND Capacity < 20)
+                    OR (@Cap = '20 – 30 chỗ' AND Capacity BETWEEN 20 AND 30)
+                    OR (@Cap = 'Trên 30 chỗ' AND Capacity > 30)
+                  )
+            ORDER BY RoomName ASC;";
+
+        return await conn.QueryAsync<ClassRoom>(sql, new
+        {
+            Kw = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
+            Status = string.IsNullOrWhiteSpace(status) || status == "Tất cả trạng thái" ? null : status,
+            Cap = string.IsNullOrWhiteSpace(capacityFilter) || capacityFilter == "Tất cả sức chứa" ? null : capacityFilter
+        });
+    }
+
+    public async Task<(bool Success, string Message)> CreateRoomAsync(ClassRoom room)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        int dup = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM ClassRooms WHERE LOWER(TRIM(RoomName)) = LOWER(TRIM(@Name));",
+            new { Name = room.RoomName });
+        if (dup > 0)
+            return (false, $"Phòng học '{room.RoomName.Trim()}' đã tồn tại.");
+
+        string status = string.IsNullOrWhiteSpace(room.RoomStatus) ? "Đang sử dụng" : room.RoomStatus.Trim();
+        int isActive = status == "Đang sử dụng" ? 1 : 0;
+        int hasProjector = (room.Equipment?.Contains("Máy chiếu", StringComparison.OrdinalIgnoreCase) ?? false) ? 1 : (room.HasProjector ? 1 : 0);
+
+        await conn.ExecuteAsync(@"
+            INSERT INTO ClassRooms (RoomName, Floor, Capacity, HasProjector, IsActive, Equipment, RoomStatus, CreatedAt)
+            VALUES (@RoomName, @Floor, @Capacity, @HasProjector, @IsActive, @Equipment, @RoomStatus, CURRENT_TIMESTAMP);",
+            new
+            {
+                RoomName = room.RoomName.Trim(),
+                Floor = Math.Max(1, room.Floor),
+                Capacity = Math.Max(1, room.Capacity),
+                HasProjector = hasProjector,
+                IsActive = isActive,
+                Equipment = room.Equipment?.Trim() ?? string.Empty,
+                RoomStatus = status
+            });
+
+        return (true, $"Đã thêm phòng học '{room.RoomName.Trim()}' thành công.");
+    }
+
+    public async Task<(bool Success, string Message)> UpdateRoomAsync(ClassRoom room)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        int dup = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM ClassRooms WHERE LOWER(TRIM(RoomName)) = LOWER(TRIM(@Name)) AND RoomId != @Id;",
+            new { Name = room.RoomName, Id = room.RoomId });
+        if (dup > 0)
+            return (false, $"Tên phòng '{room.RoomName.Trim()}' đã được sử dụng cho phòng khác.");
+
+        string status = string.IsNullOrWhiteSpace(room.RoomStatus) ? "Đang sử dụng" : room.RoomStatus.Trim();
+        int isActive = status == "Đang sử dụng" ? 1 : 0;
+        int hasProjector = (room.Equipment?.Contains("Máy chiếu", StringComparison.OrdinalIgnoreCase) ?? false) ? 1 : (room.HasProjector ? 1 : 0);
+
+        int rows = await conn.ExecuteAsync(@"
+            UPDATE ClassRooms SET
+                RoomName = @RoomName,
+                Floor = @Floor,
+                Capacity = @Capacity,
+                HasProjector = @HasProjector,
+                IsActive = @IsActive,
+                Equipment = @Equipment,
+                RoomStatus = @RoomStatus,
+                UpdatedAt = CURRENT_TIMESTAMP
+            WHERE RoomId = @RoomId;",
+            new
+            {
+                room.RoomId,
+                RoomName = room.RoomName.Trim(),
+                Floor = Math.Max(1, room.Floor),
+                Capacity = Math.Max(1, room.Capacity),
+                HasProjector = hasProjector,
+                IsActive = isActive,
+                Equipment = room.Equipment?.Trim() ?? string.Empty,
+                RoomStatus = status
+            });
+
+        return rows > 0
+            ? (true, $"Đã cập nhật phòng học '{room.RoomName.Trim()}' thành công.")
+            : (false, "Không tìm thấy phòng học cần cập nhật.");
+    }
+
+    public async Task<(bool Success, string Message)> DeleteRoomAsync(int roomId)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        int clsCnt = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM Classes WHERE DefaultRoomId = @Id;", new { Id = roomId });
+        if (clsCnt > 0)
+            return (false, $"Không thể xóa phòng đang gắn với {clsCnt} lớp học.");
+
+        int schCnt = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM ClassSchedules WHERE RoomId = @Id;", new { Id = roomId });
+        if (schCnt > 0)
+            return (false, $"Không thể xóa phòng đang có {schCnt} buổi học trong thời khóa biểu.");
+
+        int rows = await conn.ExecuteAsync("DELETE FROM ClassRooms WHERE RoomId = @Id;", new { Id = roomId });
+        return rows > 0 ? (true, "Đã xóa phòng học thành công.") : (false, "Không tìm thấy phòng học.");
+    }
 }

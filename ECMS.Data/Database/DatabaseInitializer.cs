@@ -394,6 +394,11 @@ public static class DatabaseInitializer
         try { conn.Execute("ALTER TABLE Exams ADD COLUMN StartTime TEXT DEFAULT '18:00';"); } catch { }
         try { conn.Execute("ALTER TABLE Exams ADD COLUMN EndTime TEXT DEFAULT '19:30';"); } catch { }
         try { conn.Execute("ALTER TABLE Exams ADD COLUMN RoomId INTEGER;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Equipment TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN RoomStatus TEXT DEFAULT 'Đang sử dụng';"); } catch { }
+        try { conn.Execute("ALTER TABLE StudyMaterials ADD COLUMN Version TEXT DEFAULT '1.0';"); } catch { }
+        try { conn.Execute("ALTER TABLE StudyMaterials ADD COLUMN FileType TEXT DEFAULT 'PDF';"); } catch { }
+        try { conn.Execute("ALTER TABLE StudyMaterials ADD COLUMN FileSize TEXT DEFAULT '';"); } catch { }
         try
         {
             conn.Execute("UPDATE FeeDiscounts SET DiscountCode = 'HVCU10' WHERE DiscountId = 1 AND (DiscountCode IS NULL OR DiscountCode = '');");
@@ -429,44 +434,33 @@ public static class DatabaseInitializer
                 ON CONFLICT(RoleCode) DO UPDATE SET RoleName = excluded.RoleName, Description = excluded.Description;", r);
         }
 
-        // 2. Seed Sample Profiles (Employees, Teachers, Students, Parents)
-        // Employee 1: Manager
+        // 2. Seed Core Employees & Teachers (when DB is fresh)
         conn.Execute(@"
             INSERT OR IGNORE INTO Employees (EmployeeId, EmployeeCode, FullName, Department, Phone, Email) 
-            VALUES (1, 'NV-0001', 'Hoàng Văn Quản (Giám đốc)', 'Ban Giám đốc', '0901234567', 'manager@ecms.edu.vn');");
+            VALUES 
+            (1, 'NV-0001', 'Hoàng Văn Quản', 'Ban Giám đốc', '0901234567', 'manager@ecms.edu.vn'),
+            (2, 'NV-0002', 'Lê Thị Thảo', 'Phòng Tuyển sinh', '0902345678', 'counselor@ecms.edu.vn'),
+            (3, 'NV-0003', 'Phạm Minh Tài', 'Phòng Kế toán', '0903456789', 'accountant@ecms.edu.vn'),
+            (4, 'NV-0004', 'Đặng Thị Mai', 'Phòng Đào tạo', '0904567890', 'academic@ecms.edu.vn');");
 
-        // Employee 2: Counselor (EC)
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Employees (EmployeeId, EmployeeCode, FullName, Department, Phone, Email) 
-            VALUES (2, 'NV-0002', 'Lê Thị Thảo (Tư vấn viên)', 'Phòng Tuyển sinh', '0902345678', 'counselor@ecms.edu.vn');");
+        int teacherCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Teachers;");
+        if (teacherCount == 0)
+        {
+            conn.Execute(@"
+                INSERT INTO Teachers (TeacherId, TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive, Certificate, PreferredShifts, AvailableDays) 
+                VALUES 
+                (1, 'GV-001', 'Nguyễn Hoàng Anh', 'IELTS Foundation', '0905111222', 'hoanganh@ecms.edu.vn', 350000, 0, 1, 'IELTS 8.5 · TESOL', 'Ca tối (18:00–20:00)', 'T2, T4, T6'),
+                (2, 'GV-002', 'John Smith', 'IELTS Intensive', '0905333444', 'john.smith@ecms.edu.vn', 450000, 1, 1, 'CELTA · DELTA', 'Ca chiều (14:00–16:00)', 'T3, T5, T7'),
+                (3, 'GV-003', 'Lê Hoàng Yến', 'TOEIC 500+', '0905555666', 'hoangyen.gv@ecms.edu.vn', 300000, 0, 1, 'TOEIC 965 · Thạc sĩ Ngôn ngữ', 'Ca sáng (08:30–10:30)', 'T3, T5, T7'),
+                (4, 'GV-004', 'Trần Gia Bảo', 'Tiếng Anh giao tiếp', '0905777888', 'giabao.gv@ecms.edu.vn', 280000, 0, 1, 'IELTS 7.5 · Giao tiếp', 'Ca tối (18:00–20:00)', 'T3, T5, T7');");
+        }
 
-        // Employee 3: Accountant (ACC)
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Employees (EmployeeId, EmployeeCode, FullName, Department, Phone, Email) 
-            VALUES (3, 'NV-0003', 'Phạm Minh Tài (Kế toán)', 'Phòng Kế toán', '0903456789', 'accountant@ecms.edu.vn');");
-
-        // Employee 4: Academic Affairs (AA)
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Employees (EmployeeId, EmployeeCode, FullName, Department, Phone, Email) 
-            VALUES (4, 'NV-0004', 'Đặng Thị Mai (Giáo vụ)', 'Phòng Đào tạo', '0904567890', 'academic@ecms.edu.vn');");
-
-        // Teacher 1
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Teachers (TeacherId, TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker) 
-            VALUES (1, 'GV-0015', 'Thầy John Smith (GV Bản ngữ)', 'IELTS & Giao tiếp', '0905678901', 'john.smith@ecms.edu.vn', 350000, 1);");
-
-        // Student 1
+        // Ensure Student 1 & Parent 1 exist for default student/parent login accounts
         conn.Execute(@"
             INSERT OR IGNORE INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status) 
-            VALUES (1, 'HV-2026-0001', 'Nguyễn Văn An (Học viên)', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1', 'Active');");
-
-        // Parent 1
-        conn.Execute(@"
+            VALUES (1, 'HV-0001', 'Nguyễn Văn An', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1, TP.HCM', 'Active');
             INSERT OR IGNORE INTO Parents (ParentId, ParentCode, FullName, Phone, Email, Occupation) 
-            VALUES (1, 'PH-2026-0012', 'Trần Thị Mai (Phụ huynh)', '0918765432', 'mai.tran@gmail.com', 'Kinh doanh');");
-
-        // StudentParent Link
-        conn.Execute(@"
+            VALUES (1, 'PH-0001', 'Trần Thị Mai', '0918765432', 'mai.tran@gmail.com', 'Kinh doanh');
             INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact) 
             VALUES (1, 1, 'Mẹ', 1);");
 
@@ -508,58 +502,237 @@ public static class DatabaseInitializer
             }
         }
 
-        // 4. Seed Academic Data (Courses, ClassRooms, Classes, Schedules, Enrollments, Attendance, Exams, Scores)
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Courses (CourseId, CourseCode, CourseName, Level, TotalHours, TotalSessions, BaseTuitionFee, PassingScore, IsActive)
-            VALUES (1, 'ENG-IELTS-5.5', 'IELTS Foundation 5.5+', 'Intermediate', 60, 24, 5500000, 5.0, 1);");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO ClassRooms (RoomId, RoomName, Floor, Capacity, HasProjector, IsActive)
-            VALUES (1, 'Phòng P.201 (Multimedia)', 2, 25, 1, 1);");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
-            VALUES (1, 'IELTS-2026-K12', 'Lớp IELTS Foundation K12 (T2-T4-T6)', 1, 1, 1, '2026-10-01', '2026-12-30', 20, 'InProgress');");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
-            VALUES 
-            (1, 1, 1, '2026-10-05', '18:00', '20:00', 1, 1, 1, 'Unit 1: Listening - Note Completion & Phonetics'),
-            (2, 1, 2, '2026-10-07', '18:00', '20:00', 1, 1, 1, 'Unit 2: Reading - Skimming & Scanning Masterclass'),
-            (3, 1, 3, '2026-11-02', '18:00', '20:00', 1, 1, 0, 'Unit 3: Writing Task 1 - Line Graph & Bar Chart');");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Enrollments (EnrollmentId, StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
-            VALUES (1, 1, 1, '2026-09-28', 'Active', 8.5, 100.0);");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO AttendanceRecords (ScheduleId, StudentId, Status, Note)
-            VALUES 
-            (1, 1, 'Present', 'Đi học đúng giờ, tích cực luyện phát âm'),
-            (2, 1, 'Present', 'Nắm vững kỹ thuật Skimming');");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, WeightPercentage)
-            VALUES 
-            (1, 1, 'Kiểm tra Giữa kỳ (Midterm Test)', 'Midterm', '2026-10-25', 40.0),
-            (2, 1, 'Kiểm tra Cuối kỳ (Final Test)', 'Final', '2026-12-28', 60.0);");
-
-        conn.Execute(@"
-            INSERT OR IGNORE INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments)
-            VALUES (1, 1, 8.5, 'Listening 8.5, Reading 8.5, Speaking 8.0, Writing 7.5. Thái độ học tập rất xuất sắc.');");
-
-        // 5. Seed Finance Data (Invoices & Payments)
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Invoices (InvoiceId, InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status)
-            VALUES (1, 'INV-20261001-001', 1, 5500000, 0, 5500000, 0, '2026-10-10', 'Paid');");
-
         int cashierId = conn.ExecuteScalar<int>("SELECT UserId FROM Users WHERE Username = 'accountant';");
         if (cashierId == 0) cashierId = 1;
 
-        conn.Execute(@"
-            INSERT OR IGNORE INTO Payments (PaymentId, PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note)
-            VALUES (1, 'PT-20261001-0001', 1, 5500000, '2026-10-02 09:30:00', 'Chuyển khoản', @CashierId, 'Valid', 'Đã thanh toán đủ 100% học phí khóa IELTS Foundation K12');",
-            new { CashierId = cashierId });
+        // 4. Seed Unified Academic & Finance Dataset (only when Courses is empty)
+        int courseCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Courses;");
+        if (courseCount == 0)
+        {
+            var today = DateTime.Today;
+            int diffToMon = ((int)today.DayOfWeek - (int)DayOfWeek.Monday + 7) % 7;
+            var thisMonday = today.AddDays(-diffToMon);
+            var lastMonday = thisMonday.AddDays(-7);
+
+            // 4.1 Courses
+            conn.Execute(@"
+                INSERT INTO Courses (CourseId, CourseCode, CourseName, Level, TotalHours, TotalSessions, BaseTuitionFee, PassingScore, IsActive)
+                VALUES 
+                (1, 'KH-001', 'IELTS Foundation 5.5+', 'Trung cấp (5.0-6.5)', 48, 24, 5500000, 5.5, 1),
+                (2, 'KH-002', 'IELTS Intensive 6.5+', 'Nâng cao (7.0+)', 60, 30, 8500000, 6.5, 1),
+                (3, 'KH-003', 'TOEIC 500+', 'Trung cấp (5.0-6.5)', 40, 20, 4800000, 5.0, 1),
+                (4, 'KH-004', 'Tiếng Anh giao tiếp', 'Cơ bản (0-4.5)', 32, 16, 3600000, 5.0, 1);");
+
+            // 4.2 ClassRooms
+            conn.Execute(@"
+                INSERT INTO ClassRooms (RoomId, RoomName, Floor, Capacity, HasProjector, IsActive, Equipment, RoomStatus)
+                VALUES 
+                (1, 'P101', 1, 25, 1, 1, 'Máy chiếu Sony, Bảng từ, Âm thanh', 'Đang sử dụng'),
+                (2, 'P201', 2, 20, 1, 1, 'Màn hình tương tác, Bảng kính', 'Đang sử dụng'),
+                (3, 'P202', 2, 22, 1, 1, 'Máy chiếu Epson, Điều hòa', 'Đang sử dụng'),
+                (4, 'P203', 2, 18, 1, 1, 'Máy chiếu, Loa Bluetooth', 'Đang sử dụng');");
+
+            // 4.3 Classes
+            conn.Execute(@"
+                INSERT INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
+                VALUES 
+                (1, 'IELTS-F01', 'Lớp IELTS Foundation F01', 1, 1, 1, @Start1, @End1, 20, 'InProgress'),
+                (2, 'IELTS-I01', 'Lớp IELTS Intensive I01', 2, 2, 2, @Start2, @End2, 15, 'InProgress'),
+                (3, 'TOEIC-A01', 'Lớp TOEIC 500+ A01', 3, 3, 3, @Start3, @End3, 20, 'InProgress'),
+                (4, 'COM-B01', 'Lớp Giao tiếp B01 (Sắp mở)', 4, 4, 4, @Start4, @End4, 18, 'OpenForEnrollment'),
+                (5, 'IELTS-F00', 'Lớp IELTS Foundation F00', 1, 1, 1, @Start5, @End5, 15, 'Completed');",
+                new
+                {
+                    Start1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"),
+                    End1 = thisMonday.AddDays(45).ToString("yyyy-MM-dd"),
+                    Start2 = lastMonday.AddDays(-13).ToString("yyyy-MM-dd"),
+                    End2 = thisMonday.AddDays(60).ToString("yyyy-MM-dd"),
+                    Start3 = lastMonday.AddDays(-13).ToString("yyyy-MM-dd"),
+                    End3 = thisMonday.AddDays(40).ToString("yyyy-MM-dd"),
+                    Start4 = thisMonday.AddDays(7).ToString("yyyy-MM-dd"),
+                    End4 = thisMonday.AddDays(60).ToString("yyyy-MM-dd"),
+                    Start5 = lastMonday.AddDays(-90).ToString("yyyy-MM-dd"),
+                    End5 = lastMonday.AddDays(-10).ToString("yyyy-MM-dd")
+                });
+
+            // 4.4 ClassSchedules (tuần trước + tuần này để Schedule & Attendance có sẵn dữ liệu test ngay)
+            var schSql = "INSERT INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic) VALUES (@Id, @ClassId, @Num, @Date, @Start, @End, @RoomId, @TeacherId, @Locked, @Topic);";
+            DateTime[] c1Dates = { lastMonday, lastMonday.AddDays(2), lastMonday.AddDays(4), thisMonday, thisMonday.AddDays(2), thisMonday.AddDays(4) };
+            for (int i = 0; i < c1Dates.Length; i++)
+                conn.Execute(schSql, new { Id = i + 1, ClassId = 1, Num = i + 1, Date = c1Dates[i].ToString("yyyy-MM-dd"), Start = "18:00", End = "20:00", RoomId = 1, TeacherId = 1, Locked = i < 3 ? 1 : 0, Topic = $"Buổi {i + 1} - IELTS Foundation" });
+
+            DateTime[] c2Dates = { lastMonday.AddDays(1), lastMonday.AddDays(3), lastMonday.AddDays(5), thisMonday.AddDays(1), thisMonday.AddDays(3), thisMonday.AddDays(5) };
+            for (int i = 0; i < c2Dates.Length; i++)
+                conn.Execute(schSql, new { Id = 10 + i + 1, ClassId = 2, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "14:00", End = "16:00", RoomId = 2, TeacherId = 2, Locked = i < 2 ? 1 : 0, Topic = $"Buổi {i + 1} - IELTS Intensive" });
+
+            for (int i = 0; i < c2Dates.Length; i++)
+                conn.Execute(schSql, new { Id = 20 + i + 1, ClassId = 3, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "08:30", End = "10:30", RoomId = 3, TeacherId = 3, Locked = i < 2 ? 1 : 0, Topic = $"Buổi {i + 1} - TOEIC 500+" });
+
+            conn.Execute(schSql, new { Id = 31, ClassId = 4, Num = 1, Date = thisMonday.AddDays(7).ToString("yyyy-MM-dd"), Start = "18:00", End = "20:00", RoomId = 4, TeacherId = 4, Locked = 0, Topic = "Khai giảng Giao tiếp B01" });
+
+            // 4.5 Students & Parents (HV-0002..HV-0013)
+            var students = new[]
+            {
+                new { Id = 2, Code = "HV-0002", Name = "Nguyễn Minh Anh", Dob = "2004-05-20", Gender = "Nữ", Phone = "0908123456", Email = "minhanh@gmail.com", Addr = "12 Hoàng Diệu, Phú Nhuận", Status = "Active", PName = "Nguyễn Thu Hương", PPhone = "0911556889", Rel = "Mẹ" },
+                new { Id = 3, Code = "HV-0003", Name = "Lê Hoàng Nam", Dob = "2005-01-22", Gender = "Nam", Phone = "0904221678", Email = "hoangnam@gmail.com", Addr = "78 CMT8, Q.3", Status = "Active", PName = "Lê Thị Thảo", PPhone = "0903556778", Rel = "Mẹ" },
+                new { Id = 4, Code = "HV-0004", Name = "Phạm Khánh Linh", Dob = "2004-11-10", Gender = "Nữ", Phone = "0912450678", Email = "khanhlinh@gmail.com", Addr = "89 Nguyễn Đình Chiểu, Q.3", Status = "Active", PName = "Phạm Đức Thắng", PPhone = "0913889900", Rel = "Bố" },
+                new { Id = 5, Code = "HV-0005", Name = "Trần Gia Bảo", Dob = "2003-08-14", Gender = "Nam", Phone = "0915227330", Email = "giabao@gmail.com", Addr = "45 Lê Duẩn, Q.1", Status = "Active", PName = "Trần Văn Hùng", PPhone = "0918223344", Rel = "Bố" },
+                new { Id = 6, Code = "HV-0006", Name = "Võ Hoàng Yến", Dob = "2005-07-19", Gender = "Nữ", Phone = "0978112334", Email = "hoangyen@gmail.com", Addr = "234 Võ Văn Tần, Q.3", Status = "Active", PName = "Nguyễn Mỹ Lan", PPhone = "0977445566", Rel = "Mẹ" },
+                new { Id = 7, Code = "HV-0007", Name = "Nguyễn Tiến Đạt", Dob = "2002-12-01", Gender = "Nam", Phone = "0982334556", Email = "tiendat@gmail.com", Addr = "67 Trần Hưng Đạo, Q.5", Status = "Active", PName = "Nguyễn Tiến Thịnh", PPhone = "0983667788", Rel = "Bố" },
+                new { Id = 8, Code = "HV-0008", Name = "Bùi Mai Phương", Dob = "2004-09-30", Gender = "Nữ", Phone = "0903778990", Email = "maiphuong@gmail.com", Addr = "19 Pasteur, Q.1", Status = "Active", PName = "Vũ Bích Hạnh", PPhone = "0908990011", Rel = "Mẹ" },
+                new { Id = 9, Code = "HV-0009", Name = "Đỗ Thanh Tâm", Dob = "2003-03-05", Gender = "Nữ", Phone = "0935661220", Email = "thanhtam@gmail.com", Addr = "15 Phan Đăng Lưu, Bình Thạnh", Status = "Active", PName = "Đỗ Văn Kiên", PPhone = "0938112233", Rel = "Bố" },
+                new { Id = 10, Code = "HV-0010", Name = "Trần Thảo Nhi", Dob = "2005-04-12", Gender = "Nữ", Phone = "0909887766", Email = "thaonhi@gmail.com", Addr = "102 Hai Bà Trưng, Q.1", Status = "Active", PName = "Trần Minh Tuấn", PPhone = "0909112233", Rel = "Bố" },
+                new { Id = 11, Code = "HV-0011", Name = "Đặng Minh Trí", Dob = "2003-06-18", Gender = "Nam", Phone = "0917223344", Email = "minhtri@gmail.com", Addr = "55 Nguyễn Trãi, Q.5", Status = "Completed", PName = "Đặng Văn Long", PPhone = "0917556677", Rel = "Bố" },
+                new { Id = 12, Code = "HV-0012", Name = "Hoàng Đức An", Dob = "2004-02-25", Gender = "Nam", Phone = "0933445566", Email = "ducan@gmail.com", Addr = "30 Điện Biên Phủ, Q.3", Status = "Completed", PName = "Hoàng Thị Lan", PPhone = "0933778899", Rel = "Mẹ" },
+                new { Id = 13, Code = "HV-0013", Name = "Vũ Ngọc Lan", Dob = "2005-09-08", Gender = "Nữ", Phone = "0944556677", Email = "ngoclan@gmail.com", Addr = "11 Võ Thị Sáu, Q.3", Status = "Reserved", PName = "Vũ Văn Hải", PPhone = "0944889900", Rel = "Bố" }
+            };
+
+            foreach (var s in students)
+            {
+                conn.Execute(@"
+                    INSERT INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status)
+                    VALUES (@Id, @Code, @Name, @Dob, @Gender, @Phone, @Email, @Addr, @Status);", s);
+                conn.Execute(@"
+                    INSERT INTO Parents (ParentId, ParentCode, FullName, Phone, Email, Occupation)
+                    VALUES (@Id, @PCode, @PName, @PPhone, '', 'Nhân viên văn phòng');",
+                    new { s.Id, PCode = $"PH-{s.Id:D4}", s.PName, s.PPhone });
+                conn.Execute(@"
+                    INSERT INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
+                    VALUES (@Id, @Id, @Rel, 1);", new { s.Id, s.Rel });
+            }
+
+            // 4.6 Enrollments (HV-0009 & HV-0010 chưa xếp lớp để test Chờ xếp lớp)
+            conn.Execute(@"
+                INSERT INTO Enrollments (EnrollmentId, StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
+                VALUES 
+                (1, 1, 1, @D1, 'Active', 8.5, 100.0),
+                (2, 2, 1, @D1, 'Active', 7.8, 100.0),
+                (3, 3, 1, @D1, 'Active', 7.2, 25.0),
+                (4, 4, 1, @D1, 'PendingPayment', NULL, 100.0),
+                (5, 5, 2, @D1, 'Active', 8.0, 100.0),
+                (6, 6, 2, @D1, 'Active', 8.4, 100.0),
+                (7, 7, 3, @D1, 'Active', 7.9, 100.0),
+                (8, 8, 3, @D1, 'Active', 7.4, 100.0),
+                (9, 11, 5, @D2, 'Completed', 8.6, 100.0),
+                (10, 12, 5, @D2, 'Completed', 8.2, 95.8),
+                (11, 13, 1, @D1, 'Reserved', NULL, 50.0);",
+                new { D1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"), D2 = lastMonday.AddDays(-90).ToString("yyyy-MM-dd") });
+
+            // 4.7 AttendanceRecords (HV-0003 vắng 3 buổi để kích hoạt Cảnh báo chuyên cần)
+            conn.Execute(@"
+                INSERT INTO AttendanceRecords (ScheduleId, StudentId, Status, Note)
+                VALUES 
+                (1, 1, 'Present', ''), (2, 1, 'Present', ''), (3, 1, 'Present', ''),
+                (1, 2, 'Present', ''), (2, 2, 'Present', ''), (3, 2, 'Late', 'Đến trễ 10 phút'),
+                (1, 3, 'Absent', 'Nghỉ không phép'), (2, 3, 'Absent', 'Nghỉ không phép'), (3, 3, 'Absent', 'Nghỉ ốm'),
+                (1, 4, 'Present', ''), (2, 4, 'Present', ''), (3, 4, 'Present', ''),
+                (11, 5, 'Present', ''), (12, 5, 'Present', ''),
+                (11, 6, 'Present', ''), (12, 6, 'Present', ''),
+                (21, 7, 'Present', ''), (22, 7, 'Present', ''),
+                (21, 8, 'Present', ''), (22, 8, 'Present', '');");
+
+            // 4.8 Exams & ExamScores
+            conn.Execute(@"
+                INSERT INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, StartTime, EndTime, RoomId, WeightPercentage)
+                VALUES 
+                (1, 1, 'Kiểm tra Giữa kỳ IELTS F01', 'Midterm', @MidDate, '18:00', '19:30', 1, 40.0),
+                (2, 1, 'Kiểm tra Cuối kỳ IELTS F01', 'Final', @FinDate, '18:00', '20:00', 1, 60.0),
+                (3, 2, 'Kiểm tra Giữa kỳ IELTS I01', 'Midterm', @MidDate, '14:00', '15:30', 2, 40.0),
+                (4, 3, 'Kiểm tra Giữa kỳ TOEIC A01', 'Midterm', @MidDate, '08:30', '10:00', 3, 40.0),
+                (5, 5, 'Thi Cuối khóa IELTS F00', 'Final', @DoneDate, '18:00', '20:00', 1, 100.0);
+
+                INSERT INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments)
+                VALUES 
+                (1, 1, 8.5, 'Listening & Reading rất tốt'),
+                (1, 2, 7.8, 'Viết mạch lạc, cần tăng tốc độ đọc'),
+                (1, 3, 7.2, 'Cần đi học đầy đủ hơn'),
+                (3, 5, 8.0, 'Phản xạ Speaking tốt'),
+                (3, 6, 8.4, 'Tiến bộ rõ rệt'),
+                (4, 7, 7.9, 'Nắm chắc ngữ pháp TOEIC'),
+                (4, 8, 7.4, 'Cần luyện thêm Part 7'),
+                (5, 11, 8.6, 'Xuất sắc, đủ điều kiện tốt nghiệp'),
+                (5, 12, 8.2, 'Giỏi, đủ điều kiện tốt nghiệp');",
+                new
+                {
+                    MidDate = thisMonday.AddDays(5).ToString("yyyy-MM-dd"),
+                    FinDate = thisMonday.AddDays(30).ToString("yyyy-MM-dd"),
+                    DoneDate = lastMonday.AddDays(-12).ToString("yyyy-MM-dd")
+                });
+
+            // 4.9 FeeDiscounts
+            conn.Execute(@"
+                INSERT INTO FeeDiscounts (DiscountId, DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive)
+                VALUES 
+                (1, 'HVCU10', 'Học viên cũ của trung tâm', 10, 0, 'Giảm 10% học phí tri ân học viên cũ', 0, 1),
+                (2, 'NHOM15', 'Đăng ký theo nhóm (>= 2 người)', 15, 0, 'Giảm 15% học phí khi đăng ký theo nhóm', 1, 1),
+                (3, 'EARLY500', 'Ưu đãi đăng ký sớm (Early Bird)', 0, 500000, 'Giảm trực tiếp 500.000đ khi đăng ký sớm', 0, 1);");
+
+            // 4.10 Invoices & Payments (khớp 100% học phí & công nợ)
+            conn.Execute(@"
+                INSERT INTO Invoices (InvoiceId, InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status)
+                VALUES 
+                (1, 'INV-2026-0001', 1, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
+                (2, 'INV-2026-0002', 2, 5500000, 0, 5500000, 3300000, @DueSoon, 'PartiallyPaid'),
+                (3, 'INV-2026-0003', 3, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
+                (4, 'INV-2026-0004', 4, 5500000, 0, 5500000, 5500000, @DueOver, 'Unpaid'),
+                (5, 'INV-2026-0005', 5, 8500000, 850000, 7650000, 4590000, @DueSoon, 'PartiallyPaid'),
+                (6, 'INV-2026-0006', 6, 8500000, 0, 8500000, 0, @DuePaid, 'Paid'),
+                (7, 'INV-2026-0007', 7, 4800000, 0, 4800000, 0, @DuePaid, 'Paid'),
+                (8, 'INV-2026-0008', 8, 4800000, 0, 4800000, 2400000, @DueSoon, 'PartiallyPaid'),
+                (9, 'INV-2026-0009', 9, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
+                (10, 'INV-2026-0010', 10, 5500000, 0, 5500000, 0, @DuePaid, 'Paid');",
+                new
+                {
+                    DuePaid = lastMonday.AddDays(-7).ToString("yyyy-MM-dd"),
+                    DueSoon = thisMonday.AddDays(5).ToString("yyyy-MM-dd"),
+                    DueOver = lastMonday.AddDays(-2).ToString("yyyy-MM-dd")
+                });
+
+            conn.Execute(@"
+                INSERT INTO Payments (PaymentId, PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note)
+                VALUES 
+                (1, 'PT-2026-0001', 1, 5500000, @P1, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
+                (2, 'PT-2026-0002', 2, 2200000, @P2, 'Tiền mặt', @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Foundation F01'),
+                (3, 'PT-2026-0003', 3, 5500000, @P2, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
+                (4, 'PT-2026-0004', 5, 3060000, @P3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Intensive I01 (Ưu đãi HVCU10)'),
+                (5, 'PT-2026-0005', 6, 8500000, @P3, 'POS', @CashierId, 'Valid', 'Thu trọn khóa IELTS Intensive I01'),
+                (6, 'PT-2026-0006', 7, 4800000, @P3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa TOEIC 500+ A01'),
+                (7, 'PT-2026-0007', 8, 2400000, @P4, 'Tiền mặt', @CashierId, 'Valid', 'Thu đợt 1 (50%) TOEIC 500+ A01'),
+                (8, 'PT-2026-0008', 9, 5500000, @P0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
+                (9, 'PT-2026-0009', 10, 5500000, @P0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00');",
+                new
+                {
+                    CashierId = cashierId,
+                    P0 = lastMonday.AddDays(-85).ToString("yyyy-MM-dd 09:30:00"),
+                    P1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd 09:30:00"),
+                    P2 = lastMonday.AddDays(-10).ToString("yyyy-MM-dd 14:15:00"),
+                    P3 = lastMonday.AddDays(-5).ToString("yyyy-MM-dd 10:20:00"),
+                    P4 = thisMonday.ToString("yyyy-MM-dd 15:00:00")
+                });
+
+            // 4.11 Certificates (1 đã cấp, HV-0012 đủ điều kiện chờ cấp)
+            conn.Execute(@"
+                INSERT INTO Certificates (CertificateId, CertificateNo, EnrollmentId, StudentId, IssueDate, GraduationGrade)
+                VALUES (1, 'CC-2026-0001', 9, 11, @IssueDate, 'Xuất sắc');",
+                new { IssueDate = lastMonday.AddDays(-5).ToString("yyyy-MM-dd") });
+
+            // 4.12 StudyMaterials
+            conn.Execute(@"
+                INSERT INTO StudyMaterials (CourseId, Title, FilePath, Description, Version, FileType, FileSize)
+                VALUES 
+                (1, 'IELTS_Foundation_Workbook.pdf', 'C:\ECMS\TaiLieu\IELTS_Foundation_Workbook.pdf', 'Giáo trình bài tập IELTS Foundation 5.5+', '1.2', 'PDF', '12.4 MB'),
+                (2, 'IELTS_Intensive_Speaking_Guide.pdf', 'C:\ECMS\TaiLieu\IELTS_Intensive_Speaking_Guide.pdf', 'Bộ đề & bài mẫu Speaking 6.5+', '2.0', 'PDF', '8.6 MB'),
+                (3, 'TOEIC_500_Listening_Audio.mp3', 'C:\ECMS\TaiLieu\TOEIC_500_Listening_Audio.mp3', 'Audio luyện nghe TOEIC Part 1-4', '1.0', 'MP3', '15.2 MB'),
+                (4, 'Communication_Starter_Handbook.docx', 'C:\ECMS\TaiLieu\Communication_Starter_Handbook.docx', 'Sổ tay mẫu câu giao tiếp cơ bản', '1.1', 'DOCX', '3.5 MB');");
+
+            // 4.13 Leads
+            conn.Execute(@"
+                INSERT INTO Leads (LeadId, FullName, Phone, Email, Source, Status, AssignedEmployeeId, Notes)
+                VALUES 
+                (1, 'Nguyễn Thị Thu Hà', '0905123456', 'thuha@gmail.com', 'Facebook Fanpage', 'New', 2, 'Quan tâm IELTS Foundation tối 2-4-6'),
+                (2, 'Trần Đình Trọng', '0912345679', 'trong@gmail.com', 'Trực tiếp', 'Contacted', 2, 'Cần thi TOEIC 500+ trong 3 tháng'),
+                (3, 'Phạm Quốc Bảo', '0933112233', 'quocbao@gmail.com', 'Website', 'TestScheduled', 2, 'Hẹn test đầu vào 14:00 Thứ 7');");
+        }
 
         // Seed SystemConfigs
         int configCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM SystemConfigs;");

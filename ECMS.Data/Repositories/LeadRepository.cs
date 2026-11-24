@@ -8,28 +8,9 @@ namespace ECMS.Data.Repositories;
 
 public class LeadRepository : BaseRepository, ILeadRepository
 {
-    private static bool _isSeedChecked = false;
-
-    private async Task EnsureSeedDataAsync()
+    private Task EnsureSeedDataAsync()
     {
-        if (_isSeedChecked) return;
-        _isSeedChecked = true;
-
-        using var conn = CreateConnection();
-        int count = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Leads;");
-        if (count == 0)
-        {
-            await conn.ExecuteAsync(@"
-                INSERT INTO Leads (LeadId, FullName, Phone, Email, Source, Status, AssignedEmployeeId, Notes, CreatedAt)
-                VALUES 
-                (1, 'Nguyễn Thị Thu Hà', '0905123456', 'thuha.nguyen@gmail.com', 'Facebook Fanpage', 'New', 3, 'Quan tâm khóa học IELTS cấp tốc để du học, rảnh tối 2-4-6.', datetime('now', '-2 days')),
-                (2, 'Trần Đình Trọng', '0912345678', 'trong.tran@yahoo.com', 'Trực tiếp tại quầy', 'Contacted', 3, 'Muốn nâng điểm TOEIC từ 400 lên 650 để ra trường. Đã tư vấn lộ trình 3 tháng.', datetime('now', '-3 days')),
-                (3, 'Lê Hoàng Yến', '0987654321', 'hoangyen.le@outlook.com', 'Website đăng ký', 'TestScheduled', 3, 'Đã hẹn lịch làm bài Placement Test 4 kỹ năng vào 14:00 Thứ 7 tuần này.', datetime('now', '-1 days')),
-                (4, 'Phạm Quốc Bảo', '0933112233', 'quocbao.pham@gmail.com', 'Bạn bè giới thiệu', 'Converted', 3, 'Đã làm bài test đạt 5.5, đã đồng ý đăng ký vào lớp IELTS-K26.', datetime('now', '-5 days')),
-                (5, 'Võ Minh Khôi', '0944556677', 'khoi.vo@gmail.com', 'Hotline tư vấn', 'Contacted', 3, 'Cần học Giao tiếp phản xạ cho người đi làm. Đang phân vân học phí.', datetime('now', '-4 days')),
-                (6, 'Đỗ Mỹ Linh', '0977889900', 'mylinh.do@gmail.com', 'Facebook Fanpage', 'Lost', 3, 'Khách báo bận lịch công tác dài hạn không thể thu xếp học được.', datetime('now', '-7 days'));
-            ");
-        }
+        return Task.CompletedTask;
     }
 
     public async Task<IEnumerable<LeadListItemDto>> GetLeadsAsync(LeadFilterDto filter)

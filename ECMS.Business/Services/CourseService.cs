@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ECMS.Core.DTOs;
 using ECMS.Core.Entities;
 using ECMS.Data.Repositories;
 
@@ -65,4 +66,22 @@ public class CourseService : ICourseService
 
     public Task<(bool Success, string Message)> DeleteCourseAsync(int courseId)
         => _repo.DeleteCourseAsync(courseId);
+
+    public Task<IEnumerable<StudyMaterialDto>> GetStudyMaterialsAsync(string? keyword = null, string? courseName = null, string? fileType = null)
+        => _repo.GetStudyMaterialsAsync(keyword, courseName, fileType);
+
+    public async Task<(bool Success, string Message)> SaveStudyMaterialAsync(StudyMaterialDto material)
+    {
+        if (material.CourseId <= 0)
+            return (false, "Vui lòng chọn khóa học áp dụng.");
+        if (string.IsNullOrWhiteSpace(material.Title))
+            return (false, "Vui lòng nhập tên tài liệu.");
+        if (string.IsNullOrWhiteSpace(material.FilePath))
+            return (false, "Vui lòng nhập đường dẫn tệp.");
+
+        return await _repo.SaveStudyMaterialAsync(material);
+    }
+
+    public Task<(bool Success, string Message)> DeleteStudyMaterialAsync(int materialId)
+        => _repo.DeleteStudyMaterialAsync(materialId);
 }

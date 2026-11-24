@@ -10,36 +10,7 @@ namespace ECMS.Data.Repositories;
 
 public class CertificateRepository : ICertificateRepository
 {
-    public async Task EnsureSeedCertificatesAsync()
-    {
-        using var conn = DatabaseConfig.CreateOpenConnection();
-        int certCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Certificates;");
-        if (certCount > 0) return;
-
-        // Cập nhật điểm GPA và chuyên cần cho các học viên mẫu nếu chưa có
-        await conn.ExecuteAsync(@"
-            UPDATE Enrollments SET FinalGPA = 8.5, AttendanceRate = 95.8 WHERE EnrollmentId = 1;
-            UPDATE Enrollments SET FinalGPA = 7.7, AttendanceRate = 91.7 WHERE EnrollmentId = 2;
-            UPDATE Enrollments SET FinalGPA = 8.4, AttendanceRate = 100.0 WHERE EnrollmentId = 3;
-            UPDATE Enrollments SET FinalGPA = 8.8, AttendanceRate = 95.8 WHERE EnrollmentId = 4;
-            UPDATE Enrollments SET FinalGPA = 7.9, AttendanceRate = 87.5 WHERE EnrollmentId = 5;
-            UPDATE Enrollments SET FinalGPA = 5.9, AttendanceRate = 91.7 WHERE EnrollmentId = 6;
-            UPDATE Enrollments SET FinalGPA = 7.2, AttendanceRate = 75.0 WHERE EnrollmentId = 7;
-            UPDATE Enrollments SET FinalGPA = 7.0, AttendanceRate = 87.5 WHERE EnrollmentId = 8;
-            UPDATE Enrollments SET FinalGPA = 8.1, AttendanceRate = 100.0 WHERE EnrollmentId = 9;
-            UPDATE Enrollments SET FinalGPA = 8.5, AttendanceRate = 95.8 WHERE EnrollmentId = 10;
-        ");
-
-        // Seed 4 chứng chỉ mẫu vào bảng Certificates
-        await conn.ExecuteAsync(@"
-            INSERT OR IGNORE INTO Certificates (CertificateId, CertificateNo, EnrollmentId, StudentId, IssueDate, GraduationGrade)
-            VALUES 
-            (1, 'CC-2026-0042', 2, 2, '2026-10-30', 'Khá'),
-            (2, 'CC-2026-0041', 3, 3, '2026-10-22', 'Giỏi'),
-            (3, 'CC-2026-0040', 4, 4, '2026-10-19', 'Xuất sắc'),
-            (4, 'CC-2026-0039', 5, 5, '2026-10-19', 'Khá');
-        ");
-    }
+    public Task EnsureSeedCertificatesAsync() => Task.CompletedTask;
 
     public async Task<IEnumerable<EligibleStudentDto>> GetEligibleStudentsAsync(string? keyword = null, string? courseName = null, string? className = null)
     {

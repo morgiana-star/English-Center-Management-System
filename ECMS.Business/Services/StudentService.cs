@@ -128,6 +128,10 @@ public class StudentService : IStudentService
         if (string.IsNullOrWhiteSpace(dto.Phone))
             return (false, "Số điện thoại học viên không được để trống.", 0, string.Empty);
 
+        var dup = await _studentRepo.CheckDuplicateStudentAsync(dto.Phone, dto.FullName, dto.DateOfBirth);
+        if (dup.IsDuplicate)
+            return (false, dup.Reason, 0, string.Empty);
+
         return await _studentRepo.CreateWaitingStudentAsync(dto);
     }
 

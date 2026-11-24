@@ -9,149 +9,9 @@ namespace ECMS.Data.Repositories;
 
 public class StudentRepository : BaseRepository, IStudentRepository
 {
-    private static bool _isSeeded = false;
-
-    public async Task EnsureStudentSeedDataAsync()
+    public Task EnsureStudentSeedDataAsync()
     {
-        if (_isSeeded) return;
-        _isSeeded = true;
-
-        using var conn = CreateConnection();
-
-        // 1. Đảm bảo có đủ 4 Khóa học
-        await conn.ExecuteAsync(@"
-            INSERT OR IGNORE INTO Courses (CourseId, CourseCode, CourseName, Level, TotalHours, TotalSessions, BaseTuitionFee, PassingScore, IsActive, CreatedAt)
-            VALUES 
-            (1, 'ENG-IELTS-5.5', 'IELTS Foundation', 'Intermediate', 60, 24, 6800000, 5.5, 1, CURRENT_TIMESTAMP),
-            (2, 'ENG-IELTS-6.5', 'IELTS Intensive', 'Upper-Intermediate', 75, 30, 8500000, 6.5, 1, CURRENT_TIMESTAMP),
-            (3, 'ENG-TOEIC-500', 'TOEIC 500+', 'Pre-Intermediate', 50, 20, 4800000, 5.0, 1, CURRENT_TIMESTAMP),
-            (4, 'ENG-COM-01', 'Tiếng Anh giao tiếp', 'Beginner', 40, 16, 3600000, 5.0, 1, CURRENT_TIMESTAMP);
-        ");
-
-        // 2. Đảm bảo có đủ Giáo viên & Phòng học
-        await conn.ExecuteAsync(@"
-            INSERT OR IGNORE INTO Teachers (TeacherId, TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive, CreatedAt)
-            VALUES 
-            (1, 'GV-001', 'Nguyễn Hoàng Anh', 'IELTS Specialist', '0903111222', 'hoanganh@ecms.edu.vn', 350000, 0, 1, CURRENT_TIMESTAMP),
-            (2, 'GV-002', 'Trần Gia Bảo', 'TOEIC / Giao tiếp', '0903333444', 'giabao@ecms.edu.vn', 300000, 0, 1, CURRENT_TIMESTAMP);
-
-            INSERT OR IGNORE INTO ClassRooms (RoomId, RoomName, Floor, Capacity, HasProjector, IsActive, CreatedAt)
-            VALUES 
-            (1, 'P201', 2, 25, 1, 1, CURRENT_TIMESTAMP),
-            (2, 'P202', 2, 25, 1, 1, CURRENT_TIMESTAMP),
-            (3, 'P101', 1, 25, 1, 1, CURRENT_TIMESTAMP);
-        ");
-
-        // 3. Đảm bảo có đủ Lớp học (đủ các khóa & ca sáng/chiều/tối)
-        await conn.ExecuteAsync(@"
-            INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status, CreatedAt)
-            VALUES 
-            (1, 'IELTS-F01', 'IELTS Foundation F01', 1, 1, 1, '2026-10-01', '2026-12-30', 20, 'InProgress', CURRENT_TIMESTAMP),
-            (2, 'IELTS-F02', 'IELTS Foundation F02', 1, 2, 2, '2026-10-15', '2027-01-15', 20, 'InProgress', CURRENT_TIMESTAMP),
-            (3, 'TOEIC-A01', 'Lớp TOEIC 500+ A01', 3, 2, 1, '2026-11-01', '2027-01-20', 20, 'InProgress', CURRENT_TIMESTAMP),
-            (4, 'COM-B01', 'Lớp Giao tiếp cơ bản B01', 4, 1, 2, '2026-11-05', '2027-01-10', 20, 'InProgress', CURRENT_TIMESTAMP),
-            (7, 'IELTS-F03', 'IELTS Foundation F03 (Ca sáng)', 1, 1, 3, '2026-12-10', '2027-03-10', 20, 'OpenForEnrollment', CURRENT_TIMESTAMP),
-            (8, 'IELTS-I02', 'IELTS Intensive I02 (Ca chiều)', 2, 1, 1, '2026-12-12', '2027-03-20', 15, 'OpenForEnrollment', CURRENT_TIMESTAMP),
-            (9, 'COM-B02', 'Giao tiếp quốc tế B02 (Ca tối)', 4, 2, 2, '2026-12-15', '2027-02-28', 18, 'OpenForEnrollment', CURRENT_TIMESTAMP);
-        ");
-
-        // Đảm bảo mỗi lớp đều có lịch học mẫu trong ClassSchedules để hiển thị ca sáng/chiều/tối
-        await conn.ExecuteAsync(@"
-            INSERT OR IGNORE INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, Topic)
-            VALUES
-            (301, 7, 1, '2026-12-10', '08:30', '10:30', 3, 1, 'Khai giảng IELTS F03 (Sáng)'),
-            (302, 8, 1, '2026-12-12', '14:00', '16:00', 1, 1, 'Khai giảng IELTS I02 (Chiều)'),
-            (303, 9, 1, '2026-12-15', '18:30', '20:30', 2, 2, 'Khai giảng Giao tiếp B02 (Tối)');
-        ");
-
-        // 4. Nạp danh sách học viên mẫu nếu chưa có đủ
-        int studentCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students;");
-        if (studentCount < 5)
-        {
-            var seedStudents = new[]
-            {
-                new { Code = "HV-0241", Name = "Nguyễn Minh Anh", Phone = "0908 123 456", Email = "minhanh.nguyen@email.com", Dob = "2004-05-20", Gender = "Nữ", Address = "12/4 Hoàng Diệu, Q. Phú Nhuận", ClassId = 1, AttRate = 87.5, Fee = 6800000, Debt = 1900000, Status = "Active", ParentName = "Nguyễn Thu Hương", ParentPhone = "0911 556 889", Rel = "Mẹ" },
-                new { Code = "HV-0204", Name = "Trần Gia Bảo", Phone = "0915 227 330", Email = "giabao.tran@email.com", Dob = "2003-08-14", Gender = "Nam", Address = "45 Lê Duẩn, Q.1", ClassId = 2, AttRate = 91.7, Fee = 6800000, Debt = 0, Status = "Completed", ParentName = "Trần Văn Hùng", ParentPhone = "0918 223 344", Rel = "Bố" },
-                new { Code = "HV-0237", Name = "Lê Hoàng Nam", Phone = "0904 221 678", Email = "hoangnam.le@email.com", Dob = "2005-01-22", Gender = "Nam", Address = "78 Cách Mạng Tháng 8, Q.3", ClassId = 1, AttRate = 50.0, Fee = 6800000, Debt = 0, Status = "Active", ParentName = "Lê Thị Thảo", ParentPhone = "0903 556 778", Rel = "Mẹ" },
-                new { Code = "HV-0238", Name = "Phạm Khánh Linh", Phone = "0912 450 678", Email = "khanhlinh.pham@email.com", Dob = "2004-11-10", Gender = "Nữ", Address = "89 Nguyễn Đình Chiểu, Q.3", ClassId = 1, AttRate = 100.0, Fee = 6800000, Debt = 2400000, Status = "Active", ParentName = "Phạm Đức Thắng", ParentPhone = "0913 889 900", Rel = "Bố" },
-                new { Code = "HV-0239", Name = "Đỗ Thanh Tâm", Phone = "0935 661 220", Email = "thanhtam.do@email.com", Dob = "2003-03-05", Gender = "Nữ", Address = "15 Phan Đăng Lưu, Q. Bình Thạnh", ClassId = 4, AttRate = 0.0, Fee = 3600000, Debt = 3200000, Status = "Reserved", ParentName = "Đỗ Văn Kiên", ParentPhone = "0938 112 233", Rel = "Bố" },
-                new { Code = "HV-0240", Name = "Võ Hoàng Yến", Phone = "0978 112 334", Email = "hoangyen.vo@email.com", Dob = "2005-07-19", Gender = "Nữ", Address = "234 Võ Văn Tần, Q.3", ClassId = 3, AttRate = 95.0, Fee = 4800000, Debt = 0, Status = "Active", ParentName = "Nguyễn Mỹ Lan", ParentPhone = "0977 445 566", Rel = "Mẹ" },
-                new { Code = "HV-0235", Name = "Nguyễn Tiến Đạt", Phone = "0982 334 556", Email = "tiendat.nguyen@email.com", Dob = "2002-12-01", Gender = "Nam", Address = "67 Trần Hưng Đạo, Q.5", ClassId = 2, AttRate = 88.2, Fee = 6800000, Debt = 1200000, Status = "Active", ParentName = "Nguyễn Tiến Thịnh", ParentPhone = "0983 667 788", Rel = "Bố" },
-                new { Code = "HV-0236", Name = "Bùi Mai Phương", Phone = "0903 778 990", Email = "maiphuong.bui@email.com", Dob = "2004-09-30", Gender = "Nữ", Address = "19 Pasteur, Q.1", ClassId = 4, AttRate = 90.5, Fee = 3600000, Debt = 0, Status = "Active", ParentName = "Vũ Bích Hạnh", ParentPhone = "0908 990 011", Rel = "Mẹ" }
-            };
-
-            foreach (var s in seedStudents)
-            {
-                int exists = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students WHERE StudentCode = @Code;", new { s.Code });
-                if (exists > 0) continue;
-
-                int stId = await conn.ExecuteScalarAsync<int>(@"
-                    INSERT INTO Students (StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt)
-                    VALUES (@Code, @Name, @Dob, @Gender, @Phone, @Email, @Address, @Status, CURRENT_TIMESTAMP);
-                    SELECT last_insert_rowid();", s);
-
-                int pId = await conn.ExecuteScalarAsync<int>(@"
-                    INSERT INTO Parents (ParentCode, FullName, Phone, Email, CreatedAt)
-                    VALUES (@PCode, @ParentName, @ParentPhone, '', CURRENT_TIMESTAMP);
-                    SELECT last_insert_rowid();",
-                    new { PCode = "PH-" + s.Code.Replace("HV-", ""), s.ParentName, s.ParentPhone });
-
-                await conn.ExecuteAsync(@"
-                    INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
-                    VALUES (@stId, @pId, @Rel, 1);", new { stId, pId, s.Rel });
-
-                string enStatus = s.Status == "Completed" ? "Completed" : (s.Status == "Reserved" ? "Reserved" : "Active");
-                int enId = await conn.ExecuteScalarAsync<int>(@"
-                    INSERT INTO Enrollments (StudentId, ClassId, EnrollDate, Status, AttendanceRate, CreatedAt)
-                    VALUES (@stId, @ClassId, '2026-10-01', @enStatus, @AttRate, CURRENT_TIMESTAMP);
-                    SELECT last_insert_rowid();",
-                    new { stId, s.ClassId, enStatus, s.AttRate });
-
-                string invStatus = s.Debt <= 0 ? "Paid" : "PartiallyPaid";
-                await conn.ExecuteAsync(@"
-                    INSERT INTO Invoices (InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status, CreatedAt)
-                    VALUES (@InvCode, @enId, @Fee, 0, @Fee, @Debt, '2026-12-15', @invStatus, CURRENT_TIMESTAMP);",
-                    new { InvCode = "INV-" + s.Code.Replace("HV-", ""), enId, s.Fee, s.Debt, invStatus });
-            }
-        }
-
-        // 5. Đảm bảo có dữ liệu Exams & ExamScores thật cho các lớp
-        int examCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Exams;");
-        if (examCount == 0)
-        {
-            await conn.ExecuteAsync(@"
-                INSERT OR IGNORE INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, WeightPercentage)
-                VALUES
-                (1, 1, 'Kiểm tra đầu vào IELTS', 'Placement', '2026-10-01', 0),
-                (2, 1, 'Kiểm tra thường xuyên T10', 'Regular', '2026-10-20', 20),
-                (3, 1, 'Kiểm tra giữa khóa F01', 'Midterm', '2026-11-10', 30),
-                (4, 2, 'Kiểm tra thường xuyên F02', 'Regular', '2026-10-22', 20),
-                (5, 2, 'Kiểm tra giữa khóa F02', 'Midterm', '2026-11-12', 30),
-                (6, 2, 'Thi cuối khóa F02', 'Final', '2026-12-20', 50);
-            ");
-
-            var stRows = (await conn.QueryAsync<(int StudentId, int ClassId)>(@"
-                SELECT e.StudentId, e.ClassId FROM Enrollments e ORDER BY e.StudentId LIMIT 8;")).ToList();
-
-            foreach (var st in stRows)
-            {
-                if (st.ClassId == 1)
-                {
-                    await conn.ExecuteAsync(@"
-                        INSERT OR IGNORE INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments) VALUES
-                        (1, @Id, 4.5, 'Phát âm tốt, cần cải thiện từ vựng'),
-                        (2, @Id, 7.5, 'Tham gia phát biểu tích cực');", new { Id = st.StudentId });
-                }
-                else if (st.ClassId == 2)
-                {
-                    await conn.ExecuteAsync(@"
-                        INSERT OR IGNORE INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments) VALUES
-                        (4, @Id, 8.0, 'Bài tập về nhà đầy đủ'),
-                        (5, @Id, 7.5, 'Kỹ năng Reading vững'),
-                        (6, @Id, 8.5, 'Đạt chuẩn đầu ra khóa học');", new { Id = st.StudentId });
-                }
-            }
-        }
+        return Task.CompletedTask;
     }
 
     public async Task<IEnumerable<StudentListItemDto>> GetStudentListAsync(string? keyword = null, string? status = null, int? classId = null)
@@ -175,7 +35,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                         1)
                     ELSE NULL
                 END AS AttendanceRate,
-                COALESCE((SELECT SUM(inv.BalanceDue) FROM Invoices inv INNER JOIN Enrollments e3 ON inv.EnrollmentId = e3.EnrollmentId WHERE e3.StudentId = s.StudentId AND inv.Status != 'Cancelled'), 0) AS DebtAmount,
+                CAST(COALESCE((SELECT SUM(inv.BalanceDue) FROM Invoices inv INNER JOIN Enrollments e3 ON inv.EnrollmentId = e3.EnrollmentId WHERE e3.StudentId = s.StudentId AND inv.Status != 'Cancelled'), 0.0) AS REAL) AS DebtAmount,
                 CASE 
                     WHEN s.Status = 'Active' THEN 'Đang học'
                     WHEN s.Status = 'Completed' THEN 'Hoàn thành'
@@ -280,7 +140,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
                 COALESCE(cr.RoomName, 'Chưa xếp phòng') AS RoomName,
                 e.AttendanceRate,
-                COALESCE(inv.BalanceDue, 0) AS RemainingTuition,
+                CAST(COALESCE(inv.BalanceDue, 0.0) AS REAL) AS RemainingTuition,
                 inv.DueDate AS DueDateRaw
             FROM Students s
             LEFT JOIN StudentParents sp ON s.StudentId = sp.StudentId AND sp.IsPrimaryContact = 1

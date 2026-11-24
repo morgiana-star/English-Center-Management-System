@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
+using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.UserControls;
@@ -12,7 +16,8 @@ public partial class StudyMaterialView : UserControl
 {
     private class MaterialItem
     {
-        public string MaterialId { get; set; } = string.Empty;
+        public int MaterialId { get; set; }
+        public int CourseId { get; set; }
         public string FileName { get; set; } = string.Empty;
         public string Version { get; set; } = string.Empty;
         public string CourseName { get; set; } = string.Empty;
@@ -20,51 +25,44 @@ public partial class StudyMaterialView : UserControl
         public string Status { get; set; } = string.Empty;
         public string LocalPath { get; set; } = string.Empty;
         public string FileType { get; set; } = string.Empty;
-        public string ActionText => Status.Contains("✕") ? "Chọn lại tệp" : "Mở / Sửa";
+        public string ActionText => Status.Contains("Chưa") ? "Chọn tệp" : "Mở / Sửa";
     }
 
+    private readonly ICourseService _courseService = new CourseService();
     private readonly List<MaterialItem> _allMaterials = new();
+    private readonly List<Course> _courses = new();
+    private int _editingMaterialId = 0;
 
     public StudyMaterialView()
     {
         InitializeComponent();
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
 
         SetupFilters();
         SetupGrid();
-        LoadSampleData();
         WireEvents();
+        _ = LoadInitialDataAsync();
     }
 
     private void SetupFilters()
     {
         cboCourseFilter.Items.Clear();
-        cboCourseFilter.Items.AddRange(new object[]
-        {
-            "IELTS Foundation",
-            "TOEIC 450+",
-            "Giao tiếp cơ bản",
-            "Tất cả khóa học"
-        });
+        cboCourseFilter.Items.Add("Tất cả khóa học");
         cboCourseFilter.SelectedIndex = 0;
 
         cboFileTypeFilter.Items.Clear();
         cboFileTypeFilter.Items.AddRange(new object[]
         {
             "Tất cả loại tệp",
-            "PDF (.pdf)",
-            "Audio (.mp3)",
-            "Tài liệu (.docx)"
+            "PDF",
+            "MP3",
+            "DOCX",
+            "ZIP"
         });
         cboFileTypeFilter.SelectedIndex = 0;
 
         cboAssignedCourse.Items.Clear();
-        cboAssignedCourse.Items.AddRange(new object[]
-        {
-            "IELTS Foundation",
-            "TOEIC 450+",
-            "English Communication Basic"
-        });
-        cboAssignedCourse.SelectedIndex = 0;
 
         cboFileType.Items.Clear();
         cboFileType.Items.AddRange(new object[]
@@ -90,7 +88,7 @@ public partial class StudyMaterialView : UserControl
         dgvMaterials.Columns.Add(new DataGridViewTextBoxColumn
         {
             DataPropertyName = "FileName",
-            HeaderText = "Tên tài liệu ↑",
+            HeaderText = "Tên tài liệu",
             Width = 260
         });
 
@@ -136,14 +134,15 @@ public partial class StudyMaterialView : UserControl
 
         dgvMaterials.CellFormatting += (s, e) =>
         {
+            if (e.ColumnIndex < 0 || e.RowIndex < 0) return;
             if (dgvMaterials.Columns[e.ColumnIndex].DataPropertyName == "Status" && e.Value != null)
             {
                 var val = e.Value.ToString() ?? "";
-                if (val.Contains("✓"))
+                if (val.Contains("Khả dụng", StringComparison.OrdinalIgnoreCase))
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
                 }
-                else if (val.Contains("✕"))
+                else
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(220, 38, 38);
                 }
@@ -151,52 +150,86 @@ public partial class StudyMaterialView : UserControl
         };
     }
 
-    private void LoadSampleData()
+    private async Task LoadInitialDataAsync()
     {
-        _allMaterials.Clear();
-        _allMaterials.Add(new MaterialItem
+        try
         {
-            MaterialId = "TL-001",
-            FileName = "Foundation_Workbook_v1.2.pdf",
-            Version = "1.2",
-            CourseName = "IELTS Foundation",
-            FileSize = "12,8 MB",
-            Status = "✓ Tệp khả dụng",
-            LocalPath = @"C:\ECMS\TaiLieu\IELTS\Foundation_Workbook_v1.2.pdf",
-            FileType = "PDF"
-        });
+            _courses.Clear();
+            _courses.AddRange(await _courseService.GetCoursesAsync());
 
-        _allMaterials.Add(new MaterialItem
-        {
-            MaterialId = "TL-002",
-            FileName = "Listening_Practice_01.mp3",
-            Version = "1.0",
-            CourseName = "IELTS Foundation",
-            FileSize = "8,4 MB",
-            Status = "✓ Tệp khả dụng",
-            LocalPath = @"C:\ECMS\TaiLieu\IELTS\Listening_Practice_01.mp3",
-            FileType = "MP3"
-        });
+            cboCourseFilter.Items.Clear();
+            cboCourseFilter.Items.Add("Tất cả khóa học");
+            cboAssignedCourse.Items.Clear();
 
-        _allMaterials.Add(new MaterialItem
-        {
-            MaterialId = "TL-003",
-            FileName = "Grammar_Review_v1.pdf",
-            Version = "1.0",
-            CourseName = "IELTS Foundation",
-            FileSize = "2,1 MB",
-            Status = "✕ Không tìm thấy tệp",
-            LocalPath = @"C:\ECMS\TaiLieu\IELTS\Grammar_Review_v1.pdf",
-            FileType = "PDF"
-        });
+            foreach (var c in _courses.Where(c => c.IsActive))
+            {
+                cboCourseFilter.Items.Add(c.CourseName);
+                cboAssignedCourse.Items.Add(c.CourseName);
+            }
 
-        ApplyFilter();
+            if (cboCourseFilter.Items.Count > 0) cboCourseFilter.SelectedIndex = 0;
+            if (cboAssignedCourse.Items.Count > 0) cboAssignedCourse.SelectedIndex = 0;
 
-        if (dgvMaterials.Rows.Count > 0)
-        {
-            dgvMaterials.Rows[0].Selected = true;
-            DisplayMaterialDetail(_allMaterials[0]);
+            await LoadMaterialsFromDbAsync();
         }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi tải dữ liệu tài liệu", ex.Message);
+        }
+    }
+
+    private async Task LoadMaterialsFromDbAsync()
+    {
+        try
+        {
+            var rows = await _courseService.GetStudyMaterialsAsync();
+            _allMaterials.Clear();
+
+            foreach (var r in rows)
+            {
+                bool fileExists = !string.IsNullOrWhiteSpace(r.FilePath) && File.Exists(r.FilePath);
+                string sizeText = !string.IsNullOrWhiteSpace(r.FileSize)
+                    ? r.FileSize
+                    : (fileExists ? FormatFileSize(new FileInfo(r.FilePath).Length) : "—");
+
+                _allMaterials.Add(new MaterialItem
+                {
+                    MaterialId = r.MaterialId,
+                    CourseId = r.CourseId,
+                    FileName = r.Title,
+                    Version = string.IsNullOrWhiteSpace(r.Version) ? "1.0" : r.Version,
+                    CourseName = r.CourseName,
+                    FileSize = sizeText,
+                    Status = fileExists ? "Khả dụng" : "Chưa có tệp cục bộ",
+                    LocalPath = r.FilePath,
+                    FileType = string.IsNullOrWhiteSpace(r.FileType) ? "PDF" : r.FileType
+                });
+            }
+
+            ApplyFilter();
+
+            if (dgvMaterials.Rows.Count > 0 && _allMaterials.Count > 0)
+            {
+                dgvMaterials.Rows[0].Selected = true;
+                if (dgvMaterials.Rows[0].DataBoundItem is MaterialItem firstItem)
+                {
+                    DisplayMaterialDetail(firstItem);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách tài liệu", ex.Message);
+        }
+    }
+
+    private static string FormatFileSize(long bytes)
+    {
+        if (bytes >= 1024 * 1024)
+            return $"{bytes / (1024.0 * 1024.0):F1} MB";
+        if (bytes >= 1024)
+            return $"{bytes / 1024.0:F0} KB";
+        return $"{bytes} B";
     }
 
     private void ApplyFilter()
@@ -218,35 +251,35 @@ public partial class StudyMaterialView : UserControl
             filtered = filtered.Where(m => m.CourseName.Equals(course, StringComparison.OrdinalIgnoreCase));
         }
 
+        var fileType = cboFileTypeFilter.SelectedItem?.ToString();
+        if (!string.IsNullOrEmpty(fileType) && fileType != "Tất cả loại tệp")
+        {
+            filtered = filtered.Where(m => m.FileType.Equals(fileType, StringComparison.OrdinalIgnoreCase));
+        }
+
         var list = filtered.ToList();
         dgvMaterials.DataSource = null;
         dgvMaterials.DataSource = list;
 
-        lblPagingInfo.Text = $"1–{list.Count} / {_allMaterials.Count} tài liệu";
+        lblPagingInfo.Text = list.Count == 0
+            ? "0 tài liệu"
+            : $"1–{list.Count} / {_allMaterials.Count} tài liệu";
     }
 
     private void DisplayMaterialDetail(MaterialItem item)
     {
-        txtMaterialName.Text = item.FileName.Replace(".pdf", "").Replace(".mp3", "").Replace(".docx", "");
+        _editingMaterialId = item.MaterialId;
+        txtMaterialName.Text = item.FileName;
         txtVersion.Text = item.Version;
-        cboAssignedCourse.SelectedItem = item.CourseName;
-        cboFileType.SelectedItem = item.FileType;
-        txtLocalPath.Text = item.LocalPath;
 
-        if (item.Status.Contains("✕"))
-        {
-            // bannerMissingFile.Title = $"✕ {item.FileName} không còn ở đường dẫn cũ.";
-            // bannerMissingFile.Message = "Chọn lại tệp để khôi phục khả năng mở tài liệu.";
-            // bannerMissingFile.Visible = true;
-            btnRebindMissingFile.Visible = true;
-        }
-        else
-        {
-            // bannerMissingFile.Title = "✓ Tài liệu đã liên kết hợp lệ";
-            // bannerMissingFile.Message = $"Tệp khả dụng trên máy trạm: {item.FileSize}.";
-            // bannerMissingFile.Variant = BannerVariant.Success;
-            btnRebindMissingFile.Visible = false;
-        }
+        int courseIdx = cboAssignedCourse.FindStringExact(item.CourseName);
+        if (courseIdx >= 0) cboAssignedCourse.SelectedIndex = courseIdx;
+
+        int typeIdx = cboFileType.FindStringExact(item.FileType);
+        if (typeIdx >= 0) cboFileType.SelectedIndex = typeIdx;
+
+        txtLocalPath.Text = item.LocalPath;
+        btnRebindMissingFile.Visible = item.Status.Contains("Chưa");
     }
 
     private void WireEvents()
@@ -265,11 +298,13 @@ public partial class StudyMaterialView : UserControl
 
         btnAddMaterialTop.Click += (s, e) =>
         {
+            _editingMaterialId = 0;
             txtMaterialName.Text = string.Empty;
             txtVersion.Text = "1.0";
-            cboAssignedCourse.SelectedIndex = 0;
-            cboFileType.SelectedIndex = 0;
+            if (cboAssignedCourse.Items.Count > 0) cboAssignedCourse.SelectedIndex = 0;
+            if (cboFileType.Items.Count > 0) cboFileType.SelectedIndex = 0;
             txtLocalPath.Text = string.Empty;
+            btnRebindMissingFile.Visible = false;
             txtMaterialName.Focus();
         };
 
@@ -286,13 +321,16 @@ public partial class StudyMaterialView : UserControl
             using var ofd = new OpenFileDialog
             {
                 Title = "Chọn tệp tài liệu học tập cục bộ",
-                Filter = "Tất cả tệp hỗ trợ (*.pdf;*.mp3;*.docx)|*.pdf;*.mp3;*.docx|PDF Documents (*.pdf)|*.pdf|Audio (*.mp3)|*.mp3|All files (*.*)|*.*"
+                Filter = "Tất cả tệp hỗ trợ (*.pdf;*.mp3;*.docx;*.zip)|*.pdf;*.mp3;*.docx;*.zip|PDF Documents (*.pdf)|*.pdf|Audio (*.mp3)|*.mp3|All files (*.*)|*.*"
             };
 
             if (ofd.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 txtLocalPath.Text = ofd.FileName;
-                txtMaterialName.Text = Path.GetFileNameWithoutExtension(ofd.FileName);
+                if (string.IsNullOrWhiteSpace(txtMaterialName.Text))
+                {
+                    txtMaterialName.Text = Path.GetFileNameWithoutExtension(ofd.FileName);
+                }
                 var ext = Path.GetExtension(ofd.FileName).ToUpperInvariant().TrimStart('.');
                 if (cboFileType.Items.Contains(ext))
                 {
@@ -314,20 +352,20 @@ public partial class StudyMaterialView : UserControl
             {
                 var fi = new FileInfo(path);
                 AppDialog.ShowSuccess(ParentForm, "Kiểm tra thành công",
-                    $"✓ Tệp khả dụng trên máy trạm!\n\n" +
+                    $"Tệp khả dụng trên máy trạm!\n\n" +
                     $"Đường dẫn: {path}\n" +
-                    $"Dung lượng: {(fi.Length / (1024.0 * 1024.0)):F1} MB\n" +
+                    $"Dung lượng: {FormatFileSize(fi.Length)}\n" +
                     $"Ngày tạo: {fi.CreationTime:dd/MM/yyyy HH:mm}");
             }
             else
             {
                 AppDialog.ShowError(ParentForm, "Tệp không tồn tại",
-                    $"✕ Không tìm thấy tệp tại đường dẫn:\n{path}\n\n" +
+                    $"Không tìm thấy tệp tại đường dẫn:\n{path}\n\n" +
                     "Vui lòng kiểm tra lại ổ đĩa hoặc tệp có bị di chuyển / đổi tên không.");
             }
         };
 
-        btnSaveMaterial.Click += (s, e) =>
+        btnSaveMaterial.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtMaterialName.Text))
             {
@@ -344,33 +382,48 @@ public partial class StudyMaterialView : UserControl
                 return;
             }
 
-            var newItem = new MaterialItem
+            string selectedCourseName = cboAssignedCourse.SelectedItem?.ToString() ?? "";
+            var course = _courses.FirstOrDefault(c => c.CourseName == selectedCourseName);
+            if (course == null)
             {
-                MaterialId = $"TL-{( _allMaterials.Count + 1 ):D3}",
-                FileName = Path.GetFileName(path) == "" ? $"{txtMaterialName.Text.Trim()}.pdf" : Path.GetFileName(path),
-                Version = txtVersion.Text.Trim(),
-                CourseName = cboAssignedCourse.SelectedItem?.ToString() ?? "IELTS Foundation",
-                FileSize = "10,5 MB",
-                Status = "✓ Tệp khả dụng",
-                LocalPath = path,
-                FileType = cboFileType.SelectedItem?.ToString() ?? "PDF"
+                AppDialog.ShowWarning(ParentForm, "Thiếu khóa học", "Vui lòng chọn khóa học áp dụng.");
+                return;
+            }
+
+            string fileSize = File.Exists(path) ? FormatFileSize(new FileInfo(path).Length) : "—";
+            var dto = new StudyMaterialDto
+            {
+                MaterialId = _editingMaterialId,
+                CourseId = course.CourseId,
+                CourseName = course.CourseName,
+                Title = txtMaterialName.Text.Trim(),
+                FilePath = path,
+                Version = string.IsNullOrWhiteSpace(txtVersion.Text) ? "1.0" : txtVersion.Text.Trim(),
+                FileType = cboFileType.SelectedItem?.ToString() ?? "PDF",
+                FileSize = fileSize,
+                Description = $"Tài liệu khóa {course.CourseName}"
             };
 
-            _allMaterials.Add(newItem);
-            ApplyFilter();
-            AppDialog.ShowSuccess(ParentForm, "Lưu thành công",
-                $"Đã lưu thông tin tài liệu '{newItem.FileName}' vào CSDL SQLite.");
+            var res = await _courseService.SaveStudyMaterialAsync(dto);
+            if (!res.Success)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi lưu tài liệu", res.Message);
+                return;
+            }
+
+            await LoadMaterialsFromDbAsync();
+            AppDialog.ShowSuccess(ParentForm, "Lưu thành công", res.Message);
         };
 
-        btnRebindMissingFile.Click += (s, e) =>
-        {
-            btnBrowseLocalFile.PerformClick();
-        };
+        btnRebindMissingFile.Click += (s, e) => btnBrowseLocalFile.PerformClick();
 
-        btnAssignClassDoc.Click += (s, e) =>
+        btnAssignClassDoc.Click += async (s, e) =>
         {
-            AppDialog.ShowSuccess(ParentForm, "Gán tài liệu",
-                "Đã gán tài liệu của khóa English Communication Basic vào lớp COM-B01 thành công.");
+            if (btnSaveMaterial != null)
+            {
+                btnSaveMaterial.PerformClick();
+            }
+            await Task.CompletedTask;
         };
     }
 }

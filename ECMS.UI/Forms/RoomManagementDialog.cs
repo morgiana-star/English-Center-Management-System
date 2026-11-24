@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.Entities;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class RoomManagementDialog : Form
 {
-    private readonly List<string[]> _rooms = new();
+    private readonly IClassService _classService = new ClassService();
+    private List<ClassRoom> _rooms = new();
 
     public RoomManagementDialog()
     {
@@ -16,8 +20,8 @@ public partial class RoomManagementDialog : Form
             return;
 
         SetupFilters();
-        LoadSampleRooms();
         WireEvents();
+        _ = LoadRoomsAsync();
     }
 
     private void SetupFilters()
@@ -31,74 +35,80 @@ public partial class RoomManagementDialog : Form
         if (cboCapacityFilter.Items.Count > 0) cboCapacityFilter.SelectedIndex = 0;
     }
 
-    private void LoadSampleRooms()
+    private async Task LoadRoomsAsync()
     {
-        _rooms.Clear();
-        _rooms.Add(new[] { "P201", "Phòng IELTS Chuyên sâu", "24 chỗ", "Máy chiếu Sony, Bảng từ, Loa Bluetooth", "Đang sử dụng" });
-        _rooms.Add(new[] { "P202", "Phòng Giao tiếp & Thảo luận", "20 chỗ", "Màn hình tương tác 65\", Loa âm trần", "Đang sử dụng" });
-        _rooms.Add(new[] { "P203", "Phòng Luyện thi TOEIC", "18 chỗ", "Máy chiếu Epson, Bảng kính, 18 tai nghe", "Đang sử dụng" });
-        _rooms.Add(new[] { "P101", "Hội trường & Test đầu vào", "35 chỗ", "Máy chiếu công suất lớn, Âm thanh vòm", "Đang sử dụng" });
-        _rooms.Add(new[] { "P102", "Phòng học đa năng", "15 chỗ", "Đang nâng cấp hệ thống điều hòa", "Bảo trì" });
+        try
+        {
+            string? kw = string.IsNullOrWhiteSpace(txtSearchRoom.Text) ? null : txtSearchRoom.Text.Trim();
+            string? status = cboStatusFilter.SelectedItem?.ToString();
+            string? cap = cboCapacityFilter.SelectedItem?.ToString();
 
-        RenderRooms(_rooms);
+            _rooms = new List<ClassRoom>(await _classService.GetRoomsAsync(kw, status, cap));
+            RenderRooms(_rooms);
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(this, "Lỗi tải danh sách phòng học", ex.Message);
+        }
     }
 
-    private void RenderRooms(List<string[]> rooms)
+    private void RenderRooms(List<ClassRoom> rooms)
     {
         dgvRooms.Rows.Clear();
         foreach (var r in rooms)
         {
-            dgvRooms.Rows.Add(r[0], r[1], r[2], r[3], r[4], "Sửa");
+            string code = $"PH-{r.RoomId:D3}";
+            int idx = dgvRooms.Rows.Add(
+                code,
+                r.RoomName,
+                $"{r.Capacity} chỗ",
+                string.IsNullOrWhiteSpace(r.Equipment) ? "Tiêu chuẩn" : r.Equipment,
+                r.RoomStatus,
+                "Sửa"
+            );
+            dgvRooms.Rows[idx].Tag = r;
         }
+        dgvRooms.ClearSelection();
+        dgvRooms.CurrentCell = null;
     }
 
     private void WireEvents()
     {
-        btnAddRoom.Click += (s, e) =>
+        btnAddRoom.Click += async (s, e) =>
         {
-            using var dlg = new EditRoomDialog(false, "", "", "24", "Đang sử dụng", "");
+            using var dlg = new EditRoomDialog(false, 0, "", "", "24", "Đang sử dụng", "Máy chiếu, Bảng từ, Điều hòa");
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
-                LoadSampleRooms();
+                await LoadRoomsAsync();
             }
         };
 
-        dgvRooms.CellContentClick += (s, e) =>
+        dgvRooms.CellContentClick += async (s, e) =>
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == colAction.Index)
             {
                 var row = dgvRooms.Rows[e.RowIndex];
-                string code = row.Cells[colCode.Index].Value?.ToString() ?? "";
-                string name = row.Cells[colName.Index].Value?.ToString() ?? "";
-                string cap = row.Cells[colCapacity.Index].Value?.ToString() ?? "20";
-                string equip = row.Cells[colEquipment.Index].Value?.ToString() ?? "";
-                string status = row.Cells[colStatus.Index].Value?.ToString() ?? "Đang sử dụng";
+                if (row.Tag is not ClassRoom room) return;
 
-                using var dlg = new EditRoomDialog(true, code, name, cap, status, equip);
+                string code = row.Cells[colCode.Index].Value?.ToString() ?? $"PH-{room.RoomId:D3}";
+                using var dlg = new EditRoomDialog(
+                    true,
+                    room.RoomId,
+                    code,
+                    room.RoomName,
+                    room.Capacity.ToString(),
+                    room.RoomStatus,
+                    room.Equipment);
+
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
-                    LoadSampleRooms();
+                    await LoadRoomsAsync();
                 }
             }
         };
 
-        txtSearchRoom.TextChanged += (s, e) => FilterRooms();
-        cboStatusFilter.SelectedIndexChanged += (s, e) => FilterRooms();
-        cboCapacityFilter.SelectedIndexChanged += (s, e) => FilterRooms();
-    }
-
-    private void FilterRooms()
-    {
-        string q = txtSearchRoom.Text.Trim().ToLower();
-        string status = cboStatusFilter.SelectedItem?.ToString() ?? "Tất cả trạng thái";
-
-        var filtered = _rooms.FindAll(r =>
-        {
-            bool matchQ = string.IsNullOrEmpty(q) || r[0].ToLower().Contains(q) || r[1].ToLower().Contains(q);
-            bool matchStatus = status == "Tất cả trạng thái" || r[4] == status;
-            return matchQ && matchStatus;
-        });
-
-        RenderRooms(filtered);
+        txtSearchRoom.TextChanged += async (s, e) => await LoadRoomsAsync();
+        cboStatusFilter.SelectedIndexChanged += async (s, e) => await LoadRoomsAsync();
+        cboCapacityFilter.SelectedIndexChanged += async (s, e) => await LoadRoomsAsync();
     }
 }

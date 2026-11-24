@@ -24,6 +24,8 @@ public class ClassRoom : BaseEntity
     public int Capacity { get; set; } = 20;
     public bool HasProjector { get; set; } = true;
     public bool IsActive { get; set; } = true;
+    public string Equipment { get; set; } = string.Empty;
+    public string RoomStatus { get; set; } = "Đang sử dụng";
 }
 
 public class Class : BaseEntity

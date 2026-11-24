@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
+using ECMS.Core.DTOs;
 using ECMS.Core.Entities;
 using ECMS.Core.Helpers;
 using ECMS.Data.Database;
@@ -122,5 +123,71 @@ public class CourseRepository : ICourseRepository
         return rows > 0
             ? (true, "Đã xóa khóa học thành công.")
             : (false, "Không tìm thấy khóa học cần xóa.");
+    }
+
+    public async Task<IEnumerable<StudyMaterialDto>> GetStudyMaterialsAsync(string? keyword = null, string? courseName = null, string? fileType = null)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        string sql = @"
+            SELECT
+                m.MaterialId,
+                m.CourseId,
+                co.CourseName,
+                m.Title,
+                COALESCE(m.FilePath, '') AS FilePath,
+                COALESCE(m.Description, '') AS Description,
+                COALESCE(NULLIF(m.Version, ''), '1.0') AS Version,
+                COALESCE(NULLIF(m.FileType, ''), 'PDF') AS FileType,
+                COALESCE(m.FileSize, '') AS FileSize
+            FROM StudyMaterials m
+            INNER JOIN Courses co ON m.CourseId = co.CourseId
+            WHERE (@Kw IS NULL OR m.Title LIKE @Kw OR co.CourseName LIKE @Kw OR COALESCE(m.Version, '') LIKE @Kw)
+              AND (@CourseName IS NULL OR co.CourseName = @CourseName)
+              AND (@FileType IS NULL OR UPPER(COALESCE(m.FileType, '')) = UPPER(@FileType))
+            ORDER BY m.MaterialId DESC;";
+
+        return await conn.QueryAsync<StudyMaterialDto>(sql, new
+        {
+            Kw = string.IsNullOrWhiteSpace(keyword) ? null : $"%{keyword.Trim()}%",
+            CourseName = string.IsNullOrWhiteSpace(courseName) || courseName == "Tất cả khóa học" ? null : courseName,
+            FileType = string.IsNullOrWhiteSpace(fileType) || fileType == "Tất cả loại tệp" ? null : fileType
+        });
+    }
+
+    public async Task<(bool Success, string Message)> SaveStudyMaterialAsync(StudyMaterialDto material)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        if (material.MaterialId > 0)
+        {
+            int rows = await conn.ExecuteAsync(@"
+                UPDATE StudyMaterials SET
+                    CourseId = @CourseId,
+                    Title = @Title,
+                    FilePath = @FilePath,
+                    Description = @Description,
+                    Version = @Version,
+                    FileType = @FileType,
+                    FileSize = @FileSize,
+                    UpdatedAt = CURRENT_TIMESTAMP
+                WHERE MaterialId = @MaterialId;", material);
+
+            return rows > 0
+                ? (true, $"Đã cập nhật tài liệu '{material.Title}' thành công.")
+                : (false, "Không tìm thấy tài liệu cần cập nhật.");
+        }
+
+        await conn.ExecuteAsync(@"
+            INSERT INTO StudyMaterials (CourseId, Title, FilePath, Description, Version, FileType, FileSize, CreatedAt)
+            VALUES (@CourseId, @Title, @FilePath, @Description, @Version, @FileType, @FileSize, CURRENT_TIMESTAMP);",
+            material);
+
+        return (true, $"Đã thêm tài liệu '{material.Title}' vào cơ sở dữ liệu thành công.");
+    }
+
+    public async Task<(bool Success, string Message)> DeleteStudyMaterialAsync(int materialId)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        int rows = await conn.ExecuteAsync("DELETE FROM StudyMaterials WHERE MaterialId = @Id;", new { Id = materialId });
+        return rows > 0 ? (true, "Đã xóa tài liệu thành công.") : (false, "Không tìm thấy tài liệu cần xóa.");
     }
 }

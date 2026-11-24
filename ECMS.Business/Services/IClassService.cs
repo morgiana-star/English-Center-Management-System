@@ -18,4 +18,8 @@ public interface IClassService
     Task<IEnumerable<ClassGradeItemDto>> GetClassGradesAsync(int classId);
     Task<IEnumerable<WaitingStudentItemDto>> GetWaitingStudentsForClassAsync(int classId);
     Task<(bool Success, string Message)> EnrollWaitingStudentsToClassAsync(int classId, List<int> studentIds);
+    Task<IEnumerable<ClassRoom>> GetRoomsAsync(string? keyword = null, string? status = null, string? capacityFilter = null);
+    Task<(bool Success, string Message)> CreateRoomAsync(ClassRoom room);
+    Task<(bool Success, string Message)> UpdateRoomAsync(ClassRoom room);
+    Task<(bool Success, string Message)> DeleteRoomAsync(int roomId);
 }

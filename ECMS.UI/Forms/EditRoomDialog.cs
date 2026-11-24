@@ -1,25 +1,29 @@
 using System;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.Entities;
+using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class EditRoomDialog : Form
 {
+    private readonly IClassService _classService = new ClassService();
     private readonly bool _isEditMode;
-    private readonly string _roomCode = string.Empty;
+    private readonly int _roomId;
 
-    public EditRoomDialog() : this(false, "", "", "24", "Đang sử dụng", "")
+    public EditRoomDialog() : this(false, 0, "", "", "24", "Đang sử dụng", "")
     {
     }
 
-    public EditRoomDialog(bool isEditMode, string roomCode, string roomName, string capacity, string status, string notes)
+    public EditRoomDialog(bool isEditMode, int roomId, string roomCode, string roomName, string capacity, string status, string notes)
     {
         InitializeComponent();
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
         _isEditMode = isEditMode;
-        _roomCode = roomCode;
+        _roomId = roomId;
 
         SetupStatusDropdown();
         ApplyData(roomCode, roomName, capacity, status, notes);
@@ -37,11 +41,12 @@ public partial class EditRoomDialog : Form
     {
         if (_isEditMode)
         {
+            Text = "Chỉnh sửa phòng học - ECMS";
             lblTitle.Text = "Chỉnh sửa phòng học";
             txtRoomCode.Text = roomCode;
             txtRoomCode.ReadOnly = true;
             txtRoomName.Text = roomName;
-            txtCapacity.Text = capacity;
+            txtCapacity.Text = capacity.Replace("chỗ", "", StringComparison.OrdinalIgnoreCase).Trim();
             txtNotes.Text = notes;
             btnSave.Text = "Cập nhật";
 
@@ -50,9 +55,11 @@ public partial class EditRoomDialog : Form
         }
         else
         {
+            Text = "Thêm phòng học mới - ECMS";
             lblTitle.Text = "Thêm phòng học mới";
-            txtRoomCode.Text = "P204";
-            txtRoomName.Text = "Phòng học mới";
+            txtRoomCode.Text = "Tự động";
+            txtRoomCode.ReadOnly = true;
+            txtRoomName.Text = "";
             txtCapacity.Text = "24";
             txtNotes.Text = "Máy chiếu, Bảng từ, Điều hòa";
             btnSave.Text = "Thêm phòng";
@@ -67,19 +74,59 @@ public partial class EditRoomDialog : Form
             Close();
         };
 
-        btnSave.Click += (s, e) =>
+        btnSave.Click += async (s, e) =>
         {
-            if (string.IsNullOrWhiteSpace(txtRoomCode.Text))
+            string roomName = txtRoomName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(roomName))
             {
-                MessageBox.Show("Vui lòng nhập Mã phòng.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtRoomCode.Focus();
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập tên phòng học.");
+                txtRoomName.Focus();
                 return;
             }
 
-            string actionMsg = _isEditMode ? "cập nhật" : "thêm mới";
-            MessageBox.Show($"Đã {actionMsg} phòng học '{txtRoomCode.Text} - {txtRoomName.Text}' thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            Close();
+            string capRaw = txtCapacity.Text.Replace("chỗ", "", StringComparison.OrdinalIgnoreCase).Trim();
+            if (!int.TryParse(capRaw, out int capacity) || capacity <= 0)
+            {
+                AppDialog.ShowWarning(this, "Dữ liệu không hợp lệ", "Sức chứa phòng phải là số nguyên dương.");
+                txtCapacity.Focus();
+                return;
+            }
+
+            var room = new ClassRoom
+            {
+                RoomId = _roomId,
+                RoomName = roomName,
+                Floor = 1,
+                Capacity = capacity,
+                Equipment = txtNotes.Text.Trim(),
+                RoomStatus = cboStatus.SelectedItem?.ToString() ?? "Đang sử dụng"
+            };
+
+            btnSave.Enabled = false;
+            try
+            {
+                var res = _isEditMode
+                    ? await _classService.UpdateRoomAsync(room)
+                    : await _classService.CreateRoomAsync(room);
+
+                if (!res.Success)
+                {
+                    AppDialog.ShowWarning(this, "Không thể lưu phòng học", res.Message);
+                    return;
+                }
+
+                AppDialog.ShowSuccess(this, "Thành công", res.Message);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(this, "Lỗi lưu phòng học", ex.Message);
+            }
+            finally
+            {
+                btnSave.Enabled = true;
+            }
         };
     }
 }

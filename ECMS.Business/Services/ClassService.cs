@@ -63,4 +63,30 @@ public class ClassService : IClassService
 
     public Task<(bool Success, string Message)> EnrollWaitingStudentsToClassAsync(int classId, List<int> studentIds)
         => _repo.EnrollWaitingStudentsToClassAsync(classId, studentIds);
+
+    public Task<IEnumerable<ClassRoom>> GetRoomsAsync(string? keyword = null, string? status = null, string? capacityFilter = null)
+        => _repo.GetAllRoomsAsync(keyword, status, capacityFilter);
+
+    public async Task<(bool Success, string Message)> CreateRoomAsync(ClassRoom room)
+    {
+        if (string.IsNullOrWhiteSpace(room.RoomName))
+            return (false, "Vui lòng nhập tên phòng học.");
+        if (room.Capacity <= 0)
+            return (false, "Sức chứa phòng phải lớn hơn 0.");
+        return await _repo.CreateRoomAsync(room);
+    }
+
+    public async Task<(bool Success, string Message)> UpdateRoomAsync(ClassRoom room)
+    {
+        if (room.RoomId <= 0)
+            return (false, "Mã phòng học không hợp lệ.");
+        if (string.IsNullOrWhiteSpace(room.RoomName))
+            return (false, "Vui lòng nhập tên phòng học.");
+        if (room.Capacity <= 0)
+            return (false, "Sức chứa phòng phải lớn hơn 0.");
+        return await _repo.UpdateRoomAsync(room);
+    }
+
+    public Task<(bool Success, string Message)> DeleteRoomAsync(int roomId)
+        => _repo.DeleteRoomAsync(roomId);
 }
