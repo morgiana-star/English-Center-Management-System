@@ -30,6 +30,10 @@ public partial class CollectTuitionDialog : Form
     private decimal _initialTotalFee = 3400000;
     private decimal _initialRemaining = 3400000;
 
+    // Chính sách ưu đãi học phí (Đề tài 9: giảm 10% học viên cũ, giảm khi đăng ký nhóm)
+    private readonly ComboBox _cboDiscount = new();
+    private readonly Label _lblDiscountTitle = new();
+
     public string StudentCode { get; private set; } = "HV-0241";
     public string StudentName { get; private set; } = "Nguyễn Minh Anh";
     public string ClassName { get; private set; } = "IELTS-F01";
@@ -115,8 +119,39 @@ public partial class CollectTuitionDialog : Form
 
     private void SetupForm()
     {
+        lblCollector.Location = new Point(480, 10);
         lblCollector.Text = $"Người lập: {AppSession.FullName} ({AppSession.RoleName})";
+        
+        dtpPaymentDate.Location = new Point(105, 73);
+        dtpPaymentDate.Size = new Size(130, 29);
         dtpPaymentDate.Value = DateTime.Today;
+
+        _lblDiscountTitle.Text = "Ưu đãi (*):";
+        _lblDiscountTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        _lblDiscountTitle.ForeColor = Color.FromArgb(71, 85, 105);
+        _lblDiscountTitle.AutoSize = true;
+        _lblDiscountTitle.Location = new Point(250, 77);
+
+        _cboDiscount.DropDownStyle = ComboBoxStyle.DropDownList;
+        _cboDiscount.Font = new Font("Segoe UI", 9.5F);
+        _cboDiscount.Location = new Point(335, 73);
+        _cboDiscount.Size = new Size(460, 29);
+        _cboDiscount.Items.Clear();
+        _cboDiscount.Items.AddRange(new object[]
+        {
+            "0% - Không áp dụng ưu đãi (Nguyên giá)",
+            "10% - Học viên cũ trung tâm ECMS (-10%)",
+            "15% - Đăng ký theo nhóm từ 2 học viên (-15%)",
+            "20% - Đăng ký nhóm từ 4 người / Gia đình (-20%)",
+            "5% - Đăng ký sớm trước khai giảng (-5%)"
+        });
+        _cboDiscount.SelectedIndex = 0;
+
+        if (!cardPaymentDetails.Controls.Contains(_cboDiscount))
+        {
+            cardPaymentDetails.Controls.Add(_lblDiscountTitle);
+            cardPaymentDetails.Controls.Add(_cboDiscount);
+        }
 
         cboPaymentType.Items.Clear();
         cboPaymentType.Items.AddRange(new object[]
@@ -171,6 +206,30 @@ public partial class CollectTuitionDialog : Form
         ApplyDebtorData(_selectedDebtor);
     }
 
+    private decimal GetSelectedDiscountRate()
+    {
+        return _cboDiscount.SelectedIndex switch
+        {
+            1 => 0.10m, // 10% cho học viên cũ
+            2 => 0.15m, // Giảm 15% khi đăng ký nhóm 2+
+            3 => 0.20m, // Giảm 20% nhóm 4+
+            4 => 0.05m, // Early bird 5%
+            _ => 0m
+        };
+    }
+
+    private string GetSelectedDiscountName()
+    {
+        return _cboDiscount.SelectedIndex switch
+        {
+            1 => "Ưu đãi Học viên cũ (-10%)",
+            2 => "Ưu đãi Nhóm 2+ (-15%)",
+            3 => "Ưu đãi Nhóm 4+ (-20%)",
+            4 => "Ưu đãi Early Bird (-5%)",
+            _ => ""
+        };
+    }
+
     private void ApplyDebtorData(DebtorOption debtor)
     {
         _selectedDebtor = debtor;
@@ -191,23 +250,30 @@ public partial class CollectTuitionDialog : Form
         if (_selectedDebtor == null) return;
 
         decimal baseAmount = _selectedDebtor.Paid == 0 ? _selectedDebtor.TotalFee : _selectedDebtor.Remaining;
-        decimal amountToPay = baseAmount;
+        decimal installmentAmount = baseAmount;
 
         switch (cboInstallmentPlan.SelectedIndex)
         {
             case 0: // 100%
-                amountToPay = baseAmount;
+                installmentAmount = baseAmount;
                 break;
             case 1: // 50%
-                amountToPay = Math.Round(baseAmount * 0.5m, 0);
+                installmentAmount = Math.Round(baseAmount * 0.5m, 0);
                 break;
             case 2: // 40%
-                amountToPay = Math.Round(baseAmount * 0.4m, 0);
+                installmentAmount = Math.Round(baseAmount * 0.4m, 0);
                 break;
         }
 
+        // Áp dụng chính sách ưu đãi (giảm 10% học viên cũ, giảm khi đăng ký nhóm)
+        decimal discountRate = GetSelectedDiscountRate();
+        decimal discountAmount = Math.Round(installmentAmount * discountRate, 0);
+        decimal amountToPay = Math.Max(0, installmentAmount - discountAmount);
+
         txtAmount.Text = $"{amountToPay:N0} đ";
-        UpdateWordsLabel(amountToPay);
+        
+        string discountDesc = discountAmount > 0 ? $" [Áp dụng {GetSelectedDiscountName()}: -{discountAmount:N0} đ]" : "";
+        lblAmountWords.Text = $"Bằng chữ: {NumberToWords(amountToPay)}{discountDesc}";
 
         decimal simulatedPaid = _selectedDebtor.Paid + amountToPay;
         decimal simulatedRemaining = Math.Max(0, _selectedDebtor.TotalFee - simulatedPaid);
@@ -215,6 +281,15 @@ public partial class CollectTuitionDialog : Form
         lblPaidVal.Text = $"{simulatedPaid:N0} đ";
         lblRemainingVal.Text = $"{simulatedRemaining:N0} đ";
         RemainingDebt = simulatedRemaining;
+
+        if (discountAmount > 0)
+        {
+            txtNote.Text = $"Thu học phí - {_selectedDebtor.Name} ({_selectedDebtor.Code}) - Lớp {_selectedDebtor.ClassName} [{GetSelectedDiscountName()}: -{discountAmount:N0}đ]";
+        }
+        else
+        {
+            txtNote.Text = $"Thu học phí - {_selectedDebtor.Name} ({_selectedDebtor.Code}) - Lớp {_selectedDebtor.ClassName}";
+        }
     }
 
     private void WireEvents()
@@ -230,6 +305,11 @@ public partial class CollectTuitionDialog : Form
         };
 
         cboInstallmentPlan.SelectedIndexChanged += (s, e) =>
+        {
+            ApplyInstallmentSelection();
+        };
+
+        _cboDiscount.SelectedIndexChanged += (s, e) =>
         {
             ApplyInstallmentSelection();
         };
