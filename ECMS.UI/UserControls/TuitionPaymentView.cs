@@ -43,6 +43,7 @@ public partial class TuitionPaymentView : UserControl
         public decimal Amount { get; set; }
         public string Method { get; set; } = string.Empty;
         public string Collector { get; set; } = string.Empty;
+        public bool IsCancelled { get; set; }
     }
 
     private readonly List<TuitionProfileModel> _profiles = new();
@@ -285,11 +286,28 @@ public partial class TuitionPaymentView : UserControl
         };
         gridHistory.Columns.Add(btnPrintReceipt);
 
+        var btnCancelReceipt = new DataGridViewButtonColumn
+        {
+            Name = "colCancelAction",
+            HeaderText = "Hủy phiếu",
+            Text = "❌ Hủy",
+            UseColumnTextForButtonValue = true,
+            Width = 85,
+            FlatStyle = FlatStyle.Flat
+        };
+        gridHistory.Columns.Add(btnCancelReceipt);
+
         gridHistory.CellFormatting += (s, e) =>
         {
             if (e.RowIndex < 0 || e.RowIndex >= gridHistory.Rows.Count) return;
             var item = gridHistory.Rows[e.RowIndex].DataBoundItem as ReceiptHistoryModel;
             if (item == null) return;
+
+            if (item.IsCancelled)
+            {
+                e.CellStyle!.ForeColor = Color.FromArgb(148, 163, 184);
+                return;
+            }
 
             if (gridHistory.Columns[e.ColumnIndex].Name == "colHistAmountVal")
             {
@@ -750,7 +768,66 @@ public partial class TuitionPaymentView : UserControl
             {
                 if (gridHistory.Rows[e.RowIndex].DataBoundItem is ReceiptHistoryModel item)
                 {
+                    if (item.IsCancelled)
+                    {
+                        AppDialog.ShowWarning(ParentForm, "Phiếu thu đã bị hủy",
+                            $"Phiếu thu {item.ReceiptCode} đã bị hủy bỏ trước đó, không thể in ấn hoặc sử dụng lại.");
+                        return;
+                    }
                     OpenReceiptPreview(item);
+                }
+            }
+            else if (e.RowIndex >= 0 && gridHistory.Columns[e.ColumnIndex].Name == "colCancelAction")
+            {
+                if (gridHistory.Rows[e.RowIndex].DataBoundItem is ReceiptHistoryModel item)
+                {
+                    if (item.IsCancelled)
+                    {
+                        AppDialog.ShowInfo(ParentForm, "Thông báo", $"Phiếu thu {item.ReceiptCode} đã ở trạng thái hủy.");
+                        return;
+                    }
+
+                    var confirm = AppDialog.ShowConfirm(
+                        ParentForm,
+                        "Xác nhận hủy phiếu thu",
+                        $"Bạn có chắc chắn muốn HỦY phiếu thu {item.ReceiptCode} (Số tiền: {item.Amount:N0} đ)?\n\n" +
+                        $"• Học viên: {item.StudentName} ({item.StudentCode})\n" +
+                        $"• Lớp: {item.ClassName}\n\n" +
+                        $"Hệ thống sẽ tự động hoàn trả lại số tiền {item.Amount:N0} đ vào công nợ của học viên!",
+                        "Xác nhận hủy",
+                        "Không hủy",
+                        AppDialogType.Danger
+                    );
+
+                    if (confirm == DialogResult.OK)
+                    {
+                        // 1. Đánh dấu hủy phiếu
+                        item.IsCancelled = true;
+                        item.Content = $"[ĐÃ HỦY] {item.Content}";
+
+                        // 2. Tìm học viên tương ứng trong _profiles để hoàn lại nợ
+                        var profile = _profiles.FirstOrDefault(p => p.StudentCode == item.StudentCode && p.ClassName == item.ClassName);
+                        if (profile != null)
+                        {
+                            profile.Paid = Math.Max(0, profile.Paid - item.Amount);
+                            profile.Remaining = profile.TotalFee - profile.Paid;
+                            if (profile.Remaining > 0)
+                            {
+                                profile.PaymentStatus = "⚠️ Còn nợ (Sau hủy phiếu)";
+                                profile.DebtStatus = "Đến hạn trong 7 ngày";
+                            }
+                        }
+
+                        // 3. Làm mới giao diện
+                        ApplyFilter();
+                        gridHistory.Refresh();
+
+                        AppDialog.ShowSuccess(
+                            ParentForm,
+                            "Hủy phiếu thu thành công",
+                            $"Đã hủy thành công phiếu thu {item.ReceiptCode}.\nSố dư công nợ của học viên {item.StudentName} đã được cập nhật lại chính xác!"
+                        );
+                    }
                 }
             }
         };

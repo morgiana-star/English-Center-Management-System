@@ -83,28 +83,59 @@ public partial class CourseEditDialog : Form
             Close();
         };
 
+        txtTuitionFee.Leave += (s, e) =>
+        {
+            string raw = txtTuitionFee.Text.Replace("đ", "").Replace(".", "").Replace(",", "").Trim();
+            if (decimal.TryParse(raw, out decimal val) && val > 0)
+            {
+                txtTuitionFee.Text = $"{val:N0} đ";
+            }
+        };
+
         btnSave.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtCourseCode.Text) || txtCourseCode.Text == "CT-")
             {
-                MessageBox.Show("Vui lòng nhập Mã khóa học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập Mã khóa học (bắt đầu bằng CT-).");
                 txtCourseCode.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtCourseName.Text))
             {
-                MessageBox.Show("Vui lòng nhập Tên khóa học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập Tên khóa học.");
                 txtCourseName.Focus();
                 return;
             }
 
-            int.TryParse(txtSessionCount.Text, out int sessions);
-            if (sessions <= 0) sessions = 24;
+            if (!int.TryParse(txtSessionCount.Text.Trim(), out int sessions) || sessions <= 0)
+            {
+                AppDialog.ShowWarning(this, "Số buổi học không hợp lệ", "Số buổi học phải là số nguyên dương lớn hơn 0 (ví dụ: 24 buổi).");
+                txtSessionCount.Focus();
+                return;
+            }
+
+            if (sessions < 10)
+            {
+                AppDialog.ShowWarning(this, "Thời lượng khóa học quá ngắn", "Khóa đào tạo phải có thời lượng tối thiểu 10 buổi học tiêu chuẩn.");
+                txtSessionCount.Focus();
+                return;
+            }
 
             string feeRaw = txtTuitionFee.Text.Replace("đ", "").Replace(".", "").Replace(",", "").Trim();
-            decimal.TryParse(feeRaw, out decimal fee);
-            if (fee <= 0) fee = 5000000;
+            if (!decimal.TryParse(feeRaw, out decimal fee) || fee <= 0)
+            {
+                AppDialog.ShowWarning(this, "Học phí không hợp lệ", "Vui lòng nhập mức học phí chuẩn hợp lệ lớn hơn 0 đ (ví dụ: 6.000.000 đ).");
+                txtTuitionFee.Focus();
+                return;
+            }
+
+            if (fee < 500000)
+            {
+                AppDialog.ShowWarning(this, "Học phí quá thấp", "Mức học phí chuẩn tối thiểu của một khóa học là 500.000 đ. Vui lòng kiểm tra lại!");
+                txtTuitionFee.Focus();
+                return;
+            }
 
             var newCourse = new Course
             {
@@ -115,17 +146,17 @@ public partial class CourseEditDialog : Form
                 TotalSessions = sessions,
                 BaseTuitionFee = fee,
                 PassingScore = 5.0m,
-                IsActive = true
+                IsActive = cboStatus.SelectedIndex == 0
             };
 
             var res = await _courseService.CreateCourseAsync(newCourse);
             if (!res.Success)
             {
-                MessageBox.Show(res.Message, "Lỗi lưu CSDL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppDialog.ShowError(this, "Lỗi lưu CSDL", res.Message);
                 return;
             }
 
-            MessageBox.Show("Đã lưu chương trình đào tạo thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AppDialog.ShowSuccess(this, "Lưu khóa học thành công", $"Đã lưu chương trình đào tạo '{newCourse.CourseName}' ({newCourse.CourseCode}) vào CSDL SQLite!");
             DialogResult = DialogResult.OK;
             Close();
         };
