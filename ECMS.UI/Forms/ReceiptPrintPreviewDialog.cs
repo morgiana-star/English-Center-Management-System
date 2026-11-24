@@ -107,7 +107,7 @@ public partial class ReceiptPrintPreviewDialog : Form
         lblReceiptNumber.Text = $"Số: {_receiptCode}";
         lblReceiptDate.Text = $"Ngày {DateTime.Now:dd} tháng {DateTime.Now:MM} năm {DateTime.Now:yyyy}";
         lblPayerVal.Text = $"{_studentName} · {_studentCode}";
-        lblCourseVal.Text = $"{_courseName} / Lớp {_className}";
+        lblCourseVal.Text = $"Lớp {_className}";
         lblReasonVal.Text = _reason;
         lblAmountVal.Text = $"{_amount:N0} đ";
         lblWordsVal.Text = ConvertAmountToWords(_amount);

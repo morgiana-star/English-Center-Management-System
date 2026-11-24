@@ -7,6 +7,7 @@ using Dapper;
 using ECMS.Business.Services;
 using ECMS.Core.Entities;
 using ECMS.Core.Enums;
+using ECMS.Core.Helpers;
 using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
@@ -165,14 +166,8 @@ public partial class CreateClassDialog : Form
         if (cboTimeSlot.Items.Count > 0) cboTimeSlot.SelectedIndex = 0;
 
         cboStatus.Items.Clear();
-        cboStatus.Items.AddRange(new object[]
-        {
-            "Bản nháp",
-            "Đang tuyển sinh",
-            "Đang học",
-            "Đã kết thúc"
-        });
-        if (cboStatus.Items.Count > 0) cboStatus.SelectedIndex = 0;
+        cboStatus.Items.AddRange(StatusFormatter.ClassStatusOptions);
+        if (cboStatus.Items.Count > 1) cboStatus.SelectedIndex = 1; // Đang tuyển sinh
 
         txtCapacity.Text = "20";
         dtpStartDate.Value = DateTime.Today;
@@ -257,6 +252,11 @@ public partial class CreateClassDialog : Form
             int selectedRoomId = selectedRoom?.RoomId ?? 1;
             string courseName = (cboCourse.SelectedItem as CourseComboItem)?.CourseName ?? cboCourse.SelectedItem?.ToString() ?? "IELTS";
 
+            string dbStatusStr = StatusFormatter.ToDbClassStatus(cboStatus.SelectedItem?.ToString());
+            var parsedStatus = Enum.TryParse<ClassStatus>(dbStatusStr, out var stVal)
+                ? stVal
+                : ClassStatus.OpenForEnrollment;
+
             var newClass = new Class
             {
                 ClassCode = txtClassCode.Text.Trim(),
@@ -267,7 +267,7 @@ public partial class CreateClassDialog : Form
                 StartDate = dtpStartDate.Value,
                 EndDate = dtpEndDate.Value,
                 MaxStudents = capacity,
-                Status = ClassStatus.InProgress
+                Status = parsedStatus
             };
 
             var res = await _classService.CreateClassAsync(newClass);

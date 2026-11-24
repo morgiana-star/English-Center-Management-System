@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using ECMS.Core.DTOs;
+using ECMS.Core.Helpers;
 using ECMS.Data.Database;
 
 namespace ECMS.Data.Repositories;
@@ -127,35 +128,9 @@ public class DashboardRepository : IDashboardRepository
             }
         }
 
-        // Seed Payments 6 tháng gần nhất (chỉ chạy khi có Invoice và Cashier hợp lệ)
-        int monthDistinct = await conn.ExecuteScalarAsync<int>("SELECT COUNT(DISTINCT strftime('%Y-%m', PaymentDate)) FROM Payments WHERE Status = 'Valid';");
-        if (monthDistinct < 5)
-        {
-            int defaultInvId = await conn.ExecuteScalarAsync<int>("SELECT COALESCE(MIN(InvoiceId), 0) FROM Invoices;");
-            int defaultCashierId = await conn.ExecuteScalarAsync<int>("SELECT COALESCE(MIN(UserId), 0) FROM Users;");
-
-            if (defaultInvId > 0 && defaultCashierId > 0)
-            {
-                DateTime now = DateTime.Today;
-                decimal[] amounts = { 28500000m, 34200000m, 38900000m, 41500000m, 46800000m, 52400000m };
-                for (int i = 0; i < 6; i++)
-                {
-                    DateTime mDate = now.AddMonths(i - 5);
-                    string ym = mDate.ToString("yyyy-MM");
-                    int hasMonth = await conn.ExecuteScalarAsync<int>(
-                        "SELECT COUNT(*) FROM Payments WHERE strftime('%Y-%m', PaymentDate) = @Ym;", new { Ym = ym });
-                    if (hasMonth == 0)
-                    {
-                        string pDate = new DateTime(mDate.Year, mDate.Month, 15).ToString("yyyy-MM-dd 10:00:00");
-                        string pCode = $"PT-{mDate:yyyyMM}-001";
-                        await conn.ExecuteAsync(@"
-                            INSERT OR IGNORE INTO Payments (InvoiceId, PaymentCode, PaymentDate, PaidAmount, PaymentMethod, CashierId, Status, Note, CreatedAt)
-                            VALUES (@InvId, @Code, @Date, @Amount, 'Chuyển khoản', @CashierId, 'Valid', @Note, @Date);",
-                            new { InvId = defaultInvId, Code = pCode, Date = pDate, Amount = (double)amounts[i], CashierId = defaultCashierId, Note = $"Doanh thu học phí tháng {mDate:MM/yyyy}" });
-                    }
-                }
-            }
-        }
+        // Dọn dẹp các bản ghi doanh thu giả (nếu từng được sinh tự động trước đây) để biểu đồ phản ánh 100% doanh thu thật
+        await conn.ExecuteAsync(
+            "DELETE FROM Payments WHERE Note LIKE 'Doanh thu học phí tháng %' AND PaymentCode LIKE 'PT-_____-001';");
 
         _seedChecked = true;
     }
@@ -225,6 +200,11 @@ public class DashboardRepository : IDashboardRepository
                 FROM Payments
                 WHERE Status = 'Valid' AND strftime('%Y-%m', PaymentDate) = @Ym;", new { Ym = ym });
 
+            int payCount = await conn.ExecuteScalarAsync<int>(@"
+                SELECT COUNT(*)
+                FROM Payments
+                WHERE Status = 'Valid' AND strftime('%Y-%m', PaymentDate) = @Ym;", new { Ym = ym });
+
             int newStudents = await conn.ExecuteScalarAsync<int>(@"
                 SELECT COUNT(*)
                 FROM Enrollments
@@ -244,9 +224,11 @@ public class DashboardRepository : IDashboardRepository
                 MonthLabel = $"T{m.Month}",
                 YearMonth = ym,
                 RevenueMillion = revMil,
+                ActualRevenueAmount = rev,
+                PaymentCount = payCount,
                 DisplayLabel = revMil.ToString("0.#", CultureInfo.InvariantCulture),
                 IsHighlight = i == 0,
-                TargetAmount = rev > 0 ? Math.Round(rev * 0.9m, 0) : 30000000m,
+                TargetAmount = rev > 0 ? Math.Round(rev * 0.9m, 0) : 0m,
                 GrowthRateMoM = growth,
                 NewStudentsCount = newStudents
             });
@@ -279,7 +261,11 @@ public class DashboardRepository : IDashboardRepository
             int completed = await conn.ExecuteScalarAsync<int>(@"
                 SELECT COUNT(*) FROM Students WHERE Status = 'Completed' AND CreatedAt <= @YmEnd;", new { YmEnd = ymEnd });
 
-            int active = Math.Max(0, cumulativeStudents - completed);
+            int active = await conn.ExecuteScalarAsync<int>(@"
+                SELECT COUNT(*) FROM Students WHERE Status = 'Active' AND CreatedAt <= @YmEnd;", new { YmEnd = ymEnd });
+
+            int archived = await conn.ExecuteScalarAsync<int>(@"
+                SELECT COUNT(*) FROM Students WHERE Status IN ('Reserved', 'Dropped') AND CreatedAt <= @YmEnd;", new { YmEnd = ymEnd });
 
             result.Add(new MonthlyStudentGrowthBarDto
             {
@@ -290,8 +276,10 @@ public class DashboardRepository : IDashboardRepository
                 IsHighlight = i == 0,
                 TotalStudents = cumulativeStudents,
                 NewStudents = newStudents,
+                ActiveCount = active,
+                ArchivedCount = archived,
                 GraduatedCount = completed,
-                RetentionRate = cumulativeStudents > 0 ? $"{(active * 100.0 / cumulativeStudents):0.0}%" : "100%"
+                RetentionRate = cumulativeStudents > 0 ? $"{(active * 100.0 / cumulativeStudents):0.0}%" : "0%"
             });
         }
 
@@ -327,16 +315,18 @@ public class DashboardRepository : IDashboardRepository
         const string sql = @"
             SELECT 
                 cl.ClassCode,
+                cl.ClassName,
                 co.CourseName,
                 COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
                 COUNT(DISTINCT e.StudentId) || '/' || cl.MaxStudents AS CapacityFormatted,
                 COALESCE((SELECT COUNT(*) FROM ClassSchedules cs WHERE cs.ClassId = cl.ClassId), 0) || '/' || co.TotalSessions AS LessonsProgress,
-                COALESCE(AVG(e.AttendanceRate), 100.0) AS AttendanceRate,
-                CASE 
-                    WHEN COALESCE(AVG(e.AttendanceRate), 100.0) >= 90 THEN 'Tốt'
-                    WHEN COALESCE(AVG(e.AttendanceRate), 100.0) >= 80 THEN 'Đạt'
-                    ELSE 'Cần lưu ý'
-                END AS StatusText
+                COALESCE((
+                    SELECT ROUND(SUM(CASE WHEN ar.Status IN ('Present', 'Late') THEN 1.0 ELSE 0.0 END) * 100.0 / COUNT(*), 1)
+                    FROM AttendanceRecords ar
+                    JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId
+                    WHERE cs.ClassId = cl.ClassId
+                ), 0.0) AS AttendanceRate,
+                '' AS StatusText
             FROM Classes cl
             JOIN Courses co ON cl.CourseId = co.CourseId
             LEFT JOIN Teachers t ON cl.MainTeacherId = t.TeacherId
@@ -599,6 +589,190 @@ public class DashboardRepository : IDashboardRepository
         }
 
         return results;
+    }
+
+    public async Task<IEnumerable<TodayScheduleItemDto>> GetTodaySchedulesAsync()
+    {
+        await EnsureDashboardSeedDataAsync();
+        using var conn = DatabaseConfig.CreateOpenConnection();
+
+        string todayStr = DateTime.Today.ToString("yyyy-MM-dd");
+
+        const string sql = @"
+            SELECT 
+                cs.StartTime || ' - ' || cs.EndTime AS TimeDisplay,
+                cl.ClassCode,
+                cl.ClassName,
+                COALESCE(r.RoomName, 'Chưa xếp') AS RoomName,
+                COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = cl.ClassId AND e.Status IN ('Active', 'PendingPayment')) AS CurrentEnrollment,
+                cl.MaxStudents AS MaxCapacity,
+                cl.Status AS RawStatus
+            FROM ClassSchedules cs
+            JOIN Classes cl ON cs.ClassId = cl.ClassId
+            LEFT JOIN ClassRooms r ON COALESCE(cs.RoomId, cl.DefaultRoomId) = r.RoomId
+            LEFT JOIN Teachers t ON COALESCE(cs.TeacherId, cl.MainTeacherId) = t.TeacherId
+            WHERE cs.Date = @Today
+            ORDER BY cs.StartTime ASC, cl.ClassCode ASC;";
+
+        var rows = await conn.QueryAsync<dynamic>(sql, new { Today = todayStr });
+        var result = new List<TodayScheduleItemDto>();
+        foreach (var r in rows)
+        {
+            result.Add(new TodayScheduleItemDto
+            {
+                TimeDisplay = r.TimeDisplay ?? "",
+                ClassCode = r.ClassCode ?? "",
+                ClassName = r.ClassName ?? "",
+                RoomName = r.RoomName ?? "Chưa xếp",
+                TeacherName = r.TeacherName ?? "Chưa phân công",
+                CurrentEnrollment = (int)(r.CurrentEnrollment ?? 0),
+                MaxCapacity = (int)(r.MaxCapacity ?? 20),
+                StatusText = StatusFormatter.FormatClassStatus((string?)r.RawStatus)
+            });
+        }
+        return result;
+    }
+
+    public async Task<IEnumerable<OverdueDebtAlertItemDto>> GetOverdueDebtAlertsAsync()
+    {
+        await EnsureDashboardSeedDataAsync();
+        using var conn = DatabaseConfig.CreateOpenConnection();
+
+        string todayStr = DateTime.Today.ToString("yyyy-MM-dd");
+
+        const string sql = @"
+            SELECT 
+                inv.InvoiceId,
+                inv.InvoiceCode,
+                s.StudentCode,
+                s.FullName AS StudentName,
+                COALESCE(s.Phone, '') AS Phone,
+                cl.ClassCode,
+                inv.BalanceDue,
+                inv.DueDate
+            FROM Invoices inv
+            JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId
+            JOIN Students s ON e.StudentId = s.StudentId
+            JOIN Classes cl ON e.ClassId = cl.ClassId
+            WHERE inv.BalanceDue > 0
+              AND inv.Status != 'Cancelled'
+              AND date(inv.DueDate) < date(@Today)
+            ORDER BY inv.DueDate ASC, inv.BalanceDue DESC;";
+
+        var rows = await conn.QueryAsync<dynamic>(sql, new { Today = todayStr });
+        var list = new List<OverdueDebtAlertItemDto>();
+        foreach (var r in rows)
+        {
+            string dueRaw = r.DueDate ?? "";
+            string dueDisp = dueRaw;
+            int daysOverdue = 0;
+            if (DateTime.TryParse(dueRaw, out var dt))
+            {
+                dueDisp = dt.ToString("dd/MM/yyyy");
+                daysOverdue = Math.Max(1, (DateTime.Today - dt.Date).Days);
+            }
+
+            list.Add(new OverdueDebtAlertItemDto
+            {
+                InvoiceId = (int)r.InvoiceId,
+                InvoiceCode = r.InvoiceCode ?? "",
+                StudentCode = r.StudentCode ?? "",
+                StudentName = r.StudentName ?? "",
+                Phone = r.Phone ?? "",
+                ClassCode = r.ClassCode ?? "",
+                BalanceDue = (decimal)(r.BalanceDue ?? 0m),
+                DueDate = dueDisp,
+                DaysOverdue = daysOverdue
+            });
+        }
+        return list;
+    }
+
+    public async Task<DashboardCategorizedSearchDto> QuickSearchCategorizedAsync(string keyword)
+    {
+        await EnsureDashboardSeedDataAsync();
+        var dto = new DashboardCategorizedSearchDto();
+        if (string.IsNullOrWhiteSpace(keyword)) return dto;
+
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        string kw = $"%{keyword.Trim()}%";
+
+        // 1. Học viên
+        var students = await conn.QueryAsync<dynamic>(@"
+            SELECT 
+                s.StudentId, s.StudentCode, s.FullName, COALESCE(s.Phone, '') AS Phone, s.Status,
+                COALESCE((SELECT c.ClassCode FROM Enrollments e JOIN Classes c ON e.ClassId = c.ClassId WHERE e.StudentId = s.StudentId ORDER BY e.EnrollmentId DESC LIMIT 1), 'Chờ xếp lớp') AS ClassName,
+                COALESCE((SELECT SUM(inv.BalanceDue) FROM Invoices inv JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId WHERE e.StudentId = s.StudentId AND inv.Status != 'Cancelled'), 0) AS BalanceDue
+            FROM Students s
+            WHERE s.StudentCode LIKE @kw OR s.FullName LIKE @kw OR s.Phone LIKE @kw
+            ORDER BY s.StudentId DESC;", new { kw });
+
+        foreach (var st in students)
+        {
+            string clsName = st.ClassName ?? "Chờ xếp lớp";
+            dto.Students.Add(new QuickSearchStudentItemDto
+            {
+                StudentId = (int)st.StudentId,
+                StudentCode = st.StudentCode ?? "",
+                FullName = st.FullName ?? "",
+                Phone = st.Phone ?? "",
+                ClassName = clsName,
+                BalanceDue = (decimal)(st.BalanceDue ?? 0m),
+                StatusText = StatusFormatter.FormatStudentStatus((string?)st.Status, clsName != "Chờ xếp lớp")
+            });
+        }
+
+        // 2. Khóa học
+        var courses = await conn.QueryAsync<dynamic>(@"
+            SELECT CourseId, CourseCode, CourseName, Level, TotalSessions, BaseTuitionFee, IsActive
+            FROM Courses
+            WHERE CourseCode LIKE @kw OR CourseName LIKE @kw OR Level LIKE @kw
+            ORDER BY CourseId DESC;", new { kw });
+
+        foreach (var co in courses)
+        {
+            dto.Courses.Add(new QuickSearchCourseItemDto
+            {
+                CourseId = (int)co.CourseId,
+                CourseCode = co.CourseCode ?? "",
+                CourseName = co.CourseName ?? "",
+                Level = co.Level ?? "",
+                TotalSessions = (int)(co.TotalSessions ?? 0),
+                BaseTuitionFee = (decimal)(co.BaseTuitionFee ?? 0m),
+                StatusText = (int)(co.IsActive ?? 1) == 1 ? "Đang đào tạo" : "Ngừng mở"
+            });
+        }
+
+        // 3. Lớp học
+        var classes = await conn.QueryAsync<dynamic>(@"
+            SELECT 
+                cl.ClassId, cl.ClassCode, cl.ClassName, co.CourseName,
+                COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = cl.ClassId AND e.Status IN ('Active', 'PendingPayment')) AS CurrentCount,
+                cl.MaxStudents,
+                cl.Status
+            FROM Classes cl
+            JOIN Courses co ON cl.CourseId = co.CourseId
+            LEFT JOIN Teachers t ON cl.MainTeacherId = t.TeacherId
+            WHERE cl.ClassCode LIKE @kw OR cl.ClassName LIKE @kw OR co.CourseName LIKE @kw
+            ORDER BY cl.ClassId DESC;", new { kw });
+
+        foreach (var cl in classes)
+        {
+            dto.Classes.Add(new QuickSearchClassItemDto
+            {
+                ClassId = (int)cl.ClassId,
+                ClassCode = cl.ClassCode ?? "",
+                ClassName = cl.ClassName ?? "",
+                CourseName = cl.CourseName ?? "",
+                TeacherName = cl.TeacherName ?? "Chưa phân công",
+                CapacityFormatted = $"{cl.CurrentCount}/{cl.MaxStudents}",
+                StatusText = StatusFormatter.FormatClassStatus((string?)cl.Status)
+            });
+        }
+
+        return dto;
     }
 
     private static string FormatMoneyShort(decimal amount)

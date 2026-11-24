@@ -1,51 +1,70 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
+using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class SelectStudentsForClassDialog : Form
 {
+    private readonly IClassService _classService = new ClassService();
+    private readonly int _classId;
     private readonly string _classCode = string.Empty;
-    private readonly List<string[]> _allStudents = new();
+    private List<WaitingStudentItemDto> _allStudents = new();
 
+    public List<int> SelectedStudentIds { get; } = new();
     public List<string> SelectedStudentCodes { get; } = new();
 
-    public SelectStudentsForClassDialog() : this("IELTS-F01")
+    public SelectStudentsForClassDialog() : this(0, "IELTS-F01")
     {
     }
 
-    public SelectStudentsForClassDialog(string classCode)
+    public SelectStudentsForClassDialog(string classCode) : this(0, classCode)
+    {
+    }
+
+    public SelectStudentsForClassDialog(int classId, string classCode)
     {
         InitializeComponent();
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
+        _classId = classId;
         _classCode = classCode;
+        Text = $"Thêm học viên chờ xếp lớp vào lớp {_classCode} - ECMS";
 
-        LoadData();
+        dgvStudents.ReadOnly = false;
+        dgvStudents.ScrollBars = ScrollBars.Both;
+        colSelect.ReadOnly = false;
+
         WireEvents();
+        _ = LoadDataAsync();
     }
 
-    private void LoadData()
+    private async Task LoadDataAsync()
     {
-        _allStudents.Clear();
-        _allStudents.Add(new[] { "HV-0245", "Lê Thanh Hằng", "0901234567", "thanhhang@gmail.com", "Chờ xếp lớp" });
-        _allStudents.Add(new[] { "HV-0246", "Phạm Quốc Bảo", "0912345678", "quocbao.p@gmail.com", "Chờ xếp lớp" });
-        _allStudents.Add(new[] { "HV-0247", "Đỗ Quỳnh Chi", "0934567890", "quynhchi.do@gmail.com", "Chờ xếp lớp" });
-        _allStudents.Add(new[] { "HV-0248", "Vũ Hoàng Nam", "0987654321", "nam.vh@gmail.com", "Chờ xếp lớp" });
-        _allStudents.Add(new[] { "HV-0249", "Bùi Thị Mai", "0945678901", "maibui@gmail.com", "Đang học (Lớp khác)" });
-        _allStudents.Add(new[] { "HV-0250", "Nguyễn Tuấn Kiệt", "0976543210", "tuankiet.ng@gmail.com", "Chờ xếp lớp" });
-
-        RenderRows(_allStudents);
+        try
+        {
+            _allStudents = (await _classService.GetWaitingStudentsForClassAsync(_classId)).ToList();
+            RenderRows(_allStudents);
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(this, "Lỗi tải danh sách học viên chờ xếp lớp", ex.Message);
+        }
     }
 
-    private void RenderRows(List<string[]> students)
+    private void RenderRows(List<WaitingStudentItemDto> students)
     {
         dgvStudents.Rows.Clear();
         foreach (var s in students)
         {
-            dgvStudents.Rows.Add(false, s[0], s[1], s[2], s[3], s[4]);
+            int idx = dgvStudents.Rows.Add(false, s.StudentCode, s.FullName, s.Phone, s.Email, s.StatusDisplay);
+            dgvStudents.Rows[idx].Tag = s;
         }
         UpdateSelectionCount();
     }
@@ -54,17 +73,17 @@ public partial class SelectStudentsForClassDialog : Form
     {
         txtSearch.TextChanged += (s, e) =>
         {
-            string q = txtSearch.Text.Trim().ToLower();
+            string q = txtSearch.Text.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(q))
             {
                 RenderRows(_allStudents);
             }
             else
             {
-                var filtered = _allStudents.FindAll(x =>
-                    x[0].ToLower().Contains(q) ||
-                    x[1].ToLower().Contains(q) ||
-                    x[2].ToLower().Contains(q));
+                var filtered = _allStudents.Where(x =>
+                    x.StudentCode.ToLowerInvariant().Contains(q) ||
+                    x.FullName.ToLowerInvariant().Contains(q) ||
+                    x.Phone.ToLowerInvariant().Contains(q)).ToList();
                 RenderRows(filtered);
             }
         };
@@ -93,23 +112,21 @@ public partial class SelectStudentsForClassDialog : Form
 
         btnConfirm.Click += (s, e) =>
         {
+            SelectedStudentIds.Clear();
             SelectedStudentCodes.Clear();
             foreach (DataGridViewRow row in dgvStudents.Rows)
             {
                 bool isChecked = Convert.ToBoolean(row.Cells[colSelect.Index].Value ?? false);
-                if (isChecked)
+                if (isChecked && row.Tag is WaitingStudentItemDto st)
                 {
-                    string code = row.Cells[colCode.Index].Value?.ToString() ?? "";
-                    if (!string.IsNullOrEmpty(code))
-                    {
-                        SelectedStudentCodes.Add(code);
-                    }
+                    SelectedStudentIds.Add(st.StudentId);
+                    SelectedStudentCodes.Add(st.StudentCode);
                 }
             }
 
-            if (SelectedStudentCodes.Count == 0)
+            if (SelectedStudentIds.Count == 0)
             {
-                MessageBox.Show("Vui lòng tích chọn ít nhất 1 học viên để thêm vào lớp.", "Chưa chọn học viên", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Chưa chọn học viên", "Vui lòng tích chọn ít nhất 1 học viên chờ xếp lớp để thêm vào lớp.");
                 return;
             }
 
@@ -124,11 +141,9 @@ public partial class SelectStudentsForClassDialog : Form
         foreach (DataGridViewRow row in dgvStudents.Rows)
         {
             if (Convert.ToBoolean(row.Cells[colSelect.Index].Value ?? false))
-            {
                 count++;
-            }
         }
-        btnConfirm.Text = $"Xác nhận thêm ({count})";
-        btnConfirm.Enabled = count > 0;
+
+        btnConfirm.Text = count > 0 ? $"Xác nhận thêm ({count})" : "Xác nhận thêm";
     }
 }

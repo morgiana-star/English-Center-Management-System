@@ -21,6 +21,7 @@ public partial class DashboardOverviewView : UserControl
 {
     private readonly IDashboardService _dashboardService = new DashboardService();
     private bool _isLoading = false;
+    private Label _lblNoScheduleToday = null!;
 
     public DashboardOverviewView()
     {
@@ -46,6 +47,21 @@ public partial class DashboardOverviewView : UserControl
         _btnStudentsDetail.Anchor = AnchorStyles.Top | AnchorStyles.Left;
         _btnAttDetail.Anchor = AnchorStyles.Top | AnchorStyles.Left;
         _btnSchedDetail.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+
+        // Đổi tiêu đề thành "Lịch học hôm nay" và tạo nhãn hiển thị khi hôm nay không có lịch học
+        _lblSchedTitle.Text = "Lịch học hôm nay";
+        _lblNoScheduleToday = new Label
+        {
+            Text = "Hôm nay chưa có lịch học nào.",
+            Font = new Font("Segoe UI", 10F, FontStyle.Italic),
+            ForeColor = Color.FromArgb(100, 116, 139),
+            TextAlign = ContentAlignment.MiddleCenter,
+            AutoSize = false,
+            Visible = false,
+            BackColor = Color.White
+        };
+        _cardSchedule.Controls.Add(_lblNoScheduleToday);
+        _lblNoScheduleToday.BringToFront();
     }
 
     protected override void OnLoad(EventArgs e)
@@ -75,9 +91,10 @@ public partial class DashboardOverviewView : UserControl
             _lblKpi6Value.Text = kpi.TotalOutstandingDebtFormatted;
             _lblAttPercent.Text = $"{kpi.AverageAttendanceRate:0.0}%";
 
-            // Cập nhật số lượng học viên vắng cần xử lý trên nút
+            // Cập nhật tổng số mục cần xử lý (HV vắng quá buổi + HV công nợ quá hạn)
             var pendingTasks = (await _dashboardService.GetPendingTasksAsync()).ToList();
-            _btnPendingTasks.Text = $"Danh sách cần xử lý ({pendingTasks.Count})";
+            var overdueDebts = (await _dashboardService.GetOverdueDebtAlertsAsync()).ToList();
+            _btnPendingTasks.Text = $"Danh sách cần xử lý ({pendingTasks.Count + overdueDebts.Count})";
 
             // 2. Nạp Biểu đồ doanh thu 6 tháng
             var revTrend = (await _dashboardService.GetMonthlyRevenueTrendAsync(6)).ToList();
@@ -101,15 +118,15 @@ public partial class DashboardOverviewView : UserControl
             _dgvRatio.ClearSelection();
             _dgvRatio.CurrentCell = null;
 
-            // 5. Nạp Bảng Lịch học hôm nay & Sắp khai giảng
-            var schedules = (await _dashboardService.GetTodayAndUpcomingSchedulesAsync()).ToList();
+            // 5. Nạp Bảng Lịch học hôm nay (lọc đúng ngày hôm nay từ ClassSchedules)
+            var schedules = (await _dashboardService.GetTodaySchedulesAsync()).ToList();
             _dgvSchedule.Columns.Clear();
-            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / ngày ↑", FillWeight = 22 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ học", FillWeight = 18 });
             _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp học", FillWeight = 20 });
-            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 14 });
-            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên phụ trách", FillWeight = 26 });
-            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 14 });
-            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái lớp", FillWeight = 18 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 12 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 24 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 10 });
+            _dgvSchedule.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 16 });
             _dgvSchedule.Rows.Clear();
             foreach (var s in schedules)
             {
@@ -117,6 +134,11 @@ public partial class DashboardOverviewView : UserControl
             }
             _dgvSchedule.ClearSelection();
             _dgvSchedule.CurrentCell = null;
+
+            bool hasTodaySchedule = schedules.Count > 0;
+            _dgvSchedule.Visible = hasTodaySchedule;
+            _lblNoScheduleToday.Visible = !hasTodaySchedule;
+            if (!hasTodaySchedule) _lblNoScheduleToday.BringToFront();
         }
         catch (Exception ex)
         {
@@ -148,7 +170,7 @@ public partial class DashboardOverviewView : UserControl
             }
         };
 
-        // 4. Xem chi tiết biểu đồ doanh thu dạng DataGridView
+        // 4. Xem chi tiết biểu đồ doanh thu (đơn giản, rõ nghĩa từ Payments & Enrollments)
         _btnRevenueDetail.Click += async (s, e) =>
         {
             try
@@ -156,32 +178,26 @@ public partial class DashboardOverviewView : UserControl
                 var revList = (await _dashboardService.GetMonthlyRevenueTrendAsync(6)).ToList();
                 QuickDetailGridDialog.ShowDialog(
                     ParentForm,
-                    "Báo cáo chi tiết doanh thu 6 tháng gần nhất",
-                    "Dữ liệu doanh thu thực thu từ bảng Payments và số học viên mới nhập học",
+                    "Chi tiết doanh thu 6 tháng gần nhất",
+                    "Dữ liệu thực thu từ bảng Payments và lượt ghi danh mới trong tháng",
                     dgv =>
                     {
                         dgv.Columns.Clear();
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 18, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Doanh thu thực thu", FillWeight = 26, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chỉ tiêu ước tính", FillWeight = 24, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ đạt (%)", FillWeight = 18, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số HV mới", FillWeight = 16, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tăng trưởng MoM", FillWeight = 18, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tháng", FillWeight = 22, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số phiếu thu", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng thực thu", FillWeight = 34, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số lượt đăng ký", FillWeight = 24, ReadOnly = true });
 
                         foreach (var r in revList)
                         {
-                            decimal act = (decimal)(r.RevenueMillion * 1000000);
-                            double pct = r.TargetAmount > 0 ? (double)(act / r.TargetAmount * 100) : 0.0;
                             string monthDisplay = DateTime.TryParseExact(r.YearMonth, "yyyy-MM", null, System.Globalization.DateTimeStyles.None, out var dt)
                                 ? dt.ToString("MM/yyyy")
                                 : r.YearMonth;
                             dgv.Rows.Add(
                                 $"Tháng {monthDisplay}",
-                                $"{act:N0} đ",
-                                $"{r.TargetAmount:N0} đ",
-                                $"{pct:0.0}%",
-                                $"{r.NewStudentsCount} học viên",
-                                r.GrowthRateMoM);
+                                $"{r.PaymentCount} phiếu",
+                                $"{r.ActualRevenueAmount:N0} đ",
+                                $"{r.NewStudentsCount} lượt");
                         }
 
                         dgv.ClearSelection();
@@ -193,7 +209,7 @@ public partial class DashboardOverviewView : UserControl
             }
         };
 
-        // 5. Xem chi tiết biểu đồ tăng trưởng học viên 6 tháng dạng DataGridView
+        // 5. Xem chi tiết biểu đồ tăng trưởng học viên 6 tháng (đơn giản, rõ nghĩa từ Students)
         _btnStudentsDetail.Click += async (s, e) =>
         {
             try
@@ -201,16 +217,16 @@ public partial class DashboardOverviewView : UserControl
                 var stuList = (await _dashboardService.GetMonthlyStudentGrowthAsync(6)).ToList();
                 QuickDetailGridDialog.ShowDialog(
                     ParentForm,
-                    "Báo cáo chi tiết tăng trưởng học viên 6 tháng gần nhất",
-                    "Số lượng học viên lũy kế, học viên mới và tỷ lệ duy trì theo từng tháng",
+                    "Chi tiết tăng trưởng học viên 6 tháng gần nhất",
+                    "Thống kê hồ sơ học viên mới, tổng tích lũy, đang học và đã lưu trữ theo tháng",
                     dgv =>
                     {
                         dgv.Columns.Clear();
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian ↑", FillWeight = 20, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng học viên", FillWeight = 20, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tuyển mới trong tháng", FillWeight = 22, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đã hoàn thành", FillWeight = 18, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tỷ lệ duy trì", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tháng", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học viên mới", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng tích lũy", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đang học", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đã lưu trữ", FillWeight = 20, ReadOnly = true });
 
                         foreach (var st in stuList)
                         {
@@ -219,10 +235,10 @@ public partial class DashboardOverviewView : UserControl
                                 : st.YearMonth;
                             dgv.Rows.Add(
                                 $"Tháng {monthDisplay}",
-                                $"{st.TotalStudents} học viên",
-                                $"{st.NewStudents} học viên",
-                                $"{st.GraduatedCount} học viên",
-                                st.RetentionRate);
+                                $"{st.NewStudents}",
+                                $"{st.TotalStudents}",
+                                $"{st.ActiveCount}",
+                                $"{st.ArchivedCount}");
                         }
 
                         dgv.ClearSelection();
@@ -234,7 +250,7 @@ public partial class DashboardOverviewView : UserControl
             }
         };
 
-        // 6. Xem chi tiết chuyên cần từng lớp học thật từ Database
+        // 6. Xem chi tiết chuyên cần lớp học (đơn giản, rõ nghĩa từ Classes & AttendanceRecords)
         _btnAttDetail.Click += async (s, e) =>
         {
             try
@@ -242,22 +258,21 @@ public partial class DashboardOverviewView : UserControl
                 var attList = (await _dashboardService.GetClassAttendanceDetailsAsync()).ToList();
                 QuickDetailGridDialog.ShowDialog(
                     ParentForm,
-                    "Báo cáo chi tiết chuyên cần theo từng lớp học",
-                    "Số liệu thực tế từ bảng Lớp học, Lịch học và Chuyên cần",
+                    "Chi tiết chuyên cần theo từng lớp học",
+                    "Số liệu thực tế từ bảng Lớp học và Chuyên cần",
                     dgv =>
                     {
                         dgv.Columns.Clear();
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp ↑", FillWeight = 18, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Khóa học", FillWeight = 28, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 24, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 14, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số buổi đã xếp", FillWeight = 16, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chuyên cần", FillWeight = 16, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Đánh giá", FillWeight = 18, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp", FillWeight = 14, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên lớp", FillWeight = 22, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Khóa học", FillWeight = 22, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 10, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chuyên cần (%)", FillWeight = 12, ReadOnly = true });
 
                         foreach (var item in attList)
                         {
-                            dgv.Rows.Add(item.ClassCode, item.CourseName, item.TeacherName, item.CapacityFormatted, item.LessonsProgress, item.AttendanceRateFormatted, item.StatusText);
+                            dgv.Rows.Add(item.ClassCode, item.ClassName, item.CourseName, item.TeacherName, item.CapacityFormatted, item.AttendanceRateFormatted);
                         }
 
                         dgv.ClearSelection();
@@ -269,26 +284,26 @@ public partial class DashboardOverviewView : UserControl
             }
         };
 
-        // 7. Xem chi tiết Lịch hôm nay & Sắp khai giảng dạng DataGridView
+        // 7. Xem chi tiết Lịch học hôm nay
         _btnSchedDetail.Click += async (s, e) =>
         {
             try
             {
-                var schedList = (await _dashboardService.GetTodayAndUpcomingSchedulesAsync()).ToList();
+                var schedList = (await _dashboardService.GetTodaySchedulesAsync()).ToList();
                 QuickDetailGridDialog.ShowDialog(
                     ParentForm,
-                    "Bảng chi tiết lịch học & khai giảng toàn hệ thống",
-                    "Lịch trình các lớp học và ca học từ bảng ClassSchedules",
+                    $"Chi tiết lịch học hôm nay ({DateTime.Today:dd/MM/yyyy})",
+                    "Danh sách các buổi học diễn ra trong ngày hôm nay từ bảng ClassSchedules",
                     dgv =>
                     {
                         dgv.Columns.Clear();
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ / Ngày ↑", FillWeight = 22, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp", FillWeight = 18, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên lớp", FillWeight = 24, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 12, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 24, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 12, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 18, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giờ học", FillWeight = 16, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp", FillWeight = 14, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên lớp", FillWeight = 22, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 10, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 20, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 8, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true });
 
                         foreach (var sc in schedList)
                         {
@@ -310,100 +325,139 @@ public partial class DashboardOverviewView : UserControl
         try
         {
             var tasks = (await _dashboardService.GetPendingTasksAsync()).ToList();
+            var overdueDebts = (await _dashboardService.GetOverdueDebtAlertsAsync()).ToList();
 
-            using var dlg = new QuickDetailGridDialog(
-                "Danh sách học viên vắng quá số buổi quy định",
-                "Tham chiếu ngưỡng cảnh báo vắng từ Cấu hình hệ thống — Cho phép đổi trạng thái xử lý hoặc xóa");
-
-            dlg.SetGridData(dgv =>
+            using var dlg = new Form
             {
-                dgv.ReadOnly = false;
-                dgv.Columns.Clear();
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 8, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã HV", FillWeight = 15, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "Họ và tên", FillWeight = 22, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColPhone", HeaderText = "Điện thoại", FillWeight = 16, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp học", FillWeight = 15, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColAbsent", HeaderText = "Số buổi vắng", FillWeight = 16, ReadOnly = true });
+                Text = "Danh sách cần xử lý - ECMS",
+                Size = new Size(1120, 660),
+                MinimumSize = new Size(860, 500),
+                StartPosition = FormStartPosition.CenterParent,
+                BackColor = Color.FromArgb(248, 250, 252),
+                Font = new Font("Segoe UI", 9F),
+                FormBorderStyle = FormBorderStyle.Sizable,
+                MaximizeBox = true
+            };
 
-                var colStatus = new DataGridViewComboBoxColumn
-                {
-                    Name = "ColStatus",
-                    HeaderText = "Trạng thái xử lý",
-                    FillWeight = 18,
-                    ReadOnly = false,
-                    FlatStyle = FlatStyle.Flat
-                };
-                colStatus.Items.AddRange("Chưa xử lý", "Đã xử lý");
-                dgv.Columns.Add(colStatus);
+            var pnlTop = new Panel { Dock = DockStyle.Top, Height = 64, BackColor = Color.White, Padding = new Padding(20, 14, 20, 10) };
+            var lblHead = new Label
+            {
+                Text = $"Danh sách cần xử lý ({tasks.Count + overdueDebts.Count} mục)",
+                Font = new Font("Segoe UI", 13.5F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(15, 23, 42),
+                AutoSize = true,
+                Location = new Point(20, 16)
+            };
+            pnlTop.Controls.Add(lblHead);
 
-                var colDelete = new DataGridViewButtonColumn
-                {
-                    Name = "ColDelete",
-                    HeaderText = "Xóa",
-                    Text = "🗑️ Xóa",
-                    UseColumnTextForButtonValue = true,
-                    FillWeight = 12,
-                    FlatStyle = FlatStyle.Flat
-                };
-                colDelete.DefaultCellStyle.ForeColor = Color.FromArgb(220, 38, 38);
-                dgv.Columns.Add(colDelete);
+            var tabs = new TabControl { Dock = DockStyle.Fill, Font = new Font("Segoe UI", 9.5F), Padding = new Point(16, 8) };
+            var tabAbsent = new TabPage($"Học viên vắng quá buổi ({tasks.Count})") { Padding = new Padding(14), BackColor = Color.FromArgb(248, 250, 252) };
+            var tabDebt = new TabPage($"Công nợ quá hạn thanh toán ({overdueDebts.Count})") { Padding = new Padding(14), BackColor = Color.FromArgb(248, 250, 252) };
 
-                foreach (var t in tasks)
+            // --- TAB 1: Học viên vắng quá số buổi ---
+            var dgvAbsent = new AppDataGrid { Dock = DockStyle.Fill, ReadOnly = false, ScrollBars = ScrollBars.Both, AllowUserToResizeColumns = true };
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 7, ReadOnly = true });
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã HV", FillWeight = 13, ReadOnly = true });
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "Họ và tên", FillWeight = 22, ReadOnly = true });
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColPhone", HeaderText = "Điện thoại", FillWeight = 14, ReadOnly = true });
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp học", FillWeight = 13, ReadOnly = true });
+            dgvAbsent.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColAbsent", HeaderText = "Số buổi vắng", FillWeight = 14, ReadOnly = true });
+
+            var colStatus = new DataGridViewComboBoxColumn
+            {
+                Name = "ColStatus",
+                HeaderText = "Trạng thái xử lý",
+                FillWeight = 16,
+                ReadOnly = false,
+                FlatStyle = FlatStyle.Flat
+            };
+            colStatus.Items.AddRange("Chưa xử lý", "Đã xử lý");
+            dgvAbsent.Columns.Add(colStatus);
+
+            var colDelete = new DataGridViewButtonColumn
+            {
+                Name = "ColDelete",
+                HeaderText = "Xóa",
+                Text = "🗑️ Xóa",
+                UseColumnTextForButtonValue = true,
+                FillWeight = 10,
+                FlatStyle = FlatStyle.Flat
+            };
+            colDelete.DefaultCellStyle.ForeColor = Color.FromArgb(220, 38, 38);
+            dgvAbsent.Columns.Add(colDelete);
+
+            foreach (var t in tasks)
+            {
+                int rowIdx = dgvAbsent.Rows.Add(
+                    t.Index.ToString(), t.StudentCode, t.StudentName, t.Phone, t.ClassCode,
+                    $"{t.AbsentCount} / {t.MaxAllowedAbsences} buổi",
+                    t.HandlingStatus == "Đã xử lý" ? "Đã xử lý" : "Chưa xử lý");
+                dgvAbsent.Rows[rowIdx].Tag = t.StudentId;
+            }
+
+            dgvAbsent.CurrentCellDirtyStateChanged += (sender, args) =>
+            {
+                if (dgvAbsent.IsCurrentCellDirty && dgvAbsent.CurrentCell is DataGridViewComboBoxCell)
+                    dgvAbsent.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            };
+            dgvAbsent.CellValueChanged += async (sender, args) =>
+            {
+                if (args.RowIndex < 0 || dgvAbsent.Columns[args.ColumnIndex].Name != "ColStatus") return;
+                if (dgvAbsent.Rows[args.RowIndex].Tag is int stId)
                 {
-                    int rowIdx = dgv.Rows.Add(
-                        t.Index.ToString(),
-                        t.StudentCode,
-                        t.StudentName,
-                        t.Phone,
-                        t.ClassCode,
-                        $"{t.AbsentCount} / {t.MaxAllowedAbsences} buổi",
-                        t.HandlingStatus == "Đã xử lý" ? "Đã xử lý" : "Chưa xử lý"
-                    );
-                    dgv.Rows[rowIdx].Tag = t.StudentId;
+                    string newStatus = dgvAbsent.Rows[args.RowIndex].Cells["ColStatus"].Value?.ToString() ?? "Chưa xử lý";
+                    await _dashboardService.UpdatePendingTaskStatusAsync(stId, newStatus);
                 }
-
-                // Cho phép đổi trạng thái ComboBox kích hoạt lưu tức thì xuống SQLite
-                dgv.CurrentCellDirtyStateChanged += (sender, args) =>
+            };
+            dgvAbsent.CellContentClick += async (sender, args) =>
+            {
+                if (args.RowIndex < 0 || dgvAbsent.Columns[args.ColumnIndex].Name != "ColDelete") return;
+                if (dgvAbsent.Rows[args.RowIndex].Tag is int stId)
                 {
-                    if (dgv.IsCurrentCellDirty && dgv.CurrentCell is DataGridViewComboBoxCell)
+                    string stName = dgvAbsent.Rows[args.RowIndex].Cells["ColName"].Value?.ToString() ?? "";
+                    if (AppDialog.ShowConfirm(dlg, "Xóa cảnh báo vắng",
+                        $"Bạn có chắc muốn xóa cảnh báo vắng của học viên '{stName}' khỏi danh sách cần xử lý không?") == DialogResult.OK)
                     {
-                        dgv.CommitEdit(DataGridViewDataErrorContexts.Commit);
+                        await _dashboardService.DeletePendingTaskAsync(stId);
+                        dgvAbsent.Rows.RemoveAt(args.RowIndex);
+                        tabAbsent.Text = $"Học viên vắng quá buổi ({dgvAbsent.Rows.Count})";
+                        lblHead.Text = $"Danh sách cần xử lý ({dgvAbsent.Rows.Count + overdueDebts.Count} mục)";
                     }
-                };
+                }
+            };
+            tabAbsent.Controls.Add(dgvAbsent);
 
-                dgv.CellValueChanged += async (sender, args) =>
-                {
-                    if (args.RowIndex < 0 || dgv.Columns[args.ColumnIndex].Name != "ColStatus") return;
-                    if (dgv.Rows[args.RowIndex].Tag is int stId)
-                    {
-                        string newStatus = dgv.Rows[args.RowIndex].Cells["ColStatus"].Value?.ToString() ?? "Chưa xử lý";
-                        await _dashboardService.UpdatePendingTaskStatusAsync(stId, newStatus);
-                    }
-                };
+            // --- TAB 2: Học viên công nợ quá hạn thanh toán ---
+            var dgvDebt = new AppDataGrid { Dock = DockStyle.Fill, ReadOnly = true, ScrollBars = ScrollBars.Both, AllowUserToResizeColumns = true };
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "STT", FillWeight = 7, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã HV", FillWeight = 13, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Họ và tên", FillWeight = 22, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Điện thoại", FillWeight = 14, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp", FillWeight = 12, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số tiền còn nợ", FillWeight = 16, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Hạn thanh toán", FillWeight = 14, ReadOnly = true });
+            dgvDebt.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Quá hạn", FillWeight = 12, ReadOnly = true });
 
-                dgv.CellContentClick += async (sender, args) =>
-                {
-                    if (args.RowIndex < 0 || dgv.Columns[args.ColumnIndex].Name != "ColDelete") return;
-                    if (dgv.Rows[args.RowIndex].Tag is int stId)
-                    {
-                        string stName = dgv.Rows[args.RowIndex].Cells["ColName"].Value?.ToString() ?? "";
-                        if (AppDialog.ShowConfirm(dlg, "Xóa cảnh báo vắng",
-                            $"Bạn có chắc muốn xóa cảnh báo vắng của học viên '{stName}' khỏi danh sách cần xử lý không?") == DialogResult.OK)
-                        {
-                            await _dashboardService.DeletePendingTaskAsync(stId);
-                            dgv.Rows.RemoveAt(args.RowIndex);
-                            _btnPendingTasks.Text = $"Danh sách cần xử lý ({dgv.Rows.Count})";
-                        }
-                    }
-                };
+            int dIdx = 1;
+            foreach (var d in overdueDebts)
+            {
+                dgvDebt.Rows.Add(dIdx++, d.StudentCode, d.StudentName, d.Phone, d.ClassCode, $"{d.BalanceDue:N0} đ", d.DueDate, $"{d.DaysOverdue} ngày");
+            }
+            tabDebt.Controls.Add(dgvDebt);
 
-                dgv.ClearSelection();
-            });
+            tabs.TabPages.Add(tabAbsent);
+            tabs.TabPages.Add(tabDebt);
 
+            var pnlContainer = new Panel { Dock = DockStyle.Fill, Padding = new Padding(16, 10, 16, 16) };
+            pnlContainer.Controls.Add(tabs);
+
+            dlg.Controls.Add(pnlContainer);
+            dlg.Controls.Add(pnlTop);
             dlg.ShowDialog(ParentForm);
+
             var latestTasks = (await _dashboardService.GetPendingTasksAsync()).ToList();
-            _btnPendingTasks.Text = $"Danh sách cần xử lý ({latestTasks.Count})";
+            var latestDebts = (await _dashboardService.GetOverdueDebtAlertsAsync()).ToList();
+            _btnPendingTasks.Text = $"Danh sách cần xử lý ({latestTasks.Count + latestDebts.Count})";
         }
         catch (Exception ex)
         {
@@ -498,47 +552,102 @@ public partial class DashboardOverviewView : UserControl
         string kw = _txtSearch.Text.Trim();
         if (string.IsNullOrEmpty(kw))
         {
-            AppDialog.ShowInfo(ParentForm, "Thông báo", "Vui lòng nhập tên hoặc mã học viên, lớp học hoặc khóa học để tìm kiếm nhanh.");
+            AppDialog.ShowInfo(ParentForm, "Thông báo", "Vui lòng nhập tên hoặc mã học viên, khóa học hoặc lớp học để tìm kiếm nhanh.");
             return;
         }
 
         Cursor = Cursors.WaitCursor;
         try
         {
-            var results = (await _dashboardService.QuickSearchListAsync(kw)).ToList();
+            var data = await _dashboardService.QuickSearchCategorizedAsync(kw);
             Cursor = Cursors.Default;
 
-            if (results.Count == 0)
+            if (data.TotalCount == 0)
             {
-                AppDialog.ShowInfo(ParentForm, "Kết quả tìm kiếm", $"Không tìm thấy học viên, lớp học hoặc khóa học nào khớp với từ khóa '{kw}'.");
+                AppDialog.ShowInfo(ParentForm, "Kết quả tìm kiếm", $"Không tìm thấy học viên, khóa học hoặc lớp học nào khớp với từ khóa '{kw}'.");
                 return;
             }
 
-            QuickDetailGridDialog.ShowDialog(
-                ParentForm,
-                $"Kết quả tìm kiếm cho \"{kw}\" ({results.Count} kết quả)",
-                "Danh sách học viên, lớp học và khóa học khớp với từ khóa tìm kiếm",
-                dgv =>
-                {
-                    dgv.Columns.Clear();
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phân loại", FillWeight = 14, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã", FillWeight = 16, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên / Tiêu đề", FillWeight = 24, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Liên hệ / GV / Trình độ", FillWeight = 20, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp / Phòng / Thời lượng", FillWeight = 20, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Chi tiết / Học phí", FillWeight = 22, ReadOnly = true });
-                    dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true });
+            using var dlg = new Form
+            {
+                Text = $"Kết quả tìm kiếm cho \"{kw}\" ({data.TotalCount} kết quả)",
+                Size = new Size(1100, 620),
+                MinimumSize = new Size(820, 480),
+                StartPosition = FormStartPosition.CenterParent,
+                BackColor = Color.FromArgb(248, 250, 252),
+                Font = new Font("Segoe UI", 9F),
+                FormBorderStyle = FormBorderStyle.Sizable,
+                MaximizeBox = true
+            };
 
-                    foreach (var r in results)
-                    {
-                        string contactOrExtra = !string.IsNullOrWhiteSpace(r.Phone) && r.EntityType == "Học viên"
-                            ? $"{r.Phone} · {r.Extra1}"
-                            : r.Extra1;
-                        dgv.Rows.Add(r.EntityType, r.Code, r.Name, contactOrExtra, r.Extra2, r.Extra3, r.StatusText);
-                    }
+            var pnlTop = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.White, Padding = new Padding(20, 14, 20, 10) };
+            pnlTop.Controls.Add(new Label
+            {
+                Text = $"Kết quả tìm kiếm cho \"{kw}\" ({data.TotalCount} kết quả)",
+                Font = new Font("Segoe UI", 13F, FontStyle.Bold),
+                ForeColor = Color.FromArgb(15, 23, 42),
+                AutoSize = true,
+                Location = new Point(20, 16)
+            });
 
-                    dgv.ClearSelection();
-                });
+            var tabs = new TabControl { Dock = DockStyle.Fill, Font = new Font("Segoe UI", 9.5F), Padding = new Point(16, 8) };
+
+            // Tab 1: Học viên
+            var tabStu = new TabPage($"Học viên ({data.Students.Count})") { Padding = new Padding(12), BackColor = Color.FromArgb(248, 250, 252) };
+            var dgvStu = new AppDataGrid { Dock = DockStyle.Fill, ScrollBars = ScrollBars.Both, AllowUserToResizeColumns = true };
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã HV", FillWeight = 14 });
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Họ và tên", FillWeight = 24 });
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Điện thoại", FillWeight = 16 });
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lớp hiện tại", FillWeight = 16 });
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Công nợ", FillWeight = 15 });
+            dgvStu.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 15 });
+            foreach (var st in data.Students)
+            {
+                dgvStu.Rows.Add(st.StudentCode, st.FullName, st.Phone, st.ClassName, st.BalanceDue > 0 ? $"{st.BalanceDue:N0} đ" : "0 đ", st.StatusText);
+            }
+            tabStu.Controls.Add(dgvStu);
+
+            // Tab 2: Khóa học
+            var tabCo = new TabPage($"Khóa học ({data.Courses.Count})") { Padding = new Padding(12), BackColor = Color.FromArgb(248, 250, 252) };
+            var dgvCo = new AppDataGrid { Dock = DockStyle.Fill, ScrollBars = ScrollBars.Both, AllowUserToResizeColumns = true };
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã khóa học", FillWeight = 14 });
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên khóa học", FillWeight = 28 });
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trình độ", FillWeight = 16 });
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số buổi", FillWeight = 12 });
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học phí chuẩn", FillWeight = 16 });
+            dgvCo.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 14 });
+            foreach (var co in data.Courses)
+            {
+                dgvCo.Rows.Add(co.CourseCode, co.CourseName, co.Level, $"{co.TotalSessions} buổi", $"{co.BaseTuitionFee:N0} đ", co.StatusText);
+            }
+            tabCo.Controls.Add(dgvCo);
+
+            // Tab 3: Lớp học
+            var tabCl = new TabPage($"Lớp học ({data.Classes.Count})") { Padding = new Padding(12), BackColor = Color.FromArgb(248, 250, 252) };
+            var dgvCl = new AppDataGrid { Dock = DockStyle.Fill, ScrollBars = ScrollBars.Both, AllowUserToResizeColumns = true };
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp", FillWeight = 14 });
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên lớp", FillWeight = 22 });
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Khóa học", FillWeight = 20 });
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 18 });
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số", FillWeight = 10 });
+            dgvCl.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 16 });
+            foreach (var cl in data.Classes)
+            {
+                dgvCl.Rows.Add(cl.ClassCode, cl.ClassName, cl.CourseName, cl.TeacherName, cl.CapacityFormatted, cl.StatusText);
+            }
+            tabCl.Controls.Add(dgvCl);
+
+            tabs.TabPages.AddRange(new[] { tabStu, tabCo, tabCl });
+            if (data.Students.Count > 0) tabs.SelectedIndex = 0;
+            else if (data.Courses.Count > 0) tabs.SelectedIndex = 1;
+            else tabs.SelectedIndex = 2;
+
+            var pnlWrap = new Panel { Dock = DockStyle.Fill, Padding = new Padding(16, 10, 16, 16) };
+            pnlWrap.Controls.Add(tabs);
+
+            dlg.Controls.Add(pnlWrap);
+            dlg.Controls.Add(pnlTop);
+            dlg.ShowDialog(ParentForm);
         }
         catch (Exception ex)
         {
@@ -602,46 +711,50 @@ public partial class DashboardOverviewView : UserControl
             }
         }
 
-        // 4. Middle 3 Cards (Doanh thu - Học viên - Chuyên cần)
+        // 4. Tầng 2: 2 Biểu đồ nằm ngang bằng nhau 50% / 50% (Doanh thu - Tăng trưởng học viên)
         int midY = 244;
-        int midH = 240;
+        int midH = 250;
         int midGap = 14;
-        int totalMidGaps = 2 * midGap;
-        int remainingMidW = contentW - totalMidGaps;
+        int halfW = (contentW - midGap) / 2;
+        int rightChartW = contentW - midGap - halfW;
 
-        int midW1 = (int)(remainingMidW * 0.365);
-        int midW2 = (int)(remainingMidW * 0.310);
-        int midW3 = remainingMidW - midW1 - midW2;
-
-        // Card Doanh thu
+        // Card Doanh thu (Trái)
         _cardRevenue.Location = new Point(paddingSide, midY);
-        _cardRevenue.Size = new Size(midW1, midH);
+        _cardRevenue.Size = new Size(halfW, midH);
         _btnRevenueDetail.Location = new Point(_cardRevenue.Width - _btnRevenueDetail.Width - 14, 12);
         _btnRevenueDetail.BringToFront();
-        _chartRevenue.Size = new Size(midW1 - 28, midH - 56);
+        _chartRevenue.Size = new Size(halfW - 28, midH - 56);
 
-        // Card Học viên
-        _cardStudents.Location = new Point(paddingSide + midW1 + midGap, midY);
-        _cardStudents.Size = new Size(midW2, midH);
+        // Card Tăng trưởng học viên (Phải)
+        _cardStudents.Location = new Point(paddingSide + halfW + midGap, midY);
+        _cardStudents.Size = new Size(rightChartW, midH);
         _btnStudentsDetail.Location = new Point(_cardStudents.Width - _btnStudentsDetail.Width - 14, 12);
         _btnStudentsDetail.BringToFront();
-        _chartStudents.Size = new Size(midW2 - 28, midH - 56);
+        _chartStudents.Size = new Size(rightChartW - 28, midH - 56);
 
-        // Card Chuyên cần
-        int midX3 = paddingSide + midW1 + midGap + midW2 + midGap;
-        _cardAttendance.Location = new Point(midX3, midY);
-        _cardAttendance.Size = new Size(midW3, midH);
+        // 5. Tầng 3: Chuyên cần lớp học (Trái 36%) & Lịch học hôm nay (Phải 64%)
+        int btmY = 508;
+        int btmH = 310;
+        int attW = (int)((contentW - midGap) * 0.36);
+        int schedW = contentW - midGap - attW;
+
+        // Card Chuyên cần lớp học
+        _cardAttendance.Location = new Point(paddingSide, btmY);
+        _cardAttendance.Size = new Size(attW, btmH);
         _btnAttDetail.Location = new Point(_cardAttendance.Width - _btnAttDetail.Width - 14, 12);
         _btnAttDetail.BringToFront();
-        _dgvRatio.Size = new Size(midW3 - 28, midH - 86);
+        _dgvRatio.Size = new Size(attW - 28, btmH - 92);
 
-        // 5. Bottom Card: Lịch hôm nay & Sắp khai giảng
-        int btmY = 496;
-        int btmH = 300;
-        _cardSchedule.Location = new Point(paddingSide, btmY);
-        _cardSchedule.Size = new Size(contentW, btmH);
+        // Card Lịch học hôm nay
+        _cardSchedule.Location = new Point(paddingSide + attW + midGap, btmY);
+        _cardSchedule.Size = new Size(schedW, btmH);
         _btnSchedDetail.Location = new Point(_cardSchedule.Width - _btnSchedDetail.Width - 14, 12);
         _btnSchedDetail.BringToFront();
-        _dgvSchedule.Size = new Size(contentW - 32, btmH - 60);
+        _dgvSchedule.Size = new Size(schedW - 32, btmH - 60);
+        if (_lblNoScheduleToday != null)
+        {
+            _lblNoScheduleToday.Location = new Point(16, 52);
+            _lblNoScheduleToday.Size = new Size(Math.Max(200, schedW - 32), btmH - 68);
+        }
     }
 }

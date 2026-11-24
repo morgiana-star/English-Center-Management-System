@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
@@ -20,12 +21,16 @@ public partial class StudentEnrollmentWizardDialog : Form
     private List<OpenClassOptionDto> _currentCourseClasses = new();
 
     private int _currentStep = 1;
-    private decimal _courseFee = 6800000;
+    private bool _step1Validated = false;
+    private bool _isProgrammaticTabSwitch = false;
+    private decimal _courseFee = 0;
     private int _selectedClassId = 0;
     private string _selectedClassCode = string.Empty;
     private string _selectedCourseTitle = string.Empty;
 
     public int SelectedClassId => _selectedClassId;
+    public bool SaveWaitingOnly { get; private set; } = false;
+    public bool ShouldCollectTuition { get; private set; } = true;
     public string CreatedStudentName { get; private set; } = string.Empty;
     public string CreatedStudentCode { get; private set; } = string.Empty;
     public string CreatedStudentPhone { get; private set; } = string.Empty;
@@ -63,17 +68,17 @@ public partial class StudentEnrollmentWizardDialog : Form
         dtpDob.Value = new DateTime(2004, 5, 20);
 
         cboRelationship.Items.Clear();
-        cboRelationship.Items.AddRange(new object[] { "Phụ huynh (Bố)", "Phụ huynh (Mẹ)", "Người giám hộ", "Khác" });
+        cboRelationship.Items.AddRange(new object[] { "Bố", "Mẹ", "Giám hộ", "Khác" });
         cboRelationship.SelectedIndex = 0;
 
-        // Bước 2: Lọc ca học (Sáng / Chiều / Tối kèm giờ) và bỏ ô lọc tình trạng lớp
+        // Bước 2: Lọc ca học theo 3 khung giờ chuẩn
         cboShiftFilter.Items.Clear();
         cboShiftFilter.Items.AddRange(new object[]
         {
             "Tất cả ca học",
-            "Ca sáng (08:00 - 11:30)",
-            "Ca chiều (13:30 - 17:00)",
-            "Ca tối (18:00 - 21:30)"
+            "Ca sáng (08:00 - 12:00)",
+            "Ca chiều (13:30 - 17:30)",
+            "Ca tối (18:00 - 21:00)"
         });
         cboShiftFilter.SelectedIndex = 0;
         cboShiftFilter.Width = 230;
@@ -124,9 +129,11 @@ public partial class StudentEnrollmentWizardDialog : Form
 
     private void SetupClassesGrid()
     {
+        AppGridHelper.ApplyStyle(dgvOpenClasses);
         dgvOpenClasses.Columns.Clear();
-        var colCode = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColClassCode", "Mã lớp ↑")];
-        var colStartDate = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColStartDate", "Khai giảng")];
+        var colCode = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColClassCode", "Mã lớp")];
+        var colStartDate = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColStartDate", "Ngày bắt đầu")];
+        var colEndDate = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColEndDate", "Ngày kết thúc")];
         var colSchedule = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColSchedule", "Giờ học")];
         var colRoom = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColRoom", "Phòng")];
         var colTeacher = dgvOpenClasses.Columns[dgvOpenClasses.Columns.Add("ColTeacher", "Giáo viên")];
@@ -145,13 +152,14 @@ public partial class StudentEnrollmentWizardDialog : Form
         colAction.DefaultCellStyle.SelectionBackColor = Color.FromArgb(37, 99, 235);
         dgvOpenClasses.Columns.Add(colAction);
 
-        colCode.FillWeight = 14;
-        colStartDate.FillWeight = 14;
-        colSchedule.FillWeight = 24;
-        colRoom.FillWeight = 10;
-        colTeacher.FillWeight = 18;
-        colCapacity.FillWeight = 10;
-        colAction.FillWeight = 14;
+        colCode.FillWeight = 12;
+        colStartDate.FillWeight = 13;
+        colEndDate.FillWeight = 13;
+        colSchedule.FillWeight = 16;
+        colRoom.FillWeight = 9;
+        colTeacher.FillWeight = 16;
+        colCapacity.FillWeight = 9;
+        colAction.FillWeight = 12;
     }
 
     private void PopulateClassRows(IEnumerable<OpenClassOptionDto> list)
@@ -159,10 +167,17 @@ public partial class StudentEnrollmentWizardDialog : Form
         dgvOpenClasses.Rows.Clear();
         foreach (var c in list)
         {
-            int idx = dgvOpenClasses.Rows.Add(c.ClassCode, c.StartDateDisplay, c.ScheduleDisplay, c.RoomName, c.TeacherName, c.CapacityDisplay);
+            int idx = dgvOpenClasses.Rows.Add(
+                c.ClassCode,
+                c.StartDateDisplay,
+                c.EndDateDisplay,
+                c.ScheduleDisplay,
+                c.RoomName,
+                c.TeacherName,
+                c.CapacityDisplay);
             dgvOpenClasses.Rows[idx].Tag = c;
             bool isSelected = c.ClassId == _selectedClassId;
-            dgvOpenClasses.Rows[idx].Cells["ColAction"].Value = isSelected ? "✓ Đang chọn" : "Chọn lớp";
+            dgvOpenClasses.Rows[idx].Cells["ColAction"].Value = isSelected ? "Đang chọn" : "Chọn lớp";
             if (isSelected)
             {
                 dgvOpenClasses.Rows[idx].Selected = true;
@@ -178,8 +193,30 @@ public partial class StudentEnrollmentWizardDialog : Form
 
     private void WireEvents()
     {
-        btnBack.Click += (s, e) => ShowStep(_currentStep - 1);
-        btnNext.Click += async (s, e) => await HandleNextStepAsync();
+        btnBack.Click += (s, e) => ShowStep(1);
+        btnSaveWaiting.Click += async (s, e) => await HandleSaveWaitingOnlyAsync();
+        btnNext.Click += async (s, e) => await HandleNextStepAsync(collectTuition: true);
+        btnConfirmNoPay.Click += async (s, e) => await HandleNextStepAsync(collectTuition: false);
+
+        tabSteps.Selecting += (s, e) =>
+        {
+            if (_isProgrammaticTabSwitch) return;
+            if (e.TabPage == tpStep2 && !_step1Validated)
+            {
+                e.Cancel = true;
+                AppDialog.ShowWarning(this, "Chưa hoàn tất Bước 1", "Vui lòng nhập đầy đủ thông tin ở Bước 1 và bấm 'Tiếp tục' để kiểm tra trước khi sang Bước 2.");
+            }
+            else if (e.TabPage == tpStep1)
+            {
+                _currentStep = 1;
+                UpdateFooterForStep(1);
+            }
+            else if (e.TabPage == tpStep2)
+            {
+                _currentStep = 2;
+                UpdateFooterForStep(2);
+            }
+        };
 
         cboCourse.SelectedIndexChanged += async (s, e) => await LoadClassesForSelectedCourseAsync();
         txtSearchClass.TextChanged += (s, e) => FilterClasses();
@@ -221,7 +258,7 @@ public partial class StudentEnrollmentWizardDialog : Form
 
         for (int i = 0; i < dgvOpenClasses.Rows.Count; i++)
         {
-            dgvOpenClasses.Rows[i].Cells["ColAction"].Value = (i == rowIndex) ? "✓ Đang chọn" : "Chọn lớp";
+            dgvOpenClasses.Rows[i].Cells["ColAction"].Value = (i == rowIndex) ? "Đang chọn" : "Chọn lớp";
         }
 
         if (updateRowSelection)
@@ -255,9 +292,9 @@ public partial class StudentEnrollmentWizardDialog : Form
 
                 matchShift = shiftIdx switch
                 {
-                    1 => hour >= 7 && hour < 12,   // Ca sáng (08:00 - 11:30)
-                    2 => hour >= 12 && hour < 17,  // Ca chiều (13:30 - 17:00)
-                    3 => hour >= 17,               // Ca tối (18:00 - 21:30)
+                    1 => hour >= 7 && hour < 12,   // Ca sáng (08:00 - 12:00)
+                    2 => hour >= 12 && hour < 17,  // Ca chiều (13:30 - 17:30)
+                    3 => hour >= 17,               // Ca tối (18:00 - 21:00)
                     _ => true
                 };
             }
@@ -268,41 +305,127 @@ public partial class StudentEnrollmentWizardDialog : Form
         PopulateClassRows(filtered);
     }
 
-    private async Task HandleNextStepAsync()
+    private async Task<bool> ValidateStep1Async()
+    {
+        string fullName = txtFullName.Text.Trim();
+        string phone = txtPhone.Text.Trim().Replace(" ", "");
+        string email = txtEmail.Text.Trim();
+        string address = txtAddress.Text.Trim();
+        string parentName = txtParentName.Text.Trim();
+        string parentPhone = txtParentPhone.Text.Trim().Replace(" ", "");
+
+        if (string.IsNullOrWhiteSpace(fullName) || fullName.Length < 2)
+        {
+            AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập đầy đủ họ và tên học viên.");
+            txtFullName.Focus();
+            return false;
+        }
+
+        if (dtpDob.Value.Date >= DateTime.Today.AddYears(-3))
+        {
+            AppDialog.ShowWarning(this, "Ngày sinh không hợp lệ", "Ngày sinh học viên phải nhỏ hơn ngày hiện tại ít nhất 3 năm.");
+            dtpDob.Focus();
+            return false;
+        }
+
+        if (cboGender.SelectedIndex < 0)
+        {
+            AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng chọn giới tính học viên.");
+            cboGender.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(phone) || !Regex.IsMatch(phone, @"^0\d{9}$"))
+        {
+            AppDialog.ShowWarning(this, "Số điện thoại không hợp lệ", "Vui lòng nhập số điện thoại học viên gồm đúng 10 chữ số, bắt đầu bằng số 0.");
+            txtPhone.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            AppDialog.ShowWarning(this, "Email không hợp lệ", "Vui lòng nhập địa chỉ email học viên đúng định dạng (vd: ten@domain.com).");
+            txtEmail.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập địa chỉ liên hệ của học viên.");
+            txtAddress.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(parentName))
+        {
+            AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập họ và tên phụ huynh / người liên hệ.");
+            txtParentName.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(parentPhone) || !Regex.IsMatch(parentPhone, @"^0\d{9}$"))
+        {
+            AppDialog.ShowWarning(this, "Số điện thoại phụ huynh không hợp lệ", "Vui lòng nhập số điện thoại phụ huynh gồm đúng 10 chữ số, bắt đầu bằng số 0.");
+            txtParentPhone.Focus();
+            return false;
+        }
+
+        if (cboRelationship.SelectedIndex < 0)
+        {
+            AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng chọn mối quan hệ với học viên.");
+            cboRelationship.Focus();
+            return false;
+        }
+
+        // Kiểm tra trùng học viên trong SQLite
+        var dup = await _studentService.CheckDuplicateStudentAsync(phone, fullName, dtpDob.Value);
+        if (dup.IsDuplicate)
+        {
+            AppDialog.ShowWarning(this, "Học viên đã tồn tại", dup.Reason);
+            txtPhone.Focus();
+            return false;
+        }
+
+        CreatedStudentName = fullName;
+        CreatedStudentPhone = phone;
+        CreatedStudentEmail = email;
+        CreatedStudentAddress = address;
+        CreatedStudentDob = dtpDob.Value;
+        CreatedStudentGender = cboGender.SelectedItem?.ToString() ?? "Nam";
+        CreatedParentName = parentName;
+        CreatedParentPhone = parentPhone;
+        CreatedParentRelationship = cboRelationship.SelectedItem?.ToString() ?? "Bố";
+        CreatedNotes = txtNotes.Text.Trim();
+        _step1Validated = true;
+        return true;
+    }
+
+    private async Task HandleSaveWaitingOnlyAsync()
+    {
+        if (!await ValidateStep1Async()) return;
+
+        SaveWaitingOnly = true;
+        ShouldCollectTuition = false;
+        CreatedClassName = "Chờ xếp lớp";
+        SelectedCourseTitle = string.Empty;
+        CreatedStudentCode = await _studentService.GenerateNextStudentCodeAsync();
+
+        DialogResult = DialogResult.OK;
+        Close();
+    }
+
+    private async Task HandleNextStepAsync(bool collectTuition)
     {
         if (_currentStep == 1)
         {
-            if (string.IsNullOrWhiteSpace(txtFullName.Text))
-            {
-                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập họ và tên học viên.");
-                txtFullName.Focus();
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(txtPhone.Text))
-            {
-                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập số điện thoại liên hệ của học viên.");
-                txtPhone.Focus();
-                return;
-            }
-
-            CreatedStudentName = txtFullName.Text.Trim();
-            CreatedStudentPhone = txtPhone.Text.Trim();
-            CreatedStudentEmail = txtEmail.Text.Trim();
-            CreatedStudentAddress = txtAddress.Text.Trim();
-            CreatedStudentDob = dtpDob.Value;
-            CreatedStudentGender = cboGender.SelectedItem?.ToString() ?? "Nam";
-            CreatedParentName = txtParentName.Text.Trim();
-            CreatedParentPhone = txtParentPhone.Text.Trim();
-            CreatedParentRelationship = cboRelationship.SelectedItem?.ToString() ?? "Bố";
-            CreatedNotes = txtNotes.Text.Trim();
-
+            if (!await ValidateStep1Async()) return;
             ShowStep(2);
         }
         else if (_currentStep == 2)
         {
             if (dgvOpenClasses.Rows.Count == 0)
             {
-                AppDialog.ShowWarning(this, "Chưa chọn lớp", "Khóa học này hiện không có lớp nào khả dụng. Vui lòng chọn khóa học hoặc xóa bộ lọc.");
+                AppDialog.ShowWarning(this, "Chưa chọn lớp", "Khóa học này hiện không có lớp nào khả dụng. Vui lòng chọn khóa học khác hoặc xóa bộ lọc.");
                 return;
             }
 
@@ -312,6 +435,13 @@ public partial class StudentEnrollmentWizardDialog : Form
                 SelectClassAtRow(0);
             }
 
+            if (dgvOpenClasses.CurrentRow?.Tag is OpenClassOptionDto chosen && chosen.CurrentStudents >= chosen.MaxStudents)
+            {
+                AppDialog.ShowWarning(this, "Lớp đã đủ sĩ số", $"Lớp {chosen.ClassCode} đã đủ sĩ số ({chosen.CurrentStudents}/{chosen.MaxStudents}). Vui lòng chọn lớp khác.");
+                return;
+            }
+
+            ShouldCollectTuition = collectTuition;
             CreatedClassName = _selectedClassCode;
             SelectedCourseTitle = _selectedCourseTitle;
             CreatedStudentCode = await _studentService.GenerateNextStudentCodeAsync();
@@ -324,25 +454,35 @@ public partial class StudentEnrollmentWizardDialog : Form
     private void ShowStep(int step)
     {
         _currentStep = step;
-        pnlStep1.Visible = (step == 1);
-        pnlStep2.Visible = (step == 2);
-        pnlStep3.Visible = false;
-        pnlStep4.Visible = false;
-
-        btnBack.Visible = (step > 1);
-
-        switch (step)
+        _isProgrammaticTabSwitch = true;
+        try
         {
-            case 1:
-                lblTitle.Text = "Đăng ký nhập học & Xếp lớp mới";
-                lblSubtitle.Text = "Bước 1 / 2: Điền thông tin cá nhân và người liên hệ của học viên";
-                btnNext.Text = "Tiếp tục →";
-                break;
-            case 2:
-                lblTitle.Text = "Chọn Khóa học & Lớp học";
-                lblSubtitle.Text = "Bước 2 / 2: Chọn chương trình đào tạo và lớp học đang mở tuyển sinh";
-                btnNext.Text = "Chuyển sang Thu phí →";
-                break;
+            tabSteps.SelectedIndex = step == 1 ? 0 : 1;
+        }
+        finally
+        {
+            _isProgrammaticTabSwitch = false;
+        }
+        UpdateFooterForStep(step);
+    }
+
+    private void UpdateFooterForStep(int step)
+    {
+        btnSaveWaiting.Visible = (step == 1);
+        btnBack.Visible = (step == 2);
+        btnConfirmNoPay.Visible = (step == 2);
+
+        if (step == 1)
+        {
+            lblTitle.Text = "Đăng ký nhập học & Xếp lớp mới";
+            lblSubtitle.Text = "Bước 1 / 2: Điền đầy đủ thông tin cá nhân và người liên hệ của học viên (trừ Ghi chú)";
+            btnNext.Text = "Tiếp tục";
+        }
+        else
+        {
+            lblTitle.Text = "Chọn Khóa học & Lớp học";
+            lblSubtitle.Text = "Bước 2 / 2: Chọn chương trình đào tạo và lớp học đang mở tuyển sinh";
+            btnNext.Text = "Thu phí";
         }
     }
 }

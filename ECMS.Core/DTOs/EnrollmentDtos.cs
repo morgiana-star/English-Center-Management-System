@@ -28,24 +28,41 @@ public class ClassLookupDto
 public class FeeDiscountDto
 {
     public int DiscountId { get; set; }
+    public string DiscountCode { get; set; } = string.Empty;
     public string DiscountName { get; set; } = string.Empty;
     public double Percentage { get; set; }
     public decimal FixedAmount { get; set; }
     public string? Description { get; set; }
     public bool RequiresApproval { get; set; }
+    public bool IsActive { get; set; } = true;
+
+    public string ValueDisplay
+    {
+        get
+        {
+            if (Percentage > 0 && FixedAmount > 0)
+                return $"{Percentage}% + {FixedAmount:N0}đ";
+            if (Percentage > 0)
+                return $"{Percentage}%";
+            if (FixedAmount > 0)
+                return $"{FixedAmount:N0} đ";
+            return "0";
+        }
+    }
 
     public string DisplayText
     {
         get
         {
             if (DiscountId == 0) return "Không áp dụng ưu đãi (0%)";
+            string codePrefix = string.IsNullOrWhiteSpace(DiscountCode) ? "" : $"[{DiscountCode}] ";
             if (Percentage > 0 && FixedAmount > 0)
-                return $"{DiscountName} (Giảm {Percentage}% + {FixedAmount:N0}đ)";
+                return $"{codePrefix}{DiscountName} (Giảm {Percentage}% + {FixedAmount:N0}đ)";
             if (Percentage > 0)
-                return $"{DiscountName} (Giảm {Percentage}%)";
+                return $"{codePrefix}{DiscountName} (Giảm {Percentage}%)";
             if (FixedAmount > 0)
-                return $"{DiscountName} (Giảm {FixedAmount:N0} VNĐ)";
-            return DiscountName;
+                return $"{codePrefix}{DiscountName} (Giảm {FixedAmount:N0} VNĐ)";
+            return $"{codePrefix}{DiscountName}";
         }
     }
 

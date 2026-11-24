@@ -45,10 +45,6 @@ partial class AddTeacherDialog
         lblTeacherCode = new System.Windows.Forms.Label();
         lblTeacherInfoTitle = new System.Windows.Forms.Label();
         lblScheduleBoxTitle = new System.Windows.Forms.Label();
-        lblMaxHoursTitle = new System.Windows.Forms.Label();
-        txtMaxHours = new ECMS.UI.Controls.AppTextBox();
-        lblHourUnit = new System.Windows.Forms.Label();
-        lblMaxHoursNote = new System.Windows.Forms.Label();
         lblPreferredSlotTitle = new System.Windows.Forms.Label();
         chkMorning = new System.Windows.Forms.CheckBox();
         chkAfternoon = new System.Windows.Forms.CheckBox();
@@ -397,57 +393,13 @@ partial class AddTeacherDialog
         // 
         // lblMaxHoursTitle
         // 
-        lblMaxHoursTitle.AutoSize = true;
-        lblMaxHoursTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblMaxHoursTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblMaxHoursTitle.Location = new System.Drawing.Point(14, 45);
-        lblMaxHoursTitle.Name = "lblMaxHoursTitle";
-        lblMaxHoursTitle.Size = new System.Drawing.Size(136, 20);
-        lblMaxHoursTitle.TabIndex = 1;
-        lblMaxHoursTitle.Text = "Số giờ dạy tối đa *";
-        // 
-        // txtMaxHours
-        // 
-        txtMaxHours.BackColor = System.Drawing.Color.Transparent;
-        txtMaxHours.CornerRadius = 5;
-        txtMaxHours.ErrorMessage = "";
-        txtMaxHours.HasError = false;
-        txtMaxHours.Location = new System.Drawing.Point(14, 68);
-        txtMaxHours.Name = "txtMaxHours";
-        txtMaxHours.Placeholder = "VD: 12";
-        txtMaxHours.ReadOnly = false;
-        txtMaxHours.Size = new System.Drawing.Size(200, 36);
-        txtMaxHours.TabIndex = 2;
-        txtMaxHours.UseSystemPasswordChar = false;
-        // 
-        // lblHourUnit
-        // 
-        lblHourUnit.AutoSize = true;
-        lblHourUnit.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblHourUnit.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblHourUnit.Location = new System.Drawing.Point(220, 76);
-        lblHourUnit.Name = "lblHourUnit";
-        lblHourUnit.Size = new System.Drawing.Size(78, 21);
-        lblHourUnit.TabIndex = 3;
-        lblHourUnit.Text = "giờ / tuần";
-        // 
-        // lblMaxHoursNote
-        // 
-        lblMaxHoursNote.AutoSize = true;
-        lblMaxHoursNote.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic);
-        lblMaxHoursNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblMaxHoursNote.Location = new System.Drawing.Point(14, 108);
-        lblMaxHoursNote.Name = "lblMaxHoursNote";
-        lblMaxHoursNote.Size = new System.Drawing.Size(328, 19);
-        lblMaxHoursNote.TabIndex = 4;
-        lblMaxHoursNote.Text = "Hệ thống sẽ cảnh báo nếu xếp lịch vượt số giờ này.";
         // 
         // lblPreferredSlotTitle
         // 
         lblPreferredSlotTitle.AutoSize = true;
         lblPreferredSlotTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblPreferredSlotTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblPreferredSlotTitle.Location = new System.Drawing.Point(14, 135);
+        lblPreferredSlotTitle.Location = new System.Drawing.Point(14, 44);
         lblPreferredSlotTitle.Name = "lblPreferredSlotTitle";
         lblPreferredSlotTitle.Size = new System.Drawing.Size(349, 20);
         lblPreferredSlotTitle.TabIndex = 5;
@@ -459,7 +411,7 @@ partial class AddTeacherDialog
         chkMorning.Checked = true;
         chkMorning.CheckState = System.Windows.Forms.CheckState.Checked;
         chkMorning.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkMorning.Location = new System.Drawing.Point(16, 160);
+        chkMorning.Location = new System.Drawing.Point(16, 70);
         chkMorning.Name = "chkMorning";
         chkMorning.Size = new System.Drawing.Size(183, 24);
         chkMorning.TabIndex = 6;
@@ -472,7 +424,7 @@ partial class AddTeacherDialog
         chkAfternoon.Checked = true;
         chkAfternoon.CheckState = System.Windows.Forms.CheckState.Checked;
         chkAfternoon.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkAfternoon.Location = new System.Drawing.Point(220, 160);
+        chkAfternoon.Location = new System.Drawing.Point(220, 70);
         chkAfternoon.Name = "chkAfternoon";
         chkAfternoon.Size = new System.Drawing.Size(187, 24);
         chkAfternoon.TabIndex = 7;
@@ -485,7 +437,7 @@ partial class AddTeacherDialog
         chkEvening.Checked = true;
         chkEvening.CheckState = System.Windows.Forms.CheckState.Checked;
         chkEvening.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkEvening.Location = new System.Drawing.Point(425, 160);
+        chkEvening.Location = new System.Drawing.Point(425, 70);
         chkEvening.Name = "chkEvening";
         chkEvening.Size = new System.Drawing.Size(171, 24);
         chkEvening.TabIndex = 8;
@@ -497,7 +449,7 @@ partial class AddTeacherDialog
         lblDaysTitle.AutoSize = true;
         lblDaysTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblDaysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblDaysTitle.Location = new System.Drawing.Point(14, 195);
+        lblDaysTitle.Location = new System.Drawing.Point(14, 108);
         lblDaysTitle.Name = "lblDaysTitle";
         lblDaysTitle.Size = new System.Drawing.Size(201, 20);
         lblDaysTitle.TabIndex = 9;
@@ -509,7 +461,7 @@ partial class AddTeacherDialog
         chkMon.Checked = true;
         chkMon.CheckState = System.Windows.Forms.CheckState.Checked;
         chkMon.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkMon.Location = new System.Drawing.Point(16, 222);
+        chkMon.Location = new System.Drawing.Point(16, 136);
         chkMon.Name = "chkMon";
         chkMon.Size = new System.Drawing.Size(83, 24);
         chkMon.TabIndex = 10;
@@ -520,7 +472,7 @@ partial class AddTeacherDialog
         // 
         chkTue.AutoSize = true;
         chkTue.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkTue.Location = new System.Drawing.Point(160, 222);
+        chkTue.Location = new System.Drawing.Point(160, 136);
         chkTue.Name = "chkTue";
         chkTue.Size = new System.Drawing.Size(77, 24);
         chkTue.TabIndex = 11;
@@ -533,7 +485,7 @@ partial class AddTeacherDialog
         chkWed.Checked = true;
         chkWed.CheckState = System.Windows.Forms.CheckState.Checked;
         chkWed.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkWed.Location = new System.Drawing.Point(280, 222);
+        chkWed.Location = new System.Drawing.Point(280, 136);
         chkWed.Name = "chkWed";
         chkWed.Size = new System.Drawing.Size(77, 24);
         chkWed.TabIndex = 12;
@@ -546,7 +498,7 @@ partial class AddTeacherDialog
         chkThu.Checked = true;
         chkThu.CheckState = System.Windows.Forms.CheckState.Checked;
         chkThu.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkThu.Location = new System.Drawing.Point(400, 222);
+        chkThu.Location = new System.Drawing.Point(400, 136);
         chkThu.Name = "chkThu";
         chkThu.Size = new System.Drawing.Size(92, 24);
         chkThu.TabIndex = 13;
@@ -557,7 +509,7 @@ partial class AddTeacherDialog
         // 
         chkFri.AutoSize = true;
         chkFri.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkFri.Location = new System.Drawing.Point(16, 258);
+        chkFri.Location = new System.Drawing.Point(16, 170);
         chkFri.Name = "chkFri";
         chkFri.Size = new System.Drawing.Size(84, 24);
         chkFri.TabIndex = 14;
@@ -568,7 +520,7 @@ partial class AddTeacherDialog
         // 
         chkSat.AutoSize = true;
         chkSat.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkSat.Location = new System.Drawing.Point(160, 258);
+        chkSat.Location = new System.Drawing.Point(160, 170);
         chkSat.Name = "chkSat";
         chkSat.Size = new System.Drawing.Size(84, 24);
         chkSat.TabIndex = 15;
@@ -579,7 +531,7 @@ partial class AddTeacherDialog
         // 
         chkSun.AutoSize = true;
         chkSun.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkSun.Location = new System.Drawing.Point(280, 258);
+        chkSun.Location = new System.Drawing.Point(280, 170);
         chkSun.Name = "chkSun";
         chkSun.Size = new System.Drawing.Size(92, 24);
         chkSun.TabIndex = 16;
@@ -589,8 +541,8 @@ partial class AddTeacherDialog
         // pnlScheduleBox
         // 
         pnlScheduleBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        pnlScheduleBox.BackColor = System.Drawing.Color.White;
-        pnlScheduleBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        pnlScheduleBox.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        pnlScheduleBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
         pnlScheduleBox.Controls.Add(chkSun);
         pnlScheduleBox.Controls.Add(chkSat);
         pnlScheduleBox.Controls.Add(chkFri);
@@ -603,10 +555,6 @@ partial class AddTeacherDialog
         pnlScheduleBox.Controls.Add(chkAfternoon);
         pnlScheduleBox.Controls.Add(chkMorning);
         pnlScheduleBox.Controls.Add(lblPreferredSlotTitle);
-        pnlScheduleBox.Controls.Add(lblMaxHoursNote);
-        pnlScheduleBox.Controls.Add(lblHourUnit);
-        pnlScheduleBox.Controls.Add(txtMaxHours);
-        pnlScheduleBox.Controls.Add(lblMaxHoursTitle);
         pnlScheduleBox.Controls.Add(lblScheduleBoxTitle);
         pnlScheduleBox.Location = new System.Drawing.Point(16, 345);
         pnlScheduleBox.Name = "pnlScheduleBox";
@@ -666,10 +614,6 @@ partial class AddTeacherDialog
 
     private System.Windows.Forms.Panel pnlScheduleBox;
     private System.Windows.Forms.Label lblScheduleBoxTitle;
-    private System.Windows.Forms.Label lblMaxHoursTitle;
-    private ECMS.UI.Controls.AppTextBox txtMaxHours;
-    private System.Windows.Forms.Label lblHourUnit;
-    private System.Windows.Forms.Label lblMaxHoursNote;
     private System.Windows.Forms.Label lblPreferredSlotTitle;
     private System.Windows.Forms.CheckBox chkMorning;
     private System.Windows.Forms.CheckBox chkAfternoon;

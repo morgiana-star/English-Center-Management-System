@@ -29,6 +29,7 @@ public partial class TuitionPaymentView : UserControl
         public string DueDate { get; set; } = string.Empty;
         public string PaymentStatus { get; set; } = string.Empty;
         public string DebtStatus { get; set; } = string.Empty;
+        public int PaidInstallmentCount { get; set; }
     }
 
     public class ReceiptHistoryModel
@@ -57,24 +58,43 @@ public partial class TuitionPaymentView : UserControl
             return;
 
         SetupFilters();
+        SetupDiscountManagerButton();
         SetupGrids();
         LoadRealTuitionDataAsync();
         WireEvents();
         SelectTab(0);
     }
 
+    private void SetupDiscountManagerButton()
+    {
+        // Bỏ nút "Thu học phí" ở thanh trên để tránh trùng với thao tác trong bảng
+        btnCollectTuition.Visible = false;
+        btnExportDebt.Location = new Point(pnlHeader.Width - btnExportDebt.Width - 24, btnExportDebt.Top);
+
+        var btnManageDiscounts = new AppButton
+        {
+            Name = "btnManageDiscounts",
+            Text = "Mã giảm giá",
+            Size = new Size(125, 38),
+            Location = new Point(btnExportDebt.Left - 135, btnExportDebt.Top),
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Variant = ButtonVariant.Secondary,
+            ButtonStyle = AppButtonStyle.Secondary,
+            CornerRadius = 5,
+            Cursor = Cursors.Hand
+        };
+        btnManageDiscounts.Click += (s, e) =>
+        {
+            using var dlg = new DiscountManagementDialog();
+            dlg.ShowDialog(ParentForm);
+        };
+        pnlHeader.Controls.Add(btnManageDiscounts);
+    }
+
     private void SetupFilters()
     {
         cboClassFilter.Items.Clear();
-        cboClassFilter.Items.AddRange(new object[]
-        {
-            "Tất cả lớp",
-            "IELTS-F01",
-            "IELTS-F02",
-            "IELTS-I01",
-            "TOEIC-A01",
-            "COM-B01"
-        });
+        cboClassFilter.Items.Add("Tất cả lớp");
         cboClassFilter.SelectedIndex = 0;
 
         UpdateStatusFilterItems(0);
@@ -88,8 +108,8 @@ public partial class TuitionPaymentView : UserControl
             cboStatusFilter.Items.AddRange(new object[]
             {
                 "Tất cả trạng thái",
-                "✓ Đã tất toán",
-                "⚠️ Còn nợ học phí"
+                "Đã tất toán",
+                "Còn nợ học phí"
             });
         }
         else if (tabIndex == 1) // Công nợ
@@ -97,7 +117,7 @@ public partial class TuitionPaymentView : UserControl
             cboStatusFilter.Items.AddRange(new object[]
             {
                 "Tất cả công nợ",
-                "Đã quá hạn",
+                "Quá hạn",
                 "Đến hạn trong 7 ngày",
                 "Trong hạn"
             });
@@ -107,9 +127,9 @@ public partial class TuitionPaymentView : UserControl
             cboStatusFilter.Items.AddRange(new object[]
             {
                 "Tất cả phương thức",
-                "Chuyển khoản VietQR",
-                "Tiền mặt (quầy)",
-                "Thẻ POS / Quẹt thẻ"
+                "Chuyển khoản",
+                "Tiền mặt",
+                "POS"
             });
         }
         cboStatusFilter.SelectedIndex = 0;
@@ -334,9 +354,21 @@ public partial class TuitionPaymentView : UserControl
                     Remaining = p.Remaining,
                     DueDate = p.DueDate,
                     PaymentStatus = p.PaymentStatus,
-                    DebtStatus = p.DebtStatus
+                    DebtStatus = p.DebtStatus,
+                    PaidInstallmentCount = p.PaidInstallmentCount
                 });
             }
+
+            // Đồng bộ danh sách lớp trong bộ lọc từ dữ liệu thật
+            string? prevClass = cboClassFilter.SelectedItem?.ToString();
+            cboClassFilter.Items.Clear();
+            cboClassFilter.Items.Add("Tất cả lớp");
+            foreach (var cls in _profiles.Select(x => x.ClassName).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x))
+            {
+                cboClassFilter.Items.Add(cls);
+            }
+            int clsIdx = !string.IsNullOrEmpty(prevClass) ? cboClassFilter.Items.IndexOf(prevClass) : 0;
+            cboClassFilter.SelectedIndex = clsIdx >= 0 ? clsIdx : 0;
 
             var receiptDtos = await _financeService.GetPaymentReceiptsAsync();
             _receipts.Clear();
@@ -655,9 +687,7 @@ public partial class TuitionPaymentView : UserControl
 
     private void WireEvents()
     {
-        btnTabProfiles.Click += (s, e) => SelectTab(0);
-        btnTabDebt.Click += (s, e) => SelectTab(1);
-        btnTabHistory.Click += (s, e) => SelectTab(2);
+        tabMain.SelectedIndexChanged += (s, e) => SelectTab(tabMain.SelectedIndex);
 
         txtSearch.TextChanged += (s, e) => ApplyFilter();
         cboClassFilter.SelectedIndexChanged += (s, e) => ApplyFilter();
@@ -727,7 +757,7 @@ public partial class TuitionPaymentView : UserControl
             {
                 if (gridDebtors.Rows[e.RowIndex].DataBoundItem is TuitionProfileModel item)
                 {
-                    OpenCollectDialog(item.StudentName, item.ClassName, item.Remaining, item.StudentCode);
+                    OpenCollectDialog(item);
                 }
             }
         };
@@ -770,24 +800,10 @@ public partial class TuitionPaymentView : UserControl
     private void SelectTab(int tabIndex)
     {
         _currentTabIndex = tabIndex;
-
-        Color activeColor = Color.FromArgb(37, 99, 235);
-        Color inactiveColor = Color.FromArgb(100, 116, 139);
-        var activeFont = new Font("Segoe UI", 9.5f, FontStyle.Bold);
-        var inactiveFont = new Font("Segoe UI", 9.5f, FontStyle.Regular);
-
-        btnTabProfiles.ForeColor = tabIndex == 0 ? activeColor : inactiveColor;
-        btnTabProfiles.Font = tabIndex == 0 ? activeFont : inactiveFont;
-
-        btnTabDebt.ForeColor = tabIndex == 1 ? activeColor : inactiveColor;
-        btnTabDebt.Font = tabIndex == 1 ? activeFont : inactiveFont;
-
-        btnTabHistory.ForeColor = tabIndex == 2 ? activeColor : inactiveColor;
-        btnTabHistory.Font = tabIndex == 2 ? activeFont : inactiveFont;
-
-        cardProfiles.Visible = (tabIndex == 0);
-        cardDebt.Visible = (tabIndex == 1);
-        cardHistory.Visible = (tabIndex == 2);
+        if (tabMain.SelectedIndex != tabIndex && tabIndex >= 0 && tabIndex < tabMain.TabPages.Count)
+        {
+            tabMain.SelectedIndex = tabIndex;
+        }
 
         UpdateStatusFilterItems(tabIndex);
         ApplyFilter();
@@ -815,9 +831,17 @@ public partial class TuitionPaymentView : UserControl
         }
     }
 
-    private async void OpenCollectDialog(string studentName, string className, decimal remainingDebt, string studentCode)
+    private async void OpenCollectDialog(TuitionProfileModel item)
     {
-        using var dialog = new CollectTuitionDialog(studentName, className, remainingDebt, studentCode);
+        using var dialog = new CollectTuitionDialog(
+            item.StudentName,
+            item.ClassName,
+            item.TotalFee,
+            item.Remaining,
+            item.StudentCode,
+            item.CourseName,
+            item.PaidInstallmentCount);
+
         if (dialog.ShowDialog(ParentForm) == DialogResult.OK)
         {
             decimal paidAmt = dialog.CollectedAmount;
@@ -827,12 +851,9 @@ public partial class TuitionPaymentView : UserControl
             string method = dialog.PaymentMethod;
             string note = string.IsNullOrEmpty(dialog.ContentNote) ? $"Thu học phí - {targetName} ({targetCode}) - Lớp {targetClass}" : dialog.ContentNote;
 
-            // Ghi nhận trực tiếp vào CSDL SQLite thông qua FinanceService (ACID transaction)
-            var result = await _financeService.CollectTuitionAsync(targetCode, paidAmt, method, note, AppSession.UserId);
-
+            var result = await _financeService.CollectTuitionAsync(targetCode, paidAmt, method, note, AppSession.UserId, dialog.DiscountAmount);
             string finalReceiptCode = !string.IsNullOrEmpty(result.ReceiptCode) ? result.ReceiptCode : dialog.ReceiptCode;
 
-            // Tải lại dữ liệu trực tiếp từ SQLite để cập nhật giao diện
             LoadRealTuitionDataAsync();
 
             var receiptModel = new ReceiptHistoryModel
@@ -856,10 +877,22 @@ public partial class TuitionPaymentView : UserControl
             else
             {
                 AppDialog.ShowSuccess(ParentForm, "Thu học phí thành công",
-                    $"Đã thu học phí thành công {paidAmt:N0} đ cho học viên {targetName} ({targetCode})!\n" +
-                    $"Mã phiếu thu: [{finalReceiptCode}]. Giao dịch đã được lưu trữ an toàn trong SQLite 100% Offline.");
+                    $"Đã thu học phí thành công {paidAmt:N0} đ cho học viên {targetName} ({targetCode}).\nMã phiếu thu: {finalReceiptCode}.");
             }
         }
+    }
+
+    private void OpenCollectDialog(string studentName, string className, decimal remainingDebt, string studentCode)
+    {
+        var matched = _profiles.FirstOrDefault(p => p.StudentCode == studentCode) ?? new TuitionProfileModel
+        {
+            StudentName = studentName,
+            ClassName = className,
+            TotalFee = remainingDebt,
+            Remaining = remainingDebt,
+            StudentCode = studentCode
+        };
+        OpenCollectDialog(matched);
     }
 
     private void OpenReceiptPreview(ReceiptHistoryModel receipt)
@@ -919,7 +952,7 @@ public partial class TuitionPaymentView : UserControl
             gridDebtors.DataSource = filtered;
 
             decimal totalDebt = filtered.Sum(p => p.Remaining);
-            lblDebtorsFooter.Text = $"📌 Có {filtered.Count} học viên còn nợ | Tổng số dư công nợ: {totalDebt:N0} đ | Nhấn '💵 Thu tiền' để lập tức thu phí và sinh phiếu thu.";
+            lblDebtorsFooter.Text = $"Có {filtered.Count} học viên còn nợ  |  Tổng số dư công nợ: {totalDebt:N0} đ";
         }
         else // Tab 3: Lịch sử thu
         {
@@ -939,7 +972,7 @@ public partial class TuitionPaymentView : UserControl
             gridHistory.DataSource = filtered;
 
             decimal totalCollected = filtered.Sum(r => r.Amount);
-            lblHistoryFooter.Text = $"📌 Đã ghi nhận {filtered.Count} phiếu thu | Tổng số tiền đã thu: {totalCollected:N0} đ | Nhấn '🖨️ In phiếu thu' để mở phôi in A5.";
+            lblHistoryFooter.Text = $"Đã ghi nhận {filtered.Count} phiếu thu  |  Tổng số tiền đã thu: {totalCollected:N0} đ";
         }
     }
 

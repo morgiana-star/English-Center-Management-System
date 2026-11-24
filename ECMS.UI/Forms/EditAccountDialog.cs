@@ -66,7 +66,7 @@ public partial class EditAccountDialog : Form
         IsCreateMode = isCreateMode;
         UserId = userId;
 
-        // Bỏ Liên kết hồ sơ & bổ sung Email, Số điện thoại tùy chọn
+        // Bỏ Liên kết hồ sơ & bổ sung Email, Số điện thoại mỗi trường 1 dòng riêng
         lblProfile.Visible = false;
         cboProfile.Visible = false;
 
@@ -76,15 +76,16 @@ public partial class EditAccountDialog : Form
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
             ForeColor = Color.FromArgb(51, 65, 85),
             Location = new Point(20, 162),
-            Text = "Email (tùy chọn)"
+            Text = "Email"
         };
         _txtEmail = new AppTextBox
         {
             Location = new Point(20, 186),
-            Size = new Size(226, 36),
+            Size = new Size(472, 36),
             CornerRadius = 5,
-            Placeholder = "Để trống nếu chưa có",
-            Text = email ?? string.Empty
+            Placeholder = "Nhập email (có thể để trống)",
+            Text = email ?? string.Empty,
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
         };
 
         var lblPhone = new Label
@@ -92,26 +93,26 @@ public partial class EditAccountDialog : Form
             AutoSize = true,
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
             ForeColor = Color.FromArgb(51, 65, 85),
-            Location = new Point(266, 162),
-            Text = "Số điện thoại (tùy chọn)"
+            Location = new Point(20, 234),
+            Text = "Số điện thoại"
         };
         _txtPhone = new AppTextBox
         {
-            Location = new Point(266, 186),
-            Size = new Size(226, 36),
+            Location = new Point(20, 258),
+            Size = new Size(472, 36),
             CornerRadius = 5,
-            Placeholder = "Để trống nếu chưa có",
+            Placeholder = "Nhập số điện thoại (có thể để trống)",
             Text = phone ?? string.Empty,
             Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
         };
 
         cardForm.Controls.AddRange(new Control[] { lblEmail, _txtEmail, lblPhone, _txtPhone });
 
-        lblRole.Location = new Point(20, 236);
-        cboRole.Location = new Point(20, 260);
-        chkRequirePassChange.Location = new Point(20, 310);
-        cardForm.Size = new Size(cardForm.Width, 355);
-        ClientSize = new Size(ClientSize.Width, 515);
+        lblRole.Location = new Point(20, 306);
+        cboRole.Location = new Point(20, 330);
+        chkRequirePassChange.Location = new Point(20, 378);
+        cardForm.Size = new Size(cardForm.Width, 420);
+        ClientSize = new Size(ClientSize.Width, 580);
 
         // Chỉ giữ 6 vai trò nội bộ (bỏ Học viên, Phụ huynh)
         cboRole.Items.Clear();
@@ -136,12 +137,14 @@ public partial class EditAccountDialog : Form
 
         if (isCreateMode)
         {
+            Text = "Thêm tài khoản mới - ECMS";
             lblTitle.Text = "Thêm tài khoản mới";
             btnSave.Text = "Tạo tài khoản";
             txtUsername.ReadOnly = false;
         }
         else
         {
+            Text = "Chỉnh sửa tài khoản - ECMS";
             lblTitle.Text = "Chỉnh sửa tài khoản";
             btnSave.Text = "Lưu thay đổi";
             txtUsername.ReadOnly = true;
@@ -186,6 +189,29 @@ public partial class EditAccountDialog : Form
                 AppDialog.ShowError(this, "Thiếu thông tin", "Vui lòng nhập họ và tên.");
                 txtFullName.Focus();
                 return;
+            }
+
+            string emailInput = _txtEmail.Text.Trim();
+            if (!string.IsNullOrEmpty(emailInput))
+            {
+                if (emailInput.Contains(' ') || !emailInput.Contains('@') || !emailInput.Contains('.') || emailInput.IndexOf('@') >= emailInput.LastIndexOf('.'))
+                {
+                    AppDialog.ShowError(this, "Email không hợp lệ", "Vui lòng nhập đúng định dạng email (ví dụ: ten@gmail.com) hoặc để trống.");
+                    _txtEmail.Focus();
+                    return;
+                }
+            }
+
+            string phoneInput = _txtPhone.Text.Trim();
+            if (!string.IsNullOrEmpty(phoneInput))
+            {
+                string cleanPhone = phoneInput.Replace(" ", "").Replace(".", "").Replace("-", "");
+                if (cleanPhone.Length < 9 || cleanPhone.Length > 11 || !cleanPhone.All(char.IsDigit) || !cleanPhone.StartsWith("0"))
+                {
+                    AppDialog.ShowError(this, "Số điện thoại không hợp lệ", "Số điện thoại phải bắt đầu bằng số 0 và gồm 9–11 chữ số (hoặc để trống).");
+                    _txtPhone.Focus();
+                    return;
+                }
             }
 
             btnSave.Enabled = false;

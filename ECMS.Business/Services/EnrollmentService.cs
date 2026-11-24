@@ -33,6 +33,57 @@ public class EnrollmentService : IEnrollmentService
         return await _enrollmentRepo.GetActiveDiscountsAsync();
     }
 
+    public async Task<IEnumerable<FeeDiscountDto>> GetAllDiscountsAsync()
+    {
+        return await _enrollmentRepo.GetAllDiscountsAsync();
+    }
+
+    public async Task<FeeDiscountDto?> GetDiscountByCodeAsync(string discountCode)
+    {
+        return await _enrollmentRepo.GetDiscountByCodeAsync(discountCode);
+    }
+
+    public async Task<(bool Success, string Message)> CreateDiscountAsync(FeeDiscountDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.DiscountCode))
+            return (false, "Vui lòng nhập mã giảm giá.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountName))
+            return (false, "Vui lòng nhập tên chương trình ưu đãi.");
+        if (dto.Percentage < 0 || dto.Percentage > 100)
+            return (false, "Phần trăm giảm giá phải nằm trong khoảng từ 0 đến 100.");
+        if (dto.FixedAmount < 0)
+            return (false, "Số tiền giảm cố định không được âm.");
+        if (dto.Percentage == 0 && dto.FixedAmount == 0)
+            return (false, "Vui lòng nhập mức giảm theo phần trăm hoặc số tiền cố định.");
+
+        return await _enrollmentRepo.CreateDiscountAsync(dto);
+    }
+
+    public async Task<(bool Success, string Message)> UpdateDiscountAsync(FeeDiscountDto dto)
+    {
+        if (dto.DiscountId <= 0)
+            return (false, "Mã định danh ưu đãi không hợp lệ.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountCode))
+            return (false, "Vui lòng nhập mã giảm giá.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountName))
+            return (false, "Vui lòng nhập tên chương trình ưu đãi.");
+        if (dto.Percentage < 0 || dto.Percentage > 100)
+            return (false, "Phần trăm giảm giá phải nằm trong khoảng từ 0 đến 100.");
+        if (dto.FixedAmount < 0)
+            return (false, "Số tiền giảm cố định không được âm.");
+        if (dto.Percentage == 0 && dto.FixedAmount == 0)
+            return (false, "Vui lòng nhập mức giảm theo phần trăm hoặc số tiền cố định.");
+
+        return await _enrollmentRepo.UpdateDiscountAsync(dto);
+    }
+
+    public async Task<(bool Success, string Message)> DeleteDiscountAsync(int discountId)
+    {
+        if (discountId <= 0)
+            return (false, "Mã ưu đãi không hợp lệ.");
+        return await _enrollmentRepo.DeleteDiscountAsync(discountId);
+    }
+
     public async Task<bool> IsExistingStudentByPhoneAsync(string phone)
     {
         return await _enrollmentRepo.IsExistingStudentByPhoneAsync(phone);

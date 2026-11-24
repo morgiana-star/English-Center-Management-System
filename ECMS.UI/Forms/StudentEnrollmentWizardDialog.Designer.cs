@@ -31,8 +31,12 @@ partial class StudentEnrollmentWizardDialog
         lblTitle = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
         btnBack = new ECMS.UI.Controls.AppButton();
+        btnSaveWaiting = new ECMS.UI.Controls.AppButton();
+        btnConfirmNoPay = new ECMS.UI.Controls.AppButton();
         btnNext = new ECMS.UI.Controls.AppButton();
-        pnlBodyContainer = new System.Windows.Forms.Panel();
+        tabSteps = new System.Windows.Forms.TabControl();
+        tpStep1 = new System.Windows.Forms.TabPage();
+        tpStep2 = new System.Windows.Forms.TabPage();
         pnlStep1 = new System.Windows.Forms.Panel();
         cardStep1 = new ECMS.UI.Controls.AppCard();
         txtNotes = new ECMS.UI.Controls.AppTextBox();
@@ -99,7 +103,9 @@ partial class StudentEnrollmentWizardDialog
         lblSuccessIcon = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlFooter.SuspendLayout();
-        pnlBodyContainer.SuspendLayout();
+        tabSteps.SuspendLayout();
+        tpStep1.SuspendLayout();
+        tpStep2.SuspendLayout();
         pnlStep1.SuspendLayout();
         cardStep1.SuspendLayout();
         pnlStep2.SuspendLayout();
@@ -154,6 +160,8 @@ partial class StudentEnrollmentWizardDialog
         // 
         pnlFooter.BackColor = System.Drawing.Color.White;
         pnlFooter.Controls.Add(btnBack);
+        pnlFooter.Controls.Add(btnSaveWaiting);
+        pnlFooter.Controls.Add(btnConfirmNoPay);
         pnlFooter.Controls.Add(btnNext);
         pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         pnlFooter.Location = new System.Drawing.Point(0, 680);
@@ -161,6 +169,24 @@ partial class StudentEnrollmentWizardDialog
         pnlFooter.Padding = new System.Windows.Forms.Padding(28, 12, 28, 12);
         pnlFooter.Size = new System.Drawing.Size(980, 60);
         pnlFooter.TabIndex = 1;
+        // 
+        // btnSaveWaiting
+        // 
+        btnSaveWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnSaveWaiting.BackColor = System.Drawing.Color.White;
+        btnSaveWaiting.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnSaveWaiting.CornerRadius = 6;
+        btnSaveWaiting.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnSaveWaiting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnSaveWaiting.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        btnSaveWaiting.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnSaveWaiting.Location = new System.Drawing.Point(605, 12);
+        btnSaveWaiting.Name = "btnSaveWaiting";
+        btnSaveWaiting.Size = new System.Drawing.Size(185, 36);
+        btnSaveWaiting.TabIndex = 4;
+        btnSaveWaiting.Text = "Lưu (Chờ xếp lớp)";
+        btnSaveWaiting.UseVisualStyleBackColor = false;
+        btnSaveWaiting.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnBack
         // 
@@ -172,7 +198,7 @@ partial class StudentEnrollmentWizardDialog
         btnBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnBack.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnBack.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnBack.Location = new System.Drawing.Point(675, 12);
+        btnBack.Location = new System.Drawing.Point(470, 12);
         btnBack.Name = "btnBack";
         btnBack.Size = new System.Drawing.Size(115, 36);
         btnBack.TabIndex = 1;
@@ -180,6 +206,25 @@ partial class StudentEnrollmentWizardDialog
         btnBack.UseVisualStyleBackColor = false;
         btnBack.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         btnBack.Visible = false;
+        // 
+        // btnConfirmNoPay
+        // 
+        btnConfirmNoPay.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnConfirmNoPay.BackColor = System.Drawing.Color.White;
+        btnConfirmNoPay.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnConfirmNoPay.CornerRadius = 6;
+        btnConfirmNoPay.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnConfirmNoPay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnConfirmNoPay.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        btnConfirmNoPay.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnConfirmNoPay.Location = new System.Drawing.Point(595, 12);
+        btnConfirmNoPay.Name = "btnConfirmNoPay";
+        btnConfirmNoPay.Size = new System.Drawing.Size(195, 36);
+        btnConfirmNoPay.TabIndex = 3;
+        btnConfirmNoPay.Text = "Xác nhận (Chưa thu phí)";
+        btnConfirmNoPay.UseVisualStyleBackColor = false;
+        btnConfirmNoPay.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnConfirmNoPay.Visible = false;
         // 
         // btnNext
         // 
@@ -200,18 +245,40 @@ partial class StudentEnrollmentWizardDialog
         btnNext.UseVisualStyleBackColor = false;
         btnNext.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
-        // pnlBodyContainer
+        // tabSteps
         // 
-        pnlBodyContainer.Controls.Add(pnlStep1);
-        pnlBodyContainer.Controls.Add(pnlStep2);
-        pnlBodyContainer.Controls.Add(pnlStep3);
-        pnlBodyContainer.Controls.Add(pnlStep4);
-        pnlBodyContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBodyContainer.Location = new System.Drawing.Point(0, 78);
-        pnlBodyContainer.Name = "pnlBodyContainer";
-        pnlBodyContainer.Padding = new System.Windows.Forms.Padding(24, 14, 24, 14);
-        pnlBodyContainer.Size = new System.Drawing.Size(980, 602);
-        pnlBodyContainer.TabIndex = 2;
+        tabSteps.Controls.Add(tpStep1);
+        tabSteps.Controls.Add(tpStep2);
+        tabSteps.Dock = System.Windows.Forms.DockStyle.Fill;
+        tabSteps.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        tabSteps.Location = new System.Drawing.Point(0, 78);
+        tabSteps.Name = "tabSteps";
+        tabSteps.Padding = new System.Drawing.Point(16, 6);
+        tabSteps.SelectedIndex = 0;
+        tabSteps.Size = new System.Drawing.Size(980, 602);
+        tabSteps.TabIndex = 2;
+        // 
+        // tpStep1
+        // 
+        tpStep1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        tpStep1.Controls.Add(pnlStep1);
+        tpStep1.Location = new System.Drawing.Point(4, 30);
+        tpStep1.Name = "tpStep1";
+        tpStep1.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
+        tpStep1.Size = new System.Drawing.Size(972, 568);
+        tpStep1.TabIndex = 0;
+        tpStep1.Text = "Bước 1: Thông tin học viên";
+        // 
+        // tpStep2
+        // 
+        tpStep2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        tpStep2.Controls.Add(pnlStep2);
+        tpStep2.Location = new System.Drawing.Point(4, 30);
+        tpStep2.Name = "tpStep2";
+        tpStep2.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
+        tpStep2.Size = new System.Drawing.Size(972, 568);
+        tpStep2.TabIndex = 1;
+        tpStep2.Text = "Bước 2: Chọn khóa học & lớp học";
         // 
         // pnlStep1
         // 
@@ -540,11 +607,10 @@ partial class StudentEnrollmentWizardDialog
         // 
         pnlStep2.Controls.Add(cardStep2);
         pnlStep2.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlStep2.Location = new System.Drawing.Point(24, 14);
+        pnlStep2.Location = new System.Drawing.Point(20, 12);
         pnlStep2.Name = "pnlStep2";
-        pnlStep2.Size = new System.Drawing.Size(932, 574);
+        pnlStep2.Size = new System.Drawing.Size(932, 544);
         pnlStep2.TabIndex = 1;
-        pnlStep2.Visible = false;
         // 
         // cardStep2
         // 
@@ -561,26 +627,29 @@ partial class StudentEnrollmentWizardDialog
         cardStep2.Location = new System.Drawing.Point(0, 0);
         cardStep2.Name = "cardStep2";
         cardStep2.Padding = new System.Windows.Forms.Padding(24);
-        cardStep2.Size = new System.Drawing.Size(932, 574);
+        cardStep2.Size = new System.Drawing.Size(932, 544);
         cardStep2.TabIndex = 0;
         // 
         // pnlBottomFeeSummary
         // 
-        pnlBottomFeeSummary.BackColor = System.Drawing.Color.Transparent;
+        pnlBottomFeeSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        pnlBottomFeeSummary.BackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        pnlBottomFeeSummary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         pnlBottomFeeSummary.Controls.Add(lblBottomTuitionFee);
-        pnlBottomFeeSummary.Location = new System.Drawing.Point(24, 460);
+        pnlBottomFeeSummary.Location = new System.Drawing.Point(568, 476);
         pnlBottomFeeSummary.Name = "pnlBottomFeeSummary";
-        pnlBottomFeeSummary.Size = new System.Drawing.Size(884, 45);
+        pnlBottomFeeSummary.Padding = new System.Windows.Forms.Padding(14, 0, 14, 0);
+        pnlBottomFeeSummary.Size = new System.Drawing.Size(340, 46);
         pnlBottomFeeSummary.TabIndex = 4;
         // 
         // lblBottomTuitionFee
         // 
-        lblBottomTuitionFee.Dock = System.Windows.Forms.DockStyle.Right;
-        lblBottomTuitionFee.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        lblBottomTuitionFee.Dock = System.Windows.Forms.DockStyle.Fill;
+        lblBottomTuitionFee.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold);
         lblBottomTuitionFee.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)29)), ((int)((byte)78)), ((int)((byte)216)));
-        lblBottomTuitionFee.Location = new System.Drawing.Point(400, 0);
+        lblBottomTuitionFee.Location = new System.Drawing.Point(14, 0);
         lblBottomTuitionFee.Name = "lblBottomTuitionFee";
-        lblBottomTuitionFee.Size = new System.Drawing.Size(484, 45);
+        lblBottomTuitionFee.Size = new System.Drawing.Size(310, 44);
         lblBottomTuitionFee.TabIndex = 0;
         lblBottomTuitionFee.Text = "Tổng học phí: 6.800.000 VNĐ";
         lblBottomTuitionFee.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -1076,20 +1145,23 @@ partial class StudentEnrollmentWizardDialog
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         ClientSize = new System.Drawing.Size(980, 740);
-        Controls.Add(pnlBodyContainer);
+        Controls.Add(tabSteps);
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+        MaximizeBox = true;
         MinimizeBox = false;
+        MinimumSize = new System.Drawing.Size(940, 680);
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Quy trình đăng ký học & Thanh toán học phí — ECMS";
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlFooter.ResumeLayout(false);
-        pnlBodyContainer.ResumeLayout(false);
+        tabSteps.ResumeLayout(false);
+        tpStep1.ResumeLayout(false);
+        tpStep2.ResumeLayout(false);
         pnlStep1.ResumeLayout(false);
         cardStep1.ResumeLayout(false);
         cardStep1.PerformLayout();
@@ -1122,9 +1194,13 @@ partial class StudentEnrollmentWizardDialog
     
     private System.Windows.Forms.Panel pnlFooter;
     private ECMS.UI.Controls.AppButton btnBack;
+    private ECMS.UI.Controls.AppButton btnSaveWaiting;
+    private ECMS.UI.Controls.AppButton btnConfirmNoPay;
     private ECMS.UI.Controls.AppButton btnNext;
 
-    private System.Windows.Forms.Panel pnlBodyContainer;
+    private System.Windows.Forms.TabControl tabSteps;
+    private System.Windows.Forms.TabPage tpStep1;
+    private System.Windows.Forms.TabPage tpStep2;
     
     // Step 1
     private System.Windows.Forms.Panel pnlStep1;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ECMS.Core.DTOs;
@@ -16,34 +15,52 @@ public class ClassService : IClassService
         _repo = repo ?? new ClassRepository();
     }
 
-    public async Task<IEnumerable<ClassListItemDto>> GetClassesAsync(string? keyword = null, string? courseName = null, string? status = null)
-    {
-        return await _repo.GetAllClassesAsync(keyword, courseName, status);
-    }
+    public Task<IEnumerable<ClassListItemDto>> GetClassesAsync(string? keyword = null, string? courseName = null, string? status = null)
+        => _repo.GetAllClassesAsync(keyword, courseName, status);
 
-    public async Task<Class?> GetClassByIdAsync(int id)
-    {
-        return await _repo.GetClassByIdAsync(id);
-    }
+    public Task<Class?> GetClassByIdAsync(int id) => _repo.GetClassByIdAsync(id);
+
+    public Task<Class?> GetClassByCodeAsync(string classCode) => _repo.GetClassByCodeAsync(classCode);
 
     public async Task<(bool Success, string Message)> CreateClassAsync(Class c)
     {
         if (string.IsNullOrWhiteSpace(c.ClassCode))
-            return (false, "Vui lòng nhập Mã lớp học!");
+            return (false, "Vui lòng nhập mã lớp học.");
 
         if (string.IsNullOrWhiteSpace(c.ClassName))
-            return (false, "Vui lòng nhập Tên lớp học!");
+            return (false, "Vui lòng nhập tên lớp học.");
 
         if (c.CourseId <= 0)
-            return (false, "Vui lòng chọn Khóa học áp dụng!");
+            return (false, "Vui lòng chọn khóa học áp dụng.");
 
         if (c.MaxStudents <= 0)
-            return (false, "Sĩ số tối đa phải lớn hơn 0!");
+            return (false, "Sĩ số tối đa phải lớn hơn 0.");
 
         if (c.EndDate < c.StartDate)
-            return (false, "Ngày kết thúc không được trước ngày khai giảng!");
+            return (false, "Ngày kết thúc không được trước ngày khai giảng.");
 
         bool ok = await _repo.AddClassAsync(c);
-        return ok ? (true, "Thêm lớp học thành công!") : (false, "Lỗi thêm lớp học vào CSDL!");
+        return ok ? (true, "Đã thêm lớp học thành công.") : (false, "Lỗi thêm lớp học vào cơ sở dữ liệu.");
     }
+
+    public Task<(bool Success, string Message)> DeleteClassAsync(int classId)
+        => _repo.DeleteClassAsync(classId);
+
+    public Task<IEnumerable<ClassStudentItemDto>> GetClassStudentsAsync(int classId)
+        => _repo.GetClassStudentsAsync(classId);
+
+    public Task<IEnumerable<ClassScheduleItemDto>> GetClassSchedulesAsync(int classId)
+        => _repo.GetClassSchedulesAsync(classId);
+
+    public Task<IEnumerable<ClassAttendanceSummaryDto>> GetClassAttendanceSummaryAsync(int classId)
+        => _repo.GetClassAttendanceSummaryAsync(classId);
+
+    public Task<IEnumerable<ClassGradeItemDto>> GetClassGradesAsync(int classId)
+        => _repo.GetClassGradesAsync(classId);
+
+    public Task<IEnumerable<WaitingStudentItemDto>> GetWaitingStudentsForClassAsync(int classId)
+        => _repo.GetWaitingStudentsForClassAsync(classId);
+
+    public Task<(bool Success, string Message)> EnrollWaitingStudentsToClassAsync(int classId, List<int> studentIds)
+        => _repo.EnrollWaitingStudentsToClassAsync(classId, studentIds);
 }

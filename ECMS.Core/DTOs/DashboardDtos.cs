@@ -21,6 +21,8 @@ public class MonthlyRevenueBarDto
     public string MonthLabel { get; set; } = string.Empty;
     public string YearMonth { get; set; } = string.Empty;
     public double RevenueMillion { get; set; }
+    public decimal ActualRevenueAmount { get; set; }
+    public int PaymentCount { get; set; }
     public string DisplayLabel { get; set; } = string.Empty;
     public bool IsHighlight { get; set; }
     public decimal TargetAmount { get; set; }
@@ -37,6 +39,8 @@ public class MonthlyStudentGrowthBarDto
     public bool IsHighlight { get; set; }
     public int TotalStudents { get; set; }
     public int NewStudents { get; set; }
+    public int ActiveCount { get; set; }
+    public int ArchivedCount { get; set; }
     public int GraduatedCount { get; set; }
     public string RetentionRate { get; set; } = "100%";
 }
@@ -53,6 +57,7 @@ public class CourseAttendanceRatioDto
 public class ClassAttendanceDetailDto
 {
     public string ClassCode { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
     public string CourseName { get; set; } = string.Empty;
     public string TeacherName { get; set; } = string.Empty;
     public string CapacityFormatted { get; set; } = string.Empty;
@@ -102,4 +107,58 @@ public class DashboardQuickSearchResultDto
     public string Extra2 { get; set; } = string.Empty;
     public string Extra3 { get; set; } = string.Empty;
     public string StatusText { get; set; } = string.Empty;
+}
+
+public class OverdueDebtAlertItemDto
+{
+    public int InvoiceId { get; set; }
+    public string InvoiceCode { get; set; } = string.Empty;
+    public string StudentCode { get; set; } = string.Empty;
+    public string StudentName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+    public string ClassCode { get; set; } = string.Empty;
+    public decimal BalanceDue { get; set; }
+    public string DueDate { get; set; } = string.Empty;
+    public int DaysOverdue { get; set; }
+}
+
+public class QuickSearchStudentItemDto
+{
+    public int StudentId { get; set; }
+    public string StudentCode { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public decimal BalanceDue { get; set; }
+    public string StatusText { get; set; } = string.Empty;
+}
+
+public class QuickSearchCourseItemDto
+{
+    public int CourseId { get; set; }
+    public string CourseCode { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string Level { get; set; } = string.Empty;
+    public int TotalSessions { get; set; }
+    public decimal BaseTuitionFee { get; set; }
+    public string StatusText { get; set; } = string.Empty;
+}
+
+public class QuickSearchClassItemDto
+{
+    public int ClassId { get; set; }
+    public string ClassCode { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string TeacherName { get; set; } = string.Empty;
+    public string CapacityFormatted { get; set; } = string.Empty;
+    public string StatusText { get; set; } = string.Empty;
+}
+
+public class DashboardCategorizedSearchDto
+{
+    public List<QuickSearchStudentItemDto> Students { get; set; } = new();
+    public List<QuickSearchCourseItemDto> Courses { get; set; } = new();
+    public List<QuickSearchClassItemDto> Classes { get; set; } = new();
+    public int TotalCount => Students.Count + Courses.Count + Classes.Count;
 }

@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -9,13 +14,32 @@ namespace ECMS.UI.UserControls;
 
 public partial class ScheduleManagementView : UserControl
 {
-    private class ScheduleItem
+    private readonly IScheduleService _scheduleService = new ScheduleService();
+    private AppButton _btnManageSchedules = null!;
+    private bool _isUpdatingFilters = false;
+
+    private record SemesterOption(string Display, DateTime StartDate, DateTime EndDate);
+    private record WeekOption(int WeekNumber, DateTime Monday, DateTime Sunday)
     {
-        public string CourseName { get; set; } = string.Empty;
-        public string ClassCode { get; set; } = string.Empty;
-        public string Room { get; set; } = string.Empty;
-        public string Teacher { get; set; } = string.Empty;
-        public string TimeText { get; set; } = string.Empty;
+        public string Display => $"Tuần {WeekNumber:D2} [{Monday:dd/MM/yyyy} - {Sunday:dd/MM/yyyy}]";
+    }
+
+    private readonly List<SemesterOption> _semesters = new()
+    {
+        new("Học kỳ 1 - Năm học 2025 - 2026", new DateTime(2025, 9, 1), new DateTime(2025, 12, 31)),
+        new("Học kỳ 2 - Năm học 2025 - 2026", new DateTime(2026, 1, 5), new DateTime(2026, 4, 30)),
+        new("Học kỳ 3 - Năm học 2025 - 2026", new DateTime(2026, 5, 4), new DateTime(2026, 8, 31)),
+        new("Học kỳ 1 - Năm học 2026 - 2027", new DateTime(2026, 9, 7), new DateTime(2026, 12, 31)),
+        new("Học kỳ 2 - Năm học 2026 - 2027", new DateTime(2027, 1, 4), new DateTime(2027, 4, 30)),
+        new("Học kỳ 3 - Năm học 2026 - 2027", new DateTime(2027, 5, 3), new DateTime(2027, 8, 31))
+    };
+
+    private List<WeekOption> _currentWeeks = new();
+
+    private class ScheduleCellData
+    {
+        public WeeklyScheduleSlotDto Primary { get; set; } = null!;
+        public List<WeeklyScheduleSlotDto> AllInSlot { get; set; } = new();
         public Color BgColor { get; set; }
         public Color BorderColor { get; set; }
         public Color TextColor { get; set; }
@@ -25,75 +49,141 @@ public partial class ScheduleManagementView : UserControl
     {
         InitializeComponent();
 
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
+        SetupManageSchedulesButton();
         SetupFilters();
         SetupMatrixGrid();
-        LoadScheduleData();
         WireEvents();
+        _ = RefreshScheduleAsync();
+    }
+
+    private void SetupManageSchedulesButton()
+    {
+        btnCreateSession.Text = "Tạo buổi học";
+        btnManageRooms.Text = "Quản lý phòng";
+
+        // Đặt nút "Quản lý lịch học" ở giữa "Quản lý phòng" và "Tạo buổi học"
+        _btnManageSchedules = new AppButton
+        {
+            Name = "btnManageSchedules",
+            Text = "Quản lý lịch học",
+            Size = new Size(145, 36),
+            Location = new Point(btnCreateSession.Left - 155, btnCreateSession.Top),
+            Anchor = AnchorStyles.Top | AnchorStyles.Right,
+            Variant = ButtonVariant.Secondary,
+            ButtonStyle = AppButtonStyle.Secondary,
+            CornerRadius = 5,
+            Cursor = Cursors.Hand
+        };
+        btnManageRooms.Location = new Point(_btnManageSchedules.Left - btnManageRooms.Width - 10, btnManageRooms.Top);
+        pnlHeader.Controls.Add(_btnManageSchedules);
     }
 
     private void SetupFilters()
     {
-        // 3.1: Học kỳ & Năm học (3 học kỳ / năm)
-        cboSemester.Items.Clear();
-        cboSemester.Items.AddRange(new object[]
+        _isUpdatingFilters = true;
+        try
         {
-            "Học kỳ 1 (01/2026 – 04/2026) · Năm học 2026 - 2027",
-            "Học kỳ 2 (05/2026 – 08/2026) · Năm học 2026 - 2027",
-            "Học kỳ 3 (09/2026 – 12/2026) · Năm học 2026 - 2027"
-        });
-        cboSemester.SelectedIndex = 2; // Kỳ 3 hiện tại
+            cboSemester.Items.Clear();
+            foreach (var sem in _semesters)
+            {
+                cboSemester.Items.Add(sem.Display);
+            }
 
-        // 3.2: Đối tượng xem thời khóa biểu
-        cboScheduleType.Items.Clear();
-        cboScheduleType.Items.AddRange(new object[]
+            int defaultSemIdx = _semesters.FindIndex(s => DateTime.Today >= s.StartDate && DateTime.Today <= s.EndDate);
+            cboSemester.SelectedIndex = defaultSemIdx >= 0 ? defaultSemIdx : 3;
+
+            cboScheduleType.Items.Clear();
+            cboScheduleType.Items.AddRange(new object[]
+            {
+                "Thời khóa biểu tất cả",
+                "Thời khóa biểu theo lớp",
+                "Thời khóa biểu theo khóa học",
+                "Thời khóa biểu theo giảng viên"
+            });
+            cboScheduleType.SelectedIndex = 0;
+
+            cboTargetFilter.Items.Clear();
+            cboTargetFilter.Items.Add("-- Xem tất cả thời khóa biểu --");
+            cboTargetFilter.SelectedIndex = 0;
+            cboTargetFilter.Enabled = false;
+
+            PopulateWeeksForSelectedSemester();
+        }
+        finally
         {
-            "Thời khóa biểu tất cả",
-            "Thời khóa biểu theo lớp",
-            "Thời khóa biểu theo khóa học",
-            "Thời khóa biểu theo giảng viên"
-        });
-        cboScheduleType.SelectedIndex = 0;
-
-        UpdateTargetFilter();
-
-        // 3.3: Ô chọn Tuần trong học kỳ
-        cboWeek.Items.Clear();
-        cboWeek.Items.AddRange(new object[]
-        {
-            "Tuần 09 [từ ngày 26/10/2026 đến ngày 01/11/2026]",
-            "Tuần 10 [từ ngày 02/11/2026 đến ngày 08/11/2026]",
-            "Tuần 11 [từ ngày 09/11/2026 đến ngày 15/11/2026]",
-            "Tuần 12 [từ ngày 16/11/2026 đến ngày 22/11/2026]",
-            "Tuần 13 [từ ngày 23/11/2026 đến ngày 29/11/2026]"
-        });
-        cboWeek.SelectedIndex = 2; // Tuần 11
+            _isUpdatingFilters = false;
+        }
     }
 
-    private void UpdateTargetFilter()
+    private void PopulateWeeksForSelectedSemester()
     {
-        cboTargetFilter.Items.Clear();
-        switch (cboScheduleType.SelectedIndex)
+        int semIdx = Math.Clamp(cboSemester.SelectedIndex, 0, _semesters.Count - 1);
+        var sem = _semesters[semIdx];
+
+        // Tìm thứ 2 đầu tiên <= StartDate
+        DateTime monday = sem.StartDate.Date;
+        while (monday.DayOfWeek != DayOfWeek.Monday)
         {
-            case 1: // Theo lớp
-                cboTargetFilter.Items.AddRange(new object[] { "IELTS-F01", "IELTS-F02", "IELTS-I01", "TOEIC-A01", "COM-B01" });
-                cboTargetFilter.Enabled = true;
-                cboTargetFilter.SelectedIndex = 0;
-                break;
-            case 2: // Theo khóa học
-                cboTargetFilter.Items.AddRange(new object[] { "IELTS Foundation", "IELTS Intensive", "TOEIC 500+", "Giao tiếp cơ bản" });
-                cboTargetFilter.Enabled = true;
-                cboTargetFilter.SelectedIndex = 0;
-                break;
-            case 3: // Theo giảng viên
-                cboTargetFilter.Items.AddRange(new object[] { "Nguyễn Hoàng Anh", "Trần Minh Tuấn", "Lê Thu Hà", "Võ Tấn Toàn" });
-                cboTargetFilter.Enabled = true;
-                cboTargetFilter.SelectedIndex = 0;
-                break;
-            default: // Tất cả
+            monday = monday.AddDays(-1);
+        }
+
+        _currentWeeks.Clear();
+        int weekNo = 1;
+        while (monday <= sem.EndDate)
+        {
+            _currentWeeks.Add(new WeekOption(weekNo++, monday, monday.AddDays(6)));
+            monday = monday.AddDays(7);
+        }
+
+        cboWeek.Items.Clear();
+        foreach (var w in _currentWeeks)
+        {
+            cboWeek.Items.Add(w.Display);
+        }
+
+        int todayWeekIdx = _currentWeeks.FindIndex(w => DateTime.Today >= w.Monday && DateTime.Today <= w.Sunday);
+        if (cboWeek.Items.Count > 0)
+        {
+            cboWeek.SelectedIndex = todayWeekIdx >= 0 ? todayWeekIdx : 0;
+        }
+    }
+
+    private async Task UpdateTargetFilterAsync()
+    {
+        _isUpdatingFilters = true;
+        try
+        {
+            cboTargetFilter.Items.Clear();
+            string filterType = cboScheduleType.SelectedIndex switch
+            {
+                1 => "Class",
+                2 => "Course",
+                3 => "Teacher",
+                _ => "All"
+            };
+
+            if (filterType == "All")
+            {
                 cboTargetFilter.Items.Add("-- Xem tất cả thời khóa biểu --");
                 cboTargetFilter.SelectedIndex = 0;
                 cboTargetFilter.Enabled = false;
-                break;
+                return;
+            }
+
+            var targets = await _scheduleService.GetFilterTargetsAsync(filterType);
+            foreach (var t in targets)
+            {
+                cboTargetFilter.Items.Add(t);
+            }
+            cboTargetFilter.Enabled = targets.Count > 0;
+            if (cboTargetFilter.Items.Count > 0) cboTargetFilter.SelectedIndex = 0;
+        }
+        finally
+        {
+            _isUpdatingFilters = false;
         }
     }
 
@@ -109,7 +199,6 @@ public partial class ScheduleManagementView : UserControl
         dgvScheduleMatrix.SelectionMode = DataGridViewSelectionMode.CellSelect;
         dgvScheduleMatrix.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
-        // Cột Ca học
         dgvScheduleMatrix.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colShift",
@@ -126,14 +215,12 @@ public partial class ScheduleManagementView : UserControl
             }
         });
 
-        // 7 ngày trong tuần
-        string[] days = { "Thứ 2 (09/11)", "Thứ 3 (10/11)", "Thứ 4 (11/11)", "Thứ 5 (12/11)", "Thứ 6 (13/11)", "Thứ 7 (14/11)", "Chủ Nhật (15/11)" };
-        for (int i = 0; i < days.Length; i++)
+        for (int i = 0; i < 7; i++)
         {
             dgvScheduleMatrix.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = $"colDay{i}",
-                HeaderText = days[i],
+                HeaderText = $"Ngày {i + 1}",
                 MinimumWidth = 125,
                 FillWeight = 12.7F
             });
@@ -142,222 +229,155 @@ public partial class ScheduleManagementView : UserControl
         dgvScheduleMatrix.CellPainting += DgvScheduleMatrix_CellPainting;
     }
 
-    private void LoadScheduleData()
+    private async Task RefreshScheduleAsync()
     {
-        dgvScheduleMatrix.Rows.Clear();
+        if (_currentWeeks.Count == 0 || cboWeek.SelectedIndex < 0) return;
+        var week = _currentWeeks[cboWeek.SelectedIndex];
+        UpdateWeekHeaderDates(week.Monday);
 
-        // 3.4: Trung tâm dạy 3 ca: Sáng (8h-12h), Chiều (13h30-17h30), Tối (18h-21h)
-        int rMorning = dgvScheduleMatrix.Rows.Add("Ca Sáng\n08:00 – 12:00", "", "", "", "", "", "", "");
-        int rAfternoon = dgvScheduleMatrix.Rows.Add("Ca Chiều\n13:30 – 17:30", "", "", "", "", "", "", "");
-        int rEvening = dgvScheduleMatrix.Rows.Add("Ca Tối\n18:00 – 21:00", "", "", "", "", "", "", "");
+        string filterType = cboScheduleType.SelectedIndex switch
+        {
+            1 => "Class",
+            2 => "Course",
+            3 => "Teacher",
+            _ => "All"
+        };
+        string? filterVal = filterType == "All" ? null : cboTargetFilter.SelectedItem?.ToString();
 
-        // Nạp các lớp mẫu vào các ô (Tag chứa ScheduleItem)
-        // Ca Sáng: Thứ 7 & CN có lớp Giao tiếp cơ bản
-        SetScheduleCell(rMorning, 6, new ScheduleItem
+        try
         {
-            CourseName = "Giao tiếp cơ bản",
-            ClassCode = "COM-B01",
-            Room = "P102",
-            Teacher = "Lê Thu Hà",
-            TimeText = "08:30 → 11:30",
-            BgColor = Color.FromArgb(240, 253, 244), // Xanh lá nhạt
-            BorderColor = Color.FromArgb(74, 222, 128),
-            TextColor = Color.FromArgb(22, 101, 52)
-        });
-        SetScheduleCell(rMorning, 7, new ScheduleItem
-        {
-            CourseName = "Giao tiếp cơ bản",
-            ClassCode = "COM-B01",
-            Room = "P102",
-            Teacher = "Lê Thu Hà",
-            TimeText = "08:30 → 11:30",
-            BgColor = Color.FromArgb(240, 253, 244),
-            BorderColor = Color.FromArgb(74, 222, 128),
-            TextColor = Color.FromArgb(22, 101, 52)
-        });
+            var slots = (await _scheduleService.GetSchedulesInRangeAsync(week.Monday, week.Sunday, filterType, filterVal)).ToList();
 
-        // Ca Chiều: Thứ 4 & Thứ 7
-        SetScheduleCell(rAfternoon, 3, new ScheduleItem
-        {
-            CourseName = "IELTS Intensive",
-            ClassCode = "IELTS-I01",
-            Room = "P203",
-            Teacher = "Trần Minh Tuấn",
-            TimeText = "14:00 → 17:00",
-            BgColor = Color.FromArgb(224, 242, 254), // Xanh dương nhạt
-            BorderColor = Color.FromArgb(56, 189, 248),
-            TextColor = Color.FromArgb(3, 105, 161)
-        });
-        SetScheduleCell(rAfternoon, 6, new ScheduleItem
-        {
-            CourseName = "IELTS Intensive",
-            ClassCode = "IELTS-I01",
-            Room = "P203",
-            Teacher = "Trần Minh Tuấn",
-            TimeText = "14:00 → 17:00",
-            BgColor = Color.FromArgb(224, 242, 254),
-            BorderColor = Color.FromArgb(56, 189, 248),
-            TextColor = Color.FromArgb(3, 105, 161)
-        });
+            dgvScheduleMatrix.Rows.Clear();
+            int rMorning = dgvScheduleMatrix.Rows.Add("Ca Sáng\n08:00 - 12:00", "", "", "", "", "", "", "");
+            int rAfternoon = dgvScheduleMatrix.Rows.Add("Ca Chiều\n13:30 - 17:30", "", "", "", "", "", "", "");
+            int rEvening = dgvScheduleMatrix.Rows.Add("Ca Tối\n18:00 - 21:00", "", "", "", "", "", "", "");
 
-        // Ca Tối: Thứ 3 & Thứ 6 (Lớp IELTS-F01 và TOEIC-A01)
-        SetScheduleCell(rEvening, 2, new ScheduleItem
-        {
-            CourseName = "IELTS Foundation",
-            ClassCode = "IELTS-F01",
-            Room = "P201",
-            Teacher = "Nguyễn Hoàng Anh",
-            TimeText = "18:00 → 20:00",
-            BgColor = Color.FromArgb(255, 228, 230), // Hồng nhạt như mẫu
-            BorderColor = Color.FromArgb(251, 113, 133),
-            TextColor = Color.FromArgb(159, 18, 57)
-        });
-        SetScheduleCell(rEvening, 5, new ScheduleItem
-        {
-            CourseName = "IELTS Foundation",
-            ClassCode = "IELTS-F01",
-            Room = "P201",
-            Teacher = "Nguyễn Hoàng Anh",
-            TimeText = "18:00 → 20:00",
-            BgColor = Color.FromArgb(255, 228, 230),
-            BorderColor = Color.FromArgb(251, 113, 133),
-            TextColor = Color.FromArgb(159, 18, 57)
-        });
+            var grouped = slots
+                .Where(s => DateTime.TryParse(s.Date, out _))
+                .GroupBy(s =>
+                {
+                    DateTime dt = DateTime.Parse(s.Date);
+                    int colIdx = dt.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)dt.DayOfWeek;
+                    int hour = TimeSpan.TryParse(s.StartTime, out var ts) ? ts.Hours : 18;
+                    int rowIdx = hour < 12 ? rMorning : (hour < 17 ? rAfternoon : rEvening);
+                    return (rowIdx, colIdx);
+                });
 
-        SetScheduleCell(rEvening, 4, new ScheduleItem
-        {
-            CourseName = "TOEIC 500+",
-            ClassCode = "TOEIC-A01",
-            Room = "P202",
-            Teacher = "Trần Minh Tuấn",
-            TimeText = "18:30 → 20:30",
-            BgColor = Color.FromArgb(254, 243, 199), // Vàng cam nhạt
-            BorderColor = Color.FromArgb(251, 191, 36),
-            TextColor = Color.FromArgb(146, 64, 14)
-        });
+            foreach (var g in grouped)
+            {
+                var allInSlot = g.ToList();
+                var primary = allInSlot[0]; // Hiển thị lớp đầu tiên theo yêu cầu
 
-        AdjustRowHeights();
-    }
+                var (bg, border, text) = g.Key.rowIdx switch
+                {
+                    0 => (Color.FromArgb(240, 253, 244), Color.FromArgb(34, 197, 94), Color.FromArgb(21, 128, 61)),
+                    1 => (Color.FromArgb(255, 247, 237), Color.FromArgb(249, 115, 22), Color.FromArgb(194, 65, 12)),
+                    _ => (Color.FromArgb(239, 246, 255), Color.FromArgb(59, 130, 246), Color.FromArgb(29, 78, 216))
+                };
 
-    private void SetScheduleCell(int row, int col, ScheduleItem item)
-    {
-        if (row >= 0 && row < dgvScheduleMatrix.RowCount && col >= 1 && col < dgvScheduleMatrix.ColumnCount)
+                dgvScheduleMatrix.Rows[g.Key.rowIdx].Cells[g.Key.colIdx].Tag = new ScheduleCellData
+                {
+                    Primary = primary,
+                    AllInSlot = allInSlot,
+                    BgColor = bg,
+                    BorderColor = border,
+                    TextColor = text
+                };
+            }
+
+            AdjustRowHeights();
+            dgvScheduleMatrix.ClearSelection();
+            dgvScheduleMatrix.Invalidate();
+        }
+        catch (Exception ex)
         {
-            var cell = dgvScheduleMatrix.Rows[row].Cells[col];
-            cell.Value = $"{item.CourseName}\n({item.ClassCode})\nPhòng: {item.Room}\nGV: {item.Teacher}\n{item.TimeText}";
-            cell.Tag = item;
+            AppDialog.ShowError(ParentForm, "Lỗi nạp thời khóa biểu", ex.Message);
         }
     }
 
     private void DgvScheduleMatrix_CellPainting(object? sender, DataGridViewCellPaintingEventArgs e)
     {
-        if (e.RowIndex >= 0 && e.ColumnIndex >= 1)
+        if (e.RowIndex < 0 || e.ColumnIndex < 1) return;
+
+        e.PaintBackground(e.ClipBounds, false);
+        e.Paint(e.ClipBounds, DataGridViewPaintParts.Border);
+        var cell = dgvScheduleMatrix.Rows[e.RowIndex].Cells[e.ColumnIndex];
+        if (cell.Tag is ScheduleCellData data)
         {
-            e.PaintBackground(e.CellBounds, true);
+            var g = e.Graphics!;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            var cell = dgvScheduleMatrix.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell.Tag is ScheduleItem item && e.Graphics != null)
-            {
-                var g = e.Graphics;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
+            var rect = new Rectangle(e.CellBounds.X + 4, e.CellBounds.Y + 4, e.CellBounds.Width - 9, e.CellBounds.Height - 9);
+            using var bgBrush = new SolidBrush(data.BgColor);
+            using var borderPen = new Pen(data.BorderColor, 1.5f);
+            using var accentBrush = new SolidBrush(data.BorderColor);
 
-                var cardRect = new Rectangle(e.CellBounds.X + 6, e.CellBounds.Y + 6, e.CellBounds.Width - 12, e.CellBounds.Height - 12);
+            g.FillRectangle(bgBrush, rect);
+            g.FillRectangle(accentBrush, rect.X, rect.Y, 4, rect.Height);
+            g.DrawRectangle(borderPen, rect);
 
-                using (var path = CreateRoundedRectangle(cardRect, 6))
-                using (var brush = new SolidBrush(item.BgColor))
-                using (var pen = new Pen(item.BorderColor, 1.5f))
-                {
-                    g.FillPath(brush, path);
-                    g.DrawPath(pen, path);
-                }
+            var p = data.Primary;
+            int textX = rect.X + 10;
+            int textW = Math.Max(40, rect.Width - 14);
+            using var fBold = new Font("Segoe UI", 9F, FontStyle.Bold);
+            using var fNorm = new Font("Segoe UI", 8.25F);
+            using var tBrush = new SolidBrush(data.TextColor);
+            using var sBrush = new SolidBrush(Color.FromArgb(51, 65, 85));
 
-                using var titleFont = new Font("Segoe UI", 9.2f, FontStyle.Bold);
-                using var bodyFont = new Font("Segoe UI", 8.5f, FontStyle.Regular);
-                using var timeFont = new Font("Segoe UI", 8.5f, FontStyle.Bold);
-                using var titleBrush = new SolidBrush(item.TextColor);
-                using var textBrush = new SolidBrush(Color.FromArgb(51, 65, 85));
-
-                float x = cardRect.X + 10;
-                float y = cardRect.Y + 8;
-
-                // Tên khóa học + Mã lớp
-                string header = $"{item.CourseName} ({item.ClassCode})";
-                g.DrawString(header, titleFont, titleBrush, new RectangleF(x, y, cardRect.Width - 16, 20));
-                y += 22;
-
-                // Phòng
-                g.DrawString($"Phòng: {item.Room}", bodyFont, textBrush, x, y);
-                y += 18;
-
-                // Giáo viên
-                g.DrawString($"GV: {item.Teacher}", bodyFont, textBrush, x, y);
-                y += 20;
-
-                // Thời gian (🕒 18:00 → 20:00)
-                g.DrawString($"🕒 {item.TimeText}", timeFont, titleBrush, x, y);
-            }
-
-            e.Paint(e.CellBounds, DataGridViewPaintParts.Border);
-            e.Handled = true;
+            string extra = data.AllInSlot.Count > 1 ? $" (+{data.AllInSlot.Count - 1})" : "";
+            g.DrawString($"{p.ClassCode}{extra}", fBold, tBrush, new RectangleF(textX, rect.Y + 6, textW, 20));
+            g.DrawString(p.CourseName, fNorm, sBrush, new RectangleF(textX, rect.Y + 26, textW, 18));
+            g.DrawString($"Phòng: {p.RoomName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 44, textW, 18));
+            g.DrawString($"GV: {p.TeacherName}", fNorm, sBrush, new RectangleF(textX, rect.Y + 62, textW, 18));
+            g.DrawString($"{p.StartTime} - {p.EndTime}", fNorm, tBrush, new RectangleF(textX, rect.Y + 80, textW, 18));
         }
-    }
 
-    private static GraphicsPath CreateRoundedRectangle(Rectangle bounds, int radius)
-    {
-        var path = new GraphicsPath();
-        int d = radius * 2;
-        path.AddArc(bounds.X, bounds.Y, d, d, 180, 90);
-        path.AddArc(bounds.Right - d, bounds.Y, d, d, 270, 90);
-        path.AddArc(bounds.Right - d, bounds.Bottom - d, d, d, 0, 90);
-        path.AddArc(bounds.X, bounds.Bottom - d, d, d, 90, 90);
-        path.CloseFigure();
-        return path;
+        e.Handled = true;
     }
 
     private void WireEvents()
     {
-        cboScheduleType.SelectedIndexChanged += (s, e) =>
+        cboSemester.SelectedIndexChanged += async (s, e) =>
         {
-            UpdateTargetFilter();
-            LoadScheduleData();
+            if (_isUpdatingFilters) return;
+            _isUpdatingFilters = true;
+            PopulateWeeksForSelectedSemester();
+            _isUpdatingFilters = false;
+            await RefreshScheduleAsync();
         };
 
-        cboTargetFilter.SelectedIndexChanged += (s, e) =>
+        cboScheduleType.SelectedIndexChanged += async (s, e) =>
         {
-            LoadScheduleData();
+            if (_isUpdatingFilters) return;
+            await UpdateTargetFilterAsync();
+            await RefreshScheduleAsync();
         };
 
-        cboSemester.SelectedIndexChanged += (s, e) =>
+        cboTargetFilter.SelectedIndexChanged += async (s, e) =>
         {
-            LoadScheduleData();
+            if (!_isUpdatingFilters) await RefreshScheduleAsync();
         };
 
-        cboWeek.SelectedIndexChanged += (s, e) =>
+        cboWeek.SelectedIndexChanged += async (s, e) =>
         {
-            UpdateWeekHeaderDates();
-            LoadScheduleData();
+            if (!_isUpdatingFilters) await RefreshScheduleAsync();
         };
 
         btnPrevWeek.Click += (s, e) =>
         {
-            if (cboWeek.SelectedIndex > 0)
-            {
-                cboWeek.SelectedIndex--;
-            }
+            if (cboWeek.SelectedIndex > 0) cboWeek.SelectedIndex--;
         };
 
         btnNextWeek.Click += (s, e) =>
         {
-            if (cboWeek.SelectedIndex < cboWeek.Items.Count - 1)
-            {
-                cboWeek.SelectedIndex++;
-            }
+            if (cboWeek.SelectedIndex < cboWeek.Items.Count - 1) cboWeek.SelectedIndex++;
         };
 
         btnPrint.Click += (s, e) =>
         {
-            MessageBox.Show($"Đã gửi lệnh in cho: {cboWeek.SelectedItem}\n{cboSemester.SelectedItem}", 
-                "In thời khóa biểu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            AppDialog.ShowInfo(ParentForm, "In thời khóa biểu",
+                $"Đã chuẩn bị bản in thời khóa biểu cho:\n{cboSemester.SelectedItem}\n{cboWeek.SelectedItem}");
         };
 
         btnManageRooms.Click += (s, e) =>
@@ -366,12 +386,23 @@ public partial class ScheduleManagementView : UserControl
             dlg.ShowDialog(FindForm());
         };
 
-        btnCreateSession.Click += (s, e) =>
+        _btnManageSchedules.Click += async (s, e) =>
+        {
+            using var dlg = new ManageSchedulesDialog();
+            dlg.ShowDialog(FindForm());
+            if (dlg.HasChanged)
+            {
+                await RefreshScheduleAsync();
+            }
+        };
+
+        btnCreateSession.Click += async (s, e) =>
         {
             using var dlg = new CreateScheduleDialog();
             if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                LoadScheduleData();
+                JumpToDateOnCalendar(dlg.CreatedStartDate);
+                await RefreshScheduleAsync();
             }
         };
 
@@ -380,27 +411,43 @@ public partial class ScheduleManagementView : UserControl
             if (e.RowIndex >= 0 && e.ColumnIndex >= 1)
             {
                 var cell = dgvScheduleMatrix.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                if (cell.Tag is ScheduleItem item)
+                if (cell.Tag is ScheduleCellData data)
                 {
-                    MessageBox.Show(
-                        $"THÔNG TIN BUỔI HỌC:\n\n" +
-                        $"• Khóa học: {item.CourseName}\n" +
-                        $"• Lớp: {item.ClassCode}\n" +
-                        $"• Phòng học: {item.Room}\n" +
-                        $"• Giảng viên: {item.Teacher}\n" +
-                        $"• Thời gian: {item.TimeText}",
-                        "Chi tiết lịch học", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    var lines = data.AllInSlot.Select((item, i) =>
+                        $"{i + 1}. Lớp {item.ClassCode} ({item.CourseName})\n" +
+                        $"   Phòng: {item.RoomName}  |  GV: {item.TeacherName}  |  Giờ: {item.StartTime} - {item.EndTime}");
+                    AppDialog.ShowInfo(ParentForm, "Chi tiết lịch học trong ca", string.Join("\n\n", lines));
                 }
             }
         };
     }
 
-    private void UpdateWeekHeaderDates()
+    private void JumpToDateOnCalendar(DateTime targetDate)
     {
-        // Điều chỉnh nhãn ngày trên header cột tương ứng theo tuần
-        int weekIndex = cboWeek.SelectedIndex;
-        DateTime startOfWeek = new DateTime(2026, 11, 9).AddDays((weekIndex - 2) * 7);
+        _isUpdatingFilters = true;
+        try
+        {
+            int semIdx = _semesters.FindIndex(s => targetDate.Date >= s.StartDate && targetDate.Date <= s.EndDate);
+            if (semIdx >= 0 && cboSemester.SelectedIndex != semIdx)
+            {
+                cboSemester.SelectedIndex = semIdx;
+                PopulateWeeksForSelectedSemester();
+            }
 
+            int weekIdx = _currentWeeks.FindIndex(w => targetDate.Date >= w.Monday && targetDate.Date <= w.Sunday);
+            if (weekIdx >= 0)
+            {
+                cboWeek.SelectedIndex = weekIdx;
+            }
+        }
+        finally
+        {
+            _isUpdatingFilters = false;
+        }
+    }
+
+    private void UpdateWeekHeaderDates(DateTime startOfWeek)
+    {
         string[] dayNames = { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật" };
         for (int i = 0; i < 7; i++)
         {
@@ -423,7 +470,6 @@ public partial class ScheduleManagementView : UserControl
         cardCalendar.SetBounds(margin, cardTop, cardWidth, cardHeight);
 
         dgvScheduleMatrix.SetBounds(12, 12, cardCalendar.ClientSize.Width - 24, cardCalendar.ClientSize.Height - 24);
-
         AdjustRowHeights();
     }
 

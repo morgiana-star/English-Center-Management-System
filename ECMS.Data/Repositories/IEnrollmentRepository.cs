@@ -9,7 +9,12 @@ public interface IEnrollmentRepository
     Task<IEnumerable<ClassLookupDto>> GetOpenClassesLookupAsync();
     Task<ClassLookupDto?> GetClassByIdAsync(int classId);
     Task<IEnumerable<FeeDiscountDto>> GetActiveDiscountsAsync();
+    Task<IEnumerable<FeeDiscountDto>> GetAllDiscountsAsync();
     Task<FeeDiscountDto?> GetDiscountByIdAsync(int discountId);
+    Task<FeeDiscountDto?> GetDiscountByCodeAsync(string discountCode);
+    Task<(bool Success, string Message)> CreateDiscountAsync(FeeDiscountDto dto);
+    Task<(bool Success, string Message)> UpdateDiscountAsync(FeeDiscountDto dto);
+    Task<(bool Success, string Message)> DeleteDiscountAsync(int discountId);
     Task<bool> IsExistingStudentByPhoneAsync(string phone);
     Task<string> GenerateNextStudentCodeAsync();
     Task<string> GenerateNextInvoiceCodeAsync();

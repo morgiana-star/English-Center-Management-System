@@ -22,8 +22,9 @@ public partial class StudentManagementView : UserControl
     private readonly IStudentService _studentService = new StudentService();
     private readonly IEnrollmentService _enrollmentService = new EnrollmentService();
     private List<StudentListItemDto> _allStudents = new();
-    private AppButton _btnViewArchived = null!;
-    private AppButton _btnImport = null!;
+    private List<ClassFilterItemDto> _classFilterOptions = new();
+    private StudentOverviewStatsDto _latestStats = new();
+    private bool _isLoadingFilter = false;
 
     public StudentManagementView()
     {
@@ -32,63 +33,16 @@ public partial class StudentManagementView : UserControl
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
-        SetupFilters();
         SetupGridColumns();
-        _ = LoadStudentsAsync();
         WireUpEvents();
-    }
-
-    private void SetupFilters()
-    {
-        // Bỏ 2 ô lọc trạng thái & lớp học theo yêu cầu mới
-        cboStatusFilter.Visible = false;
-        cboClassFilter.Visible = false;
-
-        // Thêm nút "Xem hồ sơ lưu trữ" ngay trên thanh toolbar
-        _btnViewArchived = new AppButton
-        {
-            Text = "📁 Xem hồ sơ lưu trữ",
-            Size = new Size(190, 34),
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 6,
-            Cursor = Cursors.Hand,
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Location = new Point(Math.Max(400, pnlStudentFilterBar.Width - 200), 7)
-        };
-        pnlStudentFilterBar.Controls.Add(_btnViewArchived);
-
-        // Kéo giãn ô tìm kiếm cân đối
-        txtSearchStudent.Size = new Size(Math.Max(320, _btnViewArchived.Left - 24), 34);
-        pnlStudentFilterBar.Resize += (s, e) =>
-        {
-            if (_btnViewArchived != null && txtSearchStudent != null)
-            {
-                _btnViewArchived.Location = new Point(pnlStudentFilterBar.Width - _btnViewArchived.Width - 10, 7);
-                txtSearchStudent.Size = new Size(Math.Max(260, _btnViewArchived.Left - 24), 34);
-            }
-        };
-
-        // Thêm nút "Nhập Excel" ngay cạnh nút Xuất danh sách
-        _btnImport = new AppButton
-        {
-            Text = "📥 Nhập Excel",
-            Size = new Size(130, 36),
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 6,
-            Cursor = Cursors.Hand,
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Location = new Point(btnExport.Left - 142, 20)
-        };
-        pnlHeader.Controls.Add(_btnImport);
+        _ = LoadInitialDataAsync();
     }
 
     private void SetupGridColumns()
     {
         AppGridHelper.ApplyStyle(dgvStudents);
         dgvStudents.Columns.Clear();
-        dgvStudents.Columns.Add("ColCode", "Mã ↑");
+        dgvStudents.Columns.Add("ColCode", "Mã HV");
         dgvStudents.Columns.Add("ColName", "Họ và tên");
         dgvStudents.Columns.Add("ColPhone", "Điện thoại");
         dgvStudents.Columns.Add("ColClass", "Lớp");
@@ -106,6 +60,50 @@ public partial class StudentManagementView : UserControl
         colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         colAction.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
         dgvStudents.Columns.Add(colAction);
+
+        dgvStudents.Columns["ColCode"]!.FillWeight = 12;
+        dgvStudents.Columns["ColName"]!.FillWeight = 22;
+        dgvStudents.Columns["ColPhone"]!.FillWeight = 14;
+        dgvStudents.Columns["ColClass"]!.FillWeight = 15;
+        dgvStudents.Columns["ColAttendance"]!.FillWeight = 12;
+        dgvStudents.Columns["ColDebt"]!.FillWeight = 13;
+        dgvStudents.Columns["ColAction"]!.FillWeight = 12;
+    }
+
+    private async Task LoadInitialDataAsync()
+    {
+        await LoadClassFilterAsync();
+        await LoadStudentsAsync();
+    }
+
+    private async Task LoadClassFilterAsync()
+    {
+        try
+        {
+            _isLoadingFilter = true;
+            var classes = (await _studentService.GetClassesForFilterAsync()).ToList();
+            _classFilterOptions = new List<ClassFilterItemDto>
+            {
+                new() { ClassId = 0, ClassCode = "", ClassName = "Tất cả lớp học" },
+                new() { ClassId = -1, ClassCode = "", ClassName = "Chờ xếp lớp" }
+            };
+            _classFilterOptions.AddRange(classes);
+
+            cboClassFilter.Items.Clear();
+            foreach (var c in _classFilterOptions)
+            {
+                cboClassFilter.Items.Add(c.DisplayText);
+            }
+            cboClassFilter.SelectedIndex = 0;
+        }
+        catch
+        {
+            // Ignore filter load errors
+        }
+        finally
+        {
+            _isLoadingFilter = false;
+        }
     }
 
     private async Task LoadStudentsAsync()
@@ -114,13 +112,8 @@ public partial class StudentManagementView : UserControl
         {
             var list = await _studentService.GetStudentListAsync();
             _allStudents = list.ToList();
+            _latestStats = await _studentService.GetStudentStatsAsync();
             FilterStudents();
-
-            var stats = await _studentService.GetStudentStatsAsync();
-            lblStatTotalValue.Text = stats.TotalStudents.ToString();
-            lblStatStudyingValue.Text = stats.StudyingStudents.ToString();
-            lblStatCompletedValue.Text = stats.CompletedStudents.ToString();
-            lblStatArchivedValue.Text = stats.ArchivedStudents.ToString();
         }
         catch (Exception ex)
         {
@@ -128,7 +121,7 @@ public partial class StudentManagementView : UserControl
         }
     }
 
-    private void PopulateGrid(IEnumerable<StudentListItemDto> items)
+    private void PopulateGrid(IReadOnlyCollection<StudentListItemDto> items)
     {
         dgvStudents.Rows.Clear();
         foreach (var s in items)
@@ -146,27 +139,18 @@ public partial class StudentManagementView : UserControl
 
         dgvStudents.ClearSelection();
         dgvStudents.CurrentCell = null;
+
+        lblBottomSummary.Text =
+            $"Đang hiển thị: {items.Count}  |  Tổng hồ sơ: {_latestStats.TotalStudents}  |  Đang học: {_latestStats.StudyingStudents}  |  Chờ xếp lớp: {_latestStats.WaitingClassStudents}  |  Đã lưu trữ: {_latestStats.ArchivedStudents}";
     }
 
     private void WireUpEvents()
     {
-        // 1. Nút "Đăng ký học": Bước 1 (Thông tin) -> Bước 2 (Chọn khóa/lớp thật) -> Thu học phí -> Transaction DB -> In phiếu -> Refresh danh sách
+        // 1. Nút "Đăng ký học": Bước 1 -> Bước 2 -> (Xác nhận chưa thu phí HOẶC Thu phí ngay) -> Lưu SQLite
         btnAddStudent.Click += async (s, e) =>
         {
             using var wizard = new StudentEnrollmentWizardDialog();
             if (wizard.ShowDialog(ParentForm) != DialogResult.OK)
-                return;
-
-            using var collectDlg = new CollectTuitionDialog(
-                wizard.CreatedStudentName,
-                wizard.CreatedClassName,
-                wizard.CourseFee,
-                wizard.CourseFee,
-                wizard.CreatedStudentCode,
-                wizard.SelectedCourseTitle
-            );
-
-            if (collectDlg.ShowDialog(ParentForm) != DialogResult.OK)
                 return;
 
             var enrollDto = new StudentEnrollmentWithTuitionDto
@@ -186,13 +170,58 @@ public partial class StudentManagementView : UserControl
                 ClassCode = wizard.CreatedClassName,
                 CourseName = wizard.SelectedCourseTitle,
                 TotalTuitionFee = wizard.CourseFee,
-                AmountPaidNow = collectDlg.CollectedAmount,
-                RemainingDebt = collectDlg.RemainingDebt,
-                PaymentMethod = collectDlg.PaymentMethod,
-                ReceiptCode = collectDlg.ReceiptCode,
-                PaymentNote = collectDlg.ContentNote,
-                CashierId = AppSession.UserId
+                CashierId = AppSession.UserId,
+                PayNow = wizard.ShouldCollectTuition
             };
+
+            if (wizard.SaveWaitingOnly)
+            {
+                var waitRes = await _studentService.CreateWaitingStudentAsync(enrollDto);
+                if (!waitRes.Success)
+                {
+                    AppDialog.ShowError(ParentForm, "Lỗi lưu hồ sơ học viên", waitRes.Message);
+                    return;
+                }
+
+                AppDialog.ShowSuccess(ParentForm, "Thành công",
+                    $"Đã thêm học viên {wizard.CreatedStudentName} ({waitRes.StudentCode}) thành công.\n{waitRes.Message}");
+                await LoadInitialDataAsync();
+                return;
+            }
+
+            bool shouldPrintReceipt = false;
+            decimal remainingDebt = wizard.CourseFee;
+
+            if (wizard.ShouldCollectTuition)
+            {
+                using var collectDlg = new CollectTuitionDialog(
+                    wizard.CreatedStudentName,
+                    wizard.CreatedClassName,
+                    wizard.CourseFee,
+                    wizard.CourseFee,
+                    wizard.CreatedStudentCode,
+                    wizard.SelectedCourseTitle
+                );
+
+                if (collectDlg.ShowDialog(ParentForm) != DialogResult.OK)
+                    return;
+
+                enrollDto.DiscountId = collectDlg.AppliedDiscountId;
+                enrollDto.DiscountCode = collectDlg.AppliedDiscountCode;
+                enrollDto.DiscountAmount = collectDlg.DiscountAmount;
+                enrollDto.AmountPaidNow = collectDlg.CollectedAmount;
+                enrollDto.RemainingDebt = collectDlg.RemainingDebt;
+                enrollDto.PaymentMethod = collectDlg.PaymentMethod;
+                enrollDto.ReceiptCode = collectDlg.ReceiptCode;
+                enrollDto.PaymentNote = collectDlg.ContentNote;
+                shouldPrintReceipt = collectDlg.ShouldPrintReceipt;
+                remainingDebt = collectDlg.RemainingDebt;
+            }
+            else
+            {
+                enrollDto.AmountPaidNow = 0;
+                enrollDto.RemainingDebt = wizard.CourseFee;
+            }
 
             var enrollResult = await _enrollmentService.EnrollStudentWithTuitionAsync(enrollDto);
             if (!enrollResult.Success)
@@ -201,47 +230,48 @@ public partial class StudentManagementView : UserControl
                 return;
             }
 
-            if (collectDlg.ShouldPrintReceipt)
+            if (wizard.ShouldCollectTuition && shouldPrintReceipt && !string.IsNullOrWhiteSpace(enrollResult.ReceiptCode))
             {
                 using var printDlg = new ReceiptPrintPreviewDialog(
                     wizard.CreatedStudentName,
                     wizard.CreatedClassName,
-                    collectDlg.CollectedAmount,
+                    enrollDto.AmountPaidNow,
                     enrollResult.ReceiptCode,
                     enrollResult.StudentCode,
-                    collectDlg.PaymentMethod,
+                    enrollDto.PaymentMethod,
                     AppSession.FullName,
                     wizard.SelectedCourseTitle,
-                    collectDlg.ContentNote,
+                    enrollDto.PaymentNote ?? "",
                     enrollResult.ReceiptCode,
-                    collectDlg.RemainingDebt,
-                    collectDlg.RemainingDebt > 0 ? DateTime.Today.AddDays(30).ToString("dd/MM/yyyy") : ""
+                    remainingDebt,
+                    remainingDebt > 0 ? DateTime.Today.AddDays(30).ToString("dd/MM/yyyy") : ""
                 );
 
                 printDlg.ShowDialog(ParentForm);
             }
 
-            AppDialog.ShowSuccess(ParentForm, "Thành công", $"🎉 Đã thêm học viên {wizard.CreatedStudentName} ({enrollResult.StudentCode}) thành công!");
-            await LoadStudentsAsync();
+            AppDialog.ShowSuccess(ParentForm, "Thành công",
+                $"Đã thêm học viên {wizard.CreatedStudentName} ({enrollResult.StudentCode}) thành công.\n{enrollResult.Message}");
+            await LoadInitialDataAsync();
         };
 
-        // 2. Nút "Xem hồ sơ lưu trữ" (kèm chức năng Khôi phục đưa lại vào danh sách chính)
-        _btnViewArchived.Click += async (s, e) => await OpenArchivedStudentsDialogAsync();
+        // 2. Nút "Xem hồ sơ lưu trữ"
+        btnViewArchived.Click += async (s, e) => await OpenArchivedStudentsDialogAsync();
 
-        // 3. Nút "Xuất danh sách" ra tệp CSV chuẩn UTF-8 BOM (mở được ngay ngoài Excel)
+        // 3. Nút "Xuất danh sách" ra tệp CSV chuẩn UTF-8 BOM
         btnExport.Click += async (s, e) => await ExportStudentsCsvAsync();
 
-        // 3.1 Nút "Nhập Excel" mở hộp thoại import hàng loạt từ Excel / CSV
-        _btnImport.Click += async (s, e) =>
+        // 4. Nút "Nhập Excel"
+        btnImport.Click += async (s, e) =>
         {
             using var importDlg = new ImportStudentsDialog();
             if (importDlg.ShowDialog(ParentForm) == DialogResult.OK)
             {
-                await LoadStudentsAsync();
+                await LoadInitialDataAsync();
             }
         };
 
-        // 4. Khi ấn "Xem chi tiết" -> Mở StudentDetailDialog 360° từ SQLite
+        // 5. Mở chi tiết học viên
         dgvStudents.CellContentClick += (s, e) =>
         {
             if (e.RowIndex >= 0 && dgvStudents.Columns[e.ColumnIndex].Name == "ColAction")
@@ -258,8 +288,12 @@ public partial class StudentManagementView : UserControl
             }
         };
 
-        // 5. Tìm kiếm realtime theo Mã HV, Họ tên, SĐT
+        // 6. Tìm kiếm realtime + Lọc theo lớp
         txtSearchStudent.TextChanged += (s, e) => FilterStudents();
+        cboClassFilter.SelectedIndexChanged += (s, e) =>
+        {
+            if (!_isLoadingFilter) FilterStudents();
+        };
     }
 
     private async Task OpenArchivedStudentsDialogAsync()
@@ -270,25 +304,25 @@ public partial class StudentManagementView : UserControl
 
             using var dlg = new QuickDetailGridDialog(
                 $"Danh sách hồ sơ học viên đã lưu trữ ({archivedList.Count})",
-                "Các học viên đang bảo lưu hoặc đã lưu trữ — Có thể bấm Khôi phục để đưa lại về danh sách học viên");
+                "Các học viên đang bảo lưu hoặc đã lưu trữ. Bấm Khôi phục để đưa học viên quay lại danh sách chính.");
 
             dlg.SetGridData(dgv =>
             {
                 dgv.Columns.Clear();
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã HV", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã HV", FillWeight = 14, ReadOnly = true });
                 dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "Họ và tên", FillWeight = 24, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColPhone", HeaderText = "Điện thoại", FillWeight = 18, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp gần nhất", FillWeight = 18, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDebt", HeaderText = "Công nợ", FillWeight = 16, ReadOnly = true });
-                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColPhone", HeaderText = "Điện thoại", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp gần nhất", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDebt", HeaderText = "Công nợ", FillWeight = 14, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true });
 
                 var colRestore = new DataGridViewButtonColumn
                 {
                     Name = "ColRestore",
                     HeaderText = "Khôi phục",
-                    Text = "🔄 Khôi phục",
+                    Text = "Khôi phục",
                     UseColumnTextForButtonValue = true,
-                    FillWeight = 16,
+                    FillWeight = 14,
                     FlatStyle = FlatStyle.Flat
                 };
                 colRestore.DefaultCellStyle.ForeColor = Color.FromArgb(22, 163, 74);
@@ -307,7 +341,7 @@ public partial class StudentManagementView : UserControl
                     {
                         string stName = dgv.Rows[args.RowIndex].Cells["ColName"].Value?.ToString() ?? "";
                         if (AppDialog.ShowConfirm(dlg, "Khôi phục học viên",
-                            $"Bạn có muốn đưa học viên '{stName}' quay lại danh sách đang học không?") == DialogResult.OK)
+                            $"Bạn có muốn khôi phục hồ sơ học viên '{stName}' không?") == DialogResult.OK)
                         {
                             var res = await _studentService.RestoreStudentAsync(stId);
                             if (res.Success)
@@ -352,7 +386,7 @@ public partial class StudentManagementView : UserControl
             var sb = new StringBuilder();
             sb.AppendLine("DANH SÁCH HỌC VIÊN TRUNG TÂM ANH NGỮ ECMS");
             sb.AppendLine($"Ngày xuất,{DateTime.Now:dd/MM/yyyy HH:mm}");
-            sb.AppendLine("Mã học viên,Họ và tên,Điện thoại,Lớp học,Chuyên cần,Công nợ,Trạng thái");
+            sb.AppendLine("Mã học viên,Họ và tên,Điện thoại,Lớp học,Chuyên cần,Công nợ");
 
             foreach (DataGridViewRow row in dgvStudents.Rows)
             {
@@ -362,13 +396,13 @@ public partial class StudentManagementView : UserControl
                 string c3 = row.Cells[3].Value?.ToString() ?? "";
                 string c4 = row.Cells[4].Value?.ToString() ?? "";
                 string c5 = row.Cells[5].Value?.ToString() ?? "";
-                sb.AppendLine($"\"{c0}\",\"{c1}\",\"{c2}\",\"{c3}\",\"{c4}\",\"{c5}\",\"Đang theo dõi\"");
+                sb.AppendLine($"\"{c0}\",\"{c1}\",\"{c2}\",\"{c3}\",\"{c4}\",\"{c5}\"");
             }
 
             await File.WriteAllTextAsync(sfd.FileName, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
 
             if (AppDialog.ShowConfirm(ParentForm, "Xuất danh sách thành công",
-                $"Đã xuất danh sách {_allStudents.Count} học viên ra tệp:\n{sfd.FileName}\n\nBạn có muốn mở tệp ngay bây giờ không?") == DialogResult.OK)
+                $"Đã xuất danh sách {dgvStudents.Rows.Count} học viên ra tệp:\n{sfd.FileName}\n\nBạn có muốn mở tệp ngay bây giờ không?") == DialogResult.OK)
             {
                 Process.Start(new ProcessStartInfo(sfd.FileName) { UseShellExecute = true });
             }
@@ -389,20 +423,34 @@ public partial class StudentManagementView : UserControl
 
         using var dlg = new StudentDetailDialog(studentId, name, code);
         dlg.ShowDialog(ParentForm);
-        // Luôn nạp lại từ SQLite để phản ánh ngay nếu người dùng sửa hồ sơ hoặc lưu trữ
         await LoadStudentsAsync();
     }
 
     private void FilterStudents()
     {
         string kw = txtSearchStudent.Text.Trim().ToLowerInvariant();
+        int selectedClassId = 0;
+        if (cboClassFilter.SelectedIndex >= 0 && cboClassFilter.SelectedIndex < _classFilterOptions.Count)
+        {
+            selectedClassId = _classFilterOptions[cboClassFilter.SelectedIndex].ClassId;
+        }
 
         var filtered = _allStudents.Where(s =>
-            string.IsNullOrEmpty(kw) ||
-            s.StudentCode.ToLowerInvariant().Contains(kw) ||
-            s.FullName.ToLowerInvariant().Contains(kw) ||
-            (s.Phone != null && s.Phone.ToLowerInvariant().Contains(kw))
-        ).ToList();
+        {
+            bool matchKw = string.IsNullOrEmpty(kw) ||
+                           s.StudentCode.ToLowerInvariant().Contains(kw) ||
+                           s.FullName.ToLowerInvariant().Contains(kw) ||
+                           (s.Phone != null && s.Phone.ToLowerInvariant().Contains(kw));
+
+            bool matchClass = selectedClassId switch
+            {
+                0 => true,
+                -1 => !s.ClassId.HasValue || s.ClassId.Value <= 0,
+                _ => s.ClassId == selectedClassId
+            };
+
+            return matchKw && matchClass;
+        }).ToList();
 
         PopulateGrid(filtered);
     }

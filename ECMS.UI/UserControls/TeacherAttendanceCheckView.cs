@@ -26,13 +26,8 @@ public partial class TeacherAttendanceCheckView : UserControl
     private void SetupFilters()
     {
         cboStatusFilter.Items.Clear();
-        cboStatusFilter.Items.AddRange(new object[]
-        {
-            "Tất cả trạng thái",
-            "Đang học",
-            "Sắp mở",
-            "Đã kết thúc"
-        });
+        cboStatusFilter.Items.Add("Tất cả trạng thái");
+        cboStatusFilter.Items.AddRange(ECMS.Core.Helpers.StatusFormatter.ClassStatusOptions);
         cboStatusFilter.SelectedIndex = 0;
 
         cboCourseFilter.Items.Clear();
@@ -164,32 +159,29 @@ public partial class TeacherAttendanceCheckView : UserControl
 
                 // Lấy thông tin lịch học tóm tắt từ ClassSchedules
                 var scheduleSummary = await conn.QueryFirstOrDefaultAsync<string>(@"
-                    SELECT cs.StartTime || '–' || cs.EndTime
+                    SELECT cs.StartTime || ' - ' || cs.EndTime
                     FROM ClassSchedules cs
                     WHERE cs.ClassId = @ClassId
-                    ORDER BY cs.ScheduleId ASC LIMIT 1;", new { ClassId = classId }) ?? "18:00–20:00";
+                    ORDER BY cs.ScheduleId ASC LIMIT 1;", new { ClassId = classId }) ?? "Chưa xếp lịch";
 
                 int total = cls.TotalSessions != null ? (int)cls.TotalSessions : 24;
                 int done = Convert.ToInt32(cls.DoneSessions);
                 string progress = $"{done} / {total} buổi";
 
                 // Tính tỷ lệ chuyên cần trung bình thực tế từ AttendanceRecords của lớp
-                var attStats = await conn.QueryFirstOrDefaultAsync<dynamic>(@"
+                var attStats = await conn.QueryFirstOrDefaultAsync<(long PresentCount, long TotalCount)?>(@"
                     SELECT 
-                        COUNT(CASE WHEN ar.Status = 'Present' THEN 1 END) AS PresentCount,
+                        COUNT(CASE WHEN ar.Status IN ('Present', 'Late') THEN 1 END) AS PresentCount,
                         COUNT(ar.AttendanceId) AS TotalCount
                     FROM AttendanceRecords ar
                     JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId
                     WHERE cs.ClassId = @ClassId;", new { ClassId = classId });
 
-                string rateStr = "100% (Tốt)";
-                if (attStats != null && attStats.TotalCount != null && (long)attStats.TotalCount > 0)
+                string rateStr = "Chưa có";
+                if (attStats.HasValue && attStats.Value.TotalCount > 0)
                 {
-                    double present = Convert.ToDouble(attStats.PresentCount);
-                    double totalAtt = Convert.ToDouble(attStats.TotalCount);
-                    double percent = (present / totalAtt) * 100.0;
-                    string grade = percent >= 90 ? "Tốt" : percent >= 80 ? "Khá" : "Cần lưu ý";
-                    rateStr = $"{percent:0.0}% ({grade})";
+                    double percent = (attStats.Value.PresentCount * 100.0) / attStats.Value.TotalCount;
+                    rateStr = $"{percent:0.0}%";
                 }
                 else if (done == 0)
                 {
@@ -197,13 +189,7 @@ public partial class TeacherAttendanceCheckView : UserControl
                 }
 
                 // Dịch trạng thái hiển thị
-                string displayStatus = rawStatus switch
-                {
-                    "InProgress" => "Đang học",
-                    "OpenForEnrollment" or "Planning" => "Sắp mở",
-                    "Completed" => "Đã kết thúc",
-                    _ => rawStatus
-                };
+                string displayStatus = ECMS.Core.Helpers.StatusFormatter.FormatClassStatus(rawStatus);
 
                 dgvAttendanceClasses.Rows.Add(
                     classId.ToString(),
@@ -280,9 +266,10 @@ public partial class TeacherAttendanceCheckView : UserControl
     {
         var row = dgvAttendanceClasses.Rows[rowIndex];
         int classId = 1;
-        if (row.Cells["colClassId"].Value != null)
+        string? classIdRaw = row.Cells["colClassId"].Value?.ToString();
+        if (!string.IsNullOrEmpty(classIdRaw))
         {
-            _ = int.TryParse(row.Cells["colClassId"].Value.ToString(), out classId);
+            _ = int.TryParse(classIdRaw, out classId);
         }
         string classCode = row.Cells["colCode"].Value?.ToString() ?? "IELTS-2026-K12";
         string courseName = row.Cells["colCourse"].Value?.ToString() ?? "IELTS Foundation";

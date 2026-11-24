@@ -72,22 +72,21 @@ public partial class ClassAttendanceDialog : Form
         dgvSessions.ScrollBars = ScrollBars.Both;
 
         dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colScheduleId", Visible = false });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSessionNum", HeaderText = "Buổi", Width = 80, MinimumWidth = 70, FillWeight = 8F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDate", HeaderText = "Ngày học", Width = 110, MinimumWidth = 100, FillWeight = 11F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDayTime", HeaderText = "Thứ & Giờ", Width = 150, MinimumWidth = 135, FillWeight = 15F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTopic", HeaderText = "Chủ đề bài học", MinimumWidth = 170, FillWeight = 24F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colPresent", HeaderText = "Có mặt / Sĩ số", Width = 125, MinimumWidth = 110, FillWeight = 12F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRate", HeaderText = "Chuyên cần", Width = 110, MinimumWidth = 95, FillWeight = 11F });
-        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStatus", HeaderText = "Trạng thái", Width = 125, MinimumWidth = 110, FillWeight = 12F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSessionNum", HeaderText = "Buổi", Width = 80, MinimumWidth = 70, FillWeight = 10F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDate", HeaderText = "Ngày học", Width = 115, MinimumWidth = 100, FillWeight = 15F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colDayTime", HeaderText = "Thứ & Giờ", Width = 175, MinimumWidth = 145, FillWeight = 22F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colPresent", HeaderText = "Có mặt / Sĩ số", Width = 130, MinimumWidth = 110, FillWeight = 15F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRate", HeaderText = "Chuyên cần", Width = 115, MinimumWidth = 95, FillWeight = 13F });
+        dgvSessions.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStatus", HeaderText = "Trạng thái", Width = 130, MinimumWidth = 110, FillWeight = 14F });
 
         var btnCol = new DataGridViewButtonColumn
         {
             Name = "colAction",
             HeaderText = "Thao tác",
-            Text = "Điểm danh / Sửa",
+            Text = "Điểm danh",
             UseColumnTextForButtonValue = true,
-            Width = 135,
-            MinimumWidth = 120,
+            Width = 120,
+            MinimumWidth = 105,
             FillWeight = 13F
         };
         dgvSessions.Columns.Add(btnCol);
@@ -307,7 +306,7 @@ public partial class ClassAttendanceDialog : Form
                 {
                     double rate = totalStudents > 0 ? (present * 100.0 / totalStudents) : 0;
                     rateStr = $"{rate:0.#}%";
-                    statusStr = isLocked ? "🔒 Đã khóa sổ" : "Đã điểm danh";
+                    statusStr = isLocked ? "Đã khóa sổ" : "Đã điểm danh";
                 }
 
                 dgvSessions.Rows.Add(
@@ -315,11 +314,10 @@ public partial class ClassAttendanceDialog : Form
                     $"Buổi {sessionNum}",
                     dateStr,
                     dayTime,
-                    topic,
                     presentRatio,
                     rateStr,
                     statusStr,
-                    "Điểm danh / Sửa"
+                    "Điểm danh"
                 );
             }
         }
@@ -482,9 +480,8 @@ public partial class ClassAttendanceDialog : Form
             foreach (DataGridViewRow row in dgvStudentCheck.Rows)
             {
                 if (row.IsNewRow) continue;
-                if (row.Cells["colStudentId"].Value == null) continue;
-
-                if (!int.TryParse(row.Cells["colStudentId"].Value.ToString(), out int studentId))
+                string? studentIdRaw = row.Cells["colStudentId"].Value?.ToString();
+                if (string.IsNullOrEmpty(studentIdRaw) || !int.TryParse(studentIdRaw, out int studentId))
                     continue;
 
                 string statusVn = row.Cells["colStatus"].Value?.ToString() ?? "Có mặt";
@@ -541,9 +538,10 @@ public partial class ClassAttendanceDialog : Form
     {
         var row = dgvSessions.Rows[rowIndex];
         int scheduleId = 1;
-        if (row.Cells["colScheduleId"].Value != null)
+        string? scheduleIdRaw = row.Cells["colScheduleId"].Value?.ToString();
+        if (!string.IsNullOrEmpty(scheduleIdRaw))
         {
-            int.TryParse(row.Cells["colScheduleId"].Value.ToString(), out scheduleId);
+            int.TryParse(scheduleIdRaw, out scheduleId);
         }
         _currentScheduleId = scheduleId;
 

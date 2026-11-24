@@ -165,9 +165,17 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 s.StudentCode,
                 s.FullName,
                 COALESCE(s.Phone, '') AS Phone,
-                COALESCE(c.ClassCode, 'Chưa xếp lớp') AS ClassName,
-                e.AttendanceRate,
-                COALESCE((SELECT SUM(inv.BalanceDue) FROM Invoices inv WHERE inv.EnrollmentId = e.EnrollmentId), 0) AS DebtAmount,
+                c.ClassId,
+                COALESCE(c.ClassCode, 'Chờ xếp lớp') AS ClassName,
+                CASE 
+                    WHEN (SELECT COUNT(*) FROM AttendanceRecords ar WHERE ar.StudentId = s.StudentId) > 0 THEN
+                        ROUND(
+                            (SELECT COUNT(*) FROM AttendanceRecords ar WHERE ar.StudentId = s.StudentId AND ar.Status IN ('Present', 'Late')) * 100.0
+                            / (SELECT COUNT(*) FROM AttendanceRecords ar WHERE ar.StudentId = s.StudentId),
+                        1)
+                    ELSE NULL
+                END AS AttendanceRate,
+                COALESCE((SELECT SUM(inv.BalanceDue) FROM Invoices inv INNER JOIN Enrollments e3 ON inv.EnrollmentId = e3.EnrollmentId WHERE e3.StudentId = s.StudentId AND inv.Status != 'Cancelled'), 0) AS DebtAmount,
                 CASE 
                     WHEN s.Status = 'Active' THEN 'Đang học'
                     WHEN s.Status = 'Completed' THEN 'Hoàn thành'
@@ -209,15 +217,34 @@ public class StudentRepository : BaseRepository, IStudentRepository
             sql += " AND s.Status IN ('Active', 'Completed')";
         }
 
-        if (classId.HasValue && classId.Value > 0)
+        if (classId.HasValue)
         {
-            sql += " AND c.ClassId = @ClassId";
-            p.Add("ClassId", classId.Value);
+            if (classId.Value == -1)
+            {
+                sql += " AND c.ClassId IS NULL";
+            }
+            else if (classId.Value > 0)
+            {
+                sql += " AND c.ClassId = @ClassId";
+                p.Add("ClassId", classId.Value);
+            }
         }
 
         sql += " ORDER BY s.StudentId DESC;";
 
         return await conn.QueryAsync<StudentListItemDto>(sql, p);
+    }
+
+    public async Task<IEnumerable<ClassFilterItemDto>> GetClassesForFilterAsync()
+    {
+        await EnsureStudentSeedDataAsync();
+        using var conn = CreateConnection();
+        const string sql = @"
+            SELECT ClassId, ClassCode, ClassName
+            FROM Classes
+            WHERE Status != 'Cancelled'
+            ORDER BY ClassId DESC;";
+        return await conn.QueryAsync<ClassFilterItemDto>(sql);
     }
 
     public async Task<StudentDetailDto?> GetStudentDetailByIdAsync(int studentId)
@@ -317,7 +344,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
         string FormatScore(string type)
         {
             var matched = scoreRows.FirstOrDefault(x => x.Type.Equals(type, StringComparison.OrdinalIgnoreCase));
-            return matched != default ? $"{matched.ScoreValue:0.0} / 10" : "Chưa có điểm";
+            return matched != default ? $"{matched.ScoreValue:0.0}" : "Chưa có điểm";
         }
 
         var dto = new StudentDetailDto
@@ -334,13 +361,13 @@ public class StudentRepository : BaseRepository, IStudentRepository
             ParentPhone = raw.ParentPhone ?? "",
             ParentEmail = raw.ParentEmail ?? "",
             ParentRelationship = raw.ParentRelationship ?? "Bố",
-            CurrentClassName = raw.CurrentClassName ?? "Chưa xếp lớp",
+            CurrentClassName = raw.CurrentClassName ?? "Chờ xếp lớp",
             CourseName = raw.CourseName ?? "Chưa đăng ký",
             TeacherName = raw.TeacherName ?? "Chưa phân công",
             RoomName = raw.RoomName ?? "Chưa xếp phòng",
             ScheduleDisplay = scheduleDisplay,
             RemainingTuition = (decimal)(raw.RemainingTuition ?? 0m),
-            AttendanceRateDisplay = $"{attRate:F1}%",
+            AttendanceRateDisplay = totalRecorded > 0 ? $"{attRate:F1}%" : "Chưa có",
             LessonsProgressDisplay = $"{totalRecorded} / {totalSessions}",
             ProgressDisplay = $"{totalRecorded} / {totalSessions} buổi",
             PresentCount = attStats.PresentCnt,
@@ -406,19 +433,19 @@ public class StudentRepository : BaseRepository, IStudentRepository
             int recCnt = (int)(h.RecordedCount ?? 0);
             int totSess = (int)(h.TotalSessions ?? 24);
 
-            string regStr = h.RegularVal != null ? $"{Convert.ToDouble(h.RegularVal):0.0} / 10" : "Chưa có điểm";
-            string midStr = h.MidtermVal != null ? $"{Convert.ToDouble(h.MidtermVal):0.0} / 10" : "Chưa kiểm tra";
-            string finStr = h.FinalVal != null ? $"{Convert.ToDouble(h.FinalVal):0.0} / 10" : "Chưa kiểm tra";
+            string regStr = h.RegularVal != null ? $"{Convert.ToDouble(h.RegularVal):0.0}" : "-";
+            string midStr = h.MidtermVal != null ? $"{Convert.ToDouble(h.MidtermVal):0.0}" : "-";
+            string finStr = h.FinalVal != null ? $"{Convert.ToDouble(h.FinalVal):0.0}" : "-";
 
             dto.LearningHistory.Add(new StudentLearningHistoryItemDto
             {
-                ClassCourseName = $"{h.ClassCode} · {h.CourseName}",
+                ClassCourseName = $"{h.ClassCode} - {h.CourseName}",
                 Status = statusVi,
-                AttendanceProgress = $"{recCnt} / {totSess}",
+                AttendanceProgress = recCnt > 0 ? $"{recCnt} / {totSess} buổi" : "Chưa điểm danh",
                 RegularScore = regStr,
                 MidtermScore = midStr,
                 FinalScore = finStr,
-                TuitionStatus = bal > 0 ? $"Còn nợ {bal:N0}đ" : "✓ Đã hoàn thành"
+                TuitionStatus = bal > 0 ? $"Còn nợ {bal:N0}đ" : "Đã hoàn thành"
             });
         }
 
@@ -509,53 +536,44 @@ public class StudentRepository : BaseRepository, IStudentRepository
         }
     }
 
-    public async Task<bool> ArchiveStudentAsync(ArchiveStudentDto dto)
+    public async Task<decimal> GetStudentOutstandingDebtAsync(int studentId)
     {
         using var conn = CreateConnection();
-        string newStatus = dto.Reason.Contains("Bảo lưu") ? "Reserved" : "Dropped";
-        int rows = await conn.ExecuteAsync(@"
-            UPDATE Students SET 
-                Status = @NewStatus,
-                UpdatedAt = CURRENT_TIMESTAMP
-            WHERE StudentId = @StudentId;",
-            new { NewStatus = newStatus, dto.StudentId });
-
-        if (rows > 0)
-        {
-            await conn.ExecuteAsync(@"
-                INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
-                VALUES ('ARCHIVE_STUDENT', 'Students', @RecordId, @ReasonNote, CURRENT_TIMESTAMP);",
-                new { RecordId = dto.StudentId.ToString(), ReasonNote = $"{dto.Reason} - {dto.Notes}" });
-            return true;
-        }
-        return false;
+        return await conn.ExecuteScalarAsync<decimal>(@"
+            SELECT COALESCE(SUM(inv.BalanceDue), 0)
+            FROM Invoices inv
+            INNER JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId
+            WHERE e.StudentId = @StudentId AND inv.Status != 'Cancelled';",
+            new { StudentId = studentId });
     }
 
-    public async Task<bool> RestoreStudentAsync(int studentId)
+    public async Task<bool> ArchiveStudentAsync(ArchiveStudentDto dto)
     {
         using var conn = CreateConnection();
         using var tran = conn.BeginTransaction();
         try
         {
+            string newStatus = dto.Reason.Contains("Bảo lưu", StringComparison.OrdinalIgnoreCase) ? "Reserved" : "Dropped";
             int rows = await conn.ExecuteAsync(@"
                 UPDATE Students SET 
-                    Status = 'Active',
+                    Status = @NewStatus,
                     UpdatedAt = CURRENT_TIMESTAMP
-                WHERE StudentId = @StudentId;", new { StudentId = studentId }, tran);
+                WHERE StudentId = @StudentId;",
+                new { NewStatus = newStatus, dto.StudentId }, tran);
 
             await conn.ExecuteAsync(@"
                 UPDATE Enrollments SET 
-                    Status = 'Active',
+                    Status = @NewStatus,
                     UpdatedAt = CURRENT_TIMESTAMP
-                WHERE StudentId = @StudentId AND Status IN ('Reserved', 'Dropped');",
-                new { StudentId = studentId }, tran);
+                WHERE StudentId = @StudentId AND Status IN ('Active', 'PendingPayment');",
+                new { NewStatus = newStatus, dto.StudentId }, tran);
 
             if (rows > 0)
             {
                 await conn.ExecuteAsync(@"
                     INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
-                    VALUES ('RESTORE_STUDENT', 'Students', @RecordId, 'Khôi phục hồ sơ học viên về trạng thái Đang học', CURRENT_TIMESTAMP);",
-                    new { RecordId = studentId.ToString() }, tran);
+                    VALUES ('ARCHIVE_STUDENT', 'Students', @RecordId, @ReasonNote, CURRENT_TIMESTAMP);",
+                    new { RecordId = dto.StudentId.ToString(), ReasonNote = $"{dto.Reason} - {dto.Notes}" }, tran);
             }
 
             tran.Commit();
@@ -568,13 +586,232 @@ public class StudentRepository : BaseRepository, IStudentRepository
         }
     }
 
+    public async Task<(bool Success, string Message)> RestoreStudentAsync(int studentId)
+    {
+        using var conn = CreateConnection();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            int rows = await conn.ExecuteAsync(@"
+                UPDATE Students SET 
+                    Status = 'Active',
+                    UpdatedAt = CURRENT_TIMESTAMP
+                WHERE StudentId = @StudentId;", new { StudentId = studentId }, tran);
+
+            if (rows == 0)
+            {
+                tran.Rollback();
+                return (false, "Không tìm thấy hồ sơ học viên cần khôi phục.");
+            }
+
+            var latestEnroll = await conn.QueryFirstOrDefaultAsync<(int EnrollmentId, int ClassId, string ClassCode, string ClassStatus, int MaxStudents, int CurrentStudents)?>(@"
+                SELECT 
+                    e.EnrollmentId,
+                    e.ClassId,
+                    c.ClassCode,
+                    c.Status AS ClassStatus,
+                    c.MaxStudents,
+                    (SELECT COUNT(*) FROM Enrollments e2 WHERE e2.ClassId = c.ClassId AND e2.Status IN ('Active', 'PendingPayment')) AS CurrentStudents
+                FROM Enrollments e
+                JOIN Classes c ON e.ClassId = c.ClassId
+                WHERE e.StudentId = @StudentId AND e.Status IN ('Reserved', 'Dropped')
+                ORDER BY e.EnrollmentId DESC
+                LIMIT 1;", new { StudentId = studentId }, tran);
+
+            string restoreMessage = "Đã khôi phục học viên về trạng thái Chờ xếp lớp.";
+            if (latestEnroll.HasValue)
+            {
+                var le = latestEnroll.Value;
+                bool classClosed = le.ClassStatus == "Completed" || le.ClassStatus == "Cancelled";
+                bool classFull = le.CurrentStudents >= le.MaxStudents;
+
+                if (!classClosed && !classFull)
+                {
+                    await conn.ExecuteAsync(@"
+                        UPDATE Enrollments SET 
+                            Status = 'Active',
+                            UpdatedAt = CURRENT_TIMESTAMP
+                        WHERE EnrollmentId = @EnrollmentId;",
+                        new { le.EnrollmentId }, tran);
+                    restoreMessage = $"Đã khôi phục học viên và đưa trở lại lớp {le.ClassCode}.";
+                }
+                else
+                {
+                    string reason = classClosed ? $"lớp cũ ({le.ClassCode}) đã kết thúc hoặc bị hủy" : $"lớp cũ ({le.ClassCode}) đã đủ sĩ số";
+                    restoreMessage = $"Đã khôi phục hồ sơ học viên ở trạng thái Chờ xếp lớp (do {reason}). Vui lòng xếp vào lớp mới.";
+                }
+            }
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
+                VALUES ('RESTORE_STUDENT', 'Students', @RecordId, @Msg, CURRENT_TIMESTAMP);",
+                new { RecordId = studentId.ToString(), Msg = restoreMessage }, tran);
+
+            tran.Commit();
+            return (true, restoreMessage);
+        }
+        catch (Exception ex)
+        {
+            tran.Rollback();
+            return (false, "Lỗi khôi phục hồ sơ học viên: " + ex.Message);
+        }
+    }
+
+    public async Task<(bool Success, string Message)> DeleteStudentWithChecksAsync(int studentId)
+    {
+        using var conn = CreateConnection();
+
+        int paymentCount = await conn.ExecuteScalarAsync<int>(@"
+            SELECT COUNT(*) FROM Payments p
+            INNER JOIN Invoices inv ON p.InvoiceId = inv.InvoiceId
+            INNER JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId
+            WHERE e.StudentId = @Id AND p.Status = 'Valid';", new { Id = studentId });
+        if (paymentCount > 0)
+            return (false, "Không thể xóa học viên đã phát sinh phiếu thu học phí. Vui lòng sử dụng chức năng Lưu trữ.");
+
+        int attendanceCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM AttendanceRecords WHERE StudentId = @Id;", new { Id = studentId });
+        if (attendanceCount > 0)
+            return (false, "Không thể xóa học viên đã có dữ liệu điểm danh. Vui lòng sử dụng chức năng Lưu trữ.");
+
+        int examCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM ExamScores WHERE StudentId = @Id;", new { Id = studentId });
+        if (examCount > 0)
+            return (false, "Không thể xóa học viên đã có điểm kiểm tra / thi. Vui lòng sử dụng chức năng Lưu trữ.");
+
+        int certCount = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM Certificates WHERE StudentId = @Id;", new { Id = studentId });
+        if (certCount > 0)
+            return (false, "Không thể xóa học viên đã được cấp chứng chỉ. Vui lòng sử dụng chức năng Lưu trữ.");
+
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            await conn.ExecuteAsync(@"
+                DELETE FROM Invoices WHERE EnrollmentId IN (SELECT EnrollmentId FROM Enrollments WHERE StudentId = @Id);",
+                new { Id = studentId }, tran);
+            await conn.ExecuteAsync("DELETE FROM Enrollments WHERE StudentId = @Id;", new { Id = studentId }, tran);
+            await conn.ExecuteAsync("DELETE FROM StudentParents WHERE StudentId = @Id;", new { Id = studentId }, tran);
+            try { await conn.ExecuteAsync("DELETE FROM AbsenceAlertStates WHERE StudentId = @Id;", new { Id = studentId }, tran); } catch { }
+            await conn.ExecuteAsync("DELETE FROM Users WHERE StudentId = @Id;", new { Id = studentId }, tran);
+            int deleted = await conn.ExecuteAsync("DELETE FROM Students WHERE StudentId = @Id;", new { Id = studentId }, tran);
+
+            if (deleted > 0)
+            {
+                await conn.ExecuteAsync(@"
+                    INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
+                    VALUES ('DELETE_STUDENT', 'Students', @RecordId, 'Xóa vĩnh viễn hồ sơ học viên chưa phát sinh dữ liệu ràng buộc', CURRENT_TIMESTAMP);",
+                    new { RecordId = studentId.ToString() }, tran);
+            }
+
+            tran.Commit();
+            return deleted > 0
+                ? (true, "Đã xóa hồ sơ học viên khỏi hệ thống thành công.")
+                : (false, "Không tìm thấy học viên cần xóa.");
+        }
+        catch (Exception ex)
+        {
+            tran.Rollback();
+            return (false, "Lỗi khi xóa hồ sơ học viên: " + ex.Message);
+        }
+    }
+
+    public async Task<(bool IsDuplicate, string Reason)> CheckDuplicateStudentAsync(string phone, string fullName, DateTime dateOfBirth, int excludeStudentId = 0)
+    {
+        using var conn = CreateConnection();
+        string cleanPhone = (phone ?? "").Replace(" ", "").Trim();
+        if (!string.IsNullOrWhiteSpace(cleanPhone))
+        {
+            var existingByPhone = await conn.QueryFirstOrDefaultAsync<(string StudentCode, string FullName)?>(@"
+                SELECT StudentCode, FullName FROM Students
+                WHERE REPLACE(COALESCE(Phone, ''), ' ', '') = @Phone
+                  AND StudentId != @ExcludeId
+                LIMIT 1;", new { Phone = cleanPhone, ExcludeId = excludeStudentId });
+
+            if (existingByPhone.HasValue)
+            {
+                return (true, $"Số điện thoại '{phone}' đã được sử dụng bởi học viên {existingByPhone.Value.FullName} ({existingByPhone.Value.StudentCode}).");
+            }
+        }
+
+        return (false, string.Empty);
+    }
+
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode)> CreateWaitingStudentAsync(StudentEnrollmentWithTuitionDto dto)
+    {
+        await EnsureStudentSeedDataAsync();
+        using var conn = CreateConnection();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            string studentCode = !string.IsNullOrWhiteSpace(dto.StudentCode)
+                ? dto.StudentCode
+                : await GenerateNextStudentCodeAsync();
+
+            int studentId = await conn.ExecuteScalarAsync<int>(@"
+                INSERT INTO Students (StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt)
+                VALUES (@StudentCode, @FullName, @DobStr, @Gender, @Phone, @Email, @Address, 'Active', CURRENT_TIMESTAMP);
+                SELECT last_insert_rowid();",
+                new
+                {
+                    StudentCode = studentCode,
+                    dto.FullName,
+                    DobStr = dto.DateOfBirth.ToString("yyyy-MM-dd"),
+                    dto.Gender,
+                    dto.Phone,
+                    dto.Email,
+                    dto.Address
+                }, tran);
+
+            if (!string.IsNullOrWhiteSpace(dto.ParentFullName))
+            {
+                int parentId = await conn.ExecuteScalarAsync<int>(@"
+                    INSERT INTO Parents (ParentCode, FullName, Phone, Email, CreatedAt)
+                    VALUES (@ParentCode, @ParentFullName, @ParentPhone, '', CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();",
+                    new
+                    {
+                        ParentCode = $"PH-{studentCode.Replace("HV-", "")}",
+                        dto.ParentFullName,
+                        dto.ParentPhone
+                    }, tran);
+
+                string normalizedRel = NormalizeRelationship(dto.ParentRelationship);
+                await conn.ExecuteAsync(@"
+                    INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact)
+                    VALUES (@StudentId, @ParentId, @Rel, 1);",
+                    new { StudentId = studentId, ParentId = parentId, Rel = normalizedRel }, tran);
+            }
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (ActionName, TableName, RecordId, NewValues, Timestamp)
+                VALUES ('CREATE_WAITING_STUDENT', 'Students', @RecordId, @Note, CURRENT_TIMESTAMP);",
+                new { RecordId = studentId.ToString(), Note = $"Thêm học viên {dto.FullName} ({studentCode}) ở trạng thái Chờ xếp lớp" }, tran);
+
+            tran.Commit();
+            return (true, "Đã lưu hồ sơ học viên ở trạng thái Chờ xếp lớp.", studentId, studentCode);
+        }
+        catch (Exception ex)
+        {
+            tran.Rollback();
+            return (false, "Lỗi lưu hồ sơ học viên: " + ex.Message, 0, string.Empty);
+        }
+    }
+
     public async Task<StudentOverviewStatsDto> GetStudentStatsAsync()
     {
         await EnsureStudentSeedDataAsync();
         using var conn = CreateConnection();
 
         int total = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students;");
-        int studying = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students WHERE Status = 'Active';");
+        int studying = await conn.ExecuteScalarAsync<int>(@"
+            SELECT COUNT(*) FROM Students s
+            WHERE s.Status = 'Active'
+              AND EXISTS (SELECT 1 FROM Enrollments e WHERE e.StudentId = s.StudentId AND e.Status IN ('Active', 'PendingPayment'));");
+        int waitingClass = await conn.ExecuteScalarAsync<int>(@"
+            SELECT COUNT(*) FROM Students s
+            WHERE s.Status = 'Active'
+              AND NOT EXISTS (SELECT 1 FROM Enrollments e WHERE e.StudentId = s.StudentId AND e.Status IN ('Active', 'PendingPayment'));");
         int completed = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students WHERE Status = 'Completed';");
         int archived = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Students WHERE Status IN ('Reserved', 'Dropped');");
         int debt = await conn.ExecuteScalarAsync<int>(@"
@@ -582,12 +819,13 @@ public class StudentRepository : BaseRepository, IStudentRepository
             FROM Students s 
             JOIN Enrollments e ON s.StudentId = e.StudentId 
             JOIN Invoices inv ON e.EnrollmentId = inv.EnrollmentId 
-            WHERE inv.BalanceDue > 0;");
+            WHERE inv.BalanceDue > 0 AND inv.Status != 'Cancelled';");
 
         return new StudentOverviewStatsDto
         {
             TotalStudents = total,
             StudyingStudents = studying,
+            WaitingClassStudents = waitingClass,
             CompletedStudents = completed,
             ArchivedStudents = archived,
             DebtStudents = debt
@@ -637,6 +875,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 co.CourseName,
                 co.BaseTuitionFee AS TuitionFee,
                 c.StartDate,
+                c.EndDate,
                 COALESCE(cr.RoomName, 'Chưa xếp phòng') AS RoomName,
                 COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
                 (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = c.ClassId AND e.Status IN ('Active', 'PendingPayment')) AS CurrentStudents,
@@ -656,7 +895,9 @@ public class StudentRepository : BaseRepository, IStudentRepository
         foreach (var r in rows)
         {
             string startRaw = r.StartDate ?? "";
-            string startDisplay = DateTime.TryParse(startRaw, out DateTime dt) ? dt.ToString("dd/MM/yyyy") : startRaw;
+            string startDisplay = DateTime.TryParse(startRaw, out DateTime dtStart) ? dtStart.ToString("dd/MM/yyyy") : startRaw;
+            string endRaw = r.EndDate ?? "";
+            string endDisplay = DateTime.TryParse(endRaw, out DateTime dtEnd) ? dtEnd.ToString("dd/MM/yyyy") : (string.IsNullOrWhiteSpace(endRaw) ? "-" : endRaw);
 
             result.Add(new OpenClassOptionDto
             {
@@ -667,6 +908,7 @@ public class StudentRepository : BaseRepository, IStudentRepository
                 CourseName = r.CourseName ?? "",
                 TuitionFee = (decimal)(r.TuitionFee ?? 0m),
                 StartDateDisplay = startDisplay,
+                EndDateDisplay = endDisplay,
                 ScheduleDisplay = r.TimeRange ?? "18:00 - 20:00",
                 StartTime = r.StartTime ?? "18:00",
                 RoomName = r.RoomName ?? "P201",

@@ -308,6 +308,7 @@ public static class DatabaseInitializer
 
         CREATE TABLE IF NOT EXISTS FeeDiscounts (
             DiscountId INTEGER PRIMARY KEY AUTOINCREMENT,
+            DiscountCode TEXT,
             DiscountName TEXT NOT NULL,
             Percentage REAL NOT NULL DEFAULT 0,
             FixedAmount REAL NOT NULL DEFAULT 0,
@@ -385,6 +386,21 @@ public static class DatabaseInitializer
         try { conn.Execute("ALTER TABLE Users ADD COLUMN StudentId INTEGER;"); } catch { }
         try { conn.Execute("ALTER TABLE Users ADD COLUMN ParentId INTEGER;"); } catch { }
         try { conn.Execute("ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 0;"); } catch { }
+        try { conn.Execute("ALTER TABLE FeeDiscounts ADD COLUMN DiscountCode TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE Teachers ADD COLUMN Certificate TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE Teachers ADD COLUMN Notes TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE Teachers ADD COLUMN PreferredShifts TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE Teachers ADD COLUMN AvailableDays TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE Exams ADD COLUMN StartTime TEXT DEFAULT '18:00';"); } catch { }
+        try { conn.Execute("ALTER TABLE Exams ADD COLUMN EndTime TEXT DEFAULT '19:30';"); } catch { }
+        try { conn.Execute("ALTER TABLE Exams ADD COLUMN RoomId INTEGER;"); } catch { }
+        try
+        {
+            conn.Execute("UPDATE FeeDiscounts SET DiscountCode = 'HVCU10' WHERE DiscountId = 1 AND (DiscountCode IS NULL OR DiscountCode = '');");
+            conn.Execute("UPDATE FeeDiscounts SET DiscountCode = 'NHOM15' WHERE DiscountId = 2 AND (DiscountCode IS NULL OR DiscountCode = '');");
+            conn.Execute("UPDATE FeeDiscounts SET DiscountCode = 'EARLY500' WHERE DiscountId = 3 AND (DiscountCode IS NULL OR DiscountCode = '');");
+        }
+        catch { }
 
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);

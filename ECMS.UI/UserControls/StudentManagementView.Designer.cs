@@ -15,10 +15,6 @@ partial class StudentManagementView
 
     #region Component Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -26,36 +22,25 @@ partial class StudentManagementView
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
+        btnViewArchived = new ECMS.UI.Controls.AppButton();
+        btnImport = new ECMS.UI.Controls.AppButton();
         btnExport = new ECMS.UI.Controls.AppButton();
         btnAddStudent = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
-        cardStatArchived = new ECMS.UI.Controls.AppCard();
-        lblStatArchivedValue = new System.Windows.Forms.Label();
-        lblStatArchivedTitle = new System.Windows.Forms.Label();
-        cardStatCompleted = new ECMS.UI.Controls.AppCard();
-        lblStatCompletedValue = new System.Windows.Forms.Label();
-        lblStatCompletedTitle = new System.Windows.Forms.Label();
-        cardStatStudying = new ECMS.UI.Controls.AppCard();
-        lblStatStudyingValue = new System.Windows.Forms.Label();
-        lblStatStudyingTitle = new System.Windows.Forms.Label();
-        cardStatTotal = new ECMS.UI.Controls.AppCard();
-        lblStatTotalValue = new System.Windows.Forms.Label();
-        lblStatTotalTitle = new System.Windows.Forms.Label();
         cardStudentList = new ECMS.UI.Controls.AppCard();
+        pnlGridFooter = new System.Windows.Forms.Panel();
+        lblBottomSummary = new System.Windows.Forms.Label();
         dgvStudents = new ECMS.UI.Controls.AppDataGrid();
         pnlStudentFilterBar = new System.Windows.Forms.Panel();
+        lblClassFilter = new System.Windows.Forms.Label();
         cboClassFilter = new ECMS.UI.Controls.AppComboBox();
-        cboStatusFilter = new ECMS.UI.Controls.AppComboBox();
         txtSearchStudent = new ECMS.UI.Controls.AppTextBox();
         lblStudentListTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
-        cardStatArchived.SuspendLayout();
-        cardStatCompleted.SuspendLayout();
-        cardStatStudying.SuspendLayout();
-        cardStatTotal.SuspendLayout();
         cardStudentList.SuspendLayout();
+        pnlGridFooter.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvStudents).BeginInit();
         pnlStudentFilterBar.SuspendLayout();
         SuspendLayout();
@@ -63,6 +48,8 @@ partial class StudentManagementView
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
+        pnlHeader.Controls.Add(btnViewArchived);
+        pnlHeader.Controls.Add(btnImport);
         pnlHeader.Controls.Add(btnExport);
         pnlHeader.Controls.Add(btnAddStudent);
         pnlHeader.Controls.Add(lblTitle);
@@ -72,6 +59,42 @@ partial class StudentManagementView
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
         pnlHeader.Size = new System.Drawing.Size(1160, 75);
         pnlHeader.TabIndex = 0;
+        // 
+        // btnViewArchived
+        // 
+        btnViewArchived.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnViewArchived.BackColor = System.Drawing.Color.White;
+        btnViewArchived.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnViewArchived.CornerRadius = 6;
+        btnViewArchived.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnViewArchived.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnViewArchived.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnViewArchived.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnViewArchived.Location = new System.Drawing.Point(555, 20);
+        btnViewArchived.Name = "btnViewArchived";
+        btnViewArchived.Size = new System.Drawing.Size(155, 36);
+        btnViewArchived.TabIndex = 6;
+        btnViewArchived.Text = "Xem hồ sơ lưu trữ";
+        btnViewArchived.UseVisualStyleBackColor = false;
+        btnViewArchived.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // btnImport
+        // 
+        btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnImport.BackColor = System.Drawing.Color.White;
+        btnImport.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnImport.CornerRadius = 6;
+        btnImport.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnImport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnImport.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnImport.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnImport.Location = new System.Drawing.Point(720, 20);
+        btnImport.Name = "btnImport";
+        btnImport.Size = new System.Drawing.Size(125, 36);
+        btnImport.TabIndex = 5;
+        btnImport.Text = "Nhập Excel";
+        btnImport.UseVisualStyleBackColor = false;
+        btnImport.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnExport
         // 
@@ -105,7 +128,7 @@ partial class StudentManagementView
         btnAddStudent.Name = "btnAddStudent";
         btnAddStudent.Size = new System.Drawing.Size(145, 36);
         btnAddStudent.TabIndex = 3;
-        btnAddStudent.Text = "+ Đăng ký học";
+        btnAddStudent.Text = "Đăng ký học";
         btnAddStudent.UseVisualStyleBackColor = false;
         btnAddStudent.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -114,7 +137,7 @@ partial class StudentManagementView
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblTitle.Location = new System.Drawing.Point(22, 14);
+        lblTitle.Location = new System.Drawing.Point(22, 18);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(129, 37);
         lblTitle.TabIndex = 1;
@@ -122,178 +145,53 @@ partial class StudentManagementView
         // 
         // pnlBody
         // 
-        pnlBody.AutoScroll = true;
-        pnlBody.Controls.Add(cardStatArchived);
-        pnlBody.Controls.Add(cardStatCompleted);
-        pnlBody.Controls.Add(cardStatStudying);
-        pnlBody.Controls.Add(cardStatTotal);
         pnlBody.Controls.Add(cardStudentList);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlBody.Location = new System.Drawing.Point(0, 75);
         pnlBody.Name = "pnlBody";
-        pnlBody.Padding = new System.Windows.Forms.Padding(24);
+        pnlBody.Padding = new System.Windows.Forms.Padding(20, 16, 20, 20);
         pnlBody.Size = new System.Drawing.Size(1160, 725);
         pnlBody.TabIndex = 1;
         // 
-        // cardStatArchived
-        // 
-        cardStatArchived.BackColor = System.Drawing.Color.White;
-        cardStatArchived.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardStatArchived.BorderWidth = 1;
-        cardStatArchived.Controls.Add(lblStatArchivedValue);
-        cardStatArchived.Controls.Add(lblStatArchivedTitle);
-        cardStatArchived.CornerRadius = 8;
-        cardStatArchived.Location = new System.Drawing.Point(845, 20);
-        cardStatArchived.Name = "cardStatArchived";
-        cardStatArchived.Padding = new System.Windows.Forms.Padding(16);
-        cardStatArchived.Size = new System.Drawing.Size(260, 85);
-        cardStatArchived.TabIndex = 8;
-        // 
-        // lblStatArchivedValue
-        // 
-        lblStatArchivedValue.AutoSize = true;
-        lblStatArchivedValue.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStatArchivedValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStatArchivedValue.Location = new System.Drawing.Point(14, 30);
-        lblStatArchivedValue.Name = "lblStatArchivedValue";
-        lblStatArchivedValue.Size = new System.Drawing.Size(64, 50);
-        lblStatArchivedValue.TabIndex = 1;
-        lblStatArchivedValue.Text = "18";
-        // 
-        // lblStatArchivedTitle
-        // 
-        lblStatArchivedTitle.AutoSize = true;
-        lblStatArchivedTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatArchivedTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStatArchivedTitle.Location = new System.Drawing.Point(16, 10);
-        lblStatArchivedTitle.Name = "lblStatArchivedTitle";
-        lblStatArchivedTitle.Size = new System.Drawing.Size(76, 20);
-        lblStatArchivedTitle.TabIndex = 0;
-        lblStatArchivedTitle.Text = "Đã lưu trữ";
-        // 
-        // cardStatCompleted
-        // 
-        cardStatCompleted.BackColor = System.Drawing.Color.White;
-        cardStatCompleted.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardStatCompleted.BorderWidth = 1;
-        cardStatCompleted.Controls.Add(lblStatCompletedValue);
-        cardStatCompleted.Controls.Add(lblStatCompletedTitle);
-        cardStatCompleted.CornerRadius = 8;
-        cardStatCompleted.Location = new System.Drawing.Point(570, 20);
-        cardStatCompleted.Name = "cardStatCompleted";
-        cardStatCompleted.Padding = new System.Windows.Forms.Padding(16);
-        cardStatCompleted.Size = new System.Drawing.Size(260, 85);
-        cardStatCompleted.TabIndex = 7;
-        // 
-        // lblStatCompletedValue
-        // 
-        lblStatCompletedValue.AutoSize = true;
-        lblStatCompletedValue.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStatCompletedValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStatCompletedValue.Location = new System.Drawing.Point(14, 30);
-        lblStatCompletedValue.Name = "lblStatCompletedValue";
-        lblStatCompletedValue.Size = new System.Drawing.Size(64, 50);
-        lblStatCompletedValue.TabIndex = 1;
-        lblStatCompletedValue.Text = "62";
-        // 
-        // lblStatCompletedTitle
-        // 
-        lblStatCompletedTitle.AutoSize = true;
-        lblStatCompletedTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatCompletedTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStatCompletedTitle.Location = new System.Drawing.Point(16, 10);
-        lblStatCompletedTitle.Name = "lblStatCompletedTitle";
-        lblStatCompletedTitle.Size = new System.Drawing.Size(86, 20);
-        lblStatCompletedTitle.TabIndex = 0;
-        lblStatCompletedTitle.Text = "Hoàn thành";
-        // 
-        // cardStatStudying
-        // 
-        cardStatStudying.BackColor = System.Drawing.Color.White;
-        cardStatStudying.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardStatStudying.BorderWidth = 1;
-        cardStatStudying.Controls.Add(lblStatStudyingValue);
-        cardStatStudying.Controls.Add(lblStatStudyingTitle);
-        cardStatStudying.CornerRadius = 8;
-        cardStatStudying.Location = new System.Drawing.Point(295, 20);
-        cardStatStudying.Name = "cardStatStudying";
-        cardStatStudying.Padding = new System.Windows.Forms.Padding(16);
-        cardStatStudying.Size = new System.Drawing.Size(260, 85);
-        cardStatStudying.TabIndex = 6;
-        // 
-        // lblStatStudyingValue
-        // 
-        lblStatStudyingValue.AutoSize = true;
-        lblStatStudyingValue.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStatStudyingValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStatStudyingValue.Location = new System.Drawing.Point(14, 30);
-        lblStatStudyingValue.Name = "lblStatStudyingValue";
-        lblStatStudyingValue.Size = new System.Drawing.Size(85, 50);
-        lblStatStudyingValue.TabIndex = 1;
-        lblStatStudyingValue.Text = "348";
-        // 
-        // lblStatStudyingTitle
-        // 
-        lblStatStudyingTitle.AutoSize = true;
-        lblStatStudyingTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatStudyingTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStatStudyingTitle.Location = new System.Drawing.Point(16, 10);
-        lblStatStudyingTitle.Name = "lblStatStudyingTitle";
-        lblStatStudyingTitle.Size = new System.Drawing.Size(73, 20);
-        lblStatStudyingTitle.TabIndex = 0;
-        lblStatStudyingTitle.Text = "Đang học";
-        // 
-        // cardStatTotal
-        // 
-        cardStatTotal.BackColor = System.Drawing.Color.White;
-        cardStatTotal.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardStatTotal.BorderWidth = 1;
-        cardStatTotal.Controls.Add(lblStatTotalValue);
-        cardStatTotal.Controls.Add(lblStatTotalTitle);
-        cardStatTotal.CornerRadius = 8;
-        cardStatTotal.Location = new System.Drawing.Point(20, 20);
-        cardStatTotal.Name = "cardStatTotal";
-        cardStatTotal.Padding = new System.Windows.Forms.Padding(16);
-        cardStatTotal.Size = new System.Drawing.Size(260, 85);
-        cardStatTotal.TabIndex = 5;
-        // 
-        // lblStatTotalValue
-        // 
-        lblStatTotalValue.AutoSize = true;
-        lblStatTotalValue.Font = new System.Drawing.Font("Segoe UI", 22F, System.Drawing.FontStyle.Bold);
-        lblStatTotalValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStatTotalValue.Location = new System.Drawing.Point(14, 30);
-        lblStatTotalValue.Name = "lblStatTotalValue";
-        lblStatTotalValue.Size = new System.Drawing.Size(85, 50);
-        lblStatTotalValue.TabIndex = 1;
-        lblStatTotalValue.Text = "428";
-        // 
-        // lblStatTotalTitle
-        // 
-        lblStatTotalTitle.AutoSize = true;
-        lblStatTotalTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblStatTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblStatTotalTitle.Location = new System.Drawing.Point(16, 10);
-        lblStatTotalTitle.Name = "lblStatTotalTitle";
-        lblStatTotalTitle.Size = new System.Drawing.Size(83, 20);
-        lblStatTotalTitle.TabIndex = 0;
-        lblStatTotalTitle.Text = "Tổng hồ sơ";
-        // 
         // cardStudentList
         // 
-        cardStudentList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardStudentList.BackColor = System.Drawing.Color.White;
         cardStudentList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardStudentList.BorderWidth = 1;
         cardStudentList.Controls.Add(dgvStudents);
+        cardStudentList.Controls.Add(pnlGridFooter);
         cardStudentList.Controls.Add(pnlStudentFilterBar);
         cardStudentList.Controls.Add(lblStudentListTitle);
         cardStudentList.CornerRadius = 8;
-        cardStudentList.Location = new System.Drawing.Point(20, 120);
+        cardStudentList.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardStudentList.Location = new System.Drawing.Point(20, 16);
         cardStudentList.Name = "cardStudentList";
         cardStudentList.Padding = new System.Windows.Forms.Padding(16);
-        cardStudentList.Size = new System.Drawing.Size(1115, 570);
+        cardStudentList.Size = new System.Drawing.Size(1120, 689);
         cardStudentList.TabIndex = 0;
+        // 
+        // pnlGridFooter
+        // 
+        pnlGridFooter.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        pnlGridFooter.Controls.Add(lblBottomSummary);
+        pnlGridFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlGridFooter.Location = new System.Drawing.Point(16, 637);
+        pnlGridFooter.Name = "pnlGridFooter";
+        pnlGridFooter.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
+        pnlGridFooter.Size = new System.Drawing.Size(1088, 36);
+        pnlGridFooter.TabIndex = 3;
+        // 
+        // lblBottomSummary
+        // 
+        lblBottomSummary.Dock = System.Windows.Forms.DockStyle.Fill;
+        lblBottomSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblBottomSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblBottomSummary.Location = new System.Drawing.Point(12, 8);
+        lblBottomSummary.Name = "lblBottomSummary";
+        lblBottomSummary.Size = new System.Drawing.Size(1064, 20);
+        lblBottomSummary.TabIndex = 0;
+        lblBottomSummary.Text = "Tổng: 0 học viên  |  Đang học: 0  |  Chờ xếp lớp: 0  |  Đã lưu trữ: 0";
+        lblBottomSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
         // dgvStudents
         // 
@@ -306,7 +204,6 @@ partial class StudentManagementView
         dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dgvStudents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvStudents.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         dgvStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvStudents.BackgroundColor = System.Drawing.Color.White;
         dgvStudents.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -321,7 +218,7 @@ partial class StudentManagementView
         dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvStudents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-        dgvStudents.ColumnHeadersHeight = 36;
+        dgvStudents.ColumnHeadersHeight = 38;
         dgvStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
@@ -332,9 +229,10 @@ partial class StudentManagementView
         dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         dgvStudents.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvStudents.Dock = System.Windows.Forms.DockStyle.Fill;
         dgvStudents.EnableHeadersVisualStyles = false;
         dgvStudents.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        dgvStudents.Location = new System.Drawing.Point(20, 108);
+        dgvStudents.Location = new System.Drawing.Point(16, 102);
         dgvStudents.MultiSelect = false;
         dgvStudents.Name = "dgvStudents";
         dgvStudents.ReadOnly = true;
@@ -348,77 +246,77 @@ partial class StudentManagementView
         dgvStudents.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvStudents.RowHeadersVisible = false;
         dgvStudents.RowHeadersWidth = 51;
+        dgvStudents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvStudents.Size = new System.Drawing.Size(1075, 442);
+        dgvStudents.Size = new System.Drawing.Size(1088, 535);
         dgvStudents.TabIndex = 2;
         // 
         // pnlStudentFilterBar
         // 
-        pnlStudentFilterBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         pnlStudentFilterBar.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        pnlStudentFilterBar.Controls.Add(lblClassFilter);
         pnlStudentFilterBar.Controls.Add(cboClassFilter);
-        pnlStudentFilterBar.Controls.Add(cboStatusFilter);
         pnlStudentFilterBar.Controls.Add(txtSearchStudent);
-        pnlStudentFilterBar.Location = new System.Drawing.Point(20, 48);
+        pnlStudentFilterBar.Dock = System.Windows.Forms.DockStyle.Top;
+        pnlStudentFilterBar.Location = new System.Drawing.Point(16, 48);
         pnlStudentFilterBar.Name = "pnlStudentFilterBar";
-        pnlStudentFilterBar.Size = new System.Drawing.Size(1075, 48);
+        pnlStudentFilterBar.Padding = new System.Windows.Forms.Padding(10, 8, 10, 8);
+        pnlStudentFilterBar.Size = new System.Drawing.Size(1088, 54);
         pnlStudentFilterBar.TabIndex = 1;
+        // 
+        // lblClassFilter
+        // 
+        lblClassFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        lblClassFilter.AutoSize = true;
+        lblClassFilter.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblClassFilter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblClassFilter.Location = new System.Drawing.Point(750, 17);
+        lblClassFilter.Name = "lblClassFilter";
+        lblClassFilter.Size = new System.Drawing.Size(68, 20);
+        lblClassFilter.TabIndex = 3;
+        lblClassFilter.Text = "Lọc lớp:";
         // 
         // cboClassFilter
         // 
+        cboClassFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboClassFilter.BackColor = System.Drawing.Color.White;
         cboClassFilter.CornerRadius = 5;
         cboClassFilter.DataSource = null;
         cboClassFilter.DisplayMember = "";
         cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboClassFilter.Location = new System.Drawing.Point(570, 7);
+        cboClassFilter.Location = new System.Drawing.Point(825, 10);
         cboClassFilter.Name = "cboClassFilter";
         cboClassFilter.SelectedIndex = -1;
         cboClassFilter.SelectedItem = null;
         cboClassFilter.SelectedValue = null;
-        cboClassFilter.Size = new System.Drawing.Size(200, 34);
+        cboClassFilter.Size = new System.Drawing.Size(250, 34);
         cboClassFilter.TabIndex = 2;
         cboClassFilter.ValueMember = "";
         // 
-        // cboStatusFilter
-        // 
-        cboStatusFilter.BackColor = System.Drawing.Color.White;
-        cboStatusFilter.CornerRadius = 5;
-        cboStatusFilter.DataSource = null;
-        cboStatusFilter.DisplayMember = "";
-        cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboStatusFilter.Location = new System.Drawing.Point(380, 7);
-        cboStatusFilter.Name = "cboStatusFilter";
-        cboStatusFilter.SelectedIndex = -1;
-        cboStatusFilter.SelectedItem = null;
-        cboStatusFilter.SelectedValue = null;
-        cboStatusFilter.Size = new System.Drawing.Size(180, 34);
-        cboStatusFilter.TabIndex = 1;
-        cboStatusFilter.ValueMember = "";
-        // 
         // txtSearchStudent
         // 
+        txtSearchStudent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtSearchStudent.BackColor = System.Drawing.Color.White;
         txtSearchStudent.CornerRadius = 6;
         txtSearchStudent.ErrorMessage = "";
         txtSearchStudent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtSearchStudent.HasError = false;
-        txtSearchStudent.Location = new System.Drawing.Point(10, 7);
+        txtSearchStudent.Location = new System.Drawing.Point(10, 10);
         txtSearchStudent.Name = "txtSearchStudent";
         txtSearchStudent.Placeholder = "Tìm theo mã học viên, họ tên, số điện thoại...";
         txtSearchStudent.ReadOnly = false;
-        txtSearchStudent.Size = new System.Drawing.Size(360, 34);
+        txtSearchStudent.Size = new System.Drawing.Size(720, 34);
         txtSearchStudent.TabIndex = 0;
         txtSearchStudent.UseSystemPasswordChar = false;
         // 
         // lblStudentListTitle
         // 
-        lblStudentListTitle.AutoSize = true;
-        lblStudentListTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+        lblStudentListTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblStudentListTitle.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold);
         lblStudentListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStudentListTitle.Location = new System.Drawing.Point(20, 16);
+        lblStudentListTitle.Location = new System.Drawing.Point(16, 16);
         lblStudentListTitle.Name = "lblStudentListTitle";
-        lblStudentListTitle.Size = new System.Drawing.Size(196, 28);
+        lblStudentListTitle.Size = new System.Drawing.Size(1088, 32);
         lblStudentListTitle.TabIndex = 0;
         lblStudentListTitle.Text = "Danh sách học viên";
         // 
@@ -434,18 +332,11 @@ partial class StudentManagementView
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlBody.ResumeLayout(false);
-        cardStatArchived.ResumeLayout(false);
-        cardStatArchived.PerformLayout();
-        cardStatCompleted.ResumeLayout(false);
-        cardStatCompleted.PerformLayout();
-        cardStatStudying.ResumeLayout(false);
-        cardStatStudying.PerformLayout();
-        cardStatTotal.ResumeLayout(false);
-        cardStatTotal.PerformLayout();
         cardStudentList.ResumeLayout(false);
-        cardStudentList.PerformLayout();
+        pnlGridFooter.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvStudents).EndInit();
         pnlStudentFilterBar.ResumeLayout(false);
+        pnlStudentFilterBar.PerformLayout();
         ResumeLayout(false);
     }
 
@@ -453,28 +344,19 @@ partial class StudentManagementView
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
+    private ECMS.UI.Controls.AppButton btnViewArchived;
+    private ECMS.UI.Controls.AppButton btnImport;
     private ECMS.UI.Controls.AppButton btnExport;
     private ECMS.UI.Controls.AppButton btnAddStudent;
     private System.Windows.Forms.Panel pnlBody;
-
-    private ECMS.UI.Controls.AppCard cardStatTotal;
-    private System.Windows.Forms.Label lblStatTotalTitle;
-    private System.Windows.Forms.Label lblStatTotalValue;
-    private ECMS.UI.Controls.AppCard cardStatStudying;
-    private System.Windows.Forms.Label lblStatStudyingTitle;
-    private System.Windows.Forms.Label lblStatStudyingValue;
-    private ECMS.UI.Controls.AppCard cardStatCompleted;
-    private System.Windows.Forms.Label lblStatCompletedTitle;
-    private System.Windows.Forms.Label lblStatCompletedValue;
-    private ECMS.UI.Controls.AppCard cardStatArchived;
-    private System.Windows.Forms.Label lblStatArchivedTitle;
-    private System.Windows.Forms.Label lblStatArchivedValue;
 
     private ECMS.UI.Controls.AppCard cardStudentList;
     private System.Windows.Forms.Label lblStudentListTitle;
     private System.Windows.Forms.Panel pnlStudentFilterBar;
     private ECMS.UI.Controls.AppTextBox txtSearchStudent;
-    private ECMS.UI.Controls.AppComboBox cboStatusFilter;
+    private System.Windows.Forms.Label lblClassFilter;
     private ECMS.UI.Controls.AppComboBox cboClassFilter;
     private ECMS.UI.Controls.AppDataGrid dgvStudents;
+    private System.Windows.Forms.Panel pnlGridFooter;
+    private System.Windows.Forms.Label lblBottomSummary;
 }

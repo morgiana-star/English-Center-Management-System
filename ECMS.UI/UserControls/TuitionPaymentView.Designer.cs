@@ -37,16 +37,15 @@ partial class TuitionPaymentView
         btnExportDebt = new ECMS.UI.Controls.AppButton();
         btnCollectTuition = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
-        pnlTabs = new System.Windows.Forms.Panel();
-        btnTabHistory = new System.Windows.Forms.Button();
-        btnTabDebt = new System.Windows.Forms.Button();
-        btnTabProfiles = new System.Windows.Forms.Button();
         pnlFilter = new System.Windows.Forms.Panel();
         cboClassFilter = new System.Windows.Forms.ComboBox();
         cboStatusFilter = new System.Windows.Forms.ComboBox();
         txtSearch = new System.Windows.Forms.TextBox();
         lblSearch = new System.Windows.Forms.Label();
-        pnlBody = new System.Windows.Forms.Panel();
+        tabMain = new System.Windows.Forms.TabControl();
+        tpProfiles = new System.Windows.Forms.TabPage();
+        tpDebt = new System.Windows.Forms.TabPage();
+        tpHistory = new System.Windows.Forms.TabPage();
         cardProfiles = new ECMS.UI.Controls.AppCard();
         gridProfiles = new ECMS.UI.Controls.AppDataGrid();
         pnlProfileSummary = new System.Windows.Forms.Panel();
@@ -69,9 +68,11 @@ partial class TuitionPaymentView
         gridHistory = new ECMS.UI.Controls.AppDataGrid();
         lblHistoryTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
-        pnlTabs.SuspendLayout();
         pnlFilter.SuspendLayout();
-        pnlBody.SuspendLayout();
+        tabMain.SuspendLayout();
+        tpProfiles.SuspendLayout();
+        tpDebt.SuspendLayout();
+        tpHistory.SuspendLayout();
         cardProfiles.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)gridProfiles).BeginInit();
         pnlProfileSummary.SuspendLayout();
@@ -144,64 +145,6 @@ partial class TuitionPaymentView
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Học phí & Thanh toán";
         // 
-        // pnlTabs
-        // 
-        pnlTabs.BackColor = System.Drawing.Color.White;
-        pnlTabs.Controls.Add(btnTabHistory);
-        pnlTabs.Controls.Add(btnTabDebt);
-        pnlTabs.Controls.Add(btnTabProfiles);
-        pnlTabs.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlTabs.Location = new System.Drawing.Point(0, 75);
-        pnlTabs.Name = "pnlTabs";
-        pnlTabs.Padding = new System.Windows.Forms.Padding(24, 0, 24, 0);
-        pnlTabs.Size = new System.Drawing.Size(1200, 44);
-        pnlTabs.TabIndex = 1;
-        // 
-        // btnTabHistory
-        // 
-        btnTabHistory.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnTabHistory.Dock = System.Windows.Forms.DockStyle.Left;
-        btnTabHistory.FlatAppearance.BorderSize = 0;
-        btnTabHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabHistory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabHistory.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnTabHistory.Location = new System.Drawing.Point(344, 0);
-        btnTabHistory.Name = "btnTabHistory";
-        btnTabHistory.Size = new System.Drawing.Size(160, 44);
-        btnTabHistory.TabIndex = 2;
-        btnTabHistory.Text = "3. Lịch sử thu";
-        btnTabHistory.UseVisualStyleBackColor = true;
-        // 
-        // btnTabDebt
-        // 
-        btnTabDebt.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnTabDebt.Dock = System.Windows.Forms.DockStyle.Left;
-        btnTabDebt.FlatAppearance.BorderSize = 0;
-        btnTabDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabDebt.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnTabDebt.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnTabDebt.Location = new System.Drawing.Point(184, 0);
-        btnTabDebt.Name = "btnTabDebt";
-        btnTabDebt.Size = new System.Drawing.Size(160, 44);
-        btnTabDebt.TabIndex = 1;
-        btnTabDebt.Text = "2. Công nợ";
-        btnTabDebt.UseVisualStyleBackColor = true;
-        // 
-        // btnTabProfiles
-        // 
-        btnTabProfiles.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnTabProfiles.Dock = System.Windows.Forms.DockStyle.Left;
-        btnTabProfiles.FlatAppearance.BorderSize = 0;
-        btnTabProfiles.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnTabProfiles.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnTabProfiles.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        btnTabProfiles.Location = new System.Drawing.Point(24, 0);
-        btnTabProfiles.Name = "btnTabProfiles";
-        btnTabProfiles.Size = new System.Drawing.Size(160, 44);
-        btnTabProfiles.TabIndex = 0;
-        btnTabProfiles.Text = "1. Hồ sơ học phí";
-        btnTabProfiles.UseVisualStyleBackColor = true;
-        // 
         // pnlFilter
         // 
         pnlFilter.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
@@ -210,11 +153,11 @@ partial class TuitionPaymentView
         pnlFilter.Controls.Add(txtSearch);
         pnlFilter.Controls.Add(lblSearch);
         pnlFilter.Dock = System.Windows.Forms.DockStyle.Top;
-        pnlFilter.Location = new System.Drawing.Point(0, 119);
+        pnlFilter.Location = new System.Drawing.Point(0, 75);
         pnlFilter.Name = "pnlFilter";
         pnlFilter.Padding = new System.Windows.Forms.Padding(24, 8, 24, 8);
         pnlFilter.Size = new System.Drawing.Size(1200, 50);
-        pnlFilter.TabIndex = 2;
+        pnlFilter.TabIndex = 1;
         // 
         // cboClassFilter
         // 
@@ -258,18 +201,52 @@ partial class TuitionPaymentView
         lblSearch.TabIndex = 0;
         lblSearch.Text = "Tìm kiếm:";
         // 
-        // pnlBody
+        // tabMain
         // 
-        pnlBody.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        pnlBody.Controls.Add(cardProfiles);
-        pnlBody.Controls.Add(cardDebt);
-        pnlBody.Controls.Add(cardHistory);
-        pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 169);
-        pnlBody.Name = "pnlBody";
-        pnlBody.Padding = new System.Windows.Forms.Padding(24, 14, 24, 18);
-        pnlBody.Size = new System.Drawing.Size(1200, 631);
-        pnlBody.TabIndex = 3;
+        tabMain.Controls.Add(tpProfiles);
+        tabMain.Controls.Add(tpDebt);
+        tabMain.Controls.Add(tpHistory);
+        tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
+        tabMain.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        tabMain.Location = new System.Drawing.Point(0, 125);
+        tabMain.Name = "tabMain";
+        tabMain.Padding = new System.Drawing.Point(16, 6);
+        tabMain.SelectedIndex = 0;
+        tabMain.Size = new System.Drawing.Size(1200, 675);
+        tabMain.TabIndex = 2;
+        // 
+        // tpProfiles
+        // 
+        tpProfiles.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        tpProfiles.Controls.Add(cardProfiles);
+        tpProfiles.Location = new System.Drawing.Point(4, 30);
+        tpProfiles.Name = "tpProfiles";
+        tpProfiles.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
+        tpProfiles.Size = new System.Drawing.Size(1192, 641);
+        tpProfiles.TabIndex = 0;
+        tpProfiles.Text = "Hồ sơ học phí";
+        // 
+        // tpDebt
+        // 
+        tpDebt.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        tpDebt.Controls.Add(cardDebt);
+        tpDebt.Location = new System.Drawing.Point(4, 30);
+        tpDebt.Name = "tpDebt";
+        tpDebt.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
+        tpDebt.Size = new System.Drawing.Size(1192, 641);
+        tpDebt.TabIndex = 1;
+        tpDebt.Text = "Công nợ";
+        // 
+        // tpHistory
+        // 
+        tpHistory.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        tpHistory.Controls.Add(cardHistory);
+        tpHistory.Location = new System.Drawing.Point(4, 30);
+        tpHistory.Name = "tpHistory";
+        tpHistory.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
+        tpHistory.Size = new System.Drawing.Size(1192, 641);
+        tpHistory.TabIndex = 2;
+        tpHistory.Text = "Lịch sử thu";
         // 
         // cardProfiles
         // 
@@ -497,7 +474,6 @@ partial class TuitionPaymentView
         cardDebt.Padding = new System.Windows.Forms.Padding(16);
         cardDebt.Size = new System.Drawing.Size(1152, 599);
         cardDebt.TabIndex = 1;
-        cardDebt.Visible = false;
         // 
         // lblDebtorsFooter
         // 
@@ -591,7 +567,6 @@ partial class TuitionPaymentView
         cardHistory.Padding = new System.Windows.Forms.Padding(16);
         cardHistory.Size = new System.Drawing.Size(1152, 599);
         cardHistory.TabIndex = 2;
-        cardHistory.Visible = false;
         // 
         // lblHistoryFooter
         // 
@@ -675,18 +650,19 @@ partial class TuitionPaymentView
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        Controls.Add(pnlBody);
+        Controls.Add(tabMain);
         Controls.Add(pnlFilter);
-        Controls.Add(pnlTabs);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
         Size = new System.Drawing.Size(1200, 800);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
-        pnlTabs.ResumeLayout(false);
         pnlFilter.ResumeLayout(false);
         pnlFilter.PerformLayout();
-        pnlBody.ResumeLayout(false);
+        tabMain.ResumeLayout(false);
+        tpProfiles.ResumeLayout(false);
+        tpDebt.ResumeLayout(false);
+        tpHistory.ResumeLayout(false);
         cardProfiles.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)gridProfiles).EndInit();
         pnlProfileSummary.ResumeLayout(false);
@@ -706,16 +682,15 @@ partial class TuitionPaymentView
     private System.Windows.Forms.Label lblTitle;
     private ECMS.UI.Controls.AppButton btnCollectTuition;
     private ECMS.UI.Controls.AppButton btnExportDebt;
-    private System.Windows.Forms.Panel pnlTabs;
-    private System.Windows.Forms.Button btnTabProfiles;
-    private System.Windows.Forms.Button btnTabDebt;
-    private System.Windows.Forms.Button btnTabHistory;
     private System.Windows.Forms.Panel pnlFilter;
     private System.Windows.Forms.Label lblSearch;
     private System.Windows.Forms.TextBox txtSearch;
     private System.Windows.Forms.ComboBox cboStatusFilter;
     private System.Windows.Forms.ComboBox cboClassFilter;
-    private System.Windows.Forms.Panel pnlBody;
+    private System.Windows.Forms.TabControl tabMain;
+    private System.Windows.Forms.TabPage tpProfiles;
+    private System.Windows.Forms.TabPage tpDebt;
+    private System.Windows.Forms.TabPage tpHistory;
     private ECMS.UI.Controls.AppCard cardProfiles;
     private System.Windows.Forms.Label lblProfilesTitle;
     private ECMS.UI.Controls.AppDataGrid gridProfiles;

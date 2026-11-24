@@ -1,11 +1,15 @@
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
 
 namespace ECMS.UI.Forms;
 
 public partial class TuitionDetailDialog : Form
 {
+    private readonly IFinanceService _financeService = new FinanceService();
     private readonly string _studentCode = string.Empty;
     private readonly string _studentName = string.Empty;
     private readonly string _className = string.Empty;
@@ -17,7 +21,7 @@ public partial class TuitionDetailDialog : Form
     private readonly decimal _remaining;
     private readonly string _status = string.Empty;
 
-    public TuitionDetailDialog() : this("HV-0241", "Nguyễn Minh Anh", "IELTS-F01", "IELTS Foundation", 6000000, 600000, 5400000, 2000000, 3400000, "Đang nợ (Đợt 2)")
+    public TuitionDetailDialog() : this("HV-0241", "Nguyễn Minh Anh", "IELTS-F01", "IELTS Foundation", 6000000, 600000, 5400000, 2000000, 3400000, "Đang nợ")
     {
     }
 
@@ -50,35 +54,26 @@ public partial class TuitionDetailDialog : Form
 
         SetupView();
         SetupGrid();
-        LoadInstallments();
         WireEvents();
+        _ = LoadInstallmentsFromDbAsync();
     }
 
     private void SetupView()
     {
-        lblTitle.Text = $"Chi tiết học phí · {_studentName} ({_studentCode})";
-        lblStudentVal.Text = $"{_studentName}  ·  Mã HV: {_studentCode}";
-        lblClassVal.Text = $"{_courseName} · Lớp {_className}";
+        lblTitle.Text = $"Chi tiết học phí - {_studentName} ({_studentCode})";
+        lblStudentVal.Text = $"{_studentName}  |  Mã HV: {_studentCode}";
+        lblClassVal.Text = $"Lớp {_className}";
         lblOriginalVal.Text = $"{_originalFee:N0} đ";
-        lblDiscountVal.Text = _discount > 0 ? $"-{_discount:N0} đ (Khuyến mãi/Học bổng)" : "0 đ";
+        lblDiscountVal.Text = _discount > 0 ? $"-{_discount:N0} đ" : "0 đ";
         lblTotalVal.Text = $"{_totalFee:N0} đ";
         lblPaidVal.Text = $"{_paid:N0} đ";
         lblRemainingVal.Text = $"{_remaining:N0} đ";
+        lblRemainingVal.ForeColor = _remaining <= 0
+            ? Color.FromArgb(22, 163, 74)
+            : Color.FromArgb(220, 38, 38);
 
-        if (_remaining <= 0)
-        {
-            lblRemainingVal.ForeColor = Color.FromArgb(22, 163, 74);
-            btnCollectNow.Enabled = false;
-            btnCollectNow.Text = "✓ Đã tất toán";
-            btnCollectNow.BackColor = Color.FromArgb(241, 245, 249);
-            btnCollectNow.ForeColor = Color.FromArgb(148, 163, 184);
-        }
-        else
-        {
-            lblRemainingVal.ForeColor = Color.FromArgb(220, 38, 38);
-            btnCollectNow.Enabled = true;
-            btnCollectNow.Text = "💵 Thu học phí";
-        }
+        // Bỏ nút Thu học phí trong hộp thoại Xem chi tiết (thu phí thực hiện ở Tab Công nợ)
+        btnCollectNow.Visible = false;
     }
 
     private void SetupGrid()
@@ -96,22 +91,22 @@ public partial class TuitionDetailDialog : Form
         {
             Name = "colBatch",
             HeaderText = "Đợt thu",
-            Width = 90
+            FillWeight = 14
         });
 
         dgvInstallments.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colAmount",
             HeaderText = "Số tiền",
-            Width = 120,
+            FillWeight = 18,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleRight, Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
         });
 
         dgvInstallments.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colDueDate",
-            HeaderText = "Hạn nộp",
-            Width = 100,
+            Name = "colMethod",
+            HeaderText = "Phương thức",
+            FillWeight = 16,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
 
@@ -119,7 +114,7 @@ public partial class TuitionDetailDialog : Form
         {
             Name = "colPaidDate",
             HeaderText = "Ngày đóng",
-            Width = 100,
+            FillWeight = 15,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
 
@@ -127,7 +122,7 @@ public partial class TuitionDetailDialog : Form
         {
             Name = "colReceipt",
             HeaderText = "Mã phiếu thu",
-            Width = 130,
+            FillWeight = 19,
             DefaultCellStyle = new DataGridViewCellStyle { Font = new Font("Consolas", 9f, FontStyle.Bold), ForeColor = Color.FromArgb(37, 99, 235) }
         });
 
@@ -135,7 +130,7 @@ public partial class TuitionDetailDialog : Form
         {
             Name = "colStatus",
             HeaderText = "Trạng thái",
-            Width = 140,
+            FillWeight = 18,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
         });
 
@@ -148,7 +143,7 @@ public partial class TuitionDetailDialog : Form
 
             if (colName == "colStatus")
             {
-                if (val.Contains("✓"))
+                if (val.Contains("Đã thanh toán"))
                 {
                     e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
                     e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
@@ -162,50 +157,55 @@ public partial class TuitionDetailDialog : Form
         };
     }
 
-    private void LoadInstallments()
+    private async Task LoadInstallmentsFromDbAsync()
     {
         dgvInstallments.Rows.Clear();
 
-        if (_paid > 0)
+        try
         {
-            dgvInstallments.Rows.Add(
-                "Đợt 1",
-                $"{_paid:N0} đ",
-                "01/10/2026",
-                "02/10/2026",
-                "PT-261002-006",
-                "✓ Đã thanh toán"
-            );
+            var receipts = (await _financeService.GetPaymentReceiptsAsync(_studentCode))
+                .Where(r => r.StudentCode.Equals(_studentCode, StringComparison.OrdinalIgnoreCase))
+                .Reverse()
+                .ToList();
+
+            int batch = 1;
+            foreach (var r in receipts)
+            {
+                dgvInstallments.Rows.Add(
+                    $"Đợt {batch++}",
+                    $"{r.Amount:N0} đ",
+                    r.Method,
+                    r.Date,
+                    r.ReceiptCode,
+                    "Đã thanh toán"
+                );
+            }
+
+            if (_remaining > 0)
+            {
+                dgvInstallments.Rows.Add(
+                    batch > 1 ? $"Đợt {batch} (Còn lại)" : "Toàn phần",
+                    $"{_remaining:N0} đ",
+                    "-",
+                    "-",
+                    "Chưa lập phiếu",
+                    "Chưa thanh toán"
+                );
+            }
+        }
+        catch
+        {
+            if (_remaining > 0)
+            {
+                dgvInstallments.Rows.Add("Còn lại", $"{_remaining:N0} đ", "-", "-", "Chưa lập phiếu", "Chưa thanh toán");
+            }
         }
 
-        if (_remaining > 0)
-        {
-            dgvInstallments.Rows.Add(
-                _paid > 0 ? "Đợt 2" : "Toàn phần",
-                $"{_remaining:N0} đ",
-                "15/11/2026",
-                "--",
-                "Chưa lập phiếu",
-                "⚠️ Quá hạn thanh toán"
-            );
-        }
+        dgvInstallments.ClearSelection();
     }
 
     private void WireEvents()
     {
-        
         btnCancel.Click += (s, e) => Close();
-
-        btnCollectNow.Click += (s, e) =>
-        {
-            if (_remaining <= 0) return;
-
-            using var dlg = new CollectTuitionDialog(_studentName, _className, _remaining);
-            if (dlg.ShowDialog(this) == DialogResult.OK)
-            {
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-        };
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
@@ -9,7 +8,7 @@ using ECMS.UI.Controls;
 namespace ECMS.UI.Forms;
 
 /// <summary>
-/// Hộp thoại xem chi tiết hồ sơ học viên 360°
+/// Hộp thoại xem chi tiết hồ sơ học viên
 /// </summary>
 public partial class StudentDetailDialog : Form
 {
@@ -47,50 +46,84 @@ public partial class StudentDetailDialog : Form
 
     private void SetupNavigation()
     {
-        btnTabOverview.Click += (s, e) => SwitchTab(0);
-        btnTabLearningPath.Click += (s, e) => SwitchTab(1);
+        tabMain.SelectedIndexChanged += (s, e) =>
+        {
+            if (tabMain.SelectedTab == tpLearningPath)
+            {
+                dgvLearningPath.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvLearningPath.PerformLayout();
+                dgvLearningPath.Invalidate();
+            }
+        };
 
-        // Lưu trữ hồ sơ
+        // Xóa học viên (kiểm tra điều kiện ràng buộc)
+        btnDelete.Click += async (s, e) =>
+        {
+            int targetId = _detail?.StudentId ?? _studentId;
+            if (targetId <= 0)
+            {
+                AppDialog.ShowWarning(this, "Thông báo", "Không xác định được mã học viên cần xóa.");
+                return;
+            }
+
+            if (AppDialog.ShowConfirm(
+                this,
+                "Xác nhận xóa học viên",
+                $"Bạn có chắc chắn muốn xóa vĩnh viễn hồ sơ học viên {_studentName} ({_studentCode}) không?\n\nLưu ý: Chỉ xóa được học viên chưa phát sinh phiếu thu, điểm danh, điểm thi hoặc chứng chỉ.",
+                "Xóa học viên",
+                "Hủy") != DialogResult.OK)
+            {
+                return;
+            }
+
+            var res = await _studentService.DeleteStudentAsync(targetId);
+            if (res.Success)
+            {
+                AppDialog.ShowSuccess(this, "Thành công", res.Message);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                AppDialog.ShowWarning(this, "Không thể xóa học viên", res.Message);
+            }
+        };
+
+        // Lưu trữ hồ sơ (kiểm tra công nợ trước khi xác nhận)
         btnArchive.Click += async (s, e) =>
         {
-            var confirm = MessageBox.Show(
-                $"Bạn có chắc chắn muốn lưu trữ/bảo lưu hồ sơ của học viên {_studentName} ({_studentCode}) không?",
-                "Xác nhận lưu trữ",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
+            int targetId = _detail?.StudentId ?? _studentId;
+            decimal debt = targetId > 0 ? await _studentService.GetStudentOutstandingDebtAsync(targetId) : 0m;
 
-            if (confirm == DialogResult.Yes)
+            string confirmMsg = debt > 0
+                ? $"CẢNH BÁO CÔNG NỢ: Học viên {_studentName} ({_studentCode}) hiện còn nợ học phí {debt:N0} đ.\n\nNếu lưu trữ, hồ sơ sẽ chuyển sang trạng thái Bảo lưu và giải phóng chỗ khỏi lớp hiện tại (công nợ vẫn được giữ lại để đối soát).\n\nBạn có chắc chắn vẫn muốn lưu trữ hồ sơ này không?"
+                : $"Bạn có chắc chắn muốn lưu trữ/bảo lưu hồ sơ của học viên {_studentName} ({_studentCode}) không?\nSĩ số lớp hiện tại của học viên sẽ được giải phóng.";
+
+            if (AppDialog.ShowConfirm(this, "Xác nhận lưu trữ hồ sơ", confirmMsg, "Lưu trữ", "Hủy") != DialogResult.OK)
+                return;
+
+            if (targetId > 0)
             {
-                int targetId = _detail?.StudentId ?? _studentId;
-                if (targetId > 0)
+                var res = await _studentService.ArchiveStudentAsync(new ArchiveStudentDto
                 {
-                    var res = await _studentService.ArchiveStudentAsync(new ArchiveStudentDto
-                    {
-                        StudentId = targetId,
-                        Reason = "Bảo lưu theo yêu cầu",
-                        Notes = "Thao tác từ màn hình hồ sơ chi tiết 360°"
-                    });
-                    if (res.Success)
-                    {
-                        AppDialog.ShowSuccess(this, "Thành công", res.Message);
-                        DialogResult = DialogResult.OK;
-                        Close();
-                    }
-                    else
-                    {
-                        AppDialog.ShowWarning(this, "Thông báo", res.Message);
-                    }
+                    StudentId = targetId,
+                    Reason = "Bảo lưu theo yêu cầu",
+                    Notes = debt > 0 ? $"Lưu trữ khi còn công nợ {debt:N0} đ" : "Thao tác từ màn hình hồ sơ chi tiết"
+                });
+                if (res.Success)
+                {
+                    AppDialog.ShowSuccess(this, "Thành công", res.Message);
+                    DialogResult = DialogResult.OK;
+                    Close();
                 }
                 else
                 {
-                    AppDialog.ShowInfo(this, "Lưu trữ", $"Hồ sơ học viên {_studentName} đã được chuyển sang trạng thái Bảo lưu.");
-                    DialogResult = DialogResult.OK;
-                    Close();
+                    AppDialog.ShowWarning(this, "Thông báo", res.Message);
                 }
             }
         };
 
-        // Sửa hồ sơ (Nạp dữ liệu thật từ _detail và lưu thật vào SQLite)
+        // Sửa hồ sơ
         btnEditProfile.Click += async (s, e) =>
         {
             using var editDlg = _detail != null
@@ -100,7 +133,7 @@ public partial class StudentDetailDialog : Form
             if (editDlg.ShowDialog(this) == DialogResult.OK)
             {
                 await LoadStudentDataAsync();
-                AppDialog.ShowSuccess(this, "Thành công", "Đã cập nhật hồ sơ học viên vào cơ sở dữ liệu SQLite thành công!");
+                AppDialog.ShowSuccess(this, "Thành công", "Đã cập nhật hồ sơ học viên thành công.");
                 DialogResult = DialogResult.OK;
             }
         };
@@ -155,14 +188,14 @@ public partial class StudentDetailDialog : Form
         lblRoomVal.Text = d.RoomName;
 
         lblAttCountVal.Text = d.ProgressDisplay;
-        lblAttPresent.Text = $"✓ Có mặt:  {d.PresentCount}";
-        lblAttLate.Text = $"⏱ Đi muộn:  {d.LateCount}";
-        lblAttAbsent.Text = $"✕ Vắng:     {d.AbsentCount} (có phép)";
+        lblAttPresent.Text = $"Có mặt: {d.PresentCount}";
+        lblAttLate.Text = $"Đi muộn: {d.LateCount}";
+        lblAttAbsent.Text = $"Vắng: {d.AbsentCount}";
 
-        lblGradeEntry.Text = $"Đầu vào:      {d.EntranceScore}";
+        lblGradeEntry.Text = $"Đầu vào: {d.EntranceScore}";
         lblGradeRegular.Text = $"Thường xuyên: {d.RegularScore}";
-        lblGradeMid.Text = $"Giữa khóa:    {d.MidtermScore}";
-        lblGradeFinal.Text = $"Cuối khóa:    {d.FinalScore}";
+        lblGradeMid.Text = $"Giữa khóa: {d.MidtermScore}";
+        lblGradeFinal.Text = $"Cuối khóa: {d.FinalScore}";
 
         // Tab 2 Lịch sử khóa học
         dgvLearningPath.Rows.Clear();
@@ -180,37 +213,6 @@ public partial class StudentDetailDialog : Form
         }
         dgvLearningPath.ClearSelection();
         dgvLearningPath.CurrentCell = null;
-    }
-
-    private void SwitchTab(int index)
-    {
-        Color activeColor = Color.FromArgb(37, 99, 235);
-        Color inactiveColor = Color.FromArgb(100, 116, 139);
-        var activeFont = new Font("Segoe UI", 9.5f, FontStyle.Bold);
-        var inactiveFont = new Font("Segoe UI", 9.5f, FontStyle.Regular);
-
-        btnTabOverview.ForeColor = index == 0 ? activeColor : inactiveColor;
-        btnTabOverview.Font = index == 0 ? activeFont : inactiveFont;
-
-        btnTabLearningPath.ForeColor = index == 1 ? activeColor : inactiveColor;
-        btnTabLearningPath.Font = index == 1 ? activeFont : inactiveFont;
-
-        pnlOverview.Visible = (index == 0);
-        pnlLearningPath.Visible = (index == 1);
-
-        if (index == 1)
-        {
-            pnlLearningPath.Dock = DockStyle.Fill;
-            pnlLearningPath.BringToFront();
-            dgvLearningPath.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvLearningPath.PerformLayout();
-            dgvLearningPath.Invalidate();
-        }
-        else
-        {
-            pnlOverview.Dock = DockStyle.Fill;
-            pnlOverview.BringToFront();
-        }
     }
 
     protected override void OnShown(EventArgs e)

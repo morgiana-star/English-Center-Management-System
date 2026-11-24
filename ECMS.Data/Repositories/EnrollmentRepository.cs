@@ -20,11 +20,11 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
         if (count == 0)
         {
             await conn.ExecuteAsync(@"
-                INSERT INTO FeeDiscounts (DiscountId, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive)
+                INSERT INTO FeeDiscounts (DiscountId, DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive)
                 VALUES 
-                (1, 'Học viên cũ của trung tâm', 10, 0, 'Áp dụng giảm 10% học phí tri ân học viên đã từng học tại ECMS', 0, 1),
-                (2, 'Đăng ký theo nhóm (>= 2 người)', 15, 0, 'Giảm 15% học phí khi đăng ký theo nhóm bạn bè / gia đình', 1, 1),
-                (3, 'Ưu đãi đăng ký sớm (Early Bird)', 0, 500000, 'Giảm trực tiếp 500,000 VNĐ khi đăng ký trước ngày khai giảng', 0, 1);
+                (1, 'HVCU10', 'Học viên cũ của trung tâm', 10, 0, 'Áp dụng giảm 10% học phí tri ân học viên đã từng học tại ECMS', 0, 1),
+                (2, 'NHOM15', 'Đăng ký theo nhóm (>= 2 người)', 15, 0, 'Giảm 15% học phí khi đăng ký theo nhóm bạn bè / gia đình', 1, 1),
+                (3, 'EARLY500', 'Ưu đãi đăng ký sớm (Early Bird)', 0, 500000, 'Giảm trực tiếp 500,000 VNĐ khi đăng ký trước ngày khai giảng', 0, 1);
             ");
         }
     }
@@ -85,10 +85,21 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
         await EnsureDiscountSeedDataAsync();
         using var conn = CreateConnection();
         const string sql = @"
-            SELECT DiscountId, DiscountName, Percentage, FixedAmount, Description, RequiresApproval
+            SELECT DiscountId, COALESCE(DiscountCode, '') AS DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive
             FROM FeeDiscounts
             WHERE IsActive = 1
             ORDER BY DiscountId ASC;";
+        return await conn.QueryAsync<FeeDiscountDto>(sql);
+    }
+
+    public async Task<IEnumerable<FeeDiscountDto>> GetAllDiscountsAsync()
+    {
+        await EnsureDiscountSeedDataAsync();
+        using var conn = CreateConnection();
+        const string sql = @"
+            SELECT DiscountId, COALESCE(DiscountCode, '') AS DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive
+            FROM FeeDiscounts
+            ORDER BY DiscountId DESC;";
         return await conn.QueryAsync<FeeDiscountDto>(sql);
     }
 
@@ -97,10 +108,101 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
         await EnsureDiscountSeedDataAsync();
         using var conn = CreateConnection();
         const string sql = @"
-            SELECT DiscountId, DiscountName, Percentage, FixedAmount, Description, RequiresApproval
+            SELECT DiscountId, COALESCE(DiscountCode, '') AS DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive
             FROM FeeDiscounts
             WHERE DiscountId = @DiscountId AND IsActive = 1;";
         return await conn.QuerySingleOrDefaultAsync<FeeDiscountDto>(sql, new { DiscountId = discountId });
+    }
+
+    public async Task<FeeDiscountDto?> GetDiscountByCodeAsync(string discountCode)
+    {
+        await EnsureDiscountSeedDataAsync();
+        if (string.IsNullOrWhiteSpace(discountCode)) return null;
+        using var conn = CreateConnection();
+        const string sql = @"
+            SELECT DiscountId, COALESCE(DiscountCode, '') AS DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive
+            FROM FeeDiscounts
+            WHERE UPPER(TRIM(COALESCE(DiscountCode, ''))) = UPPER(TRIM(@Code)) AND IsActive = 1
+            LIMIT 1;";
+        return await conn.QuerySingleOrDefaultAsync<FeeDiscountDto>(sql, new { Code = discountCode.Trim() });
+    }
+
+    public async Task<(bool Success, string Message)> CreateDiscountAsync(FeeDiscountDto dto)
+    {
+        using var conn = CreateConnection();
+        string code = (dto.DiscountCode ?? "").Trim().ToUpperInvariant();
+        if (string.IsNullOrWhiteSpace(code))
+            return (false, "Mã giảm giá không được để trống.");
+
+        int dup = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM FeeDiscounts WHERE UPPER(TRIM(COALESCE(DiscountCode, ''))) = @Code;",
+            new { Code = code });
+        if (dup > 0)
+            return (false, $"Mã giảm giá '{code}' đã tồn tại trong hệ thống.");
+
+        await conn.ExecuteAsync(@"
+            INSERT INTO FeeDiscounts (DiscountCode, DiscountName, Percentage, FixedAmount, Description, RequiresApproval, IsActive, CreatedAt)
+            VALUES (@Code, @DiscountName, @Percentage, @FixedAmount, @Description, @RequiresApproval, @IsActive, CURRENT_TIMESTAMP);",
+            new
+            {
+                Code = code,
+                DiscountName = dto.DiscountName.Trim(),
+                dto.Percentage,
+                dto.FixedAmount,
+                Description = dto.Description?.Trim() ?? "",
+                RequiresApproval = dto.RequiresApproval ? 1 : 0,
+                IsActive = dto.IsActive ? 1 : 0
+            });
+        return (true, $"Đã tạo mã giảm giá '{code}' thành công.");
+    }
+
+    public async Task<(bool Success, string Message)> UpdateDiscountAsync(FeeDiscountDto dto)
+    {
+        using var conn = CreateConnection();
+        string code = (dto.DiscountCode ?? "").Trim().ToUpperInvariant();
+        if (string.IsNullOrWhiteSpace(code))
+            return (false, "Mã giảm giá không được để trống.");
+
+        int dup = await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM FeeDiscounts WHERE UPPER(TRIM(COALESCE(DiscountCode, ''))) = @Code AND DiscountId != @Id;",
+            new { Code = code, Id = dto.DiscountId });
+        if (dup > 0)
+            return (false, $"Mã giảm giá '{code}' đã được sử dụng bởi chương trình ưu đãi khác.");
+
+        int rows = await conn.ExecuteAsync(@"
+            UPDATE FeeDiscounts SET
+                DiscountCode = @Code,
+                DiscountName = @DiscountName,
+                Percentage = @Percentage,
+                FixedAmount = @FixedAmount,
+                Description = @Description,
+                RequiresApproval = @RequiresApproval,
+                IsActive = @IsActive,
+                UpdatedAt = CURRENT_TIMESTAMP
+            WHERE DiscountId = @DiscountId;",
+            new
+            {
+                Code = code,
+                DiscountName = dto.DiscountName.Trim(),
+                dto.Percentage,
+                dto.FixedAmount,
+                Description = dto.Description?.Trim() ?? "",
+                RequiresApproval = dto.RequiresApproval ? 1 : 0,
+                IsActive = dto.IsActive ? 1 : 0,
+                dto.DiscountId
+            });
+        return rows > 0
+            ? (true, $"Đã cập nhật mã giảm giá '{code}' thành công.")
+            : (false, "Không tìm thấy mã giảm giá cần cập nhật.");
+    }
+
+    public async Task<(bool Success, string Message)> DeleteDiscountAsync(int discountId)
+    {
+        using var conn = CreateConnection();
+        int rows = await conn.ExecuteAsync("DELETE FROM FeeDiscounts WHERE DiscountId = @Id;", new { Id = discountId });
+        return rows > 0
+            ? (true, "Đã xóa mã giảm giá thành công.")
+            : (false, "Không tìm thấy mã giảm giá cần xóa.");
     }
 
     public async Task<bool> IsExistingStudentByPhoneAsync(string phone)
@@ -120,9 +222,8 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
     public async Task<string> GenerateNextStudentCodeAsync()
     {
         using var conn = CreateConnection();
-        string yearPrefix = $"HV-{DateTime.Now.Year}-";
-        const string sql = "SELECT StudentCode FROM Students WHERE StudentCode LIKE @Pattern ORDER BY StudentId DESC LIMIT 1;";
-        string? latestCode = await conn.ExecuteScalarAsync<string>(sql, new { Pattern = yearPrefix + "%" });
+        const string sql = "SELECT StudentCode FROM Students WHERE StudentCode LIKE 'HV-%' ORDER BY StudentId DESC LIMIT 1;";
+        string? latestCode = await conn.ExecuteScalarAsync<string>(sql);
 
         int nextNumber = 1;
         if (!string.IsNullOrWhiteSpace(latestCode) && latestCode.Contains('-'))
@@ -134,7 +235,7 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
             }
         }
 
-        return $"{yearPrefix}{nextNumber:D4}";
+        return $"HV-{nextNumber:D4}";
     }
 
     public async Task<string> GenerateNextInvoiceCodeAsync()
@@ -340,25 +441,32 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
             }
             if (classId <= 0) classId = 1;
 
-            // 5. Insert bảng Enrollments
+            // 5. Insert bảng Enrollments (AttendanceRate = NULL để không mặc định 100%)
+            string enrollmentStatus = dto.PayNow && dto.AmountPaidNow > 0 ? "Active" : "PendingPayment";
             const string insertEnrollmentSql = @"
                 INSERT INTO Enrollments (StudentId, ClassId, EnrollDate, Status, AttendanceRate, CreatedAt)
-                VALUES (@StudentId, @ClassId, CURRENT_TIMESTAMP, 'Active', 100.0, CURRENT_TIMESTAMP);
+                VALUES (@StudentId, @ClassId, CURRENT_TIMESTAMP, @EnrollStatus, NULL, CURRENT_TIMESTAMP);
                 SELECT last_insert_rowid();";
 
             int enrollmentId = await conn.ExecuteScalarAsync<int>(insertEnrollmentSql, new
             {
                 StudentId = studentId,
-                ClassId = classId
+                ClassId = classId,
+                EnrollStatus = enrollmentStatus
             }, tran);
 
-            // 6. Insert bảng Invoices
-            string dueDate = dto.RemainingDebt <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
-            string invoiceStatus = dto.RemainingDebt <= 0 ? "Paid" : "PartiallyPaid";
+            // 6. Insert bảng Invoices (hỗ trợ DiscountAmount và trường hợp chưa thu phí)
+            decimal discountAmount = Math.Max(0, dto.DiscountAmount);
+            decimal finalAmount = Math.Max(0, dto.TotalTuitionFee - discountAmount);
+            decimal paidNow = dto.PayNow ? Math.Max(0, dto.AmountPaidNow) : 0m;
+            decimal balanceDue = Math.Max(0, finalAmount - paidNow);
+
+            string dueDate = balanceDue <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
+            string invoiceStatus = balanceDue <= 0 ? "Paid" : (paidNow > 0 ? "PartiallyPaid" : "Unpaid");
 
             const string insertInvoiceSql = @"
                 INSERT INTO Invoices (InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status, CreatedAt)
-                VALUES (@InvoiceCode, @EnrollmentId, @OriginalAmount, 0, @FinalAmount, @BalanceDue, @DueDate, @Status, CURRENT_TIMESTAMP);
+                VALUES (@InvoiceCode, @EnrollmentId, @OriginalAmount, @DiscountAmount, @FinalAmount, @BalanceDue, @DueDate, @Status, CURRENT_TIMESTAMP);
                 SELECT last_insert_rowid();";
 
             int invoiceId = await conn.ExecuteScalarAsync<int>(insertInvoiceSql, new
@@ -366,14 +474,15 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
                 InvoiceCode = invoiceCode,
                 EnrollmentId = enrollmentId,
                 OriginalAmount = dto.TotalTuitionFee,
-                FinalAmount = dto.TotalTuitionFee,
-                BalanceDue = dto.RemainingDebt,
+                DiscountAmount = discountAmount,
+                FinalAmount = finalAmount,
+                BalanceDue = balanceDue,
                 DueDate = dueDate,
                 Status = invoiceStatus
             }, tran);
 
-            // 7. Insert bảng Payments (Phiếu thu đợt 1)
-            if (dto.AmountPaidNow > 0)
+            // 7. Insert bảng Payments (Chỉ tạo khi PayNow = true và AmountPaidNow > 0)
+            if (dto.PayNow && paidNow > 0)
             {
                 const string insertPaymentSql = @"
                     INSERT INTO Payments (PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note, CreatedAt)
@@ -391,7 +500,7 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
                 {
                     PaymentCode = receiptCode,
                     InvoiceId = invoiceId,
-                    PaidAmount = dto.AmountPaidNow,
+                    PaidAmount = paidNow,
                     PaymentMethod = normalizedMethod,
                     CashierId = dto.CashierId > 0 ? dto.CashierId : 1,
                     Note = !string.IsNullOrWhiteSpace(dto.PaymentNote) ? dto.PaymentNote : $"Thu học phí đợt 1 - {dto.FullName} ({studentCode})"
@@ -399,7 +508,10 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
             }
 
             tran.Commit();
-            return (true, "Ghi danh & Lập phiếu thu thành công!", studentId, studentCode, invoiceCode, receiptCode);
+            string successMsg = dto.PayNow && paidNow > 0
+                ? "Ghi danh và lập phiếu thu thành công."
+                : "Đã thêm học viên vào lớp (Chưa thu học phí).";
+            return (true, successMsg, studentId, studentCode, invoiceCode, dto.PayNow && paidNow > 0 ? receiptCode : string.Empty);
         }
         catch (Exception ex)
         {

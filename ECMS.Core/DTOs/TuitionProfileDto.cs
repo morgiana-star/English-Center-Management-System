@@ -16,4 +16,5 @@ public class TuitionProfileDto
     public string DueDate { get; set; } = string.Empty;
     public string PaymentStatus { get; set; } = string.Empty;
     public string DebtStatus { get; set; } = string.Empty;
+    public int PaidInstallmentCount { get; set; }
 }

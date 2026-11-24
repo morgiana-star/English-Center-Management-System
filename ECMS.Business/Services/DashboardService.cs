@@ -32,8 +32,14 @@ public class DashboardService : IDashboardService
     public Task<IEnumerable<TodayScheduleItemDto>> GetTodayAndUpcomingSchedulesAsync()
         => _dashboardRepo.GetTodayAndUpcomingSchedulesAsync();
 
+    public Task<IEnumerable<TodayScheduleItemDto>> GetTodaySchedulesAsync()
+        => _dashboardRepo.GetTodaySchedulesAsync();
+
     public Task<IEnumerable<PendingTaskItemDto>> GetPendingTasksAsync()
         => _dashboardRepo.GetPendingTasksAsync();
+
+    public Task<IEnumerable<OverdueDebtAlertItemDto>> GetOverdueDebtAlertsAsync()
+        => _dashboardRepo.GetOverdueDebtAlertsAsync();
 
     public Task<bool> UpdatePendingTaskStatusAsync(int studentId, string newStatus)
         => _dashboardRepo.UpdatePendingTaskStatusAsync(studentId, newStatus);
@@ -43,4 +49,7 @@ public class DashboardService : IDashboardService
 
     public Task<IEnumerable<DashboardQuickSearchResultDto>> QuickSearchListAsync(string keyword)
         => _dashboardRepo.QuickSearchListAsync(keyword);
+
+    public Task<DashboardCategorizedSearchDto> QuickSearchCategorizedAsync(string keyword)
+        => _dashboardRepo.QuickSearchCategorizedAsync(keyword);
 }

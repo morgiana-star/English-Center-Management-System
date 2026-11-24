@@ -1,7 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
 using ECMS.Core.Entities;
+using ECMS.Core.Helpers;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
@@ -11,61 +13,69 @@ public partial class CourseEditDialog : Form
     private readonly ICourseService _courseService = new CourseService();
     private readonly bool _isEditMode;
     private readonly string? _courseCode;
+    private Course? _editingCourse;
 
     public CourseEditDialog(string? courseCode = null)
     {
         InitializeComponent();
 
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
         _courseCode = courseCode;
         _isEditMode = !string.IsNullOrEmpty(courseCode);
 
-        SetupForm();
+        SetupDropdowns();
         WireEvents();
+        _ = LoadFormDataAsync();
     }
 
-    private void SetupForm()
+    private void SetupDropdowns()
     {
         cboInputLevel.Items.Clear();
-        cboInputLevel.Items.AddRange(new object[]
-        {
-            "Cơ bản · 0–4,5/10",
-            "Trung cấp · 4,5–6,0/10",
-            "Nâng cao · 6,0–7,5/10",
-            "Chuyên sâu · 7,5+/10"
-        });
+        cboInputLevel.Items.AddRange(StatusFormatter.CourseLevels);
         cboInputLevel.SelectedIndex = 0;
 
         cboStatus.Items.Clear();
         cboStatus.Items.AddRange(new object[]
         {
             "Đang sử dụng",
-            "Ngừng sử dụng",
-            "Bản nháp"
+            "Tạm dừng"
         });
         cboStatus.SelectedIndex = 0;
+    }
 
-        if (_isEditMode)
+    private async Task LoadFormDataAsync()
+    {
+        if (_isEditMode && !string.IsNullOrWhiteSpace(_courseCode))
         {
-            Text = "Thông tin khóa học · Đang sửa";
-            lblTitle.Text = "Thông tin khóa học";
-            
-            // Populate sample data for edit
-            txtCourseCode.Text = _courseCode ?? "CT-IELTS-F";
-            txtCourseName.Text = "IELTS Foundation";
-            cboInputLevel.SelectedIndex = 0;
-            txtOutputTarget.Text = "Nền tảng IELTS 4.0–4.5";
-            txtSessionCount.Text = "24";
-            txtSessionDuration.Text = "120 phút";
-            txtTuitionFee.Text = "6.000.000đ";
-            cboStatus.SelectedIndex = 0;
-            txtDescription.Text = "Ngữ pháp cơ bản, từ vựng chủ đề, bốn kỹ năng nghe – nói – đọc – viết.";
+            Text = "Chỉnh sửa khóa học - ECMS";
+            lblTitle.Text = "Chỉnh sửa thông tin khóa học";
+            txtCourseCode.ReadOnly = true;
+
+            _editingCourse = await _courseService.GetCourseByCodeAsync(_courseCode);
+            if (_editingCourse != null)
+            {
+                txtCourseCode.Text = _editingCourse.CourseCode;
+                txtCourseName.Text = _editingCourse.CourseName;
+
+                string formattedLevel = StatusFormatter.FormatCourseLevel(_editingCourse.Level);
+                int idx = Array.FindIndex(StatusFormatter.CourseLevels,
+                    l => l.Equals(formattedLevel, StringComparison.OrdinalIgnoreCase));
+                cboInputLevel.SelectedIndex = idx >= 0 ? idx : 0;
+
+                txtSessionCount.Text = _editingCourse.TotalSessions.ToString();
+                txtSessionDuration.Text = "120 phút";
+                txtTuitionFee.Text = $"{_editingCourse.BaseTuitionFee:N0}";
+                cboStatus.SelectedIndex = _editingCourse.IsActive ? 0 : 1;
+            }
         }
         else
         {
-            Text = "Thêm khóa học mới";
-            lblTitle.Text = "Thêm khóa học";
-            
-            txtCourseCode.Text = "CT-";
+            Text = "Thêm khóa học mới - ECMS";
+            lblTitle.Text = "Thêm khóa học mới";
+            txtCourseCode.Text = await _courseService.GenerateNextCourseCodeAsync();
+            txtCourseCode.ReadOnly = false;
             txtCourseName.Text = "";
             txtOutputTarget.Text = "";
             txtSessionCount.Text = "24";
@@ -85,49 +95,66 @@ public partial class CourseEditDialog : Form
 
         btnSave.Click += async (s, e) =>
         {
-            if (string.IsNullOrWhiteSpace(txtCourseCode.Text) || txtCourseCode.Text == "CT-")
+            if (string.IsNullOrWhiteSpace(txtCourseCode.Text))
             {
-                MessageBox.Show("Vui lòng nhập Mã khóa học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập mã khóa học.");
                 txtCourseCode.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtCourseName.Text))
             {
-                MessageBox.Show("Vui lòng nhập Tên khóa học.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thiếu thông tin", "Vui lòng nhập tên khóa học.");
                 txtCourseName.Focus();
                 return;
             }
 
-            int.TryParse(txtSessionCount.Text, out int sessions);
-            if (sessions <= 0) sessions = 24;
-
-            string feeRaw = txtTuitionFee.Text.Replace("đ", "").Replace(".", "").Replace(",", "").Trim();
-            decimal.TryParse(feeRaw, out decimal fee);
-            if (fee <= 0) fee = 5000000;
-
-            var newCourse = new Course
+            if (!int.TryParse(txtSessionCount.Text.Trim(), out int sessions) || sessions <= 0)
             {
-                CourseCode = txtCourseCode.Text.Trim(),
-                CourseName = txtCourseName.Text.Trim(),
-                Level = cboInputLevel.SelectedItem?.ToString() ?? "Cơ bản",
-                TotalHours = sessions * 2,
-                TotalSessions = sessions,
-                BaseTuitionFee = fee,
-                PassingScore = 5.0m,
-                IsActive = true
-            };
-
-            var res = await _courseService.CreateCourseAsync(newCourse);
-            if (!res.Success)
-            {
-                MessageBox.Show(res.Message, "Lỗi lưu CSDL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppDialog.ShowWarning(this, "Dữ liệu không hợp lệ", "Số buổi học phải là số nguyên dương.");
+                txtSessionCount.Focus();
                 return;
             }
 
-            MessageBox.Show("Đã lưu chương trình đào tạo thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            DialogResult = DialogResult.OK;
-            Close();
+            string feeRaw = txtTuitionFee.Text.Replace("đ", "").Replace("VNĐ", "").Replace(".", "").Replace(",", "").Replace(" ", "").Trim();
+            if (!decimal.TryParse(feeRaw, out decimal fee) || fee < 0)
+            {
+                AppDialog.ShowWarning(this, "Dữ liệu không hợp lệ", "Học phí gốc không hợp lệ.");
+                txtTuitionFee.Focus();
+                return;
+            }
+
+            string selectedLevel = !string.IsNullOrWhiteSpace(cboInputLevel.Text)
+                ? cboInputLevel.Text.Trim()
+                : (cboInputLevel.SelectedItem?.ToString() ?? StatusFormatter.CourseLevels[0]);
+
+            var course = new Course
+            {
+                CourseId = _editingCourse?.CourseId ?? 0,
+                CourseCode = txtCourseCode.Text.Trim().ToUpperInvariant(),
+                CourseName = txtCourseName.Text.Trim(),
+                Level = StatusFormatter.FormatCourseLevel(selectedLevel),
+                TotalHours = sessions * 2,
+                TotalSessions = sessions,
+                BaseTuitionFee = fee,
+                PassingScore = _editingCourse?.PassingScore ?? 5.0m,
+                IsActive = cboStatus.SelectedIndex == 0
+            };
+
+            var res = _isEditMode && _editingCourse != null
+                ? await _courseService.UpdateCourseAsync(course)
+                : await _courseService.CreateCourseAsync(course);
+
+            if (res.Success)
+            {
+                AppDialog.ShowSuccess(this, "Thành công", res.Message);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                AppDialog.ShowWarning(this, "Thông báo", res.Message);
+            }
         };
     }
 }

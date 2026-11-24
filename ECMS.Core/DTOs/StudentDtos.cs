@@ -12,9 +12,10 @@ public class StudentListItemDto
     public string StudentCode { get; set; } = string.Empty; // HV-0241
     public string FullName { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
-    public string ClassName { get; set; } = "Chưa xếp lớp"; // IELTS-F01
+    public int? ClassId { get; set; }
+    public string ClassName { get; set; } = "Chờ xếp lớp"; // IELTS-F01
     public double? AttendanceRate { get; set; }
-    public string AttendanceRateDisplay => AttendanceRate.HasValue ? $"{AttendanceRate.Value:F1}%" : "Chưa học";
+    public string AttendanceRateDisplay => AttendanceRate.HasValue ? $"{AttendanceRate.Value:F1}%" : "Chưa có";
     public decimal DebtAmount { get; set; } = 0;
     public string DebtDisplay => DebtAmount > 0 ? $"{DebtAmount:N0}đ" : "0đ";
     public string Status { get; set; } = "Đang học"; // Đang học, Hoàn thành, Đã lưu trữ
@@ -27,11 +28,11 @@ public class StudentLearningHistoryItemDto
 {
     public string ClassCourseName { get; set; } = string.Empty; // IELTS-F01 · IELTS Foundation
     public string Status { get; set; } = "Đang học";            // Đang học, Hoàn thành
-    public string AttendanceProgress { get; set; } = "—";       // 8 / 24
-    public string RegularScore { get; set; } = "—";             // 7.0 / 10
-    public string MidtermScore { get; set; } = "Chưa kiểm tra"; // 8.0 / 10 hoặc Chưa kiểm tra
-    public string FinalScore { get; set; } = "Chưa kiểm tra";   // 8.5 / 10 hoặc Chưa kiểm tra
-    public string TuitionStatus { get; set; } = "✓ Đã hoàn thành"; // Còn nợ 1.900.000đ hoặc ✓ Đã hoàn thành
+    public string AttendanceProgress { get; set; } = "-";       // 8 / 24
+    public string RegularScore { get; set; } = "-";             // 7.0
+    public string MidtermScore { get; set; } = "-";             // 8.0
+    public string FinalScore { get; set; } = "-";               // 8.5
+    public string TuitionStatus { get; set; } = "Đã hoàn thành"; // Còn nợ 1.900.000đ hoặc Đã hoàn thành
 }
 
 /// <summary>
@@ -120,9 +121,18 @@ public class StudentOverviewStatsDto
 {
     public int TotalStudents { get; set; } = 0;
     public int StudyingStudents { get; set; } = 0;
+    public int WaitingClassStudents { get; set; } = 0;
     public int CompletedStudents { get; set; } = 0;
     public int ArchivedStudents { get; set; } = 0;
     public int DebtStudents { get; set; } = 0;
+}
+
+public class ClassFilterItemDto
+{
+    public int ClassId { get; set; }
+    public string ClassCode { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public string DisplayText => ClassId <= 0 ? ClassName : $"{ClassCode} - {ClassName}";
 }
 
 public class CourseLookupDto
@@ -145,6 +155,7 @@ public class OpenClassOptionDto
     public string CourseName { get; set; } = string.Empty;
     public decimal TuitionFee { get; set; }
     public string StartDateDisplay { get; set; } = string.Empty;
+    public string EndDateDisplay { get; set; } = string.Empty;
     public string ScheduleDisplay { get; set; } = string.Empty;
     public string StartTime { get; set; } = string.Empty;
     public string RoomName { get; set; } = string.Empty;
@@ -180,12 +191,17 @@ public class StudentEnrollmentWithTuitionDto
     public string ClassName { get; set; } = string.Empty;
     public string CourseName { get; set; } = string.Empty;
     public decimal TotalTuitionFee { get; set; }
+    public int? DiscountId { get; set; }
+    public string? DiscountCode { get; set; }
+    public decimal DiscountAmount { get; set; }
+    public decimal FinalTuitionFee => Math.Max(0, TotalTuitionFee - DiscountAmount);
+    public bool PayNow { get; set; } = true;
 
     // Thu phí & Kế hoạch đóng
     public string InstallmentPlan { get; set; } = "100%"; // 100%, 50%, 40%
     public decimal AmountPaidNow { get; set; }
     public decimal RemainingDebt { get; set; }
-    public string PaymentMethod { get; set; } = "Chuyển khoản VietQR";
+    public string PaymentMethod { get; set; } = "Chuyển khoản";
     public string ReceiptCode { get; set; } = string.Empty;
     public string? TransactionReference { get; set; }
     public string? PaymentNote { get; set; }
@@ -200,7 +216,7 @@ public class StudentImportRowDto
     public int RowIndex { get; set; }
     public string FullName { get; set; } = string.Empty;
     public DateTime? DateOfBirth { get; set; }
-    public string DateOfBirthDisplay => DateOfBirth.HasValue ? DateOfBirth.Value.ToString("dd/MM/yyyy") : "—";
+    public string DateOfBirthDisplay => DateOfBirth.HasValue ? DateOfBirth.Value.ToString("dd/MM/yyyy") : "-";
     public string Gender { get; set; } = "Nam";
     public string Phone { get; set; } = string.Empty;
     public string? Email { get; set; }
@@ -209,7 +225,7 @@ public class StudentImportRowDto
     public string? ParentPhone { get; set; }
     public string? ParentRelationship { get; set; } = "Bố";
     public bool IsValid { get; set; } = true;
-    public string ValidationMessage { get; set; } = "✓ Hợp lệ";
+    public string ValidationMessage { get; set; } = "Hợp lệ";
 }
 
 /// <summary>

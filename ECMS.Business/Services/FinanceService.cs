@@ -30,17 +30,18 @@ public class FinanceService : IFinanceService
         decimal amount, 
         string paymentMethod, 
         string note, 
-        int cashierId)
+        int cashierId,
+        decimal extraDiscount = 0)
     {
         if (string.IsNullOrWhiteSpace(studentCode))
-            return (false, "Vui lòng chọn học viên cần thu phí!", string.Empty);
+            return (false, "Vui lòng chọn học viên cần thu phí.", string.Empty);
 
         if (amount <= 0)
-            return (false, "Số tiền thu học phí phải lớn hơn 0đ!", string.Empty);
+            return (false, "Số tiền thu học phí phải lớn hơn 0 đ.", string.Empty);
 
         if (string.IsNullOrWhiteSpace(paymentMethod))
-            paymentMethod = "Chuyển khoản VietQR";
+            paymentMethod = "Chuyển khoản";
 
-        return await _repo.ProcessPaymentAsync(studentCode, amount, paymentMethod, note, cashierId);
+        return await _repo.ProcessPaymentAsync(studentCode, amount, paymentMethod, note, cashierId, extraDiscount);
     }
 }

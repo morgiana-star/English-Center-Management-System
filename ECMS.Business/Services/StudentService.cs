@@ -17,11 +17,15 @@ public interface IStudentService
 {
     // 1. Nghiệp vụ DTO theo kiến trúc 4 tầng
     Task<IEnumerable<StudentListItemDto>> GetStudentListAsync(string? keyword = null, string? status = null, int? classId = null);
+    Task<IEnumerable<ClassFilterItemDto>> GetClassesForFilterAsync();
     Task<StudentDetailDto?> GetStudentDetailAsync(int studentId);
     Task<StudentDetailDto?> GetStudentDetailByCodeAsync(string studentCode);
     Task<(bool Success, string Message)> UpdateStudentProfileAsync(UpdateStudentProfileDto dto);
+    Task<decimal> GetStudentOutstandingDebtAsync(int studentId);
     Task<(bool Success, string Message)> ArchiveStudentAsync(ArchiveStudentDto dto);
     Task<(bool Success, string Message)> RestoreStudentAsync(int studentId);
+    Task<(bool IsDuplicate, string Reason)> CheckDuplicateStudentAsync(string phone, string fullName, DateTime dateOfBirth, int excludeStudentId = 0);
+    Task<(bool Success, string Message, int StudentId, string StudentCode)> CreateWaitingStudentAsync(StudentEnrollmentWithTuitionDto dto);
     Task<StudentOverviewStatsDto> GetStudentStatsAsync();
     Task<string> GenerateNextStudentCodeAsync();
     Task<IEnumerable<CourseLookupDto>> GetActiveCoursesForEnrollmentAsync();
@@ -82,6 +86,17 @@ public class StudentService : IStudentService
             : (false, "Cập nhật hồ sơ học viên thất bại.");
     }
 
+    public async Task<IEnumerable<ClassFilterItemDto>> GetClassesForFilterAsync()
+    {
+        return await _studentRepo.GetClassesForFilterAsync();
+    }
+
+    public async Task<decimal> GetStudentOutstandingDebtAsync(int studentId)
+    {
+        if (studentId <= 0) return 0m;
+        return await _studentRepo.GetStudentOutstandingDebtAsync(studentId);
+    }
+
     public async Task<(bool Success, string Message)> ArchiveStudentAsync(ArchiveStudentDto dto)
     {
         if (dto.StudentId <= 0)
@@ -89,7 +104,7 @@ public class StudentService : IStudentService
 
         bool archived = await _studentRepo.ArchiveStudentAsync(dto);
         return archived
-            ? (true, "Đã lưu trữ hồ sơ học viên thành công!")
+            ? (true, "Đã lưu trữ hồ sơ học viên thành công.")
             : (false, "Lưu trữ hồ sơ học viên thất bại.");
     }
 
@@ -98,10 +113,22 @@ public class StudentService : IStudentService
         if (studentId <= 0)
             return (false, "Mã học viên không hợp lệ.");
 
-        bool restored = await _studentRepo.RestoreStudentAsync(studentId);
-        return restored
-            ? (true, "Đã khôi phục học viên về danh sách đang học thành công!")
-            : (false, "Không thể khôi phục hồ sơ học viên.");
+        return await _studentRepo.RestoreStudentAsync(studentId);
+    }
+
+    public async Task<(bool IsDuplicate, string Reason)> CheckDuplicateStudentAsync(string phone, string fullName, DateTime dateOfBirth, int excludeStudentId = 0)
+    {
+        return await _studentRepo.CheckDuplicateStudentAsync(phone, fullName, dateOfBirth, excludeStudentId);
+    }
+
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode)> CreateWaitingStudentAsync(StudentEnrollmentWithTuitionDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.FullName))
+            return (false, "Họ và tên học viên không được để trống.", 0, string.Empty);
+        if (string.IsNullOrWhiteSpace(dto.Phone))
+            return (false, "Số điện thoại học viên không được để trống.", 0, string.Empty);
+
+        return await _studentRepo.CreateWaitingStudentAsync(dto);
     }
 
     public async Task<StudentOverviewStatsDto> GetStudentStatsAsync()
@@ -213,27 +240,10 @@ public class StudentService : IStudentService
 
     public async Task<(bool Success, string Message)> DeleteStudentAsync(int studentId)
     {
-        using var conn = DatabaseConfig.CreateOpenConnection();
+        if (studentId <= 0)
+            return (false, "Mã học viên không hợp lệ.");
 
-        int invoiceCount = await conn.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM Invoices inv INNER JOIN Enrollments e ON inv.EnrollmentId = e.EnrollmentId WHERE e.StudentId = @Id;",
-            new { Id = studentId });
-
-        if (invoiceCount > 0)
-        {
-            return (false, "Không thể xóa học viên đã phát sinh hóa đơn học phí! Bạn có thể chuyển trạng thái sang 'Nghỉ học' hoặc 'Bảo lưu'.");
-        }
-
-        int attendanceCount = await conn.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM AttendanceRecords WHERE StudentId = @Id;", new { Id = studentId });
-
-        if (attendanceCount > 0)
-        {
-            return (false, "Không thể xóa học viên đã có lịch sử điểm danh lớp học!");
-        }
-
-        await conn.ExecuteAsync("DELETE FROM Students WHERE StudentId = @Id;", new { Id = studentId });
-        return (true, "Đã xóa hồ sơ học viên thành công.");
+        return await _studentRepo.DeleteStudentWithChecksAsync(studentId);
     }
 
     #endregion
@@ -409,13 +419,18 @@ public class StudentService : IStudentService
             errors.Add("Thiếu họ tên");
         }
 
+        if (!dto.DateOfBirth.HasValue)
+        {
+            errors.Add("Thiếu hoặc sai định dạng ngày sinh (dd/MM/yyyy)");
+        }
+
         if (string.IsNullOrWhiteSpace(dto.Phone))
         {
             errors.Add("Thiếu số điện thoại");
         }
-        else if (!Regex.IsMatch(dto.Phone, @"^0\d{8,10}$"))
+        else if (!Regex.IsMatch(dto.Phone, @"^0\d{9}$"))
         {
-            errors.Add("SĐT không hợp lệ (cần 10 số bắt đầu bằng 0)");
+            errors.Add("SĐT không hợp lệ (cần đúng 10 chữ số bắt đầu bằng 0)");
         }
         else if (existingPhones.Contains(dto.Phone))
         {
@@ -426,20 +441,43 @@ public class StudentService : IStudentService
             errors.Add("SĐT bị trùng lặp trong tệp");
         }
 
-        if (!string.IsNullOrWhiteSpace(dto.ParentPhone) && !Regex.IsMatch(dto.ParentPhone, @"^0\d{8,10}$"))
+        if (string.IsNullOrWhiteSpace(dto.Email))
         {
-            errors.Add("SĐT phụ huynh không đúng định dạng");
+            errors.Add("Thiếu email");
+        }
+        else if (!Regex.IsMatch(dto.Email.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            errors.Add("Email không đúng định dạng");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.Address))
+        {
+            errors.Add("Thiếu địa chỉ");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.ParentName))
+        {
+            errors.Add("Thiếu họ tên phụ huynh");
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.ParentPhone))
+        {
+            errors.Add("Thiếu SĐT phụ huynh");
+        }
+        else if (!Regex.IsMatch(dto.ParentPhone, @"^0\d{9}$"))
+        {
+            errors.Add("SĐT phụ huynh không hợp lệ (10 chữ số)");
         }
 
         if (errors.Count > 0)
         {
             dto.IsValid = false;
-            dto.ValidationMessage = "✕ " + string.Join("; ", errors);
+            dto.ValidationMessage = string.Join("; ", errors);
         }
         else
         {
             dto.IsValid = true;
-            dto.ValidationMessage = "✓ Hợp lệ";
+            dto.ValidationMessage = "Hợp lệ";
         }
 
         return dto;
