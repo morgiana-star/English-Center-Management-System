@@ -8,6 +8,7 @@ using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 using ECMS.UI.Services;
+using CertificateService = ECMS.UI.Services.CertificateService;
 
 namespace ECMS.UI.UserControls;
 
