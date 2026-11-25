@@ -536,59 +536,87 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// Tự động chuẩn hóa kích thước icon về 18x18 pixel sắc nét và căn chỉnh chữ cho 4 danh mục Sidebar (A, B, C, D)
+    /// Tự động chuẩn hóa kích thước icon về 16x16 pixel sắc nét và căn chỉnh chữ cho 4 danh mục Sidebar (A, B, C, D)
     /// </summary>
     private void FormatSidebarHeaderIcons()
     {
-        var headers = new (Label? lbl, string text)[]
+        var headers = new (Label? lbl, Image? icon, string text)[]
         {
-            (lblGroupA, "     A · TỔNG QUAN"),
-            (lblGroupB, "     B · ĐÀO TẠO"),
-            (lblGroupC, "     C · TÀI CHÍNH"),
-            (lblGroupD, "     D · HỆ THỐNG")
+            (lblGroupA, lblGroupA?.Image, "A · TỔNG QUAN"),
+            (lblGroupB, lblGroupB?.Image, "B · ĐÀO TẠO"),
+            (lblGroupC, lblGroupC?.Image, "C · TÀI CHÍNH"),
+            (lblGroupD, lblGroupD?.Image, "D · HỆ THỐNG")
         };
 
-        foreach (var (lbl, text) in headers)
+        foreach (var (lbl, icon, text) in headers)
         {
             if (lbl == null) continue;
-            lbl.TextAlign = ContentAlignment.MiddleLeft;
-            lbl.ImageAlign = ContentAlignment.MiddleLeft;
-            lbl.Text = text;
-            if (lbl.Image != null && (lbl.Image.Width > 20 || lbl.Image.Height > 20))
+            var originalIcon = icon;
+            lbl.Text = "";
+            lbl.Image = null;
+            lbl.Paint += (s, e) =>
             {
-                lbl.Image = ResizeImage(lbl.Image, 18, 18);
-            }
-        }
-    }
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 
-    private static Image ResizeImage(Image src, int width, int height)
-    {
-        var destImage = new Bitmap(width, height);
-        using var g = Graphics.FromImage(destImage);
-        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-        g.DrawImage(src, 0, 0, width, height);
-        return destImage;
+                var textColor = Color.FromArgb(100, 116, 139); // Slate #64748B đồng bộ với chữ
+
+                // 1. Vẽ icon 16x16 căn giữa chuẩn xác theo chiều dọc, đổi màu trùng 100% với màu chữ
+                if (originalIcon != null)
+                {
+                    int iconSize = 16;
+                    int iconY = Math.Max(0, (lbl.Height - iconSize) / 2);
+
+                    float r = textColor.R / 255f;
+                    float g = textColor.G / 255f;
+                    float b = textColor.B / 255f;
+
+                    var colorMatrix = new System.Drawing.Imaging.ColorMatrix(new float[][]
+                    {
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 1, 0 },
+                        new float[] { r, g, b, 0, 1 }
+                    });
+
+                    using var attr = new System.Drawing.Imaging.ImageAttributes();
+                    attr.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
+
+                    e.Graphics.DrawImage(originalIcon, new Rectangle(0, iconY, iconSize, iconSize),
+                        0, 0, originalIcon.Width, originalIcon.Height, GraphicsUnit.Pixel, attr);
+                }
+
+                // 2. Vẽ chữ cách icon 8px (bắt đầu từ X = 24), canh giữa thẳng hàng
+                using var brush = new SolidBrush(textColor);
+                using var sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Near,
+                    LineAlignment = StringAlignment.Center
+                };
+                var textRect = new Rectangle(24, 0, Math.Max(0, lbl.Width - 24), lbl.Height);
+                e.Graphics.DrawString(text, lbl.Font, brush, textRect, sf);
+            };
+            lbl.Invalidate();
+        }
     }
 
     private void lblGroupC_Click(object sender, EventArgs e)
     {
-        throw new System.NotImplementedException();
     }
 
     private void lblUser_Click(object sender, EventArgs e)
     {
-        throw new System.NotImplementedException();
+        ShowUserProfile();
     }
 
     private void lblHeaderCenter_Click(object sender, EventArgs e)
     {
-        throw new System.NotImplementedException();
     }
 
     private void btnLogoutTop_Click(object sender, EventArgs e)
     {
-        throw new System.NotImplementedException();
+        HandleLogout();
     }
 }

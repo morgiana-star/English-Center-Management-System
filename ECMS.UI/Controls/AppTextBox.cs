@@ -24,7 +24,8 @@ public class AppTextBox : UserControl
     {
         if (_innerBox.IsHandleCreated)
         {
-            SendMessage(_innerBox.Handle, EM_SETCUEBANNER, (nint)1, _placeholder);
+            // wParam = 0: Cue banner tự động ẩn ngay khi người dùng click chuột vào ô để gõ phím
+            SendMessage(_innerBox.Handle, EM_SETCUEBANNER, (nint)0, _placeholder);
         }
     }
 

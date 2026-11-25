@@ -191,7 +191,7 @@ partial class SystemConfigView
         tabCenter.Padding = new System.Windows.Forms.Padding(16, 12, 16, 16);
         tabCenter.Size = new System.Drawing.Size(1192, 696);
         tabCenter.TabIndex = 0;
-        tabCenter.Text = "🏢 1. Thông tin trung tâm & CSDL";
+        tabCenter.Text = "1. Thông tin trung tâm & CSDL";
         // 
         // pnlTabCenterContent
         // 
@@ -747,7 +747,7 @@ partial class SystemConfigView
         tabGrading.Padding = new System.Windows.Forms.Padding(16, 12, 16, 16);
         tabGrading.Size = new System.Drawing.Size(1192, 696);
         tabGrading.TabIndex = 1;
-        tabGrading.Text = "🎯 2. Quy tắc điểm & Chuyên cần";
+        tabGrading.Text = "2. Quy tắc điểm & Chuyên cần";
         // 
         // pnlTabGradingContent
         // 
@@ -1044,7 +1044,7 @@ partial class SystemConfigView
         tabBackup.Padding = new System.Windows.Forms.Padding(16, 12, 16, 16);
         tabBackup.Size = new System.Drawing.Size(1192, 696);
         tabBackup.TabIndex = 2;
-        tabBackup.Text = "💾 3. Sao lưu & Khôi phục dữ liệu";
+        tabBackup.Text = "3. Sao lưu & Khôi phục dữ liệu";
         // 
         // pnlTabBackupContent
         // 
@@ -1240,7 +1240,7 @@ partial class SystemConfigView
         btnOpenBackupFolder.Name = "btnOpenBackupFolder";
         btnOpenBackupFolder.Size = new System.Drawing.Size(180, 36);
         btnOpenBackupFolder.TabIndex = 2;
-        btnOpenBackupFolder.Text = "📁 Mở thư mục chứa";
+        btnOpenBackupFolder.Text = "Mở thư mục chứa";
         btnOpenBackupFolder.UseVisualStyleBackColor = false;
         btnOpenBackupFolder.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -1258,7 +1258,7 @@ partial class SystemConfigView
         btnRestoreBackup.Name = "btnRestoreBackup";
         btnRestoreBackup.Size = new System.Drawing.Size(200, 36);
         btnRestoreBackup.TabIndex = 1;
-        btnRestoreBackup.Text = "🔄 Khôi phục từ tệp (.db)";
+        btnRestoreBackup.Text = "Khôi phục từ tệp (.db)";
         btnRestoreBackup.UseVisualStyleBackColor = false;
         btnRestoreBackup.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -1276,7 +1276,7 @@ partial class SystemConfigView
         btnCreateBackupNow.Name = "btnCreateBackupNow";
         btnCreateBackupNow.Size = new System.Drawing.Size(220, 36);
         btnCreateBackupNow.TabIndex = 0;
-        btnCreateBackupNow.Text = "💾 Tạo bản sao lưu ngay";
+        btnCreateBackupNow.Text = "Tạo bản sao lưu ngay";
         btnCreateBackupNow.UseVisualStyleBackColor = false;
         btnCreateBackupNow.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 

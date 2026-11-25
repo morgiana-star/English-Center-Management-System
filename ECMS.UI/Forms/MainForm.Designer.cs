@@ -69,7 +69,7 @@ partial class MainForm
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new System.Drawing.Size(1924, 141);
+        pnlHeader.Size = new System.Drawing.Size(1924, 64);
         pnlHeader.TabIndex = 0;
         // 
         // btnLogoutTop
@@ -81,13 +81,12 @@ partial class MainForm
         btnLogoutTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogoutTop.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnLogoutTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
-        btnLogoutTop.Location = new System.Drawing.Point(1739, 41);
+        btnLogoutTop.Location = new System.Drawing.Point(1780, 14);
         btnLogoutTop.Name = "btnLogoutTop";
-        btnLogoutTop.Size = new System.Drawing.Size(146, 66);
+        btnLogoutTop.Size = new System.Drawing.Size(110, 36);
         btnLogoutTop.TabIndex = 6;
         btnLogoutTop.Text = "Đăng xuất";
         btnLogoutTop.UseVisualStyleBackColor = false;
-        btnLogoutTop.Click += btnLogoutTop_Click;
         // 
         // lblUser
         // 
@@ -95,32 +94,30 @@ partial class MainForm
         lblUser.Cursor = System.Windows.Forms.Cursors.Hand;
         lblUser.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         lblUser.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblUser.Location = new System.Drawing.Point(1265, 52);
+        lblUser.Location = new System.Drawing.Point(1250, 18);
         lblUser.Name = "lblUser";
-        lblUser.Size = new System.Drawing.Size(458, 338);
+        lblUser.Size = new System.Drawing.Size(510, 28);
         lblUser.TabIndex = 5;
         lblUser.Text = "ADMIN\r\n";
         lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        lblUser.Click += lblUser_Click;
         // 
         // lblHeaderCenter
         // 
         lblHeaderCenter.AutoSize = true;
         lblHeaderCenter.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
         lblHeaderCenter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblHeaderCenter.Location = new System.Drawing.Point(162, 57);
+        lblHeaderCenter.Location = new System.Drawing.Point(145, 23);
         lblHeaderCenter.Name = "lblHeaderCenter";
         lblHeaderCenter.Size = new System.Drawing.Size(181, 19);
         lblHeaderCenter.TabIndex = 2;
         lblHeaderCenter.Text = "TRUNG TÂM NGOẠI NGỮ ";
-        lblHeaderCenter.Click += lblHeaderCenter_Click;
         // 
         // lblHeaderBrand
         // 
         lblHeaderBrand.AutoSize = true;
         lblHeaderBrand.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
         lblHeaderBrand.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblHeaderBrand.Location = new System.Drawing.Point(96, 52);
+        lblHeaderBrand.Location = new System.Drawing.Point(70, 19);
         lblHeaderBrand.Name = "lblHeaderBrand";
         lblHeaderBrand.Size = new System.Drawing.Size(60, 25);
         lblHeaderBrand.TabIndex = 1;
@@ -130,9 +127,9 @@ partial class MainForm
         // 
         picHeaderLogo.BackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         picHeaderLogo.Image = ((System.Drawing.Image)resources.GetObject("picHeaderLogo.Image"));
-        picHeaderLogo.Location = new System.Drawing.Point(33, -46);
+        picHeaderLogo.Location = new System.Drawing.Point(20, 12);
         picHeaderLogo.Name = "picHeaderLogo";
-        picHeaderLogo.Size = new System.Drawing.Size(57, 224);
+        picHeaderLogo.Size = new System.Drawing.Size(40, 40);
         picHeaderLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
         picHeaderLogo.TabIndex = 0;
         picHeaderLogo.TabStop = false;
