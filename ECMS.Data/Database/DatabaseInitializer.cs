@@ -389,6 +389,11 @@ public static class DatabaseInitializer
         try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Equipment TEXT;"); } catch { }
         try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Status TEXT DEFAULT 'Đang sử dụng';"); } catch { }
 
+        // Ensure columns SchedulePattern, StartTime, EndTime exist in Classes if table existed prior
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN SchedulePattern TEXT DEFAULT 'T3,T6';"); } catch { }
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN StartTime TEXT DEFAULT '18:00';"); } catch { }
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN EndTime TEXT DEFAULT '20:00';"); } catch { }
+
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);
     }
@@ -526,12 +531,23 @@ public static class DatabaseInitializer
         catch { }
 
         conn.Execute(@"
-            INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
+            INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status, SchedulePattern, StartTime, EndTime)
             VALUES 
-            (1, 'IELTS-F01', 'Lớp IELTS Foundation K12 (T3-T6)', 1, 2, 1, '2026-10-06', '2026-12-30', 20, 'InProgress'),
-            (2, 'IELTS-I01', 'Lớp IELTS Intensive K05 (T4-T7)', 2, 3, 3, '2026-10-15', '2027-01-15', 18, 'InProgress'),
-            (3, 'TOEIC-A01', 'Lớp TOEIC 500+ K08 (T3-T6)', 3, 3, 2, '2026-10-20', '2026-12-25', 20, 'InProgress'),
-            (4, 'COM-B01', 'Lớp Giao tiếp cơ bản K02 (T7-CN)', 4, 4, 5, '2026-11-01', '2026-12-28', 15, 'InProgress');");
+            (1, 'IELTS-F01', 'Lớp IELTS Foundation K12 (T3-T6)', 1, 2, 1, '2026-10-06', '2026-12-30', 20, 'InProgress', 'T3,T6', '18:00', '20:00'),
+            (2, 'IELTS-I01', 'Lớp IELTS Intensive K05 (T4-T7)', 2, 3, 3, '2026-10-15', '2027-01-15', 18, 'InProgress', 'T4,T7', '14:00', '17:00'),
+            (3, 'TOEIC-A01', 'Lớp TOEIC 500+ K08 (T3-T6)', 3, 3, 2, '2026-10-20', '2026-12-25', 20, 'InProgress', 'T3,T6', '18:30', '20:30'),
+            (4, 'COM-B01', 'Lớp Giao tiếp cơ bản K02 (T7-CN)', 4, 4, 5, '2026-11-01', '2026-12-28', 15, 'InProgress', 'T7,CN', '08:30', '11:30'),
+            (5, 'IELTS-F02', 'Lớp IELTS Foundation K13 (T2-T5)', 1, 3, 2, '2026-11-16', '2027-02-16', 20, 'OpenForEnrollment', 'T2,T5', '18:00', '20:00'),
+            (6, 'COM-B02', 'Lớp Giao tiếp cơ bản K03 (T7-CN)', 4, 4, 1, '2026-11-21', '2027-01-21', 15, 'Planning', 'T7,CN', '08:30', '11:30');");
+
+        try
+        {
+            conn.Execute("UPDATE Classes SET SchedulePattern = 'T3,T6', StartTime = '18:00', EndTime = '20:00' WHERE ClassId = 1;");
+            conn.Execute("UPDATE Classes SET SchedulePattern = 'T4,T7', StartTime = '14:00', EndTime = '17:00' WHERE ClassId = 2;");
+            conn.Execute("UPDATE Classes SET SchedulePattern = 'T3,T6', StartTime = '18:30', EndTime = '20:30' WHERE ClassId = 3;");
+            conn.Execute("UPDATE Classes SET SchedulePattern = 'T7,CN', StartTime = '08:30', EndTime = '11:30' WHERE ClassId = 4;");
+        }
+        catch { }
 
         conn.Execute(@"
             INSERT OR IGNORE INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)

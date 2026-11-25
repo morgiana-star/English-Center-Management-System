@@ -41,6 +41,9 @@ public class Class : BaseEntity
     public DateTime EndDate { get; set; }
     public int MaxStudents { get; set; } = 15;
     public ClassStatus Status { get; set; } = ClassStatus.Planning;
+    public string SchedulePattern { get; set; } = "T3,T6";
+    public string StartTime { get; set; } = "18:00";
+    public string EndTime { get; set; } = "20:00";
 }
 
 public class ClassSchedule : BaseEntity

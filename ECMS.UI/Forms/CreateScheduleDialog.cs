@@ -1,6 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
@@ -15,7 +21,7 @@ public partial class CreateScheduleDialog : Form
         InitializeComponent();
 
         SetupGrid();
-        LoadClassesData();
+        _ = LoadClassesDataAsync();
         WireEvents();
     }
 
@@ -30,32 +36,162 @@ public partial class CreateScheduleDialog : Form
         dgvClasses.AllowUserToAddRows = false;
         dgvClasses.ScrollBars = ScrollBars.Both;
 
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 55, MinimumWidth = 50, FillWeight = 6F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã lớp", Width = 105, MinimumWidth = 95, FillWeight = 11F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCourse", HeaderText = "Khóa học", MinimumWidth = 150, FillWeight = 20F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTeacher", HeaderText = "Giáo viên phụ trách", Width = 150, MinimumWidth = 130, FillWeight = 16F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSchedule", HeaderText = "Lịch định kỳ", Width = 120, MinimumWidth = 110, FillWeight = 12F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTime", HeaderText = "Khung giờ", Width = 135, MinimumWidth = 120, FillWeight = 13F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRoom", HeaderText = "Phòng", Width = 85, MinimumWidth = 75, FillWeight = 8F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStartDate", HeaderText = "Khai giảng", Width = 110, MinimumWidth = 100, FillWeight = 11F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSessions", HeaderText = "Số buổi", Width = 85, MinimumWidth = 75, FillWeight = 8F });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStatus", HeaderText = "Trạng thái", Width = 105, MinimumWidth = 95, FillWeight = 11F });
+        // Cột ẩn chứa thông tin kỹ thuật
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colClassId", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTotalSessions", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colExistingSessions", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRoomId", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTeacherId", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSchedulePattern", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStartTime", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colEndTime", Visible = false });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStartDateRaw", Visible = false });
+
+        // Cột hiển thị
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 50, MinimumWidth = 45, FillWeight = 5F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã lớp", Width = 100, MinimumWidth = 90, FillWeight = 11F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCourse", HeaderText = "Khóa học", MinimumWidth = 140, FillWeight = 19F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTeacher", HeaderText = "Giáo viên phụ trách", Width = 145, MinimumWidth = 130, FillWeight = 15F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSchedule", HeaderText = "Lịch định kỳ", Width = 115, MinimumWidth = 105, FillWeight = 12F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colTime", HeaderText = "Khung giờ", Width = 130, MinimumWidth = 115, FillWeight = 13F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colRoom", HeaderText = "Phòng", Width = 80, MinimumWidth = 70, FillWeight = 8F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStartDate", HeaderText = "Khai giảng", Width = 105, MinimumWidth = 95, FillWeight = 10F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colSessions", HeaderText = "Số buổi", Width = 115, MinimumWidth = 105, FillWeight = 12F });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStatus", HeaderText = "Trạng thái", Width = 105, MinimumWidth = 95, FillWeight = 10F });
+
+        dgvClasses.CellFormatting += (s, e) =>
+        {
+            if (e.RowIndex >= 0 && dgvClasses.Columns[e.ColumnIndex].Name == "colStatus" && e.Value != null)
+            {
+                string val = e.Value.ToString() ?? "";
+                if (val.Contains("Đang học"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52); // Xanh lá
+                    e.CellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+                }
+                else if (val.Contains("tuyển sinh") || val.Contains("Sắp mở"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(37, 99, 235); // Xanh dương
+                    e.CellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(100, 116, 139);
+                }
+            }
+        };
     }
 
-    private void LoadClassesData()
+    private async Task LoadClassesDataAsync()
     {
-        dgvClasses.Rows.Clear();
-
-        dgvClasses.Rows.Add("1", "IELTS-F01", "IELTS Foundation", "Nguyễn Hoàng Anh", "T3 / T6", "18:00 – 20:00", "P201", "06/10/2026", "24 buổi", "Đang học");
-        dgvClasses.Rows.Add("2", "IELTS-F02", "IELTS Foundation", "Trần Minh Tuấn", "T2 / T5", "18:00 – 20:00", "P202", "12/10/2026", "24 buổi", "Đang học");
-        dgvClasses.Rows.Add("3", "IELTS-I01", "IELTS Intensive", "Trần Minh Tuấn", "T4 / T7", "14:00 – 17:00", "P203", "15/10/2026", "30 buổi", "Đang học");
-        dgvClasses.Rows.Add("4", "TOEIC-A01", "TOEIC 500+", "Lê Thu Hà", "T3 / T6", "18:30 – 20:30", "P202", "20/10/2026", "20 buổi", "Đang học");
-        dgvClasses.Rows.Add("5", "COM-B01", "Giao tiếp cơ bản", "Lê Thu Hà", "T7 / CN", "08:30 – 11:30", "P102", "01/11/2026", "16 buổi", "Đang học");
-        dgvClasses.Rows.Add("6", "IELTS-F04", "IELTS Foundation", "Võ Tấn Toàn", "T2 / T5", "18:00 – 20:00", "P201", "20/11/2026", "24 buổi", "Sắp mở");
-
-        if (dgvClasses.RowCount > 0)
+        try
         {
-            dgvClasses.Rows[0].Selected = true;
+            dgvClasses.Rows.Clear();
+            using var conn = DatabaseConfig.GetConnection();
+
+            string sql = @"
+                SELECT 
+                    c.ClassId,
+                    c.ClassCode,
+                    c.ClassName,
+                    co.CourseName,
+                    COALESCE(co.TotalSessions, 24) AS TotalSessions,
+                    COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                    COALESCE(c.MainTeacherId, 1) AS TeacherId,
+                    COALESCE(c.SchedulePattern, 'T3,T6') AS SchedulePattern,
+                    COALESCE(c.StartTime, '18:00') AS StartTime,
+                    COALESCE(c.EndTime, '20:00') AS EndTime,
+                    COALESCE(cr.RoomCode, 'P' || cr.RoomId) AS RoomCode,
+                    COALESCE(c.DefaultRoomId, 1) AS RoomId,
+                    c.StartDate,
+                    c.Status,
+                    COUNT(cs.ScheduleId) AS ExistingSessionsCount
+                FROM Classes c
+                JOIN Courses co ON c.CourseId = co.CourseId
+                LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
+                LEFT JOIN ClassRooms cr ON c.DefaultRoomId = cr.RoomId
+                LEFT JOIN ClassSchedules cs ON c.ClassId = cs.ClassId
+                GROUP BY c.ClassId
+                ORDER BY c.ClassId ASC;";
+
+            var classes = (await conn.QueryAsync<dynamic>(sql)).ToList();
+
+            int stt = 1;
+            foreach (var c in classes)
+            {
+                int classId = Convert.ToInt32(c.ClassId);
+                string code = (string)c.ClassCode;
+                string course = (string)c.CourseName;
+                string teacher = (string)c.TeacherName;
+                int teacherId = Convert.ToInt32(c.TeacherId);
+                string pattern = (string)c.SchedulePattern;
+                string startTime = (string)c.StartTime;
+                string endTime = (string)c.EndTime;
+                string room = (string)c.RoomCode;
+                int roomId = Convert.ToInt32(c.RoomId);
+                string startDateRaw = (string)c.StartDate;
+                int totalSessions = Convert.ToInt32(c.TotalSessions);
+                int existingCount = Convert.ToInt32(c.ExistingSessionsCount);
+                string rawStatus = (string)c.Status;
+
+                // Format ngày hiển thị
+                string startDateDisplay = startDateRaw.Split('T')[0];
+                if (DateTime.TryParse(startDateDisplay, out var dt))
+                {
+                    startDateDisplay = dt.ToString("dd/MM/yyyy");
+                }
+
+                // Format lịch định kỳ: T3,T6 -> T3 / T6
+                string scheduleDisplay = pattern.Replace(",", " / ");
+                string timeDisplay = $"{startTime} – {endTime}";
+
+                // Format số buổi
+                string sessionsDisplay = existingCount == 0 
+                    ? $"{totalSessions} buổi (Chưa xếp)" 
+                    : $"{totalSessions} buổi ({existingCount}/{totalSessions})";
+
+                // Format trạng thái
+                string statusDisplay = rawStatus switch
+                {
+                    "InProgress" => "Đang học",
+                    "OpenForEnrollment" => "Đang tuyển sinh",
+                    "Planning" => "Sắp mở",
+                    "Completed" => "Đã kết thúc",
+                    _ => rawStatus
+                };
+
+                dgvClasses.Rows.Add(
+                    classId.ToString(),
+                    totalSessions.ToString(),
+                    existingCount.ToString(),
+                    roomId.ToString(),
+                    teacherId.ToString(),
+                    pattern,
+                    startTime,
+                    endTime,
+                    startDateRaw,
+                    stt.ToString(),
+                    code,
+                    course,
+                    teacher,
+                    scheduleDisplay,
+                    timeDisplay,
+                    room,
+                    startDateDisplay,
+                    sessionsDisplay,
+                    statusDisplay
+                );
+                stt++;
+            }
+
+            if (dgvClasses.RowCount > 0)
+            {
+                dgvClasses.Rows[0].Selected = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải danh sách lớp học: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -67,13 +203,13 @@ public partial class CreateScheduleDialog : Form
             Close();
         };
 
-        btnCreateSessions.Click += (s, e) => ConfirmCreate();
+        btnCreateSessions.Click += async (s, e) => await ConfirmCreateAsync();
 
-        dgvClasses.CellDoubleClick += (s, e) =>
+        dgvClasses.CellDoubleClick += async (s, e) =>
         {
             if (e.RowIndex >= 0)
             {
-                ConfirmCreate();
+                await ConfirmCreateAsync();
             }
         };
 
@@ -94,7 +230,7 @@ public partial class CreateScheduleDialog : Form
         };
     }
 
-    private void ConfirmCreate()
+    private async Task ConfirmCreateAsync()
     {
         if (dgvClasses.SelectedRows.Count == 0)
         {
@@ -103,26 +239,203 @@ public partial class CreateScheduleDialog : Form
         }
 
         var row = dgvClasses.SelectedRows[0];
+        int classId = Convert.ToInt32(row.Cells["colClassId"].Value);
         string code = row.Cells["colCode"].Value?.ToString() ?? "";
         string course = row.Cells["colCourse"].Value?.ToString() ?? "";
         string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "";
-        string schedule = row.Cells["colSchedule"].Value?.ToString() ?? "";
-        string time = row.Cells["colTime"].Value?.ToString() ?? "";
+        int teacherId = Convert.ToInt32(row.Cells["colTeacherId"].Value);
         string room = row.Cells["colRoom"].Value?.ToString() ?? "";
-        string sessions = row.Cells["colSessions"].Value?.ToString() ?? "";
+        int roomId = Convert.ToInt32(row.Cells["colRoomId"].Value);
+        string pattern = row.Cells["colSchedulePattern"].Value?.ToString() ?? "T3,T6";
+        string startTime = row.Cells["colStartTime"].Value?.ToString() ?? "18:00";
+        string endTime = row.Cells["colEndTime"].Value?.ToString() ?? "20:00";
+        string startDateRaw = row.Cells["colStartDateRaw"].Value?.ToString() ?? "2026-11-01";
+        int totalSessions = Convert.ToInt32(row.Cells["colTotalSessions"].Value);
+        int existingCount = Convert.ToInt32(row.Cells["colExistingSessions"].Value);
 
         SelectedClassCode = code;
         SelectedCourseName = course;
 
-        string message = $"ĐÃ TẠO LỊCH HỌC THÀNH CÔNG!\n\n" +
-                         $"• Lớp: {code} ({course})\n" +
-                         $"• Giáo viên: {teacher}\n" +
-                         $"• Phòng học: {room}\n" +
-                         $"• Lịch định kỳ: {schedule} ({time})\n" +
-                         $"• Kế hoạch: Đã sinh đầy đủ {sessions} vào Thời khóa biểu trung tâm.";
+        // Phân tích các thứ trong tuần được chọn
+        var targetDays = ParseDaysOfWeek(pattern);
+        if (targetDays.Count == 0)
+        {
+            targetDays = new List<DayOfWeek> { DayOfWeek.Tuesday, DayOfWeek.Friday };
+        }
 
-        MessageBox.Show(message, "Tạo buổi học thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        DialogResult = DialogResult.OK;
-        Close();
+        DateTime startDate;
+        if (!DateTime.TryParse(startDateRaw.Split('T')[0], out startDate))
+        {
+            startDate = DateTime.Today;
+        }
+
+        try
+        {
+            using var conn = DatabaseConfig.GetConnection();
+
+            int startSessionNum = 1;
+            DateTime currentScanDate = startDate;
+
+            if (existingCount >= totalSessions)
+            {
+                var ask = MessageBox.Show(
+                    $"Lớp '{code}' hiện đã có đủ {existingCount}/{totalSessions} buổi học trong hệ thống.\n\n" +
+                    "Bạn có muốn XÓA TOÀN BỘ các buổi học chưa khóa và sinh lại từ ngày khai giảng không?",
+                    "Lớp đã có đủ lịch học", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (ask != DialogResult.Yes) return;
+
+                // Xóa các buổi học chưa khóa sổ
+                await conn.ExecuteAsync(
+                    "DELETE FROM ClassSchedules WHERE ClassId = @ClassId AND IsAttendanceLocked = 0;",
+                    new { ClassId = classId });
+
+                existingCount = await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM ClassSchedules WHERE ClassId = @ClassId;",
+                    new { ClassId = classId });
+
+                startSessionNum = existingCount + 1;
+            }
+            else if (existingCount > 0)
+            {
+                var ask = MessageBox.Show(
+                    $"Lớp '{code}' hiện đã có {existingCount} buổi học.\n\n" +
+                    $"Hệ thống sẽ tiếp tục sinh thêm {totalSessions - existingCount} buổi còn lại để đạt đủ {totalSessions} buổi.\n" +
+                    "Bạn có muốn tiếp tục?",
+                    "Tiếp tục sinh lịch học", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (ask != DialogResult.Yes) return;
+
+                startSessionNum = existingCount + 1;
+
+                // Tìm ngày của buổi học cuối cùng hiện có để sinh tiếp từ ngày sau đó
+                string? lastDateStr = await conn.ExecuteScalarAsync<string?>(
+                    "SELECT MAX(Date) FROM ClassSchedules WHERE ClassId = @ClassId;",
+                    new { ClassId = classId });
+
+                if (!string.IsNullOrEmpty(lastDateStr) && DateTime.TryParse(lastDateStr.Split('T')[0], out var lastDate))
+                {
+                    currentScanDate = lastDate.AddDays(1);
+                }
+            }
+
+            // Sinh các buổi học
+            btnCreateSessions.Enabled = false;
+            var newSessions = new List<(int SessionNum, string Date, string Topic)>();
+            DateTime lastCreatedDate = currentScanDate;
+
+            while (startSessionNum <= totalSessions)
+            {
+                if (targetDays.Contains(currentScanDate.DayOfWeek))
+                {
+                    string topic = $"Buổi {startSessionNum}: Bài học chương trình {course}";
+                    newSessions.Add((startSessionNum, currentScanDate.ToString("yyyy-MM-dd"), topic));
+                    lastCreatedDate = currentScanDate;
+                    startSessionNum++;
+                }
+                currentScanDate = currentScanDate.AddDays(1);
+            }
+
+            // Thực hiện ghi vào CSDL trong Transaction
+            using var trans = conn.BeginTransaction();
+            try
+            {
+                foreach (var s in newSessions)
+                {
+                    await conn.ExecuteAsync(@"
+                        INSERT INTO ClassSchedules (ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
+                        VALUES (@ClassId, @SessionNum, @Date, @StartTime, @EndTime, @RoomId, @TeacherId, 0, @Topic);",
+                        new
+                        {
+                            ClassId = classId,
+                            SessionNum = s.SessionNum,
+                            Date = s.Date,
+                            StartTime = startTime,
+                            EndTime = endTime,
+                            RoomId = roomId,
+                            TeacherId = teacherId,
+                            Topic = s.Topic
+                        }, trans);
+                }
+
+                // Cập nhật ngày kết thúc dự kiến của lớp
+                await conn.ExecuteAsync(
+                    "UPDATE Classes SET EndDate = @EndDate, UpdatedAt = CURRENT_TIMESTAMP WHERE ClassId = @ClassId;",
+                    new { EndDate = lastCreatedDate.ToString("yyyy-MM-dd"), ClassId = classId }, trans);
+
+                trans.Commit();
+            }
+            catch
+            {
+                trans.Rollback();
+                throw;
+            }
+
+            string firstDateStr = newSessions.Count > 0 ? DateTime.Parse(newSessions[0].Date).ToString("dd/MM/yyyy") : "";
+            string lastDateDisplay = lastCreatedDate.ToString("dd/MM/yyyy");
+
+            string message = $"ĐÃ TẠO LỊCH HỌC THÀNH CÔNG!\n\n" +
+                             $"• Lớp: {code} ({course})\n" +
+                             $"• Giáo viên: {teacher}\n" +
+                             $"• Phòng học: {room}\n" +
+                             $"• Lịch định kỳ: {pattern.Replace(",", " / ")} ({startTime} – {endTime})\n" +
+                             $"• Số buổi đã tạo: {newSessions.Count} buổi học\n" +
+                             $"• Thời gian diễn ra: Từ {firstDateStr} đến {lastDateDisplay}";
+
+            MessageBox.Show(message, "Tạo buổi học thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tạo buổi học vào CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        finally
+        {
+            btnCreateSessions.Enabled = true;
+        }
+    }
+
+    private static List<DayOfWeek> ParseDaysOfWeek(string pattern)
+    {
+        var result = new List<DayOfWeek>();
+        var tokens = pattern.ToUpper().Split(new[] { ',', '/', '-', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        foreach (var t in tokens)
+        {
+            switch (t.Trim())
+            {
+                case "T2":
+                case "THU2":
+                    result.Add(DayOfWeek.Monday);
+                    break;
+                case "T3":
+                case "THU3":
+                    result.Add(DayOfWeek.Tuesday);
+                    break;
+                case "T4":
+                case "THU4":
+                    result.Add(DayOfWeek.Wednesday);
+                    break;
+                case "T5":
+                case "THU5":
+                    result.Add(DayOfWeek.Thursday);
+                    break;
+                case "T6":
+                case "THU6":
+                    result.Add(DayOfWeek.Friday);
+                    break;
+                case "T7":
+                case "THU7":
+                    result.Add(DayOfWeek.Saturday);
+                    break;
+                case "CN":
+                case "CHUNHAT":
+                    result.Add(DayOfWeek.Sunday);
+                    break;
+            }
+        }
+
+        return result;
     }
 }
