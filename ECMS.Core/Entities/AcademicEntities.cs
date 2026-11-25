@@ -19,9 +19,12 @@ public class Course : BaseEntity
 public class ClassRoom : BaseEntity
 {
     public int RoomId { get; set; }
+    public string RoomCode { get; set; } = string.Empty;
     public string RoomName { get; set; } = string.Empty;
     public int Floor { get; set; } = 1;
     public int Capacity { get; set; } = 20;
+    public string? Equipment { get; set; }
+    public string Status { get; set; } = "Đang sử dụng";
     public bool HasProjector { get; set; } = true;
     public bool IsActive { get; set; } = true;
 }

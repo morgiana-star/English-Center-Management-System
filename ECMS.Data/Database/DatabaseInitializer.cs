@@ -384,6 +384,11 @@ public static class DatabaseInitializer
         try { conn.Execute("ALTER TABLE Users ADD COLUMN StudentId INTEGER;"); } catch { }
         try { conn.Execute("ALTER TABLE Users ADD COLUMN ParentId INTEGER;"); } catch { }
 
+        // Ensure columns RoomCode, Equipment, Status exist in ClassRooms if table existed prior
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN RoomCode TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Equipment TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Status TEXT DEFAULT 'Đang sử dụng';"); } catch { }
+
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);
     }
@@ -497,8 +502,20 @@ public static class DatabaseInitializer
             VALUES (1, 'ENG-IELTS-5.5', 'IELTS Foundation 5.5+', 'Intermediate', 60, 24, 5500000, 5.0, 1);");
 
         conn.Execute(@"
-            INSERT OR IGNORE INTO ClassRooms (RoomId, RoomName, Floor, Capacity, HasProjector, IsActive)
-            VALUES (1, 'Phòng P.201 (Multimedia)', 2, 25, 1, 1);");
+            INSERT OR IGNORE INTO ClassRooms (RoomId, RoomCode, RoomName, Floor, Capacity, Equipment, Status, HasProjector, IsActive)
+            VALUES 
+            (1, 'P201', 'Phòng IELTS Chuyên sâu', 2, 24, 'Máy chiếu Sony, Bảng từ, Loa Bluetooth', 'Đang sử dụng', 1, 1),
+            (2, 'P202', 'Phòng Giao tiếp & Thảo luận', 2, 20, 'Màn hình tương tác 65"", Loa âm trần', 'Đang sử dụng', 1, 1),
+            (3, 'P203', 'Phòng Luyện thi TOEIC', 2, 18, 'Máy chiếu Epson, Bảng kính, 18 tai nghe', 'Đang sử dụng', 1, 1),
+            (4, 'P101', 'Hội trường & Test đầu vào', 1, 35, 'Máy chiếu công suất lớn, Âm thanh vòm', 'Đang sử dụng', 1, 1),
+            (5, 'P102', 'Phòng học đa năng', 1, 15, 'Đang nâng cấp hệ thống điều hòa', 'Bảo trì', 0, 0);");
+
+        try
+        {
+            conn.Execute("UPDATE ClassRooms SET RoomCode = 'P201' WHERE RoomId = 1 AND (RoomCode IS NULL OR RoomCode = '');");
+            conn.Execute("UPDATE ClassRooms SET Status = 'Đang sử dụng' WHERE Status IS NULL OR Status = '';");
+        }
+        catch { }
 
         conn.Execute(@"
             INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
