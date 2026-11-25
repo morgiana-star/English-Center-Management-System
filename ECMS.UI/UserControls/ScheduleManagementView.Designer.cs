@@ -27,13 +27,13 @@ partial class ScheduleManagementView
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnCreateSession = new ECMS.UI.Controls.AppButton();
+        btnManageSchedules = new ECMS.UI.Controls.AppButton();
         btnManageRooms = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardCalendar = new ECMS.UI.Controls.AppCard();
         dgvScheduleMatrix = new ECMS.UI.Controls.AppDataGrid();
         pnlFilterBar = new System.Windows.Forms.Panel();
-        lblSemester = new System.Windows.Forms.Label();
         cboSemester = new System.Windows.Forms.ComboBox();
         lblScheduleType = new System.Windows.Forms.Label();
         cboScheduleType = new System.Windows.Forms.ComboBox();
@@ -53,6 +53,7 @@ partial class ScheduleManagementView
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
         pnlHeader.Controls.Add(btnCreateSession);
+        pnlHeader.Controls.Add(btnManageSchedules);
         pnlHeader.Controls.Add(btnManageRooms);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -76,9 +77,27 @@ partial class ScheduleManagementView
         btnCreateSession.Name = "btnCreateSession";
         btnCreateSession.Size = new System.Drawing.Size(140, 36);
         btnCreateSession.TabIndex = 4;
-        btnCreateSession.Text = "+ Tạo buổi học";
+        btnCreateSession.Text = "Tạo buổi học";
         btnCreateSession.UseVisualStyleBackColor = false;
         btnCreateSession.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        // 
+        // btnManageSchedules
+        // 
+        btnManageSchedules.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnManageSchedules.BackColor = System.Drawing.Color.White;
+        btnManageSchedules.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnManageSchedules.CornerRadius = 5;
+        btnManageSchedules.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnManageSchedules.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnManageSchedules.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnManageSchedules.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnManageSchedules.Location = new System.Drawing.Point(840, 18);
+        btnManageSchedules.Name = "btnManageSchedules";
+        btnManageSchedules.Size = new System.Drawing.Size(145, 36);
+        btnManageSchedules.TabIndex = 5;
+        btnManageSchedules.Text = "Quản lý lịch học";
+        btnManageSchedules.UseVisualStyleBackColor = false;
+        btnManageSchedules.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnManageRooms
         // 
@@ -90,7 +109,7 @@ partial class ScheduleManagementView
         btnManageRooms.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnManageRooms.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnManageRooms.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnManageRooms.Location = new System.Drawing.Point(850, 18);
+        btnManageRooms.Location = new System.Drawing.Point(695, 18);
         btnManageRooms.Name = "btnManageRooms";
         btnManageRooms.Size = new System.Drawing.Size(135, 36);
         btnManageRooms.TabIndex = 3;
@@ -105,9 +124,9 @@ partial class ScheduleManagementView
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(271, 37);
+        lblTitle.Size = new System.Drawing.Size(121, 37);
         lblTitle.TabIndex = 1;
-        lblTitle.Text = "Lịch học & phòng học";
+        lblTitle.Text = "Lịch học";
         // 
         // pnlBody
         // 
@@ -144,6 +163,7 @@ partial class ScheduleManagementView
         dgvScheduleMatrix.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvScheduleMatrix.BackgroundColor = System.Drawing.Color.White;
         dgvScheduleMatrix.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvScheduleMatrix.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         dgvScheduleMatrix.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
         dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
@@ -189,7 +209,6 @@ partial class ScheduleManagementView
         // pnlFilterBar
         // 
         pnlFilterBar.BackColor = System.Drawing.Color.White;
-        pnlFilterBar.Controls.Add(lblSemester);
         pnlFilterBar.Controls.Add(cboSemester);
         pnlFilterBar.Controls.Add(lblScheduleType);
         pnlFilterBar.Controls.Add(cboScheduleType);
@@ -204,23 +223,12 @@ partial class ScheduleManagementView
         pnlFilterBar.Size = new System.Drawing.Size(1112, 90);
         pnlFilterBar.TabIndex = 0;
         // 
-        // lblSemester
-        // 
-        lblSemester.AutoSize = true;
-        lblSemester.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSemester.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblSemester.Location = new System.Drawing.Point(12, 10);
-        lblSemester.Name = "lblSemester";
-        lblSemester.Size = new System.Drawing.Size(125, 20);
-        lblSemester.TabIndex = 0;
-        lblSemester.Text = "Học kỳ & Năm học:";
-        // 
         // cboSemester
         // 
         cboSemester.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboSemester.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboSemester.FormattingEnabled = true;
-        cboSemester.Location = new System.Drawing.Point(145, 6);
+        cboSemester.Location = new System.Drawing.Point(12, 10);
         cboSemester.Name = "cboSemester";
         cboSemester.Size = new System.Drawing.Size(295, 29);
         cboSemester.TabIndex = 1;
@@ -230,7 +238,7 @@ partial class ScheduleManagementView
         lblScheduleType.AutoSize = true;
         lblScheduleType.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblScheduleType.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblScheduleType.Location = new System.Drawing.Point(455, 10);
+        lblScheduleType.Location = new System.Drawing.Point(451, 12);
         lblScheduleType.Name = "lblScheduleType";
         lblScheduleType.Size = new System.Drawing.Size(110, 20);
         lblScheduleType.TabIndex = 2;
@@ -241,7 +249,7 @@ partial class ScheduleManagementView
         cboScheduleType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboScheduleType.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboScheduleType.FormattingEnabled = true;
-        cboScheduleType.Location = new System.Drawing.Point(570, 6);
+        cboScheduleType.Location = new System.Drawing.Point(566, 8);
         cboScheduleType.Name = "cboScheduleType";
         cboScheduleType.Size = new System.Drawing.Size(230, 29);
         cboScheduleType.TabIndex = 3;
@@ -251,7 +259,7 @@ partial class ScheduleManagementView
         cboTargetFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboTargetFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboTargetFilter.FormattingEnabled = true;
-        cboTargetFilter.Location = new System.Drawing.Point(815, 6);
+        cboTargetFilter.Location = new System.Drawing.Point(811, 8);
         cboTargetFilter.Name = "cboTargetFilter";
         cboTargetFilter.Size = new System.Drawing.Size(275, 29);
         cboTargetFilter.TabIndex = 4;
@@ -301,7 +309,7 @@ partial class ScheduleManagementView
         btnPrint.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)34)), ((int)((byte)197)), ((int)((byte)94)));
         btnPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPrint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
+        btnPrint.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         btnPrint.Location = new System.Drawing.Point(510, 48);
         btnPrint.Name = "btnPrint";
         btnPrint.Size = new System.Drawing.Size(95, 32);
@@ -333,10 +341,10 @@ partial class ScheduleManagementView
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
     private ECMS.UI.Controls.AppButton btnManageRooms;
+    private ECMS.UI.Controls.AppButton btnManageSchedules;
     private ECMS.UI.Controls.AppButton btnCreateSession;
     private System.Windows.Forms.Panel pnlBody;
     private System.Windows.Forms.Panel pnlFilterBar;
-    private System.Windows.Forms.Label lblSemester;
     private System.Windows.Forms.ComboBox cboSemester;
     private System.Windows.Forms.Label lblScheduleType;
     private System.Windows.Forms.ComboBox cboScheduleType;

@@ -16,11 +16,6 @@ public partial class CollectTuitionDialog : Form
     private decimal _effectiveTotalFee = 3400000;
     private decimal _effectiveRemaining = 3400000;
     private int _paidInstallmentCount = 0;
-    private Label _lblStudentDisplay = null!;
-    private Label _lblDiscountTitle = null!;
-    private TextBox _txtDiscountCode = null!;
-    private AppButton _btnApplyDiscount = null!;
-    private Label _lblDiscountInfo = null!;
 
     public string StudentCode { get; private set; } = string.Empty;
     public string StudentName { get; private set; } = string.Empty;
@@ -83,19 +78,7 @@ public partial class CollectTuitionDialog : Form
 
     private void SetupForm()
     {
-        // Thay ComboBox chọn học viên bằng Label chỉ chứa Tên học viên & Mã học viên
-        cboStudentSelect.Visible = false;
-        lblStudentTitle.Text = "Học viên:";
-        _lblStudentDisplay = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-            ForeColor = Color.FromArgb(15, 23, 42),
-            Location = new Point(145, 46),
-            Text = $"{StudentName}  ·  {StudentCode}"
-        };
-        cardStudentSummary.Controls.Add(_lblStudentDisplay);
-        _lblStudentDisplay.BringToFront();
+        lblStudentDisplay.Text = $"{StudentName}  ·  {StudentCode}";
 
         cboPaymentType.Items.Clear();
         cboPaymentType.Items.AddRange(new object[]
@@ -137,42 +120,7 @@ public partial class CollectTuitionDialog : Form
         lblClassInfo.Text = $"Lớp: {ClassName}";
         lblTotalVal.Text = $"{_effectiveTotalFee:N0} đ";
         txtNote.Text = $"Thu học phí - {StudentName} ({StudentCode}) - Lớp {ClassName}";
-
-        // Bổ sung ô nhập Mã giảm giá cùng hàng Ngày thu
-        _lblDiscountTitle = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(71, 85, 105),
-            Location = new Point(312, 77),
-            Text = "Mã giảm giá:"
-        };
-        _txtDiscountCode = new TextBox
-        {
-            Font = new Font("Segoe UI", 9.5F),
-            Location = new Point(405, 73),
-            Size = new Size(150, 29),
-            PlaceholderText = "VD: HVCU10"
-        };
-        _btnApplyDiscount = new AppButton
-        {
-            Text = "Áp dụng",
-            Location = new Point(562, 72),
-            Size = new Size(86, 30),
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 5,
-            Cursor = Cursors.Hand
-        };
-        _lblDiscountInfo = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 8.5F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(22, 163, 74),
-            Location = new Point(655, 78),
-            Text = ""
-        };
-        cardPaymentDetails.Controls.AddRange(new Control[] { _lblDiscountTitle, _txtDiscountCode, _btnApplyDiscount, _lblDiscountInfo });
+        lblDiscountInfo.Text = "";
 
         ApplyInstallmentSelection();
     }
@@ -213,9 +161,9 @@ public partial class CollectTuitionDialog : Form
 
         cboInstallmentPlan.SelectedIndexChanged += (s, e) => ApplyInstallmentSelection();
 
-        _btnApplyDiscount.Click += async (s, e) =>
+        btnApplyDiscount.Click += async (s, e) =>
         {
-            string code = _txtDiscountCode.Text.Trim().ToUpperInvariant();
+            string code = txtDiscountCode.Text.Trim().ToUpperInvariant();
             if (string.IsNullOrWhiteSpace(code))
             {
                 AppliedDiscountId = null;
@@ -223,7 +171,7 @@ public partial class CollectTuitionDialog : Form
                 DiscountAmount = 0;
                 _effectiveTotalFee = _initialTotalFee;
                 _effectiveRemaining = _initialRemaining;
-                _lblDiscountInfo.Text = "";
+                lblDiscountInfo.Text = "";
                 ApplyInstallmentSelection();
                 return;
             }
@@ -231,8 +179,8 @@ public partial class CollectTuitionDialog : Form
             var discount = await _enrollmentService.GetDiscountByCodeAsync(code);
             if (discount == null)
             {
-                _lblDiscountInfo.ForeColor = Color.FromArgb(220, 38, 38);
-                _lblDiscountInfo.Text = "Mã không hợp lệ";
+                lblDiscountInfo.ForeColor = Color.FromArgb(220, 38, 38);
+                lblDiscountInfo.Text = "Mã không hợp lệ";
                 AppDialog.ShowWarning(this, "Mã giảm giá không hợp lệ", $"Không tìm thấy mã giảm giá '{code}' đang hoạt động.");
                 return;
             }
@@ -242,8 +190,8 @@ public partial class CollectTuitionDialog : Form
             DiscountAmount = discount.CalculateDiscount(_initialTotalFee);
             _effectiveTotalFee = Math.Max(0, _initialTotalFee - DiscountAmount);
             _effectiveRemaining = Math.Max(0, _effectiveTotalFee - _initialPaid);
-            _lblDiscountInfo.ForeColor = Color.FromArgb(22, 163, 74);
-            _lblDiscountInfo.Text = $"-{DiscountAmount:N0} đ";
+            lblDiscountInfo.ForeColor = Color.FromArgb(22, 163, 74);
+            lblDiscountInfo.Text = $"-{DiscountAmount:N0} đ";
             ApplyInstallmentSelection();
         };
 

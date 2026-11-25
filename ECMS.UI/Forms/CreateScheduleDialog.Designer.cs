@@ -161,7 +161,7 @@ partial class CreateScheduleDialog
         txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtSearch.Location = new System.Drawing.Point(100, 7);
         txtSearch.Name = "txtSearch";
-        txtSearch.PlaceholderText = "Nhập mã lớp, khóa học, giáo viên hoặc phòng học để tìm nhanh...";
+        txtSearch.PlaceholderText = "Nhập mã lớp, khóa học, giáo viên hoặc phòng học để tìm";
         txtSearch.Size = new System.Drawing.Size(460, 29);
         txtSearch.TabIndex = 1;
         // 
@@ -172,9 +172,9 @@ partial class CreateScheduleDialog
         lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSearch.Location = new System.Drawing.Point(6, 11);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new System.Drawing.Size(88, 20);
+        lblSearch.Size = new System.Drawing.Size(78, 20);
         lblSearch.TabIndex = 0;
-        lblSearch.Text = "Tìm nhanh:";
+        lblSearch.Text = "Tìm kiếm:";
         // 
         // pnlFooter
         // 
@@ -234,8 +234,6 @@ partial class CreateScheduleDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Tạo buổi học · Phát sinh lịch học theo lớp";

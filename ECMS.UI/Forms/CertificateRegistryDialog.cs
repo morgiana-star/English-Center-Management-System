@@ -224,7 +224,6 @@ public partial class CertificateRegistryDialog : Form
         cboCourseFilter.SelectedIndexChanged += (s, e) => LoadCertificates();
         cboYearFilter.SelectedIndexChanged += (s, e) => LoadCertificates();
 
-        btnClose.Click += (s, e) => Close();
 
         btnExportExcel.Click += async (s, e) =>
         {

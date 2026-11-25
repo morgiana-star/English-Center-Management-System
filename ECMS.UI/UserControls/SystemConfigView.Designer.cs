@@ -41,9 +41,15 @@ partial class SystemConfigView
         btnBrowseDb = new ECMS.UI.Controls.AppButton();
         txtDatabasePath = new ECMS.UI.Controls.AppTextBox();
         lblDatabasePath = new System.Windows.Forms.Label();
-        lblDbInfoSub = new System.Windows.Forms.Label();
         lblDbInfoTitle = new System.Windows.Forms.Label();
         cardCenterInfo = new ECMS.UI.Controls.AppCard();
+        btnBrowseLogo = new ECMS.UI.Controls.AppButton();
+        picLogoPreview = new System.Windows.Forms.PictureBox();
+        lblLogo = new System.Windows.Forms.Label();
+        txtShortName = new ECMS.UI.Controls.AppTextBox();
+        lblShortName = new System.Windows.Forms.Label();
+        txtAppName = new ECMS.UI.Controls.AppTextBox();
+        lblAppName = new System.Windows.Forms.Label();
         txtDirectorTitle = new ECMS.UI.Controls.AppTextBox();
         lblDirectorTitle = new System.Windows.Forms.Label();
         txtDirector = new ECMS.UI.Controls.AppTextBox();
@@ -63,9 +69,6 @@ partial class SystemConfigView
         tabGrading = new System.Windows.Forms.TabPage();
         pnlTabGradingContent = new System.Windows.Forms.Panel();
         cardAttendanceRules = new ECMS.UI.Controls.AppCard();
-        chkAutoLockAttendance = new System.Windows.Forms.CheckBox();
-        chkDebtCertRule = new System.Windows.Forms.CheckBox();
-        chkLateCounted = new System.Windows.Forms.CheckBox();
         txtAbsenceAlert = new ECMS.UI.Controls.AppTextBox();
         lblAbsenceAlert = new System.Windows.Forms.Label();
         txtMinAttendance = new ECMS.UI.Controls.AppTextBox();
@@ -89,7 +92,6 @@ partial class SystemConfigView
         pnlTabBackupContent = new System.Windows.Forms.Panel();
         cardBackupTable = new ECMS.UI.Controls.AppCard();
         dgvBackups = new ECMS.UI.Controls.AppDataGrid();
-        lblBackupListSub = new System.Windows.Forms.Label();
         lblBackupListTitle = new System.Windows.Forms.Label();
         cardAutoBackup = new ECMS.UI.Controls.AppCard();
         cboBackupTime = new ECMS.UI.Controls.AppComboBox();
@@ -101,12 +103,14 @@ partial class SystemConfigView
         btnOpenBackupFolder = new ECMS.UI.Controls.AppButton();
         btnRestoreBackup = new ECMS.UI.Controls.AppButton();
         btnCreateBackupNow = new ECMS.UI.Controls.AppButton();
+        lblDbInfoSub = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         tabMainConfig.SuspendLayout();
         tabCenter.SuspendLayout();
         pnlTabCenterContent.SuspendLayout();
         cardDbInfo.SuspendLayout();
         cardCenterInfo.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogoPreview).BeginInit();
         tabGrading.SuspendLayout();
         pnlTabGradingContent.SuspendLayout();
         cardAttendanceRules.SuspendLayout();
@@ -219,10 +223,10 @@ partial class SystemConfigView
         cardDbInfo.Controls.Add(lblDbInfoSub);
         cardDbInfo.Controls.Add(lblDbInfoTitle);
         cardDbInfo.CornerRadius = 6;
-        cardDbInfo.Location = new System.Drawing.Point(0, 390);
+        cardDbInfo.Location = new System.Drawing.Point(0, 340);
         cardDbInfo.Name = "cardDbInfo";
         cardDbInfo.Padding = new System.Windows.Forms.Padding(20);
-        cardDbInfo.Size = new System.Drawing.Size(1140, 270);
+        cardDbInfo.Size = new System.Drawing.Size(1140, 205);
         cardDbInfo.TabIndex = 2;
         // 
         // btnBrowseBackup
@@ -236,11 +240,11 @@ partial class SystemConfigView
         btnBrowseBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnBrowseBackup.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnBrowseBackup.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnBrowseBackup.Location = new System.Drawing.Point(990, 210);
+        btnBrowseBackup.Location = new System.Drawing.Point(990, 145);
         btnBrowseBackup.Name = "btnBrowseBackup";
         btnBrowseBackup.Size = new System.Drawing.Size(130, 34);
         btnBrowseBackup.TabIndex = 11;
-        btnBrowseBackup.Text = "📁 Chọn thư mục";
+        btnBrowseBackup.Text = "Chọn thư mục";
         btnBrowseBackup.UseVisualStyleBackColor = false;
         btnBrowseBackup.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
@@ -251,7 +255,7 @@ partial class SystemConfigView
         txtBackupDir.CornerRadius = 5;
         txtBackupDir.ErrorMessage = "";
         txtBackupDir.HasError = false;
-        txtBackupDir.Location = new System.Drawing.Point(20, 210);
+        txtBackupDir.Location = new System.Drawing.Point(20, 145);
         txtBackupDir.Name = "txtBackupDir";
         txtBackupDir.Placeholder = "D:\\ECMS_Backup\\";
         txtBackupDir.ReadOnly = false;
@@ -264,7 +268,7 @@ partial class SystemConfigView
         lblBackupDir.AutoSize = true;
         lblBackupDir.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblBackupDir.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblBackupDir.Location = new System.Drawing.Point(20, 188);
+        lblBackupDir.Location = new System.Drawing.Point(20, 122);
         lblBackupDir.Name = "lblBackupDir";
         lblBackupDir.Size = new System.Drawing.Size(209, 20);
         lblBackupDir.TabIndex = 9;
@@ -285,9 +289,10 @@ partial class SystemConfigView
         btnBrowseStorage.Name = "btnBrowseStorage";
         btnBrowseStorage.Size = new System.Drawing.Size(130, 34);
         btnBrowseStorage.TabIndex = 8;
-        btnBrowseStorage.Text = "📁 Chọn thư mục";
+        btnBrowseStorage.Text = "Chọn thư mục";
         btnBrowseStorage.UseVisualStyleBackColor = false;
         btnBrowseStorage.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnBrowseStorage.Visible = false;
         // 
         // txtStoragePath
         // 
@@ -303,6 +308,7 @@ partial class SystemConfigView
         txtStoragePath.Size = new System.Drawing.Size(950, 34);
         txtStoragePath.TabIndex = 7;
         txtStoragePath.UseSystemPasswordChar = false;
+        txtStoragePath.Visible = false;
         // 
         // lblStoragePath
         // 
@@ -314,6 +320,7 @@ partial class SystemConfigView
         lblStoragePath.Size = new System.Drawing.Size(231, 20);
         lblStoragePath.TabIndex = 6;
         lblStoragePath.Text = "Thư mục lưu trữ tài liệu học tập";
+        lblStoragePath.Visible = false;
         // 
         // btnCheckDb
         // 
@@ -379,17 +386,6 @@ partial class SystemConfigView
         lblDatabasePath.TabIndex = 2;
         lblDatabasePath.Text = "Đường dẫn CSDL SQLite *";
         // 
-        // lblDbInfoSub
-        // 
-        lblDbInfoSub.AutoSize = true;
-        lblDbInfoSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblDbInfoSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDbInfoSub.Location = new System.Drawing.Point(20, 36);
-        lblDbInfoSub.Name = "lblDbInfoSub";
-        lblDbInfoSub.Size = new System.Drawing.Size(502, 20);
-        lblDbInfoSub.TabIndex = 1;
-        lblDbInfoSub.Text = "Cấu hình vị trí tệp cơ sở dữ liệu SQLite và các thư mục lưu trữ của hệ thống";
-        // 
         // lblDbInfoTitle
         // 
         lblDbInfoTitle.AutoSize = true;
@@ -397,9 +393,9 @@ partial class SystemConfigView
         lblDbInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblDbInfoTitle.Location = new System.Drawing.Point(20, 10);
         lblDbInfoTitle.Name = "lblDbInfoTitle";
-        lblDbInfoTitle.Size = new System.Drawing.Size(256, 28);
+        lblDbInfoTitle.Size = new System.Drawing.Size(145, 28);
         lblDbInfoTitle.TabIndex = 0;
-        lblDbInfoTitle.Text = "Cơ sở dữ liệu & Lưu trữ tệp";
+        lblDbInfoTitle.Text = "Cơ sở dữ liệu";
         // 
         // cardCenterInfo
         // 
@@ -407,6 +403,13 @@ partial class SystemConfigView
         cardCenterInfo.BackColor = System.Drawing.Color.White;
         cardCenterInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardCenterInfo.BorderWidth = 1;
+        cardCenterInfo.Controls.Add(btnBrowseLogo);
+        cardCenterInfo.Controls.Add(picLogoPreview);
+        cardCenterInfo.Controls.Add(lblLogo);
+        cardCenterInfo.Controls.Add(txtShortName);
+        cardCenterInfo.Controls.Add(lblShortName);
+        cardCenterInfo.Controls.Add(txtAppName);
+        cardCenterInfo.Controls.Add(lblAppName);
         cardCenterInfo.Controls.Add(txtDirectorTitle);
         cardCenterInfo.Controls.Add(lblDirectorTitle);
         cardCenterInfo.Controls.Add(txtDirector);
@@ -427,8 +430,100 @@ partial class SystemConfigView
         cardCenterInfo.Location = new System.Drawing.Point(0, 3);
         cardCenterInfo.Name = "cardCenterInfo";
         cardCenterInfo.Padding = new System.Windows.Forms.Padding(20);
-        cardCenterInfo.Size = new System.Drawing.Size(1140, 373);
+        cardCenterInfo.Size = new System.Drawing.Size(1140, 320);
         cardCenterInfo.TabIndex = 1;
+        // 
+        // lblAppName
+        // 
+        lblAppName.AutoSize = true;
+        lblAppName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblAppName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblAppName.Location = new System.Drawing.Point(20, 238);
+        lblAppName.Name = "lblAppName";
+        lblAppName.Size = new System.Drawing.Size(228, 20);
+        lblAppName.TabIndex = 16;
+        lblAppName.Text = "Tên ứng dụng (Tiêu đề cửa sổ)";
+        // 
+        // txtAppName
+        // 
+        txtAppName.BackColor = System.Drawing.Color.Transparent;
+        txtAppName.CornerRadius = 5;
+        txtAppName.ErrorMessage = "";
+        txtAppName.HasError = false;
+        txtAppName.Location = new System.Drawing.Point(20, 260);
+        txtAppName.Name = "txtAppName";
+        txtAppName.Placeholder = "ECMS — Hệ thống quản lý trung tâm Anh ngữ";
+        txtAppName.ReadOnly = false;
+        txtAppName.Size = new System.Drawing.Size(400, 34);
+        txtAppName.TabIndex = 17;
+        txtAppName.UseSystemPasswordChar = false;
+        // 
+        // lblShortName
+        // 
+        lblShortName.AutoSize = true;
+        lblShortName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblShortName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblShortName.Location = new System.Drawing.Point(440, 238);
+        lblShortName.Name = "lblShortName";
+        lblShortName.Size = new System.Drawing.Size(91, 20);
+        lblShortName.TabIndex = 18;
+        lblShortName.Text = "Tên viết tắt";
+        // 
+        // txtShortName
+        // 
+        txtShortName.BackColor = System.Drawing.Color.Transparent;
+        txtShortName.CornerRadius = 5;
+        txtShortName.ErrorMessage = "";
+        txtShortName.HasError = false;
+        txtShortName.Location = new System.Drawing.Point(440, 260);
+        txtShortName.Name = "txtShortName";
+        txtShortName.Placeholder = "ECMS";
+        txtShortName.ReadOnly = false;
+        txtShortName.Size = new System.Drawing.Size(130, 34);
+        txtShortName.TabIndex = 19;
+        txtShortName.UseSystemPasswordChar = false;
+        // 
+        // lblLogo
+        // 
+        lblLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        lblLogo.AutoSize = true;
+        lblLogo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblLogo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblLogo.Location = new System.Drawing.Point(590, 238);
+        lblLogo.Name = "lblLogo";
+        lblLogo.Size = new System.Drawing.Size(230, 20);
+        lblLogo.TabIndex = 20;
+        lblLogo.Text = "Ảnh Logo trung tâm (PNG / JPG)";
+        // 
+        // picLogoPreview
+        // 
+        picLogoPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        picLogoPreview.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        picLogoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        picLogoPreview.Location = new System.Drawing.Point(590, 258);
+        picLogoPreview.Name = "picLogoPreview";
+        picLogoPreview.Size = new System.Drawing.Size(40, 40);
+        picLogoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+        picLogoPreview.TabIndex = 21;
+        picLogoPreview.TabStop = false;
+        // 
+        // btnBrowseLogo
+        // 
+        btnBrowseLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnBrowseLogo.BackColor = System.Drawing.Color.White;
+        btnBrowseLogo.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnBrowseLogo.CornerRadius = 5;
+        btnBrowseLogo.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnBrowseLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnBrowseLogo.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnBrowseLogo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnBrowseLogo.Location = new System.Drawing.Point(642, 260);
+        btnBrowseLogo.Name = "btnBrowseLogo";
+        btnBrowseLogo.Size = new System.Drawing.Size(140, 34);
+        btnBrowseLogo.TabIndex = 22;
+        btnBrowseLogo.Text = "Chọn ảnh logo";
+        btnBrowseLogo.UseVisualStyleBackColor = false;
+        btnBrowseLogo.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // txtDirectorTitle
         // 
@@ -437,13 +532,14 @@ partial class SystemConfigView
         txtDirectorTitle.CornerRadius = 5;
         txtDirectorTitle.ErrorMessage = "";
         txtDirectorTitle.HasError = false;
-        txtDirectorTitle.Location = new System.Drawing.Point(590, 260);
+        txtDirectorTitle.Location = new System.Drawing.Point(590, 241);
         txtDirectorTitle.Name = "txtDirectorTitle";
         txtDirectorTitle.Placeholder = "GIÁM ĐỐC TRUNG TÂM";
         txtDirectorTitle.ReadOnly = false;
         txtDirectorTitle.Size = new System.Drawing.Size(530, 34);
         txtDirectorTitle.TabIndex = 15;
         txtDirectorTitle.UseSystemPasswordChar = false;
+        txtDirectorTitle.Visible = false;
         // 
         // lblDirectorTitle
         // 
@@ -451,11 +547,12 @@ partial class SystemConfigView
         lblDirectorTitle.AutoSize = true;
         lblDirectorTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblDirectorTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblDirectorTitle.Location = new System.Drawing.Point(590, 238);
+        lblDirectorTitle.Location = new System.Drawing.Point(590, 219);
         lblDirectorTitle.Name = "lblDirectorTitle";
         lblDirectorTitle.Size = new System.Drawing.Size(141, 20);
         lblDirectorTitle.TabIndex = 14;
         lblDirectorTitle.Text = "Chức vụ người ký *";
+        lblDirectorTitle.Visible = false;
         // 
         // txtDirector
         // 
@@ -464,24 +561,26 @@ partial class SystemConfigView
         txtDirector.CornerRadius = 5;
         txtDirector.ErrorMessage = "";
         txtDirector.HasError = false;
-        txtDirector.Location = new System.Drawing.Point(20, 260);
+        txtDirector.Location = new System.Drawing.Point(20, 241);
         txtDirector.Name = "txtDirector";
         txtDirector.Placeholder = "Trần Minh Quân";
         txtDirector.ReadOnly = false;
         txtDirector.Size = new System.Drawing.Size(540, 34);
         txtDirector.TabIndex = 13;
         txtDirector.UseSystemPasswordChar = false;
+        txtDirector.Visible = false;
         // 
         // lblDirector
         // 
         lblDirector.AutoSize = true;
         lblDirector.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblDirector.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblDirector.Location = new System.Drawing.Point(20, 238);
+        lblDirector.Location = new System.Drawing.Point(20, 219);
         lblDirector.Name = "lblDirector";
         lblDirector.Size = new System.Drawing.Size(199, 20);
         lblDirector.TabIndex = 12;
         lblDirector.Text = "Người đại diện / Ký duyệt *";
+        lblDirector.Visible = false;
         // 
         // txtCenterAddress
         // 
@@ -490,7 +589,7 @@ partial class SystemConfigView
         txtCenterAddress.CornerRadius = 5;
         txtCenterAddress.ErrorMessage = "";
         txtCenterAddress.HasError = false;
-        txtCenterAddress.Location = new System.Drawing.Point(590, 190);
+        txtCenterAddress.Location = new System.Drawing.Point(590, 171);
         txtCenterAddress.Name = "txtCenterAddress";
         txtCenterAddress.Placeholder = "25 Nguyễn Văn Cừ, Quận 5, TP.HCM";
         txtCenterAddress.ReadOnly = false;
@@ -504,7 +603,7 @@ partial class SystemConfigView
         lblCenterAddress.AutoSize = true;
         lblCenterAddress.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterAddress.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCenterAddress.Location = new System.Drawing.Point(590, 168);
+        lblCenterAddress.Location = new System.Drawing.Point(590, 149);
         lblCenterAddress.Name = "lblCenterAddress";
         lblCenterAddress.Size = new System.Drawing.Size(112, 20);
         lblCenterAddress.TabIndex = 10;
@@ -517,7 +616,7 @@ partial class SystemConfigView
         txtCenterWebsite.CornerRadius = 5;
         txtCenterWebsite.ErrorMessage = "";
         txtCenterWebsite.HasError = false;
-        txtCenterWebsite.Location = new System.Drawing.Point(20, 190);
+        txtCenterWebsite.Location = new System.Drawing.Point(20, 171);
         txtCenterWebsite.Name = "txtCenterWebsite";
         txtCenterWebsite.Placeholder = "https://ecms.edu.vn";
         txtCenterWebsite.ReadOnly = false;
@@ -530,7 +629,7 @@ partial class SystemConfigView
         lblCenterWebsite.AutoSize = true;
         lblCenterWebsite.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterWebsite.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCenterWebsite.Location = new System.Drawing.Point(20, 168);
+        lblCenterWebsite.Location = new System.Drawing.Point(20, 149);
         lblCenterWebsite.Name = "lblCenterWebsite";
         lblCenterWebsite.Size = new System.Drawing.Size(140, 20);
         lblCenterWebsite.TabIndex = 8;
@@ -543,7 +642,7 @@ partial class SystemConfigView
         txtCenterEmail.CornerRadius = 5;
         txtCenterEmail.ErrorMessage = "";
         txtCenterEmail.HasError = false;
-        txtCenterEmail.Location = new System.Drawing.Point(590, 120);
+        txtCenterEmail.Location = new System.Drawing.Point(590, 101);
         txtCenterEmail.Name = "txtCenterEmail";
         txtCenterEmail.Placeholder = "contact@ecms.edu.vn";
         txtCenterEmail.ReadOnly = false;
@@ -557,7 +656,7 @@ partial class SystemConfigView
         lblCenterEmail.AutoSize = true;
         lblCenterEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCenterEmail.Location = new System.Drawing.Point(590, 98);
+        lblCenterEmail.Location = new System.Drawing.Point(590, 79);
         lblCenterEmail.Name = "lblCenterEmail";
         lblCenterEmail.Size = new System.Drawing.Size(97, 20);
         lblCenterEmail.TabIndex = 6;
@@ -570,7 +669,7 @@ partial class SystemConfigView
         txtCenterPhone.CornerRadius = 5;
         txtCenterPhone.ErrorMessage = "";
         txtCenterPhone.HasError = false;
-        txtCenterPhone.Location = new System.Drawing.Point(860, 120);
+        txtCenterPhone.Location = new System.Drawing.Point(860, 101);
         txtCenterPhone.Name = "txtCenterPhone";
         txtCenterPhone.Placeholder = "028 3822 6688";
         txtCenterPhone.ReadOnly = false;
@@ -584,7 +683,7 @@ partial class SystemConfigView
         lblCenterPhone.AutoSize = true;
         lblCenterPhone.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCenterPhone.Location = new System.Drawing.Point(860, 98);
+        lblCenterPhone.Location = new System.Drawing.Point(860, 79);
         lblCenterPhone.Name = "lblCenterPhone";
         lblCenterPhone.Size = new System.Drawing.Size(111, 20);
         lblCenterPhone.TabIndex = 4;
@@ -597,7 +696,7 @@ partial class SystemConfigView
         txtCenterName.CornerRadius = 5;
         txtCenterName.ErrorMessage = "";
         txtCenterName.HasError = false;
-        txtCenterName.Location = new System.Drawing.Point(20, 120);
+        txtCenterName.Location = new System.Drawing.Point(20, 101);
         txtCenterName.Name = "txtCenterName";
         txtCenterName.Placeholder = "Trung tâm Anh ngữ ECMS";
         txtCenterName.ReadOnly = false;
@@ -610,7 +709,7 @@ partial class SystemConfigView
         lblCenterName.AutoSize = true;
         lblCenterName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCenterName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCenterName.Location = new System.Drawing.Point(20, 98);
+        lblCenterName.Location = new System.Drawing.Point(20, 79);
         lblCenterName.Name = "lblCenterName";
         lblCenterName.Size = new System.Drawing.Size(120, 20);
         lblCenterName.TabIndex = 2;
@@ -667,9 +766,6 @@ partial class SystemConfigView
         cardAttendanceRules.BackColor = System.Drawing.Color.White;
         cardAttendanceRules.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardAttendanceRules.BorderWidth = 1;
-        cardAttendanceRules.Controls.Add(chkAutoLockAttendance);
-        cardAttendanceRules.Controls.Add(chkDebtCertRule);
-        cardAttendanceRules.Controls.Add(chkLateCounted);
         cardAttendanceRules.Controls.Add(txtAbsenceAlert);
         cardAttendanceRules.Controls.Add(lblAbsenceAlert);
         cardAttendanceRules.Controls.Add(txtMinAttendance);
@@ -680,53 +776,8 @@ partial class SystemConfigView
         cardAttendanceRules.Location = new System.Drawing.Point(0, 310);
         cardAttendanceRules.Name = "cardAttendanceRules";
         cardAttendanceRules.Padding = new System.Windows.Forms.Padding(20);
-        cardAttendanceRules.Size = new System.Drawing.Size(1140, 333);
+        cardAttendanceRules.Size = new System.Drawing.Size(1140, 160);
         cardAttendanceRules.TabIndex = 1;
-        // 
-        // chkAutoLockAttendance
-        // 
-        chkAutoLockAttendance.AutoSize = true;
-        chkAutoLockAttendance.Checked = true;
-        chkAutoLockAttendance.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkAutoLockAttendance.Cursor = System.Windows.Forms.Cursors.Hand;
-        chkAutoLockAttendance.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        chkAutoLockAttendance.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        chkAutoLockAttendance.Location = new System.Drawing.Point(20, 215);
-        chkAutoLockAttendance.Name = "chkAutoLockAttendance";
-        chkAutoLockAttendance.Size = new System.Drawing.Size(441, 25);
-        chkAutoLockAttendance.TabIndex = 8;
-        chkAutoLockAttendance.Text = "Tự động khóa sổ điểm danh sau 24h kể từ khi kết thúc buổi";
-        chkAutoLockAttendance.UseVisualStyleBackColor = true;
-        // 
-        // chkDebtCertRule
-        // 
-        chkDebtCertRule.AutoSize = true;
-        chkDebtCertRule.Checked = true;
-        chkDebtCertRule.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkDebtCertRule.Cursor = System.Windows.Forms.Cursors.Hand;
-        chkDebtCertRule.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        chkDebtCertRule.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
-        chkDebtCertRule.Location = new System.Drawing.Point(20, 180);
-        chkDebtCertRule.Name = "chkDebtCertRule";
-        chkDebtCertRule.Size = new System.Drawing.Size(572, 25);
-        chkDebtCertRule.TabIndex = 7;
-        chkDebtCertRule.Text = "Ràng buộc tài chính: Chỉ cho phép cấp chứng chỉ khi không có công nợ";
-        chkDebtCertRule.UseVisualStyleBackColor = true;
-        // 
-        // chkLateCounted
-        // 
-        chkLateCounted.AutoSize = true;
-        chkLateCounted.Checked = true;
-        chkLateCounted.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkLateCounted.Cursor = System.Windows.Forms.Cursors.Hand;
-        chkLateCounted.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        chkLateCounted.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        chkLateCounted.Location = new System.Drawing.Point(20, 145);
-        chkLateCounted.Name = "chkLateCounted";
-        chkLateCounted.Size = new System.Drawing.Size(343, 25);
-        chkLateCounted.TabIndex = 6;
-        chkLateCounted.Text = "Đi muộn (< 15 phút) được tính là có tham dự";
-        chkLateCounted.UseVisualStyleBackColor = true;
         // 
         // txtAbsenceAlert
         // 
@@ -1013,7 +1064,6 @@ partial class SystemConfigView
         cardBackupTable.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardBackupTable.BorderWidth = 1;
         cardBackupTable.Controls.Add(dgvBackups);
-        cardBackupTable.Controls.Add(lblBackupListSub);
         cardBackupTable.Controls.Add(lblBackupListTitle);
         cardBackupTable.CornerRadius = 6;
         cardBackupTable.Location = new System.Drawing.Point(0, 160);
@@ -1060,26 +1110,15 @@ partial class SystemConfigView
         dgvBackups.DefaultCellStyle = dataGridViewCellStyle3;
         dgvBackups.EnableHeadersVisualStyles = false;
         dgvBackups.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        dgvBackups.Location = new System.Drawing.Point(20, 70);
+        dgvBackups.Location = new System.Drawing.Point(20, 57);
         dgvBackups.MultiSelect = false;
         dgvBackups.Name = "dgvBackups";
         dgvBackups.ReadOnly = true;
         dgvBackups.RowHeadersVisible = false;
         dgvBackups.RowHeadersWidth = 51;
         dgvBackups.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvBackups.Size = new System.Drawing.Size(1120, 410);
+        dgvBackups.Size = new System.Drawing.Size(1120, 423);
         dgvBackups.TabIndex = 2;
-        // 
-        // lblBackupListSub
-        // 
-        lblBackupListSub.AutoSize = true;
-        lblBackupListSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblBackupListSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblBackupListSub.Location = new System.Drawing.Point(20, 36);
-        lblBackupListSub.Name = "lblBackupListSub";
-        lblBackupListSub.Size = new System.Drawing.Size(567, 20);
-        lblBackupListSub.TabIndex = 1;
-        lblBackupListSub.Text = ("Danh sách các bản sao lưu đã tạo, có thể phục hồi dữ liệu về trạng thái thời điểm" + " đó");
         // 
         // lblBackupListTitle
         // 
@@ -1241,6 +1280,17 @@ partial class SystemConfigView
         btnCreateBackupNow.UseVisualStyleBackColor = false;
         btnCreateBackupNow.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
+        // lblDbInfoSub
+        // 
+        lblDbInfoSub.AutoSize = true;
+        lblDbInfoSub.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblDbInfoSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblDbInfoSub.Location = new System.Drawing.Point(20, 36);
+        lblDbInfoSub.Name = "lblDbInfoSub";
+        lblDbInfoSub.Size = new System.Drawing.Size(502, 20);
+        lblDbInfoSub.TabIndex = 1;
+        lblDbInfoSub.Text = "Cấu hình vị trí tệp cơ sở dữ liệu SQLite và các thư mục lưu trữ của hệ thống";
+        // 
         // SystemConfigView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -1260,6 +1310,7 @@ partial class SystemConfigView
         cardDbInfo.PerformLayout();
         cardCenterInfo.ResumeLayout(false);
         cardCenterInfo.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogoPreview).EndInit();
         tabGrading.ResumeLayout(false);
         pnlTabGradingContent.ResumeLayout(false);
         cardAttendanceRules.ResumeLayout(false);
@@ -1307,6 +1358,13 @@ partial class SystemConfigView
     private ECMS.UI.Controls.AppTextBox txtDirector;
     private System.Windows.Forms.Label lblDirectorTitle;
     private ECMS.UI.Controls.AppTextBox txtDirectorTitle;
+    private System.Windows.Forms.Label lblAppName;
+    private ECMS.UI.Controls.AppTextBox txtAppName;
+    private System.Windows.Forms.Label lblShortName;
+    private ECMS.UI.Controls.AppTextBox txtShortName;
+    private System.Windows.Forms.Label lblLogo;
+    private System.Windows.Forms.PictureBox picLogoPreview;
+    private ECMS.UI.Controls.AppButton btnBrowseLogo;
 
     private ECMS.UI.Controls.AppCard cardDbInfo;
     private System.Windows.Forms.Label lblDbInfoTitle;
@@ -1345,9 +1403,6 @@ partial class SystemConfigView
     private ECMS.UI.Controls.AppTextBox txtMinAttendance;
     private System.Windows.Forms.Label lblAbsenceAlert;
     private ECMS.UI.Controls.AppTextBox txtAbsenceAlert;
-    private System.Windows.Forms.CheckBox chkLateCounted;
-    private System.Windows.Forms.CheckBox chkDebtCertRule;
-    private System.Windows.Forms.CheckBox chkAutoLockAttendance;
 
     // Tab 3: Backup & Restore
     private System.Windows.Forms.Panel pnlTabBackupContent;
@@ -1365,6 +1420,5 @@ partial class SystemConfigView
 
     private ECMS.UI.Controls.AppCard cardBackupTable;
     private System.Windows.Forms.Label lblBackupListTitle;
-    private System.Windows.Forms.Label lblBackupListSub;
     private ECMS.UI.Controls.AppDataGrid dgvBackups;
 }

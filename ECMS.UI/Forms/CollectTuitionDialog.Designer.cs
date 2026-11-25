@@ -26,6 +26,10 @@ partial class CollectTuitionDialog
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardPaymentDetails = new ECMS.UI.Controls.AppCard();
+        lblDiscountInfo = new System.Windows.Forms.Label();
+        btnApplyDiscount = new ECMS.UI.Controls.AppButton();
+        txtDiscountCode = new System.Windows.Forms.TextBox();
+        lblDiscountTitle = new System.Windows.Forms.Label();
         txtNote = new System.Windows.Forms.TextBox();
         lblNoteTitle = new System.Windows.Forms.Label();
         txtReference = new System.Windows.Forms.TextBox();
@@ -56,7 +60,7 @@ partial class CollectTuitionDialog
         lblTotalVal = new System.Windows.Forms.Label();
         lblTotalTitle = new System.Windows.Forms.Label();
         lblClassInfo = new System.Windows.Forms.Label();
-        cboStudentSelect = new System.Windows.Forms.ComboBox();
+        lblStudentDisplay = new System.Windows.Forms.Label();
         lblStudentTitle = new System.Windows.Forms.Label();
         lblSectionStudent = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
@@ -128,6 +132,10 @@ partial class CollectTuitionDialog
         cardPaymentDetails.BackColor = System.Drawing.Color.White;
         cardPaymentDetails.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardPaymentDetails.BorderWidth = 1;
+        cardPaymentDetails.Controls.Add(lblDiscountInfo);
+        cardPaymentDetails.Controls.Add(btnApplyDiscount);
+        cardPaymentDetails.Controls.Add(txtDiscountCode);
+        cardPaymentDetails.Controls.Add(lblDiscountTitle);
         cardPaymentDetails.Controls.Add(txtNote);
         cardPaymentDetails.Controls.Add(lblNoteTitle);
         cardPaymentDetails.Controls.Add(txtReference);
@@ -251,6 +259,54 @@ partial class CollectTuitionDialog
         lblMethodTitle.TabIndex = 11;
         lblMethodTitle.Text = "Phương thức:";
         // 
+        // lblDiscountTitle
+        // 
+        lblDiscountTitle.AutoSize = true;
+        lblDiscountTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        lblDiscountTitle.Location = new System.Drawing.Point(312, 77);
+        lblDiscountTitle.Name = "lblDiscountTitle";
+        lblDiscountTitle.Size = new System.Drawing.Size(91, 20);
+        lblDiscountTitle.TabIndex = 17;
+        lblDiscountTitle.Text = "Mã giảm giá:";
+        // 
+        // txtDiscountCode
+        // 
+        txtDiscountCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        txtDiscountCode.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        txtDiscountCode.Location = new System.Drawing.Point(405, 73);
+        txtDiscountCode.Name = "txtDiscountCode";
+        txtDiscountCode.PlaceholderText = "VD: HVCU10";
+        txtDiscountCode.Size = new System.Drawing.Size(150, 29);
+        txtDiscountCode.TabIndex = 18;
+        // 
+        // btnApplyDiscount
+        // 
+        btnApplyDiscount.BackColor = System.Drawing.Color.White;
+        btnApplyDiscount.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnApplyDiscount.CornerRadius = 5;
+        btnApplyDiscount.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnApplyDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnApplyDiscount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        btnApplyDiscount.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnApplyDiscount.Location = new System.Drawing.Point(562, 72);
+        btnApplyDiscount.Name = "btnApplyDiscount";
+        btnApplyDiscount.Size = new System.Drawing.Size(86, 30);
+        btnApplyDiscount.TabIndex = 19;
+        btnApplyDiscount.Text = "Áp dụng";
+        btnApplyDiscount.UseVisualStyleBackColor = false;
+        btnApplyDiscount.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // lblDiscountInfo
+        // 
+        lblDiscountInfo.AutoSize = true;
+        lblDiscountInfo.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
+        lblDiscountInfo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)163)), ((int)((byte)74)));
+        lblDiscountInfo.Location = new System.Drawing.Point(655, 78);
+        lblDiscountInfo.Name = "lblDiscountInfo";
+        lblDiscountInfo.Size = new System.Drawing.Size(0, 19);
+        lblDiscountInfo.TabIndex = 20;
+        // 
         // lblAmountWords
         // 
         lblAmountWords.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
@@ -352,7 +408,7 @@ partial class CollectTuitionDialog
         cardStudentSummary.BorderWidth = 1;
         cardStudentSummary.Controls.Add(pnlStatsRow);
         cardStudentSummary.Controls.Add(lblClassInfo);
-        cardStudentSummary.Controls.Add(cboStudentSelect);
+        cardStudentSummary.Controls.Add(lblStudentDisplay);
         cardStudentSummary.Controls.Add(lblStudentTitle);
         cardStudentSummary.Controls.Add(lblSectionStudent);
         cardStudentSummary.CornerRadius = 6;
@@ -505,15 +561,16 @@ partial class CollectTuitionDialog
         lblClassInfo.TabIndex = 3;
         lblClassInfo.Text = "Khóa / Lớp: IELTS Foundation · IELTS-F01";
         // 
-        // cboStudentSelect
+        // lblStudentDisplay
         // 
-        cboStudentSelect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-        cboStudentSelect.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        cboStudentSelect.FormattingEnabled = true;
-        cboStudentSelect.Location = new System.Drawing.Point(145, 44);
-        cboStudentSelect.Name = "cboStudentSelect";
-        cboStudentSelect.Size = new System.Drawing.Size(315, 29);
-        cboStudentSelect.TabIndex = 2;
+        lblStudentDisplay.AutoSize = true;
+        lblStudentDisplay.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblStudentDisplay.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
+        lblStudentDisplay.Location = new System.Drawing.Point(145, 46);
+        lblStudentDisplay.Name = "lblStudentDisplay";
+        lblStudentDisplay.Size = new System.Drawing.Size(242, 23);
+        lblStudentDisplay.TabIndex = 2;
+        lblStudentDisplay.Text = "Nguyễn Minh Anh  ·  HV-0241";
         // 
         // lblStudentTitle
         // 
@@ -522,9 +579,9 @@ partial class CollectTuitionDialog
         lblStudentTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblStudentTitle.Location = new System.Drawing.Point(18, 48);
         lblStudentTitle.Name = "lblStudentTitle";
-        lblStudentTitle.Size = new System.Drawing.Size(111, 20);
+        lblStudentTitle.Size = new System.Drawing.Size(75, 20);
         lblStudentTitle.TabIndex = 1;
-        lblStudentTitle.Text = "Chọn học viên:";
+        lblStudentTitle.Text = "Học viên:";
         // 
         // lblSectionStudent
         // 
@@ -644,7 +701,7 @@ partial class CollectTuitionDialog
     private ECMS.UI.Controls.AppCard cardStudentSummary;
     private System.Windows.Forms.Label lblSectionStudent;
     private System.Windows.Forms.Label lblStudentTitle;
-    private System.Windows.Forms.ComboBox cboStudentSelect;
+    private System.Windows.Forms.Label lblStudentDisplay;
     private System.Windows.Forms.Label lblClassInfo;
     private System.Windows.Forms.TableLayoutPanel pnlStatsRow;
     private ECMS.UI.Controls.AppCard cardTotal;
@@ -675,6 +732,10 @@ partial class CollectTuitionDialog
     private System.Windows.Forms.TextBox txtReference;
     private System.Windows.Forms.Label lblNoteTitle;
     private System.Windows.Forms.TextBox txtNote;
+    private System.Windows.Forms.Label lblDiscountTitle;
+    private System.Windows.Forms.TextBox txtDiscountCode;
+    private ECMS.UI.Controls.AppButton btnApplyDiscount;
+    private System.Windows.Forms.Label lblDiscountInfo;
     private System.Windows.Forms.Panel pnlFooter;
     private System.Windows.Forms.CheckBox chkPrintReceipt;
     private ECMS.UI.Controls.AppButton btnCancel;

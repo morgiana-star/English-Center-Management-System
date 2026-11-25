@@ -74,24 +74,25 @@ partial class TeacherGradeManagementView
         btnCreateAssessmentTop.Text = "+ Tạo bài kiểm tra";
         btnCreateAssessmentTop.UseVisualStyleBackColor = false;
         btnCreateAssessmentTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        btnCreateAssessmentTop.Visible = false;
         // 
         // btnEnterGradesTop
         // 
         btnEnterGradesTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnEnterGradesTop.BackColor = System.Drawing.Color.White;
-        btnEnterGradesTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnEnterGradesTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
+        btnEnterGradesTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnEnterGradesTop.CornerRadius = 5;
         btnEnterGradesTop.Cursor = System.Windows.Forms.Cursors.Hand;
         btnEnterGradesTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnEnterGradesTop.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnEnterGradesTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnEnterGradesTop.Location = new System.Drawing.Point(860, 18);
+        btnEnterGradesTop.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        btnEnterGradesTop.ForeColor = System.Drawing.Color.White;
+        btnEnterGradesTop.Location = new System.Drawing.Point(965, 18);
         btnEnterGradesTop.Name = "btnEnterGradesTop";
-        btnEnterGradesTop.Size = new System.Drawing.Size(115, 36);
+        btnEnterGradesTop.Size = new System.Drawing.Size(170, 36);
         btnEnterGradesTop.TabIndex = 3;
-        btnEnterGradesTop.Text = "Nhập điểm";
+        btnEnterGradesTop.Text = "Nhập điểm theo lớp";
         btnEnterGradesTop.UseVisualStyleBackColor = false;
-        btnEnterGradesTop.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        btnEnterGradesTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
         // lblTitle
         // 
@@ -100,9 +101,9 @@ partial class TeacherGradeManagementView
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(245, 37);
+        lblTitle.Size = new System.Drawing.Size(218, 37);
         lblTitle.TabIndex = 1;
-        lblTitle.Text = "Kiểm tra & Điểm số";
+        lblTitle.Text = "Quản lý điểm số";
         // 
         // pnlBody
         // 
@@ -217,6 +218,7 @@ partial class TeacherGradeManagementView
         cboTypeFilter.Name = "cboTypeFilter";
         cboTypeFilter.Size = new System.Drawing.Size(185, 29);
         cboTypeFilter.TabIndex = 2;
+        cboTypeFilter.Visible = false;
         // 
         // txtSearchAssessment
         // 

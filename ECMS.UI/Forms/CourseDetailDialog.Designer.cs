@@ -210,9 +210,9 @@ partial class CourseDetailDialog
         lblClassListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblClassListTitle.Location = new System.Drawing.Point(16, 14);
         lblClassListTitle.Name = "lblClassListTitle";
-        lblClassListTitle.Size = new System.Drawing.Size(255, 25);
+        lblClassListTitle.Size = new System.Drawing.Size(219, 25);
         lblClassListTitle.TabIndex = 0;
-        lblClassListTitle.Text = "Các lớp thuộc chương trình";
+        lblClassListTitle.Text = "Các lớp thuộc khóa học";
         // 
         // cardStatClasses
         // 
@@ -232,7 +232,7 @@ partial class CourseDetailDialog
         // 
         lblStatClassesValue.AutoSize = true;
         lblStatClassesValue.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-        lblStatClassesValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblStatClassesValue.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStatClassesValue.Location = new System.Drawing.Point(14, 30);
         lblStatClassesValue.Name = "lblStatClassesValue";
         lblStatClassesValue.Size = new System.Drawing.Size(90, 41);
@@ -367,8 +367,6 @@ partial class CourseDetailDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

@@ -15,10 +15,17 @@ partial class ManageSchedulesDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSubtitle = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlFilter = new System.Windows.Forms.Panel();
         txtSearch = new ECMS.UI.Controls.AppTextBox();
@@ -27,7 +34,6 @@ partial class ManageSchedulesDialog
         dgvSchedules = new ECMS.UI.Controls.AppDataGrid();
         pnlFooter = new System.Windows.Forms.Panel();
         lblSummary = new System.Windows.Forms.Label();
-        btnClose = new ECMS.UI.Controls.AppButton();
         pnlHeader.SuspendLayout();
         pnlFilter.SuspendLayout();
         pnlBody.SuspendLayout();
@@ -39,7 +45,6 @@ partial class ManageSchedulesDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -53,22 +58,11 @@ partial class ManageSchedulesDialog
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(24, 12);
+        lblTitle.Location = new System.Drawing.Point(20, 19);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(220, 32);
+        lblTitle.Size = new System.Drawing.Size(285, 32);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Quản lý lịch học các lớp";
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblSubtitle.Location = new System.Drawing.Point(26, 44);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(480, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Danh sách lịch học đã tạo từ cơ sở dữ liệu (chỉ xóa được lịch học chưa phát sinh điểm danh)";
         // 
         // pnlFilter
         // 
@@ -90,7 +84,7 @@ partial class ManageSchedulesDialog
         txtSearch.HasError = false;
         txtSearch.Location = new System.Drawing.Point(20, 10);
         txtSearch.Name = "txtSearch";
-        txtSearch.Placeholder = "Tìm theo mã lớp, giáo viên, phòng học, khung giờ...";
+        txtSearch.Placeholder = "Tìm theo mã lớp, giáo viên, phòng học, khung giờ";
         txtSearch.ReadOnly = false;
         txtSearch.Size = new System.Drawing.Size(1040, 34);
         txtSearch.TabIndex = 0;
@@ -125,16 +119,55 @@ partial class ManageSchedulesDialog
         // 
         dgvSchedules.AllowUserToAddRows = false;
         dgvSchedules.AllowUserToDeleteRows = false;
+        dgvSchedules.AllowUserToResizeColumns = false;
+        dgvSchedules.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvSchedules.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
         dgvSchedules.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvSchedules.BackgroundColor = System.Drawing.Color.White;
         dgvSchedules.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvSchedules.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvSchedules.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvSchedules.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvSchedules.ColumnHeadersHeight = 36;
+        dgvSchedules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvSchedules.DefaultCellStyle = dataGridViewCellStyle3;
         dgvSchedules.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvSchedules.EnableHeadersVisualStyles = false;
+        dgvSchedules.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         dgvSchedules.Location = new System.Drawing.Point(12, 12);
         dgvSchedules.MultiSelect = false;
         dgvSchedules.Name = "dgvSchedules";
         dgvSchedules.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvSchedules.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvSchedules.RowHeadersVisible = false;
-        dgvSchedules.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+        dgvSchedules.RowHeadersWidth = 51;
         dgvSchedules.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvSchedules.Size = new System.Drawing.Size(1016, 408);
         dgvSchedules.TabIndex = 0;
@@ -142,7 +175,6 @@ partial class ManageSchedulesDialog
         // pnlFooter
         // 
         pnlFooter.BackColor = System.Drawing.Color.White;
-        pnlFooter.Controls.Add(btnClose);
         pnlFooter.Controls.Add(lblSummary);
         pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         pnlFooter.Location = new System.Drawing.Point(0, 580);
@@ -158,27 +190,9 @@ partial class ManageSchedulesDialog
         lblSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblSummary.Location = new System.Drawing.Point(24, 18);
         lblSummary.Name = "lblSummary";
-        lblSummary.Size = new System.Drawing.Size(220, 20);
+        lblSummary.Size = new System.Drawing.Size(136, 20);
         lblSummary.TabIndex = 0;
         lblSummary.Text = "Tổng số lịch lớp: 0";
-        // 
-        // btnClose
-        // 
-        btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnClose.BackColor = System.Drawing.Color.White;
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnClose.CornerRadius = 6;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnClose.Location = new System.Drawing.Point(946, 10);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(110, 36);
-        btnClose.TabIndex = 1;
-        btnClose.Text = "Đóng";
-        btnClose.UseVisualStyleBackColor = false;
-        btnClose.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // ManageSchedulesDialog
         // 
@@ -191,8 +205,6 @@ partial class ManageSchedulesDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         MinimumSize = new System.Drawing.Size(920, 520);
         ShowInTaskbar = false;
@@ -213,7 +225,6 @@ partial class ManageSchedulesDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlFilter;
     private ECMS.UI.Controls.AppTextBox txtSearch;
     private System.Windows.Forms.Panel pnlBody;
@@ -221,5 +232,4 @@ partial class ManageSchedulesDialog
     private ECMS.UI.Controls.AppDataGrid dgvSchedules;
     private System.Windows.Forms.Panel pnlFooter;
     private System.Windows.Forms.Label lblSummary;
-    private ECMS.UI.Controls.AppButton btnClose;
 }

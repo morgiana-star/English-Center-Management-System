@@ -658,7 +658,7 @@ partial class DashboardOverviewView
         _lblAttSub.AutoSize = true;
         _lblAttSub.Font = new System.Drawing.Font("Segoe UI", 8.25F);
         _lblAttSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        _lblAttSub.Location = new System.Drawing.Point(100, 50);
+        _lblAttSub.Location = new System.Drawing.Point(115, 50);
         _lblAttSub.Name = "_lblAttSub";
         _lblAttSub.Size = new System.Drawing.Size(139, 19);
         _lblAttSub.TabIndex = 3;

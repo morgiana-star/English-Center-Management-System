@@ -180,7 +180,7 @@ partial class EditRoomDialog
         txtNotes.HasError = false;
         txtNotes.Location = new System.Drawing.Point(20, 312);
         txtNotes.Name = "txtNotes";
-        txtNotes.Placeholder = "Nhập ghi chú trang thiết bị (Máy chiếu, bảng tương tác, loa...)";
+        txtNotes.Placeholder = "Nhập ghi chú trang thiết bị";
         txtNotes.ReadOnly = false;
         txtNotes.Size = new System.Drawing.Size(472, 36);
         txtNotes.TabIndex = 5;
@@ -193,9 +193,9 @@ partial class EditRoomDialog
         lblNotes.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
         lblNotes.Location = new System.Drawing.Point(20, 290);
         lblNotes.Name = "lblNotes";
-        lblNotes.Size = new System.Drawing.Size(127, 20);
+        lblNotes.Size = new System.Drawing.Size(66, 20);
         lblNotes.TabIndex = 6;
-        lblNotes.Text = "Ghi chú & Thiết bị:";
+        lblNotes.Text = "Ghi chú:";
         // 
         // txtCapacity
         // 
@@ -206,7 +206,7 @@ partial class EditRoomDialog
         txtCapacity.HasError = false;
         txtCapacity.Location = new System.Drawing.Point(20, 180);
         txtCapacity.Name = "txtCapacity";
-        txtCapacity.Placeholder = "VD: 24";
+        txtCapacity.Placeholder = "Nhập sức chứa";
         txtCapacity.ReadOnly = false;
         txtCapacity.Size = new System.Drawing.Size(472, 36);
         txtCapacity.TabIndex = 3;
@@ -232,7 +232,7 @@ partial class EditRoomDialog
         txtRoomName.HasError = false;
         txtRoomName.Location = new System.Drawing.Point(20, 114);
         txtRoomName.Name = "txtRoomName";
-        txtRoomName.Placeholder = "VD: Phòng IELTS 201";
+        txtRoomName.Placeholder = "Nhập tên phòng";
         txtRoomName.ReadOnly = false;
         txtRoomName.Size = new System.Drawing.Size(472, 36);
         txtRoomName.TabIndex = 2;
@@ -258,7 +258,7 @@ partial class EditRoomDialog
         txtRoomCode.HasError = false;
         txtRoomCode.Location = new System.Drawing.Point(20, 48);
         txtRoomCode.Name = "txtRoomCode";
-        txtRoomCode.Placeholder = "VD: P201";
+        txtRoomCode.Placeholder = "Nhập mã phòng";
         txtRoomCode.ReadOnly = false;
         txtRoomCode.Size = new System.Drawing.Size(472, 36);
         txtRoomCode.TabIndex = 1;
@@ -284,8 +284,6 @@ partial class EditRoomDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Quản lý phòng học · ECMS";

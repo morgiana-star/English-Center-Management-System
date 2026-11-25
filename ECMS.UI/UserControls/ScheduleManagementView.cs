@@ -15,7 +15,6 @@ namespace ECMS.UI.UserControls;
 public partial class ScheduleManagementView : UserControl
 {
     private readonly IScheduleService _scheduleService = new ScheduleService();
-    private AppButton _btnManageSchedules = null!;
     private bool _isUpdatingFilters = false;
 
     private record SemesterOption(string Display, DateTime StartDate, DateTime EndDate);
@@ -63,22 +62,7 @@ public partial class ScheduleManagementView : UserControl
     {
         btnCreateSession.Text = "Tạo buổi học";
         btnManageRooms.Text = "Quản lý phòng";
-
-        // Đặt nút "Quản lý lịch học" ở giữa "Quản lý phòng" và "Tạo buổi học"
-        _btnManageSchedules = new AppButton
-        {
-            Name = "btnManageSchedules",
-            Text = "Quản lý lịch học",
-            Size = new Size(145, 36),
-            Location = new Point(btnCreateSession.Left - 155, btnCreateSession.Top),
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 5,
-            Cursor = Cursors.Hand
-        };
-        btnManageRooms.Location = new Point(_btnManageSchedules.Left - btnManageRooms.Width - 10, btnManageRooms.Top);
-        pnlHeader.Controls.Add(_btnManageSchedules);
+        btnManageSchedules.Text = "Quản lý lịch học";
     }
 
     private void SetupFilters()
@@ -384,7 +368,7 @@ public partial class ScheduleManagementView : UserControl
             dlg.ShowDialog(FindForm());
         };
 
-        _btnManageSchedules.Click += async (s, e) =>
+        btnManageSchedules.Click += async (s, e) =>
         {
             using var dlg = new ManageSchedulesDialog();
             dlg.ShowDialog(FindForm());

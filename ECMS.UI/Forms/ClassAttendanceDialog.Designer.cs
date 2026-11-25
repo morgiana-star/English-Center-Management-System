@@ -34,7 +34,6 @@ partial class ClassAttendanceDialog
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        btnClose = new ECMS.UI.Controls.AppButton();
         lblSub = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlTabs = new System.Windows.Forms.Panel();
@@ -74,7 +73,6 @@ partial class ClassAttendanceDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(btnClose);
         pnlHeader.Controls.Add(lblSub);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -83,24 +81,6 @@ partial class ClassAttendanceDialog
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
         pnlHeader.Size = new System.Drawing.Size(1200, 75);
         pnlHeader.TabIndex = 0;
-        // 
-        // btnClose
-        // 
-        btnClose.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnClose.BackColor = System.Drawing.Color.White;
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnClose.CornerRadius = 5;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnClose.Location = new System.Drawing.Point(1090, 18);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(90, 36);
-        btnClose.TabIndex = 2;
-        btnClose.Text = "Đóng";
-        btnClose.UseVisualStyleBackColor = false;
-        btnClose.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblSub
         // 
@@ -135,6 +115,7 @@ partial class ClassAttendanceDialog
         pnlTabs.Padding = new System.Windows.Forms.Padding(24, 0, 24, 0);
         pnlTabs.Size = new System.Drawing.Size(1200, 42);
         pnlTabs.TabIndex = 1;
+        pnlTabs.Visible = false;
         // 
         // btnTabOverview
         // 
@@ -149,6 +130,7 @@ partial class ClassAttendanceDialog
         btnTabOverview.TabIndex = 1;
         btnTabOverview.Text = "Tổng quan chuyên cần cả lớp";
         btnTabOverview.UseVisualStyleBackColor = true;
+        btnTabOverview.Visible = false;
         // 
         // btnTabSessions
         // 
@@ -455,8 +437,10 @@ partial class ClassAttendanceDialog
         dgvMatrix.AllowUserToResizeRows = false;
         dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         dgvMatrix.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
+        dgvMatrix.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvMatrix.BackgroundColor = System.Drawing.Color.White;
         dgvMatrix.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvMatrix.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         dgvMatrix.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
         dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
         dataGridViewCellStyle10.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
@@ -523,8 +507,6 @@ partial class ClassAttendanceDialog
         Controls.Add(pnlTabs);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Điểm danh lớp học";
@@ -553,7 +535,6 @@ partial class ClassAttendanceDialog
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Label lblSub;
-    private ECMS.UI.Controls.AppButton btnClose;
     private System.Windows.Forms.Panel pnlTabs;
     private System.Windows.Forms.Button btnTabSessions;
     private System.Windows.Forms.Button btnTabOverview;

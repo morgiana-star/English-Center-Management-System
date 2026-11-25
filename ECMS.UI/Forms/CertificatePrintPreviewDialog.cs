@@ -126,9 +126,7 @@ public partial class CertificatePrintPreviewDialog : Form
         lblIssueLocationDate.Text = $"TP. Hồ Chí Minh, ngày {DateTime.Now:dd} tháng {DateTime.Now:MM} năm {DateTime.Now:yyyy}";
         lblDirectorTitle.Text = _signerRole.ToUpper();
         lblDirectorName.Text = _signerName;
-
-        btnClose.Click += (s, e) => Close();
-
+        
         btnPrintCert.Click += (s, e) =>
         {
             string printer = cboPrinter.SelectedItem?.ToString() ?? "Máy in mặc định";

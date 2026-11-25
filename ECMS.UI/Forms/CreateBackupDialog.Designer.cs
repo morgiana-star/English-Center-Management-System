@@ -22,7 +22,6 @@ partial class CreateBackupDialog
     private void InitializeComponent()
     {
         pnlHeader = new System.Windows.Forms.Panel();
-        btnCloseTop = new System.Windows.Forms.Label();
         lblDialogTitle = new System.Windows.Forms.Label();
         pnlContent = new System.Windows.Forms.Panel();
         btnConfirmBackup = new ECMS.UI.Controls.AppButton();
@@ -44,7 +43,6 @@ partial class CreateBackupDialog
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(btnCloseTop);
         pnlHeader.Controls.Add(lblDialogTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -52,19 +50,6 @@ partial class CreateBackupDialog
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
         pnlHeader.Size = new System.Drawing.Size(600, 56);
         pnlHeader.TabIndex = 0;
-        // 
-        // btnCloseTop
-        // 
-        btnCloseTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnCloseTop.AutoSize = true;
-        btnCloseTop.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnCloseTop.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        btnCloseTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnCloseTop.Location = new System.Drawing.Point(556, 16);
-        btnCloseTop.Name = "btnCloseTop";
-        btnCloseTop.Size = new System.Drawing.Size(29, 28);
-        btnCloseTop.TabIndex = 1;
-        btnCloseTop.Text = "✕";
         // 
         // lblDialogTitle
         // 
@@ -110,7 +95,7 @@ partial class CreateBackupDialog
         btnConfirmBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnConfirmBackup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnConfirmBackup.ForeColor = System.Drawing.Color.White;
-        btnConfirmBackup.Location = new System.Drawing.Point(446, 310);
+        btnConfirmBackup.Location = new System.Drawing.Point(443, 310);
         btnConfirmBackup.Name = "btnConfirmBackup";
         btnConfirmBackup.Size = new System.Drawing.Size(130, 34);
         btnConfirmBackup.TabIndex = 13;
@@ -256,9 +241,7 @@ partial class CreateBackupDialog
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -274,7 +257,6 @@ partial class CreateBackupDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblDialogTitle;
-    private System.Windows.Forms.Label btnCloseTop;
     private System.Windows.Forms.Panel pnlContent;
     private System.Windows.Forms.Label lblSourceKey;
     private System.Windows.Forms.Label lblSourceVal;

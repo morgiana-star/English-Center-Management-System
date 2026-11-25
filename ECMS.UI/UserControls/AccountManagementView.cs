@@ -236,11 +236,6 @@ public partial class AccountManagementView : UserControl
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Kế toán", FillWeight = 12, ReadOnly = true });
         dgvPermissions.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên", FillWeight = 12, ReadOnly = true });
 
-        if (lblMatrixSub != null)
-        {
-            lblMatrixSub.Text = "Nhấp vào từng ô để chuyển đổi quyền hạn: Toàn quyền ↔ Chỉ xem ↔ Không có quyền (Áp dụng trực tiếp khi đăng nhập theo vai trò)";
-        }
-
         _isMatrixInitialized = true;
     }
 
@@ -581,14 +576,13 @@ public partial class AccountManagementView : UserControl
             AppSession.JobTitle = txtJobTitle.Text.Trim();
 
             BindUserProfileToUi();
-            bannerProfileSuccess.Visible = true;
             AppDialog.ShowSuccess(ParentForm, "Cập nhật hồ sơ", res.Message);
         };
 
         btnCancelProf.Click += (s, e) =>
         {
             BindUserProfileToUi();
-            bannerProfileSuccess.Visible = false;
+
         };
 
         chkShowPassword.CheckedChanged += (s, e) =>
@@ -636,7 +630,6 @@ public partial class AccountManagementView : UserControl
             var res = await _userService.ChangePasswordSelfAsync(AppSession.UserId, cur, newP, conf);
             if (res.Success)
             {
-                bannerPassSuccess.Visible = true;
                 txtCurrentPass.Text = "";
                 txtNewPass.Text = "";
                 txtConfirmPass.Text = "";
@@ -653,7 +646,6 @@ public partial class AccountManagementView : UserControl
             txtCurrentPass.Text = "";
             txtNewPass.Text = "";
             txtConfirmPass.Text = "";
-            bannerPassSuccess.Visible = false;
         };
     }
 }

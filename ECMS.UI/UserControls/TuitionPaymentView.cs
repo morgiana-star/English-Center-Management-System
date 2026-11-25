@@ -67,28 +67,12 @@ public partial class TuitionPaymentView : UserControl
 
     private void SetupDiscountManagerButton()
     {
-        // Bỏ nút "Thu học phí" ở thanh trên để tránh trùng với thao tác trong bảng
         btnCollectTuition.Visible = false;
-        btnExportDebt.Location = new Point(pnlHeader.Width - btnExportDebt.Width - 24, btnExportDebt.Top);
-
-        var btnManageDiscounts = new AppButton
-        {
-            Name = "btnManageDiscounts",
-            Text = "Mã giảm giá",
-            Size = new Size(125, 38),
-            Location = new Point(btnExportDebt.Left - 135, btnExportDebt.Top),
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            CornerRadius = 5,
-            Cursor = Cursors.Hand
-        };
         btnManageDiscounts.Click += (s, e) =>
         {
             using var dlg = new DiscountManagementDialog();
             dlg.ShowDialog(ParentForm);
         };
-        pnlHeader.Controls.Add(btnManageDiscounts);
     }
 
     private void SetupFilters()

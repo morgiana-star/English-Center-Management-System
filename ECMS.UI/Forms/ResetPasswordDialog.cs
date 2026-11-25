@@ -9,7 +9,6 @@ public partial class ResetPasswordDialog : Form
     public int TargetUserId { get; private set; }
     public string TempPassword => txtTempPassword.Text.Trim();
     public bool MustChangePassword => chkMustChangePass.Checked;
-    public bool UnlockAccount => chkUnlockAccount.Checked;
 
     public ResetPasswordDialog() : this(0, "admin", "Trần Minh Quân")
     {
@@ -25,8 +24,7 @@ public partial class ResetPasswordDialog : Form
         TargetUserId = targetUserId;
 
         txtTargetAccount.Text = $"{username} ({fullName})";
-        chkUnlockAccount.Visible = false;
-        chkUnlockAccount.Checked = false;
+
         chkMustChangePass.Checked = true;
         GeneratePassword();
 
@@ -40,7 +38,7 @@ public partial class ResetPasswordDialog : Form
 
     private void WireEvents()
     {
-        btnGenerate.Click += (s, e) => GeneratePassword();
+
 
         btnCancel.Click += (s, e) =>
         {

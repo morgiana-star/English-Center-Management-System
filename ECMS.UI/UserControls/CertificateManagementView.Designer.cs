@@ -108,7 +108,7 @@ partial class CertificateManagementView
         btnIssueSelectedTop.Name = "btnIssueSelectedTop";
         btnIssueSelectedTop.Size = new System.Drawing.Size(170, 38);
         btnIssueSelectedTop.TabIndex = 2;
-        btnIssueSelectedTop.Text = "🎓 Cấp chứng chỉ (0)";
+        btnIssueSelectedTop.Text = "Cấp chứng chỉ (0)";
         btnIssueSelectedTop.UseVisualStyleBackColor = false;
         btnIssueSelectedTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 

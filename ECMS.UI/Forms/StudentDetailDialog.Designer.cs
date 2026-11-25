@@ -33,7 +33,6 @@ partial class StudentDetailDialog
         lblDetailHeader = new System.Windows.Forms.Label();
         tabMain = new System.Windows.Forms.TabControl();
         tpOverview = new System.Windows.Forms.TabPage();
-        tpLearningPath = new System.Windows.Forms.TabPage();
         pnlOverview = new System.Windows.Forms.Panel();
         cardStatTuition = new ECMS.UI.Controls.AppCard();
         lblStatTuitionSub = new System.Windows.Forms.Label();
@@ -70,6 +69,7 @@ partial class StudentDetailDialog
         lblGradeRegular = new System.Windows.Forms.Label();
         lblGradeEntry = new System.Windows.Forms.Label();
         lblColGradesTitle = new System.Windows.Forms.Label();
+        tpLearningPath = new System.Windows.Forms.TabPage();
         pnlLearningPath = new System.Windows.Forms.Panel();
         cardLearningPath = new ECMS.UI.Controls.AppCard();
         dgvLearningPath = new ECMS.UI.Controls.AppDataGrid();
@@ -85,7 +85,6 @@ partial class StudentDetailDialog
         pnlTop.SuspendLayout();
         tabMain.SuspendLayout();
         tpOverview.SuspendLayout();
-        tpLearningPath.SuspendLayout();
         pnlOverview.SuspendLayout();
         cardStatTuition.SuspendLayout();
         cardStatAttendance.SuspendLayout();
@@ -95,6 +94,7 @@ partial class StudentDetailDialog
         pnlColClass.SuspendLayout();
         pnlColAttendance.SuspendLayout();
         pnlColGrades.SuspendLayout();
+        tpLearningPath.SuspendLayout();
         pnlLearningPath.SuspendLayout();
         cardLearningPath.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLearningPath).BeginInit();
@@ -113,26 +113,8 @@ partial class StudentDetailDialog
         pnlTop.Location = new System.Drawing.Point(0, 0);
         pnlTop.Name = "pnlTop";
         pnlTop.Padding = new System.Windows.Forms.Padding(24, 14, 24, 14);
-        pnlTop.Size = new System.Drawing.Size(1040, 75);
+        pnlTop.Size = new System.Drawing.Size(1053, 75);
         pnlTop.TabIndex = 0;
-        // 
-        // btnDelete
-        // 
-        btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
-        btnDelete.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Danger;
-        btnDelete.CornerRadius = 6;
-        btnDelete.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnDelete.ForeColor = System.Drawing.Color.White;
-        btnDelete.Location = new System.Drawing.Point(680, 18);
-        btnDelete.Name = "btnDelete";
-        btnDelete.Size = new System.Drawing.Size(110, 38);
-        btnDelete.TabIndex = 5;
-        btnDelete.Text = "Xóa học viên";
-        btnDelete.UseVisualStyleBackColor = false;
-        btnDelete.Variant = ECMS.UI.Controls.ButtonVariant.Danger;
         // 
         // btnEditProfile
         // 
@@ -144,7 +126,7 @@ partial class StudentDetailDialog
         btnEditProfile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnEditProfile.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnEditProfile.ForeColor = System.Drawing.Color.White;
-        btnEditProfile.Location = new System.Drawing.Point(905, 18);
+        btnEditProfile.Location = new System.Drawing.Point(918, 18);
         btnEditProfile.Name = "btnEditProfile";
         btnEditProfile.Size = new System.Drawing.Size(115, 38);
         btnEditProfile.TabIndex = 4;
@@ -162,13 +144,31 @@ partial class StudentDetailDialog
         btnArchive.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnArchive.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnArchive.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnArchive.Location = new System.Drawing.Point(800, 18);
+        btnArchive.Location = new System.Drawing.Point(813, 18);
         btnArchive.Name = "btnArchive";
         btnArchive.Size = new System.Drawing.Size(95, 38);
         btnArchive.TabIndex = 3;
         btnArchive.Text = "Lưu trữ";
         btnArchive.UseVisualStyleBackColor = false;
         btnArchive.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // btnDelete
+        // 
+        btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
+        btnDelete.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Danger;
+        btnDelete.CornerRadius = 6;
+        btnDelete.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        btnDelete.ForeColor = System.Drawing.Color.White;
+        btnDelete.Location = new System.Drawing.Point(693, 18);
+        btnDelete.Name = "btnDelete";
+        btnDelete.Size = new System.Drawing.Size(110, 38);
+        btnDelete.TabIndex = 5;
+        btnDelete.Text = "Xóa học viên";
+        btnDelete.UseVisualStyleBackColor = false;
+        btnDelete.Variant = ECMS.UI.Controls.ButtonVariant.Danger;
         // 
         // lblDetailSub
         // 
@@ -197,35 +197,24 @@ partial class StudentDetailDialog
         tabMain.Controls.Add(tpOverview);
         tabMain.Controls.Add(tpLearningPath);
         tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
-        tabMain.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular);
+        tabMain.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         tabMain.Location = new System.Drawing.Point(0, 75);
         tabMain.Name = "tabMain";
         tabMain.Padding = new System.Drawing.Point(16, 6);
         tabMain.SelectedIndex = 0;
-        tabMain.Size = new System.Drawing.Size(1040, 625);
+        tabMain.Size = new System.Drawing.Size(1053, 625);
         tabMain.TabIndex = 1;
         // 
         // tpOverview
         // 
         tpOverview.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         tpOverview.Controls.Add(pnlOverview);
-        tpOverview.Location = new System.Drawing.Point(4, 30);
+        tpOverview.Location = new System.Drawing.Point(4, 36);
         tpOverview.Name = "tpOverview";
         tpOverview.Padding = new System.Windows.Forms.Padding(20);
-        tpOverview.Size = new System.Drawing.Size(1032, 591);
+        tpOverview.Size = new System.Drawing.Size(1045, 585);
         tpOverview.TabIndex = 0;
         tpOverview.Text = "Tổng quan";
-        // 
-        // tpLearningPath
-        // 
-        tpLearningPath.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        tpLearningPath.Controls.Add(pnlLearningPath);
-        tpLearningPath.Location = new System.Drawing.Point(4, 30);
-        tpLearningPath.Name = "tpLearningPath";
-        tpLearningPath.Padding = new System.Windows.Forms.Padding(20);
-        tpLearningPath.Size = new System.Drawing.Size(1032, 591);
-        tpLearningPath.TabIndex = 1;
-        tpLearningPath.Text = "Quá trình học tập";
         // 
         // pnlOverview
         // 
@@ -237,7 +226,7 @@ partial class StudentDetailDialog
         pnlOverview.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlOverview.Location = new System.Drawing.Point(20, 20);
         pnlOverview.Name = "pnlOverview";
-        pnlOverview.Size = new System.Drawing.Size(992, 551);
+        pnlOverview.Size = new System.Drawing.Size(1005, 545);
         pnlOverview.TabIndex = 0;
         // 
         // cardStatTuition
@@ -250,7 +239,7 @@ partial class StudentDetailDialog
         cardStatTuition.Controls.Add(lblStatTuitionVal);
         cardStatTuition.Controls.Add(lblStatTuitionTitle);
         cardStatTuition.CornerRadius = 8;
-        cardStatTuition.Location = new System.Drawing.Point(752, 10);
+        cardStatTuition.Location = new System.Drawing.Point(754, 10);
         cardStatTuition.Name = "cardStatTuition";
         cardStatTuition.Padding = new System.Windows.Forms.Padding(16);
         cardStatTuition.Size = new System.Drawing.Size(235, 95);
@@ -413,7 +402,7 @@ partial class StudentDetailDialog
         cardCurrentAcademic.Location = new System.Drawing.Point(2, 120);
         cardCurrentAcademic.Name = "cardCurrentAcademic";
         cardCurrentAcademic.Padding = new System.Windows.Forms.Padding(20);
-        cardCurrentAcademic.Size = new System.Drawing.Size(985, 380);
+        cardCurrentAcademic.Size = new System.Drawing.Size(998, 380);
         cardCurrentAcademic.TabIndex = 5;
         // 
         // lblCurrentTitle
@@ -423,9 +412,9 @@ partial class StudentDetailDialog
         lblCurrentTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblCurrentTitle.Location = new System.Drawing.Point(20, 18);
         lblCurrentTitle.Name = "lblCurrentTitle";
-        lblCurrentTitle.Size = new System.Drawing.Size(239, 25);
+        lblCurrentTitle.Size = new System.Drawing.Size(220, 25);
         lblCurrentTitle.TabIndex = 0;
-        lblCurrentTitle.Text = "🗎 Tóm tắt học tập hiện tại";
+        lblCurrentTitle.Text = "Tóm tắt học tập hiện tại";
         // 
         // pnlColClass
         // 
@@ -516,7 +505,7 @@ partial class StudentDetailDialog
         // 
         lblAttAbsent.AutoSize = true;
         lblAttAbsent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblAttAbsent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
+        lblAttAbsent.ForeColor = System.Drawing.SystemColors.ControlText;
         lblAttAbsent.Location = new System.Drawing.Point(10, 185);
         lblAttAbsent.Name = "lblAttAbsent";
         lblAttAbsent.Size = new System.Drawing.Size(131, 21);
@@ -527,7 +516,7 @@ partial class StudentDetailDialog
         // 
         lblAttLate.AutoSize = true;
         lblAttLate.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblAttLate.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)202)), ((int)((byte)138)), ((int)((byte)4)));
+        lblAttLate.ForeColor = System.Drawing.SystemColors.ControlText;
         lblAttLate.Location = new System.Drawing.Point(10, 140);
         lblAttLate.Name = "lblAttLate";
         lblAttLate.Size = new System.Drawing.Size(86, 21);
@@ -538,7 +527,7 @@ partial class StudentDetailDialog
         // 
         lblAttPresent.AutoSize = true;
         lblAttPresent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblAttPresent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)101)), ((int)((byte)52)));
+        lblAttPresent.ForeColor = System.Drawing.SystemColors.ControlText;
         lblAttPresent.Location = new System.Drawing.Point(10, 95);
         lblAttPresent.Name = "lblAttPresent";
         lblAttPresent.Size = new System.Drawing.Size(76, 21);
@@ -549,7 +538,7 @@ partial class StudentDetailDialog
         // 
         lblAttCountVal.AutoSize = true;
         lblAttCountVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblAttCountVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        lblAttCountVal.ForeColor = System.Drawing.SystemColors.ControlText;
         lblAttCountVal.Location = new System.Drawing.Point(10, 50);
         lblAttCountVal.Name = "lblAttCountVal";
         lblAttCountVal.Size = new System.Drawing.Size(188, 21);
@@ -641,13 +630,24 @@ partial class StudentDetailDialog
         lblColGradesTitle.TabIndex = 0;
         lblColGradesTitle.Text = "ĐIỂM SỐ";
         // 
+        // tpLearningPath
+        // 
+        tpLearningPath.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        tpLearningPath.Controls.Add(pnlLearningPath);
+        tpLearningPath.Location = new System.Drawing.Point(4, 36);
+        tpLearningPath.Name = "tpLearningPath";
+        tpLearningPath.Padding = new System.Windows.Forms.Padding(20);
+        tpLearningPath.Size = new System.Drawing.Size(1045, 585);
+        tpLearningPath.TabIndex = 1;
+        tpLearningPath.Text = "Quá trình học tập";
+        // 
         // pnlLearningPath
         // 
         pnlLearningPath.Controls.Add(cardLearningPath);
         pnlLearningPath.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlLearningPath.Location = new System.Drawing.Point(20, 20);
         pnlLearningPath.Name = "pnlLearningPath";
-        pnlLearningPath.Size = new System.Drawing.Size(992, 551);
+        pnlLearningPath.Size = new System.Drawing.Size(1005, 545);
         pnlLearningPath.TabIndex = 1;
         // 
         // cardLearningPath
@@ -662,7 +662,7 @@ partial class StudentDetailDialog
         cardLearningPath.Location = new System.Drawing.Point(0, 0);
         cardLearningPath.Name = "cardLearningPath";
         cardLearningPath.Padding = new System.Windows.Forms.Padding(20);
-        cardLearningPath.Size = new System.Drawing.Size(992, 531);
+        cardLearningPath.Size = new System.Drawing.Size(1005, 545);
         cardLearningPath.TabIndex = 0;
         // 
         // dgvLearningPath
@@ -718,9 +718,8 @@ partial class StudentDetailDialog
         dgvLearningPath.RowHeadersVisible = false;
         dgvLearningPath.RowHeadersWidth = 51;
         dgvLearningPath.RowTemplate.Height = 44;
-        dgvLearningPath.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvLearningPath.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvLearningPath.Size = new System.Drawing.Size(952, 451);
+        dgvLearningPath.Size = new System.Drawing.Size(965, 465);
         dgvLearningPath.TabIndex = 1;
         // 
         // colClassCourse
@@ -785,7 +784,7 @@ partial class StudentDetailDialog
         pnlPathHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlPathHeader.Location = new System.Drawing.Point(20, 20);
         pnlPathHeader.Name = "pnlPathHeader";
-        pnlPathHeader.Size = new System.Drawing.Size(952, 40);
+        pnlPathHeader.Size = new System.Drawing.Size(965, 40);
         pnlPathHeader.TabIndex = 0;
         // 
         // lblPathTitle
@@ -795,21 +794,19 @@ partial class StudentDetailDialog
         lblPathTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblPathTitle.Location = new System.Drawing.Point(0, 5);
         lblPathTitle.Name = "lblPathTitle";
-        lblPathTitle.Size = new System.Drawing.Size(317, 25);
+        lblPathTitle.Size = new System.Drawing.Size(169, 25);
         lblPathTitle.TabIndex = 0;
-        lblPathTitle.Text = "Lịch sử đăng ký & Tiến trình học tập";
+        lblPathTitle.Text = "Tiến trình học tập";
         // 
         // StudentDetailDialog
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        ClientSize = new System.Drawing.Size(1040, 700);
+        ClientSize = new System.Drawing.Size(1053, 700);
         Controls.Add(tabMain);
         Controls.Add(pnlTop);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         MinimumSize = new System.Drawing.Size(960, 640);
         ShowInTaskbar = false;
@@ -819,7 +816,6 @@ partial class StudentDetailDialog
         pnlTop.PerformLayout();
         tabMain.ResumeLayout(false);
         tpOverview.ResumeLayout(false);
-        tpLearningPath.ResumeLayout(false);
         pnlOverview.ResumeLayout(false);
         cardStatTuition.ResumeLayout(false);
         cardStatTuition.PerformLayout();
@@ -837,6 +833,7 @@ partial class StudentDetailDialog
         pnlColAttendance.PerformLayout();
         pnlColGrades.ResumeLayout(false);
         pnlColGrades.PerformLayout();
+        tpLearningPath.ResumeLayout(false);
         pnlLearningPath.ResumeLayout(false);
         cardLearningPath.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvLearningPath).EndInit();

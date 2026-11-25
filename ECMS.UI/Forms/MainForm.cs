@@ -109,7 +109,6 @@ public partial class MainForm : Form
         btnNavSchedule.Click += (s, e) => NavigateToSchedule();
         btnNavAttendance.Click += (s, e) => NavigateToAttendance();
         btnNavGrades.Click += (s, e) => NavigateToGrades();
-        btnNavMaterials.Click += (s, e) => NavigateToMaterials();
         btnNavCertificates.Click += (s, e) => NavigateToCertificates();
 
         // Phân hệ C · TÀI CHÍNH
@@ -125,7 +124,11 @@ public partial class MainForm : Form
     /// </summary>
     private async Task ApplyRoleBasedAccessControlAsync(bool navigateDefault = true)
     {
-        lblUser.Text = $"{AppSession.FullName} · {AppSession.RoleName} ▾";
+        lblUser.Text = $"{AppSession.FullName} · {AppSession.RoleName}";
+        if (lblUser.AutoSize)
+        {
+            lblUser.Location = new Point(btnLogoutTop.Left - lblUser.Width - 16, lblUser.Location.Y);
+        }
 
         string role = AppSession.RoleCode;
         HashSet<string> allowed;
@@ -222,7 +225,6 @@ public partial class MainForm : Form
         btnNavSchedule.Visible = schedule;
         btnNavAttendance.Visible = attendance;
         btnNavGrades.Visible = grades;
-        btnNavMaterials.Visible = false; // Bỏ phân hệ Tài liệu học tập
         btnNavCertificates.Visible = certificates;
         btnNavTuition.Visible = tuition;
         btnNavAccounts.Visible = accounts;
@@ -255,7 +257,7 @@ public partial class MainForm : Form
         var groupBControls = new Control[]
         {
             btnNavStudent, btnNavTeacher, btnNavCourse, btnNavClass,
-            btnNavSchedule, btnNavAttendance, btnNavGrades, btnNavMaterials, btnNavCertificates
+            btnNavSchedule, btnNavAttendance, btnNavGrades, btnNavCertificates
         };
         bool hasGroupB = groupBControls.Any(c => c.Visible);
         lblGroupB.Visible = hasGroupB;
@@ -386,12 +388,6 @@ public partial class MainForm : Form
     {
         SetActiveButton(btnNavCertificates);
         LoadView(new CertificateManagementView(), "Certificates");
-    }
-
-    private void NavigateToMaterials()
-    {
-        SetActiveButton(btnNavMaterials);
-        LoadView(new StudyMaterialView(), "Materials");
     }
 
     private void NavigateToSettings()

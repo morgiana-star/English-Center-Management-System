@@ -15,46 +15,52 @@ partial class DiscountManagementDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         lblTitle = new System.Windows.Forms.Label();
-        lblSubtitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
-        cardForm = new ECMS.UI.Controls.AppCard();
-        lblFormTitle = new System.Windows.Forms.Label();
-        lblCode = new System.Windows.Forms.Label();
-        txtCode = new ECMS.UI.Controls.AppTextBox();
-        lblName = new System.Windows.Forms.Label();
-        txtName = new ECMS.UI.Controls.AppTextBox();
-        lblPercent = new System.Windows.Forms.Label();
-        nudPercent = new System.Windows.Forms.NumericUpDown();
-        lblFixedAmount = new System.Windows.Forms.Label();
-        nudFixedAmount = new System.Windows.Forms.NumericUpDown();
-        lblDescription = new System.Windows.Forms.Label();
-        txtDescription = new ECMS.UI.Controls.AppTextBox();
-        chkIsActive = new System.Windows.Forms.CheckBox();
-        btnSave = new ECMS.UI.Controls.AppButton();
-        btnNew = new ECMS.UI.Controls.AppButton();
-        btnDelete = new ECMS.UI.Controls.AppButton();
         cardList = new ECMS.UI.Controls.AppCard();
         dgvDiscounts = new ECMS.UI.Controls.AppDataGrid();
+        cardForm = new ECMS.UI.Controls.AppCard();
+        btnDelete = new ECMS.UI.Controls.AppButton();
+        btnNew = new ECMS.UI.Controls.AppButton();
+        btnSave = new ECMS.UI.Controls.AppButton();
+        chkIsActive = new System.Windows.Forms.CheckBox();
+        txtDescription = new ECMS.UI.Controls.AppTextBox();
+        lblDescription = new System.Windows.Forms.Label();
+        nudFixedAmount = new System.Windows.Forms.NumericUpDown();
+        lblFixedAmount = new System.Windows.Forms.Label();
+        nudPercent = new System.Windows.Forms.NumericUpDown();
+        lblPercent = new System.Windows.Forms.Label();
+        txtName = new ECMS.UI.Controls.AppTextBox();
+        lblName = new System.Windows.Forms.Label();
+        txtCode = new ECMS.UI.Controls.AppTextBox();
+        lblCode = new System.Windows.Forms.Label();
+        lblFormTitle = new System.Windows.Forms.Label();
         pnlFooter = new System.Windows.Forms.Panel();
         btnClose = new ECMS.UI.Controls.AppButton();
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
-        cardForm.SuspendLayout();
-        ((System.ComponentModel.ISupportInitialize)nudPercent).BeginInit();
-        ((System.ComponentModel.ISupportInitialize)nudFixedAmount).BeginInit();
         cardList.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvDiscounts).BeginInit();
+        cardForm.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)nudFixedAmount).BeginInit();
+        ((System.ComponentModel.ISupportInitialize)nudPercent).BeginInit();
         pnlFooter.SuspendLayout();
         SuspendLayout();
         // 
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSubtitle);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
@@ -68,22 +74,11 @@ partial class DiscountManagementDialog
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(24, 12);
+        lblTitle.Location = new System.Drawing.Point(20, 22);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(260, 32);
+        lblTitle.Size = new System.Drawing.Size(341, 32);
         lblTitle.TabIndex = 0;
         lblTitle.Text = "Quản lý mã giảm giá học phí";
-        // 
-        // lblSubtitle
-        // 
-        lblSubtitle.AutoSize = true;
-        lblSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSubtitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblSubtitle.Location = new System.Drawing.Point(26, 44);
-        lblSubtitle.Name = "lblSubtitle";
-        lblSubtitle.Size = new System.Drawing.Size(440, 20);
-        lblSubtitle.TabIndex = 1;
-        lblSubtitle.Text = "Thiết lập các mã ưu đãi (học viên cũ, đăng ký nhóm, đăng ký sớm) để áp dụng khi thu phí";
         // 
         // pnlBody
         // 
@@ -96,6 +91,77 @@ partial class DiscountManagementDialog
         pnlBody.Padding = new System.Windows.Forms.Padding(20, 14, 20, 14);
         pnlBody.Size = new System.Drawing.Size(960, 506);
         pnlBody.TabIndex = 1;
+        // 
+        // cardList
+        // 
+        cardList.BackColor = System.Drawing.Color.White;
+        cardList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardList.BorderWidth = 1;
+        cardList.Controls.Add(dgvDiscounts);
+        cardList.CornerRadius = 8;
+        cardList.Dock = System.Windows.Forms.DockStyle.Fill;
+        cardList.Location = new System.Drawing.Point(20, 210);
+        cardList.Name = "cardList";
+        cardList.Padding = new System.Windows.Forms.Padding(12);
+        cardList.Size = new System.Drawing.Size(920, 282);
+        cardList.TabIndex = 1;
+        // 
+        // dgvDiscounts
+        // 
+        dgvDiscounts.AllowUserToAddRows = false;
+        dgvDiscounts.AllowUserToDeleteRows = false;
+        dgvDiscounts.AllowUserToResizeColumns = false;
+        dgvDiscounts.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dgvDiscounts.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvDiscounts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvDiscounts.BackgroundColor = System.Drawing.Color.White;
+        dgvDiscounts.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvDiscounts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvDiscounts.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvDiscounts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvDiscounts.ColumnHeadersHeight = 36;
+        dgvDiscounts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvDiscounts.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvDiscounts.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvDiscounts.EnableHeadersVisualStyles = false;
+        dgvDiscounts.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        dgvDiscounts.Location = new System.Drawing.Point(12, 12);
+        dgvDiscounts.MultiSelect = false;
+        dgvDiscounts.Name = "dgvDiscounts";
+        dgvDiscounts.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvDiscounts.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvDiscounts.RowHeadersVisible = false;
+        dgvDiscounts.RowHeadersWidth = 51;
+        dgvDiscounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvDiscounts.Size = new System.Drawing.Size(896, 258);
+        dgvDiscounts.TabIndex = 0;
         // 
         // cardForm
         // 
@@ -125,166 +191,6 @@ partial class DiscountManagementDialog
         cardForm.Size = new System.Drawing.Size(920, 196);
         cardForm.TabIndex = 0;
         // 
-        // lblFormTitle
-        // 
-        lblFormTitle.AutoSize = true;
-        lblFormTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-        lblFormTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblFormTitle.Location = new System.Drawing.Point(16, 12);
-        lblFormTitle.Name = "lblFormTitle";
-        lblFormTitle.Size = new System.Drawing.Size(180, 23);
-        lblFormTitle.TabIndex = 0;
-        lblFormTitle.Text = "Thông tin mã giảm giá";
-        // 
-        // lblCode
-        // 
-        lblCode.AutoSize = true;
-        lblCode.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblCode.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblCode.Location = new System.Drawing.Point(16, 42);
-        lblCode.Name = "lblCode";
-        lblCode.Size = new System.Drawing.Size(95, 20);
-        lblCode.TabIndex = 1;
-        lblCode.Text = "Mã giảm giá *";
-        // 
-        // txtCode
-        // 
-        txtCode.BackColor = System.Drawing.Color.White;
-        txtCode.CornerRadius = 5;
-        txtCode.ErrorMessage = "";
-        txtCode.HasError = false;
-        txtCode.Location = new System.Drawing.Point(16, 64);
-        txtCode.Name = "txtCode";
-        txtCode.Placeholder = "VD: HVCU10, NHOM15";
-        txtCode.ReadOnly = false;
-        txtCode.Size = new System.Drawing.Size(170, 34);
-        txtCode.TabIndex = 2;
-        txtCode.UseSystemPasswordChar = false;
-        // 
-        // lblName
-        // 
-        lblName.AutoSize = true;
-        lblName.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblName.Location = new System.Drawing.Point(200, 42);
-        lblName.Name = "lblName";
-        lblName.Size = new System.Drawing.Size(145, 20);
-        lblName.TabIndex = 3;
-        lblName.Text = "Tên chương trình ưu đãi *";
-        // 
-        // txtName
-        // 
-        txtName.BackColor = System.Drawing.Color.White;
-        txtName.CornerRadius = 5;
-        txtName.ErrorMessage = "";
-        txtName.HasError = false;
-        txtName.Location = new System.Drawing.Point(200, 64);
-        txtName.Name = "txtName";
-        txtName.Placeholder = "VD: Ưu đãi học viên cũ";
-        txtName.ReadOnly = false;
-        txtName.Size = new System.Drawing.Size(310, 34);
-        txtName.TabIndex = 4;
-        txtName.UseSystemPasswordChar = false;
-        // 
-        // lblPercent
-        // 
-        lblPercent.AutoSize = true;
-        lblPercent.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPercent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblPercent.Location = new System.Drawing.Point(524, 42);
-        lblPercent.Name = "lblPercent";
-        lblPercent.Size = new System.Drawing.Size(80, 20);
-        lblPercent.TabIndex = 5;
-        lblPercent.Text = "Giảm (%)";
-        // 
-        // nudPercent
-        // 
-        nudPercent.DecimalPlaces = 1;
-        nudPercent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        nudPercent.Location = new System.Drawing.Point(524, 66);
-        nudPercent.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
-        nudPercent.Name = "nudPercent";
-        nudPercent.Size = new System.Drawing.Size(105, 29);
-        nudPercent.TabIndex = 6;
-        // 
-        // lblFixedAmount
-        // 
-        lblFixedAmount.AutoSize = true;
-        lblFixedAmount.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblFixedAmount.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblFixedAmount.Location = new System.Drawing.Point(642, 42);
-        lblFixedAmount.Name = "lblFixedAmount";
-        lblFixedAmount.Size = new System.Drawing.Size(120, 20);
-        lblFixedAmount.TabIndex = 7;
-        lblFixedAmount.Text = "Giảm tiền (VNĐ)";
-        // 
-        // nudFixedAmount
-        // 
-        nudFixedAmount.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        nudFixedAmount.Increment = new decimal(new int[] { 50000, 0, 0, 0 });
-        nudFixedAmount.Location = new System.Drawing.Point(642, 66);
-        nudFixedAmount.Maximum = new decimal(new int[] { 50000000, 0, 0, 0 });
-        nudFixedAmount.Name = "nudFixedAmount";
-        nudFixedAmount.Size = new System.Drawing.Size(155, 29);
-        nudFixedAmount.TabIndex = 8;
-        nudFixedAmount.ThousandsSeparator = true;
-        // 
-        // chkIsActive
-        // 
-        chkIsActive.AutoSize = true;
-        chkIsActive.Checked = true;
-        chkIsActive.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkIsActive.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkIsActive.Location = new System.Drawing.Point(810, 70);
-        chkIsActive.Name = "chkIsActive";
-        chkIsActive.Size = new System.Drawing.Size(95, 24);
-        chkIsActive.TabIndex = 9;
-        chkIsActive.Text = "Đang bật";
-        chkIsActive.UseVisualStyleBackColor = true;
-        // 
-        // lblDescription
-        // 
-        lblDescription.AutoSize = true;
-        lblDescription.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblDescription.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblDescription.Location = new System.Drawing.Point(16, 108);
-        lblDescription.Name = "lblDescription";
-        lblDescription.Size = new System.Drawing.Size(110, 20);
-        lblDescription.TabIndex = 10;
-        lblDescription.Text = "Mô tả điều kiện";
-        // 
-        // txtDescription
-        // 
-        txtDescription.BackColor = System.Drawing.Color.White;
-        txtDescription.CornerRadius = 5;
-        txtDescription.ErrorMessage = "";
-        txtDescription.HasError = false;
-        txtDescription.Location = new System.Drawing.Point(16, 130);
-        txtDescription.Name = "txtDescription";
-        txtDescription.Placeholder = "Nhập điều kiện áp dụng mã giảm giá...";
-        txtDescription.ReadOnly = false;
-        txtDescription.Size = new System.Drawing.Size(555, 34);
-        txtDescription.TabIndex = 11;
-        txtDescription.UseSystemPasswordChar = false;
-        // 
-        // btnNew
-        // 
-        btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnNew.BackColor = System.Drawing.Color.White;
-        btnNew.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnNew.CornerRadius = 6;
-        btnNew.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnNew.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnNew.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnNew.Location = new System.Drawing.Point(586, 130);
-        btnNew.Name = "btnNew";
-        btnNew.Size = new System.Drawing.Size(95, 34);
-        btnNew.TabIndex = 12;
-        btnNew.Text = "Làm mới";
-        btnNew.UseVisualStyleBackColor = false;
-        btnNew.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
         // btnDelete
         // 
         btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
@@ -304,6 +210,24 @@ partial class DiscountManagementDialog
         btnDelete.UseVisualStyleBackColor = false;
         btnDelete.Variant = ECMS.UI.Controls.ButtonVariant.Danger;
         // 
+        // btnNew
+        // 
+        btnNew.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnNew.BackColor = System.Drawing.Color.White;
+        btnNew.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnNew.CornerRadius = 6;
+        btnNew.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnNew.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnNew.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnNew.Location = new System.Drawing.Point(586, 130);
+        btnNew.Name = "btnNew";
+        btnNew.Size = new System.Drawing.Size(95, 34);
+        btnNew.TabIndex = 12;
+        btnNew.Text = "Làm mới";
+        btnNew.UseVisualStyleBackColor = false;
+        btnNew.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
         // btnSave
         // 
         btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
@@ -322,37 +246,146 @@ partial class DiscountManagementDialog
         btnSave.UseVisualStyleBackColor = false;
         btnSave.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
-        // cardList
+        // chkIsActive
         // 
-        cardList.BackColor = System.Drawing.Color.White;
-        cardList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardList.BorderWidth = 1;
-        cardList.Controls.Add(dgvDiscounts);
-        cardList.CornerRadius = 8;
-        cardList.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardList.Location = new System.Drawing.Point(20, 210);
-        cardList.Name = "cardList";
-        cardList.Padding = new System.Windows.Forms.Padding(12);
-        cardList.Size = new System.Drawing.Size(920, 282);
-        cardList.TabIndex = 1;
+        chkIsActive.AutoSize = true;
+        chkIsActive.Checked = true;
+        chkIsActive.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkIsActive.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkIsActive.Location = new System.Drawing.Point(810, 70);
+        chkIsActive.Name = "chkIsActive";
+        chkIsActive.Size = new System.Drawing.Size(93, 24);
+        chkIsActive.TabIndex = 9;
+        chkIsActive.Text = "Đang bật";
+        chkIsActive.UseVisualStyleBackColor = true;
         // 
-        // dgvDiscounts
+        // txtDescription
         // 
-        dgvDiscounts.AllowUserToAddRows = false;
-        dgvDiscounts.AllowUserToDeleteRows = false;
-        dgvDiscounts.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-        dgvDiscounts.BackgroundColor = System.Drawing.Color.White;
-        dgvDiscounts.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        dgvDiscounts.Dock = System.Windows.Forms.DockStyle.Fill;
-        dgvDiscounts.Location = new System.Drawing.Point(12, 12);
-        dgvDiscounts.MultiSelect = false;
-        dgvDiscounts.Name = "dgvDiscounts";
-        dgvDiscounts.ReadOnly = true;
-        dgvDiscounts.RowHeadersVisible = false;
-        dgvDiscounts.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-        dgvDiscounts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvDiscounts.Size = new System.Drawing.Size(896, 258);
-        dgvDiscounts.TabIndex = 0;
+        txtDescription.BackColor = System.Drawing.Color.White;
+        txtDescription.CornerRadius = 5;
+        txtDescription.ErrorMessage = "";
+        txtDescription.HasError = false;
+        txtDescription.Location = new System.Drawing.Point(16, 130);
+        txtDescription.Name = "txtDescription";
+        txtDescription.Placeholder = "Nhập mô tả điều kiện áp dụng mã giảm giá";
+        txtDescription.ReadOnly = false;
+        txtDescription.Size = new System.Drawing.Size(555, 34);
+        txtDescription.TabIndex = 11;
+        txtDescription.UseSystemPasswordChar = false;
+        // 
+        // lblDescription
+        // 
+        lblDescription.AutoSize = true;
+        lblDescription.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblDescription.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblDescription.Location = new System.Drawing.Point(16, 108);
+        lblDescription.Name = "lblDescription";
+        lblDescription.Size = new System.Drawing.Size(112, 20);
+        lblDescription.TabIndex = 10;
+        lblDescription.Text = "Mô tả điều kiện";
+        // 
+        // nudFixedAmount
+        // 
+        nudFixedAmount.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        nudFixedAmount.Increment = new decimal(new int[] { 50000, 0, 0, 0 });
+        nudFixedAmount.Location = new System.Drawing.Point(642, 66);
+        nudFixedAmount.Maximum = new decimal(new int[] { 50000000, 0, 0, 0 });
+        nudFixedAmount.Name = "nudFixedAmount";
+        nudFixedAmount.Size = new System.Drawing.Size(155, 29);
+        nudFixedAmount.TabIndex = 8;
+        nudFixedAmount.ThousandsSeparator = true;
+        // 
+        // lblFixedAmount
+        // 
+        lblFixedAmount.AutoSize = true;
+        lblFixedAmount.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblFixedAmount.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblFixedAmount.Location = new System.Drawing.Point(642, 42);
+        lblFixedAmount.Name = "lblFixedAmount";
+        lblFixedAmount.Size = new System.Drawing.Size(118, 20);
+        lblFixedAmount.TabIndex = 7;
+        lblFixedAmount.Text = "Giảm tiền (VNĐ)";
+        // 
+        // nudPercent
+        // 
+        nudPercent.DecimalPlaces = 1;
+        nudPercent.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        nudPercent.Location = new System.Drawing.Point(524, 66);
+        nudPercent.Name = "nudPercent";
+        nudPercent.Size = new System.Drawing.Size(105, 29);
+        nudPercent.TabIndex = 6;
+        // 
+        // lblPercent
+        // 
+        lblPercent.AutoSize = true;
+        lblPercent.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblPercent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblPercent.Location = new System.Drawing.Point(524, 42);
+        lblPercent.Name = "lblPercent";
+        lblPercent.Size = new System.Drawing.Size(70, 20);
+        lblPercent.TabIndex = 5;
+        lblPercent.Text = "Giảm (%)";
+        // 
+        // txtName
+        // 
+        txtName.BackColor = System.Drawing.Color.White;
+        txtName.CornerRadius = 5;
+        txtName.ErrorMessage = "";
+        txtName.HasError = false;
+        txtName.Location = new System.Drawing.Point(200, 64);
+        txtName.Name = "txtName";
+        txtName.Placeholder = "Nhập tên chương trình ưu đãi";
+        txtName.ReadOnly = false;
+        txtName.Size = new System.Drawing.Size(310, 34);
+        txtName.TabIndex = 4;
+        txtName.UseSystemPasswordChar = false;
+        // 
+        // lblName
+        // 
+        lblName.AutoSize = true;
+        lblName.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblName.Location = new System.Drawing.Point(200, 42);
+        lblName.Name = "lblName";
+        lblName.Size = new System.Drawing.Size(176, 20);
+        lblName.TabIndex = 3;
+        lblName.Text = "Tên chương trình ưu đãi *";
+        // 
+        // txtCode
+        // 
+        txtCode.BackColor = System.Drawing.Color.White;
+        txtCode.CornerRadius = 5;
+        txtCode.ErrorMessage = "";
+        txtCode.HasError = false;
+        txtCode.Location = new System.Drawing.Point(16, 64);
+        txtCode.Name = "txtCode";
+        txtCode.Placeholder = "Nhập mã giảm giá";
+        txtCode.ReadOnly = false;
+        txtCode.Size = new System.Drawing.Size(170, 34);
+        txtCode.TabIndex = 2;
+        txtCode.UseSystemPasswordChar = false;
+        // 
+        // lblCode
+        // 
+        lblCode.AutoSize = true;
+        lblCode.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblCode.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblCode.Location = new System.Drawing.Point(16, 42);
+        lblCode.Name = "lblCode";
+        lblCode.Size = new System.Drawing.Size(103, 20);
+        lblCode.TabIndex = 1;
+        lblCode.Text = "Mã giảm giá *";
+        // 
+        // lblFormTitle
+        // 
+        lblFormTitle.AutoSize = true;
+        lblFormTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+        lblFormTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblFormTitle.Location = new System.Drawing.Point(16, 12);
+        lblFormTitle.Name = "lblFormTitle";
+        lblFormTitle.Size = new System.Drawing.Size(194, 23);
+        lblFormTitle.TabIndex = 0;
+        lblFormTitle.Text = "Thông tin mã giảm giá";
         // 
         // pnlFooter
         // 
@@ -393,8 +426,6 @@ partial class DiscountManagementDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         MinimumSize = new System.Drawing.Size(880, 560);
         ShowInTaskbar = false;
@@ -403,12 +434,12 @@ partial class DiscountManagementDialog
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlBody.ResumeLayout(false);
-        cardForm.ResumeLayout(false);
-        cardForm.PerformLayout();
-        ((System.ComponentModel.ISupportInitialize)nudPercent).EndInit();
-        ((System.ComponentModel.ISupportInitialize)nudFixedAmount).EndInit();
         cardList.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvDiscounts).EndInit();
+        cardForm.ResumeLayout(false);
+        cardForm.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)nudFixedAmount).EndInit();
+        ((System.ComponentModel.ISupportInitialize)nudPercent).EndInit();
         pnlFooter.ResumeLayout(false);
         ResumeLayout(false);
     }
@@ -417,7 +448,6 @@ partial class DiscountManagementDialog
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSubtitle;
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppCard cardForm;
     private System.Windows.Forms.Label lblFormTitle;

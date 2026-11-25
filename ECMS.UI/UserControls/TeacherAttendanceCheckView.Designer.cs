@@ -58,7 +58,7 @@ partial class TeacherAttendanceCheckView
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblTitle.Location = new System.Drawing.Point(22, 12);
+        lblTitle.Location = new System.Drawing.Point(24, 24);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(331, 35);
         lblTitle.TabIndex = 1;

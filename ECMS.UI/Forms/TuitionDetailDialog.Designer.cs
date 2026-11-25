@@ -170,7 +170,7 @@ partial class TuitionDetailDialog
         lblInstallmentsTitle.Name = "lblInstallmentsTitle";
         lblInstallmentsTitle.Size = new System.Drawing.Size(788, 26);
         lblInstallmentsTitle.TabIndex = 0;
-        lblInstallmentsTitle.Text = "LỊCH TRÌNH THANH TOÁN THEO ĐỢT & PHIẾU THU";
+        lblInstallmentsTitle.Text = "LỊCH TRÌNH THANH TOÁN THEO ĐỢT";
         // 
         // cardSummary
         // 
@@ -397,8 +397,6 @@ partial class TuitionDetailDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

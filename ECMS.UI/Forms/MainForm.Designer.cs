@@ -38,10 +38,8 @@ partial class MainForm
         btnNavAccounts = new System.Windows.Forms.Button();
         lblGroupD = new System.Windows.Forms.Label();
         btnNavTuition = new System.Windows.Forms.Button();
-        btnNavAdmissions = new System.Windows.Forms.Button();
         lblGroupC = new System.Windows.Forms.Label();
         btnNavCertificates = new System.Windows.Forms.Button();
-        btnNavMaterials = new System.Windows.Forms.Button();
         btnNavGrades = new System.Windows.Forms.Button();
         btnNavAttendance = new System.Windows.Forms.Button();
         btnNavSchedule = new System.Windows.Forms.Button();
@@ -71,7 +69,7 @@ partial class MainForm
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
-        pnlHeader.Size = new System.Drawing.Size(1924, 68);
+        pnlHeader.Size = new System.Drawing.Size(1924, 71);
         pnlHeader.TabIndex = 0;
         // 
         // btnLogoutTop
@@ -83,9 +81,9 @@ partial class MainForm
         btnLogoutTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogoutTop.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnLogoutTop.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
-        btnLogoutTop.Location = new System.Drawing.Point(1754, 16);
+        btnLogoutTop.Location = new System.Drawing.Point(1754, 15);
         btnLogoutTop.Name = "btnLogoutTop";
-        btnLogoutTop.Size = new System.Drawing.Size(151, 40);
+        btnLogoutTop.Size = new System.Drawing.Size(146, 40);
         btnLogoutTop.TabIndex = 6;
         btnLogoutTop.Text = "Đăng xuất";
         btnLogoutTop.UseVisualStyleBackColor = false;
@@ -93,22 +91,22 @@ partial class MainForm
         // lblUser
         // 
         lblUser.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblUser.AutoSize = true;
         lblUser.Cursor = System.Windows.Forms.Cursors.Hand;
         lblUser.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         lblUser.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblUser.Location = new System.Drawing.Point(1534, 26);
+        lblUser.Location = new System.Drawing.Point(1280, 15);
         lblUser.Name = "lblUser";
-        lblUser.Size = new System.Drawing.Size(214, 21);
+        lblUser.Size = new System.Drawing.Size(458, 40);
         lblUser.TabIndex = 5;
-        lblUser.Text = "Trần Minh Quân · Admin ▾";
+        lblUser.Text = "Trần Minh Quân · Admin";
+        lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
         // lblHeaderCenter
         // 
         lblHeaderCenter.AutoSize = true;
         lblHeaderCenter.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
         lblHeaderCenter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblHeaderCenter.Location = new System.Drawing.Point(180, 22);
+        lblHeaderCenter.Location = new System.Drawing.Point(202, 23);
         lblHeaderCenter.Name = "lblHeaderCenter";
         lblHeaderCenter.Size = new System.Drawing.Size(200, 25);
         lblHeaderCenter.TabIndex = 2;
@@ -119,7 +117,7 @@ partial class MainForm
         lblHeaderBrand.AutoSize = true;
         lblHeaderBrand.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
         lblHeaderBrand.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblHeaderBrand.Location = new System.Drawing.Point(85, 22);
+        lblHeaderBrand.Location = new System.Drawing.Point(96, 23);
         lblHeaderBrand.Name = "lblHeaderBrand";
         lblHeaderBrand.Size = new System.Drawing.Size(72, 30);
         lblHeaderBrand.TabIndex = 1;
@@ -129,9 +127,9 @@ partial class MainForm
         // 
         picHeaderLogo.BackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
         picHeaderLogo.Image = ((System.Drawing.Image)resources.GetObject("picHeaderLogo.Image"));
-        picHeaderLogo.Location = new System.Drawing.Point(28, 16);
+        picHeaderLogo.Location = new System.Drawing.Point(32, 17);
         picHeaderLogo.Name = "picHeaderLogo";
-        picHeaderLogo.Size = new System.Drawing.Size(51, 40);
+        picHeaderLogo.Size = new System.Drawing.Size(57, 42);
         picHeaderLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
         picHeaderLogo.TabIndex = 0;
         picHeaderLogo.TabStop = false;
@@ -141,17 +139,18 @@ partial class MainForm
         pnlStatusBar.BackColor = System.Drawing.Color.White;
         pnlStatusBar.Controls.Add(lblStatusRight);
         pnlStatusBar.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlStatusBar.Location = new System.Drawing.Point(0, 1004);
+        pnlStatusBar.Location = new System.Drawing.Point(0, 1020);
         pnlStatusBar.Name = "pnlStatusBar";
-        pnlStatusBar.Size = new System.Drawing.Size(1924, 33);
+        pnlStatusBar.Size = new System.Drawing.Size(1924, 35);
         pnlStatusBar.TabIndex = 1;
         // 
         // lblStatusRight
         // 
+        lblStatusRight.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblStatusRight.AutoSize = true;
         lblStatusRight.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblStatusRight.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblStatusRight.Location = new System.Drawing.Point(2001, 6);
+        lblStatusRight.Location = new System.Drawing.Point(1776, 8);
         lblStatusRight.Name = "lblStatusRight";
         lblStatusRight.Size = new System.Drawing.Size(124, 20);
         lblStatusRight.TabIndex = 1;
@@ -163,9 +162,9 @@ partial class MainForm
         pnlBody.Controls.Add(pnlContent);
         pnlBody.Controls.Add(pnlSidebar);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlBody.Location = new System.Drawing.Point(0, 68);
+        pnlBody.Location = new System.Drawing.Point(0, 71);
         pnlBody.Name = "pnlBody";
-        pnlBody.Size = new System.Drawing.Size(1924, 936);
+        pnlBody.Size = new System.Drawing.Size(1924, 949);
         pnlBody.TabIndex = 2;
         // 
         // pnlContent
@@ -174,7 +173,7 @@ partial class MainForm
         pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlContent.Location = new System.Drawing.Point(250, 0);
         pnlContent.Name = "pnlContent";
-        pnlContent.Size = new System.Drawing.Size(1674, 936);
+        pnlContent.Size = new System.Drawing.Size(1674, 949);
         pnlContent.TabIndex = 1;
         // 
         // pnlSidebar
@@ -184,7 +183,7 @@ partial class MainForm
         pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
         pnlSidebar.Location = new System.Drawing.Point(0, 0);
         pnlSidebar.Name = "pnlSidebar";
-        pnlSidebar.Size = new System.Drawing.Size(250, 936);
+        pnlSidebar.Size = new System.Drawing.Size(250, 949);
         pnlSidebar.TabIndex = 0;
         // 
         // pnlSidebarMenu
@@ -197,7 +196,6 @@ partial class MainForm
         pnlSidebarMenu.Controls.Add(btnNavTuition);
         pnlSidebarMenu.Controls.Add(lblGroupC);
         pnlSidebarMenu.Controls.Add(btnNavCertificates);
-        pnlSidebarMenu.Controls.Add(btnNavMaterials);
         pnlSidebarMenu.Controls.Add(btnNavGrades);
         pnlSidebarMenu.Controls.Add(btnNavAttendance);
         pnlSidebarMenu.Controls.Add(btnNavSchedule);
@@ -211,8 +209,8 @@ partial class MainForm
         pnlSidebarMenu.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlSidebarMenu.Location = new System.Drawing.Point(0, 0);
         pnlSidebarMenu.Name = "pnlSidebarMenu";
-        pnlSidebarMenu.Padding = new System.Windows.Forms.Padding(0, 8, 0, 20);
-        pnlSidebarMenu.Size = new System.Drawing.Size(249, 936);
+        pnlSidebarMenu.Padding = new System.Windows.Forms.Padding(0, 8, 0, 21);
+        pnlSidebarMenu.Size = new System.Drawing.Size(250, 949);
         pnlSidebarMenu.TabIndex = 0;
         // 
         // btnNavSettings
@@ -223,10 +221,10 @@ partial class MainForm
         btnNavSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavSettings.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavSettings.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavSettings.Location = new System.Drawing.Point(0, 646);
+        btnNavSettings.Location = new System.Drawing.Point(0, 616);
         btnNavSettings.Name = "btnNavSettings";
-        btnNavSettings.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavSettings.Size = new System.Drawing.Size(353, 40);
+        btnNavSettings.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavSettings.Size = new System.Drawing.Size(248, 40);
         btnNavSettings.TabIndex = 20;
         btnNavSettings.Text = "Cấu hình";
         btnNavSettings.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -240,10 +238,10 @@ partial class MainForm
         btnNavAccounts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavAccounts.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavAccounts.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavAccounts.Location = new System.Drawing.Point(0, 604);
+        btnNavAccounts.Location = new System.Drawing.Point(0, 574);
         btnNavAccounts.Name = "btnNavAccounts";
-        btnNavAccounts.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavAccounts.Size = new System.Drawing.Size(353, 40);
+        btnNavAccounts.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavAccounts.Size = new System.Drawing.Size(248, 40);
         btnNavAccounts.TabIndex = 19;
         btnNavAccounts.Text = "Tài khoản & Phân quyền";
         btnNavAccounts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -253,9 +251,9 @@ partial class MainForm
         // 
         lblGroupD.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupD.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblGroupD.Location = new System.Drawing.Point(28, 574);
+        lblGroupD.Location = new System.Drawing.Point(20, 548);
         lblGroupD.Name = "lblGroupD";
-        lblGroupD.Size = new System.Drawing.Size(296, 28);
+        lblGroupD.Size = new System.Drawing.Size(210, 26);
         lblGroupD.TabIndex = 15;
         lblGroupD.Text = "D · HỆ THỐNG";
         lblGroupD.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -268,10 +266,10 @@ partial class MainForm
         btnNavTuition.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavTuition.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavTuition.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavTuition.Location = new System.Drawing.Point(0, 528);
+        btnNavTuition.Location = new System.Drawing.Point(0, 498);
         btnNavTuition.Name = "btnNavTuition";
-        btnNavTuition.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavTuition.Size = new System.Drawing.Size(353, 40);
+        btnNavTuition.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavTuition.Size = new System.Drawing.Size(248, 40);
         btnNavTuition.TabIndex = 14;
         btnNavTuition.Text = "Học phí & Thanh toán";
         btnNavTuition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -281,9 +279,9 @@ partial class MainForm
         // 
         lblGroupC.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupC.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblGroupC.Location = new System.Drawing.Point(28, 498);
+        lblGroupC.Location = new System.Drawing.Point(20, 472);
         lblGroupC.Name = "lblGroupC";
-        lblGroupC.Size = new System.Drawing.Size(296, 28);
+        lblGroupC.Size = new System.Drawing.Size(210, 26);
         lblGroupC.TabIndex = 12;
         lblGroupC.Text = "C · TÀI CHÍNH";
         lblGroupC.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -296,31 +294,14 @@ partial class MainForm
         btnNavCertificates.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavCertificates.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavCertificates.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavCertificates.Location = new System.Drawing.Point(0, 460);
+        btnNavCertificates.Location = new System.Drawing.Point(0, 422);
         btnNavCertificates.Name = "btnNavCertificates";
-        btnNavCertificates.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavCertificates.Size = new System.Drawing.Size(353, 40);
-        btnNavCertificates.TabIndex = 11;
+        btnNavCertificates.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavCertificates.Size = new System.Drawing.Size(248, 40);
+        btnNavCertificates.TabIndex = 10;
         btnNavCertificates.Text = "Chứng chỉ";
         btnNavCertificates.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         btnNavCertificates.UseVisualStyleBackColor = true;
-        // 
-        // btnNavMaterials
-        // 
-        btnNavMaterials.BackColor = System.Drawing.Color.White;
-        btnNavMaterials.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnNavMaterials.FlatAppearance.BorderSize = 0;
-        btnNavMaterials.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnNavMaterials.Font = new System.Drawing.Font("Segoe UI", 9.25F);
-        btnNavMaterials.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavMaterials.Location = new System.Drawing.Point(0, 418);
-        btnNavMaterials.Name = "btnNavMaterials";
-        btnNavMaterials.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavMaterials.Size = new System.Drawing.Size(353, 40);
-        btnNavMaterials.TabIndex = 10;
-        btnNavMaterials.Text = "Tài liệu học tập";
-        btnNavMaterials.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-        btnNavMaterials.UseVisualStyleBackColor = true;
         // 
         // btnNavGrades
         // 
@@ -330,10 +311,10 @@ partial class MainForm
         btnNavGrades.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavGrades.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavGrades.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavGrades.Location = new System.Drawing.Point(0, 377);
+        btnNavGrades.Location = new System.Drawing.Point(0, 380);
         btnNavGrades.Name = "btnNavGrades";
-        btnNavGrades.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavGrades.Size = new System.Drawing.Size(353, 40);
+        btnNavGrades.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavGrades.Size = new System.Drawing.Size(248, 40);
         btnNavGrades.TabIndex = 9;
         btnNavGrades.Text = "Kiểm tra & Điểm số";
         btnNavGrades.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -347,10 +328,10 @@ partial class MainForm
         btnNavAttendance.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavAttendance.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavAttendance.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavAttendance.Location = new System.Drawing.Point(0, 335);
+        btnNavAttendance.Location = new System.Drawing.Point(0, 338);
         btnNavAttendance.Name = "btnNavAttendance";
-        btnNavAttendance.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavAttendance.Size = new System.Drawing.Size(353, 40);
+        btnNavAttendance.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavAttendance.Size = new System.Drawing.Size(248, 40);
         btnNavAttendance.TabIndex = 8;
         btnNavAttendance.Text = "Điểm danh";
         btnNavAttendance.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -364,10 +345,10 @@ partial class MainForm
         btnNavSchedule.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavSchedule.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavSchedule.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavSchedule.Location = new System.Drawing.Point(0, 294);
+        btnNavSchedule.Location = new System.Drawing.Point(0, 296);
         btnNavSchedule.Name = "btnNavSchedule";
-        btnNavSchedule.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavSchedule.Size = new System.Drawing.Size(353, 40);
+        btnNavSchedule.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavSchedule.Size = new System.Drawing.Size(248, 40);
         btnNavSchedule.TabIndex = 7;
         btnNavSchedule.Text = "Lịch học & Phòng học";
         btnNavSchedule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -381,10 +362,10 @@ partial class MainForm
         btnNavClass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavClass.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavClass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavClass.Location = new System.Drawing.Point(0, 252);
+        btnNavClass.Location = new System.Drawing.Point(0, 254);
         btnNavClass.Name = "btnNavClass";
-        btnNavClass.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavClass.Size = new System.Drawing.Size(353, 40);
+        btnNavClass.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavClass.Size = new System.Drawing.Size(248, 40);
         btnNavClass.TabIndex = 6;
         btnNavClass.Text = "Lớp học";
         btnNavClass.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -400,8 +381,8 @@ partial class MainForm
         btnNavCourse.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         btnNavCourse.Location = new System.Drawing.Point(0, 212);
         btnNavCourse.Name = "btnNavCourse";
-        btnNavCourse.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavCourse.Size = new System.Drawing.Size(353, 40);
+        btnNavCourse.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavCourse.Size = new System.Drawing.Size(248, 40);
         btnNavCourse.TabIndex = 5;
         btnNavCourse.Text = "Khóa học";
         btnNavCourse.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -417,8 +398,8 @@ partial class MainForm
         btnNavTeacher.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
         btnNavTeacher.Location = new System.Drawing.Point(0, 170);
         btnNavTeacher.Name = "btnNavTeacher";
-        btnNavTeacher.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavTeacher.Size = new System.Drawing.Size(353, 40);
+        btnNavTeacher.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavTeacher.Size = new System.Drawing.Size(248, 40);
         btnNavTeacher.TabIndex = 4;
         btnNavTeacher.Text = "Giáo viên";
         btnNavTeacher.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -432,10 +413,10 @@ partial class MainForm
         btnNavStudent.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavStudent.Font = new System.Drawing.Font("Segoe UI", 9.25F);
         btnNavStudent.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        btnNavStudent.Location = new System.Drawing.Point(0, 129);
+        btnNavStudent.Location = new System.Drawing.Point(0, 128);
         btnNavStudent.Name = "btnNavStudent";
-        btnNavStudent.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavStudent.Size = new System.Drawing.Size(353, 40);
+        btnNavStudent.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavStudent.Size = new System.Drawing.Size(248, 40);
         btnNavStudent.TabIndex = 3;
         btnNavStudent.Text = "Học viên";
         btnNavStudent.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -445,9 +426,9 @@ partial class MainForm
         // 
         lblGroupB.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupB.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblGroupB.Location = new System.Drawing.Point(28, 94);
+        lblGroupB.Location = new System.Drawing.Point(20, 102);
         lblGroupB.Name = "lblGroupB";
-        lblGroupB.Size = new System.Drawing.Size(296, 28);
+        lblGroupB.Size = new System.Drawing.Size(210, 26);
         lblGroupB.TabIndex = 2;
         lblGroupB.Text = "B · ĐÀO TẠO";
         lblGroupB.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -460,10 +441,10 @@ partial class MainForm
         btnNavDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnNavDashboard.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold);
         btnNavDashboard.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        btnNavDashboard.Location = new System.Drawing.Point(0, 46);
+        btnNavDashboard.Location = new System.Drawing.Point(0, 42);
         btnNavDashboard.Name = "btnNavDashboard";
-        btnNavDashboard.Padding = new System.Windows.Forms.Padding(32, 0, 0, 0);
-        btnNavDashboard.Size = new System.Drawing.Size(353, 40);
+        btnNavDashboard.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
+        btnNavDashboard.Size = new System.Drawing.Size(248, 40);
         btnNavDashboard.TabIndex = 1;
         btnNavDashboard.Text = "•  Tổng quan";
         btnNavDashboard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -473,9 +454,9 @@ partial class MainForm
         // 
         lblGroupA.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupA.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
-        lblGroupA.Location = new System.Drawing.Point(28, 10);
+        lblGroupA.Location = new System.Drawing.Point(20, 8);
         lblGroupA.Name = "lblGroupA";
-        lblGroupA.Size = new System.Drawing.Size(296, 28);
+        lblGroupA.Size = new System.Drawing.Size(210, 26);
         lblGroupA.TabIndex = 0;
         lblGroupA.Text = "A · TỔNG QUAN";
         lblGroupA.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
@@ -485,7 +466,7 @@ partial class MainForm
         AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        ClientSize = new System.Drawing.Size(1924, 1037);
+        ClientSize = new System.Drawing.Size(1924, 1055);
         Controls.Add(pnlBody);
         Controls.Add(pnlStatusBar);
         Controls.Add(pnlHeader);
@@ -532,10 +513,8 @@ partial class MainForm
     private System.Windows.Forms.Button btnNavSchedule;
     private System.Windows.Forms.Button btnNavAttendance;
     private System.Windows.Forms.Button btnNavGrades;
-    private System.Windows.Forms.Button btnNavMaterials;
     private System.Windows.Forms.Button btnNavCertificates;
     private System.Windows.Forms.Label lblGroupC;
-    private System.Windows.Forms.Button btnNavAdmissions;
     private System.Windows.Forms.Button btnNavTuition;
     private System.Windows.Forms.Label lblGroupD;
     private System.Windows.Forms.Button btnNavAccounts;

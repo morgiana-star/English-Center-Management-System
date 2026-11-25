@@ -36,7 +36,6 @@ partial class StudentEnrollmentWizardDialog
         btnNext = new ECMS.UI.Controls.AppButton();
         tabSteps = new System.Windows.Forms.TabControl();
         tpStep1 = new System.Windows.Forms.TabPage();
-        tpStep2 = new System.Windows.Forms.TabPage();
         pnlStep1 = new System.Windows.Forms.Panel();
         cardStep1 = new ECMS.UI.Controls.AppCard();
         txtNotes = new ECMS.UI.Controls.AppTextBox();
@@ -62,6 +61,7 @@ partial class StudentEnrollmentWizardDialog
         txtFullName = new ECMS.UI.Controls.AppTextBox();
         lblFullName = new System.Windows.Forms.Label();
         lblSec1Title = new System.Windows.Forms.Label();
+        tpStep2 = new System.Windows.Forms.TabPage();
         pnlStep2 = new System.Windows.Forms.Panel();
         cardStep2 = new ECMS.UI.Controls.AppCard();
         pnlBottomFeeSummary = new System.Windows.Forms.Panel();
@@ -105,9 +105,9 @@ partial class StudentEnrollmentWizardDialog
         pnlFooter.SuspendLayout();
         tabSteps.SuspendLayout();
         tpStep1.SuspendLayout();
-        tpStep2.SuspendLayout();
         pnlStep1.SuspendLayout();
         cardStep1.SuspendLayout();
+        tpStep2.SuspendLayout();
         pnlStep2.SuspendLayout();
         cardStep2.SuspendLayout();
         pnlBottomFeeSummary.SuspendLayout();
@@ -152,9 +152,9 @@ partial class StudentEnrollmentWizardDialog
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblTitle.Location = new System.Drawing.Point(26, 12);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(322, 32);
+        lblTitle.Size = new System.Drawing.Size(156, 32);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "Đăng ký nhập học & Xếp lớp";
+        lblTitle.Text = "Đăng ký học";
         // 
         // pnlFooter
         // 
@@ -169,24 +169,6 @@ partial class StudentEnrollmentWizardDialog
         pnlFooter.Padding = new System.Windows.Forms.Padding(28, 12, 28, 12);
         pnlFooter.Size = new System.Drawing.Size(980, 60);
         pnlFooter.TabIndex = 1;
-        // 
-        // btnSaveWaiting
-        // 
-        btnSaveWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnSaveWaiting.BackColor = System.Drawing.Color.White;
-        btnSaveWaiting.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnSaveWaiting.CornerRadius = 6;
-        btnSaveWaiting.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnSaveWaiting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnSaveWaiting.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnSaveWaiting.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnSaveWaiting.Location = new System.Drawing.Point(605, 12);
-        btnSaveWaiting.Name = "btnSaveWaiting";
-        btnSaveWaiting.Size = new System.Drawing.Size(185, 36);
-        btnSaveWaiting.TabIndex = 4;
-        btnSaveWaiting.Text = "Lưu (Chờ xếp lớp)";
-        btnSaveWaiting.UseVisualStyleBackColor = false;
-        btnSaveWaiting.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnBack
         // 
@@ -206,6 +188,24 @@ partial class StudentEnrollmentWizardDialog
         btnBack.UseVisualStyleBackColor = false;
         btnBack.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         btnBack.Visible = false;
+        // 
+        // btnSaveWaiting
+        // 
+        btnSaveWaiting.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnSaveWaiting.BackColor = System.Drawing.Color.White;
+        btnSaveWaiting.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnSaveWaiting.CornerRadius = 6;
+        btnSaveWaiting.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnSaveWaiting.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnSaveWaiting.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        btnSaveWaiting.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        btnSaveWaiting.Location = new System.Drawing.Point(605, 12);
+        btnSaveWaiting.Name = "btnSaveWaiting";
+        btnSaveWaiting.Size = new System.Drawing.Size(185, 36);
+        btnSaveWaiting.TabIndex = 4;
+        btnSaveWaiting.Text = "Lưu (Chờ xếp lớp)";
+        btnSaveWaiting.UseVisualStyleBackColor = false;
+        btnSaveWaiting.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnConfirmNoPay
         // 
@@ -262,31 +262,20 @@ partial class StudentEnrollmentWizardDialog
         // 
         tpStep1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
         tpStep1.Controls.Add(pnlStep1);
-        tpStep1.Location = new System.Drawing.Point(4, 30);
+        tpStep1.Location = new System.Drawing.Point(4, 36);
         tpStep1.Name = "tpStep1";
         tpStep1.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
-        tpStep1.Size = new System.Drawing.Size(972, 568);
+        tpStep1.Size = new System.Drawing.Size(972, 562);
         tpStep1.TabIndex = 0;
         tpStep1.Text = "Bước 1: Thông tin học viên";
-        // 
-        // tpStep2
-        // 
-        tpStep2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        tpStep2.Controls.Add(pnlStep2);
-        tpStep2.Location = new System.Drawing.Point(4, 30);
-        tpStep2.Name = "tpStep2";
-        tpStep2.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
-        tpStep2.Size = new System.Drawing.Size(972, 568);
-        tpStep2.TabIndex = 1;
-        tpStep2.Text = "Bước 2: Chọn khóa học & lớp học";
         // 
         // pnlStep1
         // 
         pnlStep1.Controls.Add(cardStep1);
         pnlStep1.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlStep1.Location = new System.Drawing.Point(24, 14);
+        pnlStep1.Location = new System.Drawing.Point(20, 12);
         pnlStep1.Name = "pnlStep1";
-        pnlStep1.Size = new System.Drawing.Size(932, 574);
+        pnlStep1.Size = new System.Drawing.Size(932, 538);
         pnlStep1.TabIndex = 0;
         // 
         // cardStep1
@@ -322,7 +311,7 @@ partial class StudentEnrollmentWizardDialog
         cardStep1.Location = new System.Drawing.Point(0, 0);
         cardStep1.Name = "cardStep1";
         cardStep1.Padding = new System.Windows.Forms.Padding(24);
-        cardStep1.Size = new System.Drawing.Size(932, 574);
+        cardStep1.Size = new System.Drawing.Size(932, 538);
         cardStep1.TabIndex = 0;
         // 
         // txtNotes
@@ -603,13 +592,24 @@ partial class StudentEnrollmentWizardDialog
         lblSec1Title.TabIndex = 0;
         lblSec1Title.Text = "1. Thông tin cá nhân học viên";
         // 
+        // tpStep2
+        // 
+        tpStep2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        tpStep2.Controls.Add(pnlStep2);
+        tpStep2.Location = new System.Drawing.Point(4, 36);
+        tpStep2.Name = "tpStep2";
+        tpStep2.Padding = new System.Windows.Forms.Padding(20, 12, 20, 12);
+        tpStep2.Size = new System.Drawing.Size(972, 562);
+        tpStep2.TabIndex = 1;
+        tpStep2.Text = "Bước 2: Chọn khóa học & lớp học";
+        // 
         // pnlStep2
         // 
         pnlStep2.Controls.Add(cardStep2);
         pnlStep2.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlStep2.Location = new System.Drawing.Point(20, 12);
         pnlStep2.Name = "pnlStep2";
-        pnlStep2.Size = new System.Drawing.Size(932, 544);
+        pnlStep2.Size = new System.Drawing.Size(932, 538);
         pnlStep2.TabIndex = 1;
         // 
         // cardStep2
@@ -627,7 +627,7 @@ partial class StudentEnrollmentWizardDialog
         cardStep2.Location = new System.Drawing.Point(0, 0);
         cardStep2.Name = "cardStep2";
         cardStep2.Padding = new System.Windows.Forms.Padding(24);
-        cardStep2.Size = new System.Drawing.Size(932, 544);
+        cardStep2.Size = new System.Drawing.Size(932, 538);
         cardStep2.TabIndex = 0;
         // 
         // pnlBottomFeeSummary
@@ -707,7 +707,7 @@ partial class StudentEnrollmentWizardDialog
         dgvOpenClasses.RowTemplate.Height = 44;
         dgvOpenClasses.ScrollBars = System.Windows.Forms.ScrollBars.None;
         dgvOpenClasses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvOpenClasses.Size = new System.Drawing.Size(884, 300);
+        dgvOpenClasses.Size = new System.Drawing.Size(884, 312);
         dgvOpenClasses.TabIndex = 3;
         // 
         // pnlTableToolbar
@@ -759,7 +759,7 @@ partial class StudentEnrollmentWizardDialog
         txtSearchClass.HasError = false;
         txtSearchClass.Location = new System.Drawing.Point(0, 0);
         txtSearchClass.Name = "txtSearchClass";
-        txtSearchClass.Placeholder = "🔍 Tìm nhanh theo mã lớp, giáo viên, phòng học...";
+        txtSearchClass.Placeholder = "Tìm kiếm theo mã lớp, giáo viên, phòng học...";
         txtSearchClass.ReadOnly = false;
         txtSearchClass.Size = new System.Drawing.Size(420, 36);
         txtSearchClass.TabIndex = 0;
@@ -1149,8 +1149,6 @@ partial class StudentEnrollmentWizardDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         MinimumSize = new System.Drawing.Size(940, 680);
         ShowInTaskbar = false;
@@ -1161,10 +1159,10 @@ partial class StudentEnrollmentWizardDialog
         pnlFooter.ResumeLayout(false);
         tabSteps.ResumeLayout(false);
         tpStep1.ResumeLayout(false);
-        tpStep2.ResumeLayout(false);
         pnlStep1.ResumeLayout(false);
         cardStep1.ResumeLayout(false);
         cardStep1.PerformLayout();
+        tpStep2.ResumeLayout(false);
         pnlStep2.ResumeLayout(false);
         cardStep2.ResumeLayout(false);
         cardStep2.PerformLayout();

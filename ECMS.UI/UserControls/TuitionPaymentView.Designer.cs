@@ -34,6 +34,7 @@ partial class TuitionPaymentView
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
+        btnManageDiscounts = new ECMS.UI.Controls.AppButton();
         btnExportDebt = new ECMS.UI.Controls.AppButton();
         btnCollectTuition = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
@@ -44,8 +45,6 @@ partial class TuitionPaymentView
         lblSearch = new System.Windows.Forms.Label();
         tabMain = new System.Windows.Forms.TabControl();
         tpProfiles = new System.Windows.Forms.TabPage();
-        tpDebt = new System.Windows.Forms.TabPage();
-        tpHistory = new System.Windows.Forms.TabPage();
         cardProfiles = new ECMS.UI.Controls.AppCard();
         gridProfiles = new ECMS.UI.Controls.AppDataGrid();
         pnlProfileSummary = new System.Windows.Forms.Panel();
@@ -59,10 +58,12 @@ partial class TuitionPaymentView
         lblSumTotalVal = new System.Windows.Forms.Label();
         lblSumTotalTitle = new System.Windows.Forms.Label();
         lblProfilesTitle = new System.Windows.Forms.Label();
+        tpDebt = new System.Windows.Forms.TabPage();
         cardDebt = new ECMS.UI.Controls.AppCard();
         lblDebtorsFooter = new System.Windows.Forms.Label();
         gridDebtors = new ECMS.UI.Controls.AppDataGrid();
         lblDebtTitle = new System.Windows.Forms.Label();
+        tpHistory = new System.Windows.Forms.TabPage();
         cardHistory = new ECMS.UI.Controls.AppCard();
         lblHistoryFooter = new System.Windows.Forms.Label();
         gridHistory = new ECMS.UI.Controls.AppDataGrid();
@@ -71,16 +72,16 @@ partial class TuitionPaymentView
         pnlFilter.SuspendLayout();
         tabMain.SuspendLayout();
         tpProfiles.SuspendLayout();
-        tpDebt.SuspendLayout();
-        tpHistory.SuspendLayout();
         cardProfiles.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)gridProfiles).BeginInit();
         pnlProfileSummary.SuspendLayout();
         cardSumRemaining.SuspendLayout();
         cardSumPaid.SuspendLayout();
         cardSumTotal.SuspendLayout();
+        tpDebt.SuspendLayout();
         cardDebt.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)gridDebtors).BeginInit();
+        tpHistory.SuspendLayout();
         cardHistory.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)gridHistory).BeginInit();
         SuspendLayout();
@@ -88,6 +89,7 @@ partial class TuitionPaymentView
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
+        pnlHeader.Controls.Add(btnManageDiscounts);
         pnlHeader.Controls.Add(btnExportDebt);
         pnlHeader.Controls.Add(btnCollectTuition);
         pnlHeader.Controls.Add(lblTitle);
@@ -97,6 +99,24 @@ partial class TuitionPaymentView
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 14, 24, 12);
         pnlHeader.Size = new System.Drawing.Size(1200, 75);
         pnlHeader.TabIndex = 0;
+        // 
+        // btnManageDiscounts
+        // 
+        btnManageDiscounts.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        btnManageDiscounts.BackColor = System.Drawing.Color.White;
+        btnManageDiscounts.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnManageDiscounts.CornerRadius = 5;
+        btnManageDiscounts.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnManageDiscounts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnManageDiscounts.Font = new System.Drawing.Font("Segoe UI", 9F);
+        btnManageDiscounts.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnManageDiscounts.Location = new System.Drawing.Point(920, 18);
+        btnManageDiscounts.Name = "btnManageDiscounts";
+        btnManageDiscounts.Size = new System.Drawing.Size(125, 38);
+        btnManageDiscounts.TabIndex = 3;
+        btnManageDiscounts.Text = "Mã giảm giá";
+        btnManageDiscounts.UseVisualStyleBackColor = false;
+        btnManageDiscounts.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // btnExportDebt
         // 
@@ -108,7 +128,7 @@ partial class TuitionPaymentView
         btnExportDebt.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnExportDebt.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnExportDebt.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnExportDebt.Location = new System.Drawing.Point(920, 18);
+        btnExportDebt.Location = new System.Drawing.Point(1055, 18);
         btnExportDebt.Name = "btnExportDebt";
         btnExportDebt.Size = new System.Drawing.Size(120, 38);
         btnExportDebt.TabIndex = 1;
@@ -133,17 +153,18 @@ partial class TuitionPaymentView
         btnCollectTuition.Text = "+ Thu học phí";
         btnCollectTuition.UseVisualStyleBackColor = false;
         btnCollectTuition.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        btnCollectTuition.Visible = false;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(22, 12);
+        lblTitle.Location = new System.Drawing.Point(24, 18);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(253, 35);
+        lblTitle.Size = new System.Drawing.Size(212, 35);
         lblTitle.TabIndex = 0;
-        lblTitle.Text = "Học phí & Thanh toán";
+        lblTitle.Text = "Quản lý tài chính";
         // 
         // pnlFilter
         // 
@@ -219,34 +240,12 @@ partial class TuitionPaymentView
         // 
         tpProfiles.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
         tpProfiles.Controls.Add(cardProfiles);
-        tpProfiles.Location = new System.Drawing.Point(4, 30);
+        tpProfiles.Location = new System.Drawing.Point(4, 36);
         tpProfiles.Name = "tpProfiles";
         tpProfiles.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
-        tpProfiles.Size = new System.Drawing.Size(1192, 641);
+        tpProfiles.Size = new System.Drawing.Size(1192, 635);
         tpProfiles.TabIndex = 0;
         tpProfiles.Text = "Hồ sơ học phí";
-        // 
-        // tpDebt
-        // 
-        tpDebt.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        tpDebt.Controls.Add(cardDebt);
-        tpDebt.Location = new System.Drawing.Point(4, 30);
-        tpDebt.Name = "tpDebt";
-        tpDebt.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
-        tpDebt.Size = new System.Drawing.Size(1192, 641);
-        tpDebt.TabIndex = 1;
-        tpDebt.Text = "Công nợ";
-        // 
-        // tpHistory
-        // 
-        tpHistory.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        tpHistory.Controls.Add(cardHistory);
-        tpHistory.Location = new System.Drawing.Point(4, 30);
-        tpHistory.Name = "tpHistory";
-        tpHistory.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
-        tpHistory.Size = new System.Drawing.Size(1192, 641);
-        tpHistory.TabIndex = 2;
-        tpHistory.Text = "Lịch sử thu";
         // 
         // cardProfiles
         // 
@@ -258,10 +257,10 @@ partial class TuitionPaymentView
         cardProfiles.Controls.Add(lblProfilesTitle);
         cardProfiles.CornerRadius = 8;
         cardProfiles.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardProfiles.Location = new System.Drawing.Point(24, 14);
+        cardProfiles.Location = new System.Drawing.Point(20, 12);
         cardProfiles.Name = "cardProfiles";
         cardProfiles.Padding = new System.Windows.Forms.Padding(16);
-        cardProfiles.Size = new System.Drawing.Size(1152, 599);
+        cardProfiles.Size = new System.Drawing.Size(1152, 607);
         cardProfiles.TabIndex = 0;
         // 
         // gridProfiles
@@ -316,7 +315,7 @@ partial class TuitionPaymentView
         gridProfiles.RowHeadersWidth = 51;
         gridProfiles.RowTemplate.Height = 42;
         gridProfiles.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridProfiles.Size = new System.Drawing.Size(1120, 467);
+        gridProfiles.Size = new System.Drawing.Size(1120, 475);
         gridProfiles.TabIndex = 1;
         // 
         // pnlProfileSummary
@@ -325,7 +324,7 @@ partial class TuitionPaymentView
         pnlProfileSummary.Controls.Add(cardSumPaid);
         pnlProfileSummary.Controls.Add(cardSumTotal);
         pnlProfileSummary.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlProfileSummary.Location = new System.Drawing.Point(16, 511);
+        pnlProfileSummary.Location = new System.Drawing.Point(16, 519);
         pnlProfileSummary.Name = "pnlProfileSummary";
         pnlProfileSummary.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
         pnlProfileSummary.Size = new System.Drawing.Size(1120, 72);
@@ -459,20 +458,31 @@ partial class TuitionPaymentView
         lblProfilesTitle.TabIndex = 0;
         lblProfilesTitle.Text = "HỒ SƠ HỌC PHÍ HỌC VIÊN TOÀN TRUNG TÂM";
         // 
+        // tpDebt
+        // 
+        tpDebt.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        tpDebt.Controls.Add(cardDebt);
+        tpDebt.Location = new System.Drawing.Point(4, 36);
+        tpDebt.Name = "tpDebt";
+        tpDebt.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
+        tpDebt.Size = new System.Drawing.Size(1192, 635);
+        tpDebt.TabIndex = 1;
+        tpDebt.Text = "Công nợ";
+        // 
         // cardDebt
         // 
         cardDebt.BackColor = System.Drawing.Color.White;
         cardDebt.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardDebt.BorderWidth = 1;
-        cardDebt.Controls.Add(lblDebtorsFooter);
         cardDebt.Controls.Add(gridDebtors);
+        cardDebt.Controls.Add(lblDebtorsFooter);
         cardDebt.Controls.Add(lblDebtTitle);
         cardDebt.CornerRadius = 8;
         cardDebt.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardDebt.Location = new System.Drawing.Point(24, 14);
+        cardDebt.Location = new System.Drawing.Point(20, 12);
         cardDebt.Name = "cardDebt";
         cardDebt.Padding = new System.Windows.Forms.Padding(16);
-        cardDebt.Size = new System.Drawing.Size(1152, 599);
+        cardDebt.Size = new System.Drawing.Size(1152, 607);
         cardDebt.TabIndex = 1;
         // 
         // lblDebtorsFooter
@@ -480,11 +490,11 @@ partial class TuitionPaymentView
         lblDebtorsFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         lblDebtorsFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblDebtorsFooter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDebtorsFooter.Location = new System.Drawing.Point(16, 555);
+        lblDebtorsFooter.Location = new System.Drawing.Point(16, 563);
         lblDebtorsFooter.Name = "lblDebtorsFooter";
         lblDebtorsFooter.Size = new System.Drawing.Size(1120, 28);
         lblDebtorsFooter.TabIndex = 2;
-        lblDebtorsFooter.Text = ("📌 Nhấn \'💵 Thu tiền\' tại học viên bất kỳ để mở hộp thoại thu học phí và tự động " + "lập phiếu thu.");
+        lblDebtorsFooter.Text = "Nhấn 'Thu tiền' tại học viên bất kỳ để mở hộp thoại thu học phí và tự động lập phiếu thu.";
         // 
         // gridDebtors
         // 
@@ -538,7 +548,7 @@ partial class TuitionPaymentView
         gridDebtors.RowHeadersWidth = 51;
         gridDebtors.RowTemplate.Height = 42;
         gridDebtors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridDebtors.Size = new System.Drawing.Size(1120, 539);
+        gridDebtors.Size = new System.Drawing.Size(1120, 547);
         gridDebtors.TabIndex = 1;
         // 
         // lblDebtTitle
@@ -552,20 +562,31 @@ partial class TuitionPaymentView
         lblDebtTitle.TabIndex = 0;
         lblDebtTitle.Text = "DANH SÁCH HỌC VIÊN CÒN KHOẢN PHẢI THANH TOÁN (CÔNG NỢ > 0đ)";
         // 
+        // tpHistory
+        // 
+        tpHistory.BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        tpHistory.Controls.Add(cardHistory);
+        tpHistory.Location = new System.Drawing.Point(4, 36);
+        tpHistory.Name = "tpHistory";
+        tpHistory.Padding = new System.Windows.Forms.Padding(20, 12, 20, 16);
+        tpHistory.Size = new System.Drawing.Size(1192, 635);
+        tpHistory.TabIndex = 2;
+        tpHistory.Text = "Lịch sử thu";
+        // 
         // cardHistory
         // 
         cardHistory.BackColor = System.Drawing.Color.White;
         cardHistory.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardHistory.BorderWidth = 1;
-        cardHistory.Controls.Add(lblHistoryFooter);
         cardHistory.Controls.Add(gridHistory);
+        cardHistory.Controls.Add(lblHistoryFooter);
         cardHistory.Controls.Add(lblHistoryTitle);
         cardHistory.CornerRadius = 8;
         cardHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-        cardHistory.Location = new System.Drawing.Point(24, 14);
+        cardHistory.Location = new System.Drawing.Point(20, 12);
         cardHistory.Name = "cardHistory";
         cardHistory.Padding = new System.Windows.Forms.Padding(16);
-        cardHistory.Size = new System.Drawing.Size(1152, 599);
+        cardHistory.Size = new System.Drawing.Size(1152, 607);
         cardHistory.TabIndex = 2;
         // 
         // lblHistoryFooter
@@ -573,11 +594,11 @@ partial class TuitionPaymentView
         lblHistoryFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
         lblHistoryFooter.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblHistoryFooter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblHistoryFooter.Location = new System.Drawing.Point(16, 555);
+        lblHistoryFooter.Location = new System.Drawing.Point(16, 563);
         lblHistoryFooter.Name = "lblHistoryFooter";
         lblHistoryFooter.Size = new System.Drawing.Size(1120, 28);
         lblHistoryFooter.TabIndex = 2;
-        lblHistoryFooter.Text = ("📌 Nhấn \'🖨️ In phiếu thu\' để mở phôi biên lai thu tiền chuẩn A5 hai liên và gửi " + "lệnh in.");
+        lblHistoryFooter.Text = "Nhấn 'In phiếu thu' để mở phôi biên lai thu tiền chuẩn A5 hai liên và gửi lệnh in.";
         // 
         // gridHistory
         // 
@@ -631,7 +652,7 @@ partial class TuitionPaymentView
         gridHistory.RowHeadersWidth = 51;
         gridHistory.RowTemplate.Height = 42;
         gridHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        gridHistory.Size = new System.Drawing.Size(1120, 539);
+        gridHistory.Size = new System.Drawing.Size(1120, 547);
         gridHistory.TabIndex = 1;
         // 
         // lblHistoryTitle
@@ -661,16 +682,16 @@ partial class TuitionPaymentView
         pnlFilter.PerformLayout();
         tabMain.ResumeLayout(false);
         tpProfiles.ResumeLayout(false);
-        tpDebt.ResumeLayout(false);
-        tpHistory.ResumeLayout(false);
         cardProfiles.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)gridProfiles).EndInit();
         pnlProfileSummary.ResumeLayout(false);
         cardSumRemaining.ResumeLayout(false);
         cardSumPaid.ResumeLayout(false);
         cardSumTotal.ResumeLayout(false);
+        tpDebt.ResumeLayout(false);
         cardDebt.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)gridDebtors).EndInit();
+        tpHistory.ResumeLayout(false);
         cardHistory.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)gridHistory).EndInit();
         ResumeLayout(false);
@@ -682,6 +703,7 @@ partial class TuitionPaymentView
     private System.Windows.Forms.Label lblTitle;
     private ECMS.UI.Controls.AppButton btnCollectTuition;
     private ECMS.UI.Controls.AppButton btnExportDebt;
+    private ECMS.UI.Controls.AppButton btnManageDiscounts;
     private System.Windows.Forms.Panel pnlFilter;
     private System.Windows.Forms.Label lblSearch;
     private System.Windows.Forms.TextBox txtSearch;

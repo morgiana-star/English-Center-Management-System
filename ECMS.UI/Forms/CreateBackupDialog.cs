@@ -50,7 +50,6 @@ public partial class CreateBackupDialog : Form
 
     private void WireEvents()
     {
-        btnCloseTop.Click += (s, e) =>
         {
             DialogResult = DialogResult.Cancel;
             Close();

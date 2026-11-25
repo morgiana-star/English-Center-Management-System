@@ -24,22 +24,6 @@ partial class CourseEditDialog
         pnlHeader = new System.Windows.Forms.Panel();
         lblTitle = new System.Windows.Forms.Label();
         pnlContent = new System.Windows.Forms.Panel();
-        cardRules = new ECMS.UI.Controls.AppCard();
-        lblAttendanceVal = new System.Windows.Forms.Label();
-        lblAttendanceKey = new System.Windows.Forms.Label();
-        lblPassScoreVal = new System.Windows.Forms.Label();
-        lblPassScoreKey = new System.Windows.Forms.Label();
-        lblTotalWeightVal = new System.Windows.Forms.Label();
-        lblTotalWeightKey = new System.Windows.Forms.Label();
-        lblFinalWeightVal = new System.Windows.Forms.Label();
-        lblFinalWeightKey = new System.Windows.Forms.Label();
-        lblMidtermWeightVal = new System.Windows.Forms.Label();
-        lblMidtermWeightKey = new System.Windows.Forms.Label();
-        lblRegularWeightVal = new System.Windows.Forms.Label();
-        lblRegularWeightKey = new System.Windows.Forms.Label();
-        lblGradingScaleVal = new System.Windows.Forms.Label();
-        lblGradingScaleKey = new System.Windows.Forms.Label();
-        lblRulesTitle = new System.Windows.Forms.Label();
         cardProgramInfo = new ECMS.UI.Controls.AppCard();
         btnSave = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
@@ -64,7 +48,6 @@ partial class CourseEditDialog
         lblProgramInfoTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
-        cardRules.SuspendLayout();
         cardProgramInfo.SuspendLayout();
         SuspendLayout();
         // 
@@ -76,7 +59,7 @@ partial class CourseEditDialog
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-        pnlHeader.Size = new System.Drawing.Size(1220, 75);
+        pnlHeader.Size = new System.Drawing.Size(860, 75);
         pnlHeader.TabIndex = 0;
         // 
         // lblTitle
@@ -93,211 +76,17 @@ partial class CourseEditDialog
         // pnlContent
         // 
         pnlContent.AutoScroll = true;
-        pnlContent.Controls.Add(cardRules);
         pnlContent.Controls.Add(cardProgramInfo);
         pnlContent.Dock = System.Windows.Forms.DockStyle.Fill;
         pnlContent.Location = new System.Drawing.Point(0, 75);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new System.Windows.Forms.Padding(24);
-        pnlContent.Size = new System.Drawing.Size(1220, 685);
+        pnlContent.Size = new System.Drawing.Size(860, 590);
         pnlContent.TabIndex = 1;
-        // 
-        // cardRules
-        // 
-        cardRules.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        cardRules.BackColor = System.Drawing.Color.White;
-        cardRules.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        cardRules.BorderWidth = 1;
-        cardRules.Controls.Add(lblAttendanceVal);
-        cardRules.Controls.Add(lblAttendanceKey);
-        cardRules.Controls.Add(lblPassScoreVal);
-        cardRules.Controls.Add(lblPassScoreKey);
-        cardRules.Controls.Add(lblTotalWeightVal);
-        cardRules.Controls.Add(lblTotalWeightKey);
-        cardRules.Controls.Add(lblFinalWeightVal);
-        cardRules.Controls.Add(lblFinalWeightKey);
-        cardRules.Controls.Add(lblMidtermWeightVal);
-        cardRules.Controls.Add(lblMidtermWeightKey);
-        cardRules.Controls.Add(lblRegularWeightVal);
-        cardRules.Controls.Add(lblRegularWeightKey);
-        cardRules.Controls.Add(lblGradingScaleVal);
-        cardRules.Controls.Add(lblGradingScaleKey);
-        cardRules.Controls.Add(lblRulesTitle);
-        cardRules.CornerRadius = 6;
-        cardRules.Location = new System.Drawing.Point(860, 24);
-        cardRules.Name = "cardRules";
-        cardRules.Padding = new System.Windows.Forms.Padding(20);
-        cardRules.Size = new System.Drawing.Size(336, 620);
-        cardRules.TabIndex = 1;
-        // 
-        // lblAttendanceVal
-        // 
-        lblAttendanceVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblAttendanceVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblAttendanceVal.Location = new System.Drawing.Point(180, 260);
-        lblAttendanceVal.Name = "lblAttendanceVal";
-        lblAttendanceVal.Size = new System.Drawing.Size(130, 20);
-        lblAttendanceVal.TabIndex = 14;
-        lblAttendanceVal.Text = "≥ 80%";
-        lblAttendanceVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblAttendanceKey
-        // 
-        lblAttendanceKey.AutoSize = true;
-        lblAttendanceKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblAttendanceKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblAttendanceKey.Location = new System.Drawing.Point(20, 262);
-        lblAttendanceKey.Name = "lblAttendanceKey";
-        lblAttendanceKey.Size = new System.Drawing.Size(84, 20);
-        lblAttendanceKey.TabIndex = 13;
-        lblAttendanceKey.Text = "Chuyên cần";
-        // 
-        // lblPassScoreVal
-        // 
-        lblPassScoreVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblPassScoreVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblPassScoreVal.Location = new System.Drawing.Point(180, 225);
-        lblPassScoreVal.Name = "lblPassScoreVal";
-        lblPassScoreVal.Size = new System.Drawing.Size(130, 20);
-        lblPassScoreVal.TabIndex = 12;
-        lblPassScoreVal.Text = "≥ 6,5 / 10";
-        lblPassScoreVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblPassScoreKey
-        // 
-        lblPassScoreKey.AutoSize = true;
-        lblPassScoreKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblPassScoreKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblPassScoreKey.Location = new System.Drawing.Point(20, 227);
-        lblPassScoreKey.Name = "lblPassScoreKey";
-        lblPassScoreKey.Size = new System.Drawing.Size(71, 20);
-        lblPassScoreKey.TabIndex = 11;
-        lblPassScoreKey.Text = "Điểm đạt";
-        // 
-        // lblTotalWeightVal
-        // 
-        lblTotalWeightVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblTotalWeightVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblTotalWeightVal.Location = new System.Drawing.Point(180, 190);
-        lblTotalWeightVal.Name = "lblTotalWeightVal";
-        lblTotalWeightVal.Size = new System.Drawing.Size(130, 20);
-        lblTotalWeightVal.TabIndex = 10;
-        lblTotalWeightVal.Text = "100%";
-        lblTotalWeightVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblTotalWeightKey
-        // 
-        lblTotalWeightKey.AutoSize = true;
-        lblTotalWeightKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblTotalWeightKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblTotalWeightKey.Location = new System.Drawing.Point(20, 192);
-        lblTotalWeightKey.Name = "lblTotalWeightKey";
-        lblTotalWeightKey.Size = new System.Drawing.Size(102, 20);
-        lblTotalWeightKey.TabIndex = 9;
-        lblTotalWeightKey.Text = "Tổng trọng số";
-        // 
-        // lblFinalWeightVal
-        // 
-        lblFinalWeightVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblFinalWeightVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblFinalWeightVal.Location = new System.Drawing.Point(180, 155);
-        lblFinalWeightVal.Name = "lblFinalWeightVal";
-        lblFinalWeightVal.Size = new System.Drawing.Size(130, 20);
-        lblFinalWeightVal.TabIndex = 8;
-        lblFinalWeightVal.Text = "50%";
-        lblFinalWeightVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblFinalWeightKey
-        // 
-        lblFinalWeightKey.AutoSize = true;
-        lblFinalWeightKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblFinalWeightKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblFinalWeightKey.Location = new System.Drawing.Point(20, 157);
-        lblFinalWeightKey.Name = "lblFinalWeightKey";
-        lblFinalWeightKey.Size = new System.Drawing.Size(75, 20);
-        lblFinalWeightKey.TabIndex = 7;
-        lblFinalWeightKey.Text = "Cuối khóa";
-        // 
-        // lblMidtermWeightVal
-        // 
-        lblMidtermWeightVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblMidtermWeightVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblMidtermWeightVal.Location = new System.Drawing.Point(180, 120);
-        lblMidtermWeightVal.Name = "lblMidtermWeightVal";
-        lblMidtermWeightVal.Size = new System.Drawing.Size(130, 20);
-        lblMidtermWeightVal.TabIndex = 6;
-        lblMidtermWeightVal.Text = "30%";
-        lblMidtermWeightVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblMidtermWeightKey
-        // 
-        lblMidtermWeightKey.AutoSize = true;
-        lblMidtermWeightKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblMidtermWeightKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblMidtermWeightKey.Location = new System.Drawing.Point(20, 122);
-        lblMidtermWeightKey.Name = "lblMidtermWeightKey";
-        lblMidtermWeightKey.Size = new System.Drawing.Size(76, 20);
-        lblMidtermWeightKey.TabIndex = 5;
-        lblMidtermWeightKey.Text = "Giữa khóa";
-        // 
-        // lblRegularWeightVal
-        // 
-        lblRegularWeightVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblRegularWeightVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblRegularWeightVal.Location = new System.Drawing.Point(180, 85);
-        lblRegularWeightVal.Name = "lblRegularWeightVal";
-        lblRegularWeightVal.Size = new System.Drawing.Size(130, 20);
-        lblRegularWeightVal.TabIndex = 4;
-        lblRegularWeightVal.Text = "20%";
-        lblRegularWeightVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblRegularWeightKey
-        // 
-        lblRegularWeightKey.AutoSize = true;
-        lblRegularWeightKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblRegularWeightKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblRegularWeightKey.Location = new System.Drawing.Point(20, 87);
-        lblRegularWeightKey.Name = "lblRegularWeightKey";
-        lblRegularWeightKey.Size = new System.Drawing.Size(102, 20);
-        lblRegularWeightKey.TabIndex = 3;
-        lblRegularWeightKey.Text = "Thường xuyên";
-        // 
-        // lblGradingScaleVal
-        // 
-        lblGradingScaleVal.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        lblGradingScaleVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblGradingScaleVal.Location = new System.Drawing.Point(180, 50);
-        lblGradingScaleVal.Name = "lblGradingScaleVal";
-        lblGradingScaleVal.Size = new System.Drawing.Size(130, 20);
-        lblGradingScaleVal.TabIndex = 2;
-        lblGradingScaleVal.Text = "0–10";
-        lblGradingScaleVal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
-        // lblGradingScaleKey
-        // 
-        lblGradingScaleKey.AutoSize = true;
-        lblGradingScaleKey.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblGradingScaleKey.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)108)), ((int)((byte)117)), ((int)((byte)125)));
-        lblGradingScaleKey.Location = new System.Drawing.Point(20, 52);
-        lblGradingScaleKey.Name = "lblGradingScaleKey";
-        lblGradingScaleKey.Size = new System.Drawing.Size(88, 20);
-        lblGradingScaleKey.TabIndex = 1;
-        lblGradingScaleKey.Text = "Thang điểm";
-        // 
-        // lblRulesTitle
-        // 
-        lblRulesTitle.AutoSize = true;
-        lblRulesTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-        lblRulesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        lblRulesTitle.Location = new System.Drawing.Point(20, 16);
-        lblRulesTitle.Name = "lblRulesTitle";
-        lblRulesTitle.Size = new System.Drawing.Size(179, 28);
-        lblRulesTitle.TabIndex = 0;
-        lblRulesTitle.Text = "Quy tắc mặc định";
         // 
         // cardProgramInfo
         // 
-        cardProgramInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        cardProgramInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
         cardProgramInfo.BackColor = System.Drawing.Color.White;
         cardProgramInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardProgramInfo.BorderWidth = 1;
@@ -326,7 +115,7 @@ partial class CourseEditDialog
         cardProgramInfo.Location = new System.Drawing.Point(24, 24);
         cardProgramInfo.Name = "cardProgramInfo";
         cardProgramInfo.Padding = new System.Windows.Forms.Padding(24);
-        cardProgramInfo.Size = new System.Drawing.Size(815, 620);
+        cardProgramInfo.Size = new System.Drawing.Size(812, 540);
         cardProgramInfo.TabIndex = 0;
         // 
         // btnSave
@@ -339,7 +128,7 @@ partial class CourseEditDialog
         btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSave.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSave.ForeColor = System.Drawing.Color.White;
-        btnSave.Location = new System.Drawing.Point(681, 557);
+        btnSave.Location = new System.Drawing.Point(678, 480);
         btnSave.Name = "btnSave";
         btnSave.Size = new System.Drawing.Size(110, 36);
         btnSave.TabIndex = 20;
@@ -357,7 +146,7 @@ partial class CourseEditDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnCancel.Location = new System.Drawing.Point(585, 557);
+        btnCancel.Location = new System.Drawing.Point(576, 480);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(90, 36);
         btnCancel.TabIndex = 19;
@@ -376,7 +165,7 @@ partial class CourseEditDialog
         txtDescription.Name = "txtDescription";
         txtDescription.Placeholder = "Nhập tóm tắt mô tả chương trình học, nội dung cốt lõi...";
         txtDescription.ReadOnly = false;
-        txtDescription.Size = new System.Drawing.Size(767, 75);
+        txtDescription.Size = new System.Drawing.Size(764, 75);
         txtDescription.TabIndex = 18;
         txtDescription.UseSystemPasswordChar = false;
         // 
@@ -393,27 +182,25 @@ partial class CourseEditDialog
         // 
         // cboStatus
         // 
-        cboStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboStatus.BackColor = System.Drawing.Color.Transparent;
         cboStatus.CornerRadius = 5;
         cboStatus.DataSource = null;
         cboStatus.DisplayMember = "";
-        cboStatus.Location = new System.Drawing.Point(415, 305);
+        cboStatus.Location = new System.Drawing.Point(418, 305);
         cboStatus.Name = "cboStatus";
         cboStatus.SelectedIndex = -1;
         cboStatus.SelectedItem = null;
         cboStatus.SelectedValue = null;
-        cboStatus.Size = new System.Drawing.Size(376, 35);
+        cboStatus.Size = new System.Drawing.Size(370, 35);
         cboStatus.TabIndex = 16;
         cboStatus.ValueMember = "";
         // 
         // lblStatus
         // 
-        lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblStatus.AutoSize = true;
         lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblStatus.Location = new System.Drawing.Point(415, 285);
+        lblStatus.Location = new System.Drawing.Point(418, 285);
         lblStatus.Name = "lblStatus";
         lblStatus.Size = new System.Drawing.Size(91, 20);
         lblStatus.TabIndex = 15;
@@ -446,26 +233,24 @@ partial class CourseEditDialog
         // 
         // txtSessionDuration
         // 
-        txtSessionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtSessionDuration.BackColor = System.Drawing.Color.Transparent;
         txtSessionDuration.CornerRadius = 5;
         txtSessionDuration.ErrorMessage = "";
         txtSessionDuration.HasError = false;
-        txtSessionDuration.Location = new System.Drawing.Point(415, 225);
+        txtSessionDuration.Location = new System.Drawing.Point(418, 225);
         txtSessionDuration.Name = "txtSessionDuration";
         txtSessionDuration.Placeholder = "Ví dụ: 120 phút";
         txtSessionDuration.ReadOnly = false;
-        txtSessionDuration.Size = new System.Drawing.Size(376, 35);
+        txtSessionDuration.Size = new System.Drawing.Size(370, 35);
         txtSessionDuration.TabIndex = 12;
         txtSessionDuration.UseSystemPasswordChar = false;
         // 
         // lblSessionDuration
         // 
-        lblSessionDuration.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblSessionDuration.AutoSize = true;
         lblSessionDuration.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblSessionDuration.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblSessionDuration.Location = new System.Drawing.Point(415, 205);
+        lblSessionDuration.Location = new System.Drawing.Point(418, 205);
         lblSessionDuration.Name = "lblSessionDuration";
         lblSessionDuration.Size = new System.Drawing.Size(142, 20);
         lblSessionDuration.TabIndex = 11;
@@ -498,26 +283,24 @@ partial class CourseEditDialog
         // 
         // txtOutputTarget
         // 
-        txtOutputTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtOutputTarget.BackColor = System.Drawing.Color.Transparent;
         txtOutputTarget.CornerRadius = 5;
         txtOutputTarget.ErrorMessage = "";
         txtOutputTarget.HasError = false;
-        txtOutputTarget.Location = new System.Drawing.Point(415, 145);
+        txtOutputTarget.Location = new System.Drawing.Point(418, 145);
         txtOutputTarget.Name = "txtOutputTarget";
         txtOutputTarget.Placeholder = "Ví dụ: Nền tảng IELTS 4.0–4.5";
         txtOutputTarget.ReadOnly = false;
-        txtOutputTarget.Size = new System.Drawing.Size(376, 35);
+        txtOutputTarget.Size = new System.Drawing.Size(370, 35);
         txtOutputTarget.TabIndex = 8;
         txtOutputTarget.UseSystemPasswordChar = false;
         // 
         // lblOutputTarget
         // 
-        lblOutputTarget.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblOutputTarget.AutoSize = true;
         lblOutputTarget.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblOutputTarget.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblOutputTarget.Location = new System.Drawing.Point(415, 125);
+        lblOutputTarget.Location = new System.Drawing.Point(418, 125);
         lblOutputTarget.Name = "lblOutputTarget";
         lblOutputTarget.Size = new System.Drawing.Size(129, 20);
         lblOutputTarget.TabIndex = 7;
@@ -551,26 +334,24 @@ partial class CourseEditDialog
         // 
         // txtCourseName
         // 
-        txtCourseName.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         txtCourseName.BackColor = System.Drawing.Color.Transparent;
         txtCourseName.CornerRadius = 5;
         txtCourseName.ErrorMessage = "";
         txtCourseName.HasError = false;
-        txtCourseName.Location = new System.Drawing.Point(415, 68);
+        txtCourseName.Location = new System.Drawing.Point(418, 68);
         txtCourseName.Name = "txtCourseName";
         txtCourseName.Placeholder = "Ví dụ: IELTS Foundation";
         txtCourseName.ReadOnly = false;
-        txtCourseName.Size = new System.Drawing.Size(376, 35);
+        txtCourseName.Size = new System.Drawing.Size(370, 35);
         txtCourseName.TabIndex = 4;
         txtCourseName.UseSystemPasswordChar = false;
         // 
         // lblCourseName
         // 
-        lblCourseName.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         lblCourseName.AutoSize = true;
         lblCourseName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCourseName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblCourseName.Location = new System.Drawing.Point(415, 48);
+        lblCourseName.Location = new System.Drawing.Point(418, 48);
         lblCourseName.Name = "lblCourseName";
         lblCourseName.Size = new System.Drawing.Size(112, 20);
         lblCourseName.TabIndex = 3;
@@ -584,7 +365,7 @@ partial class CourseEditDialog
         txtCourseCode.HasError = false;
         txtCourseCode.Location = new System.Drawing.Point(24, 68);
         txtCourseCode.Name = "txtCourseCode";
-        txtCourseCode.Placeholder = "Ví dụ: CT-IELTS-F";
+        txtCourseCode.Placeholder = "Nhập mã khóa học";
         txtCourseCode.ReadOnly = false;
         txtCourseCode.Size = new System.Drawing.Size(370, 35);
         txtCourseCode.TabIndex = 2;
@@ -617,21 +398,19 @@ partial class CourseEditDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        ClientSize = new System.Drawing.Size(1220, 760);
+        ClientSize = new System.Drawing.Size(860, 665);
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
         MaximizeBox = true;
         MinimizeBox = false;
+        MinimumSize = new System.Drawing.Size(780, 600);
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thông tin khóa học";
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();
         pnlContent.ResumeLayout(false);
-        cardRules.ResumeLayout(false);
-        cardRules.PerformLayout();
         cardProgramInfo.ResumeLayout(false);
         cardProgramInfo.PerformLayout();
         ResumeLayout(false);
@@ -664,20 +443,4 @@ partial class CourseEditDialog
     private ECMS.UI.Controls.AppTextBox txtDescription;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnSave;
-    private ECMS.UI.Controls.AppCard cardRules;
-    private System.Windows.Forms.Label lblRulesTitle;
-    private System.Windows.Forms.Label lblGradingScaleKey;
-    private System.Windows.Forms.Label lblGradingScaleVal;
-    private System.Windows.Forms.Label lblRegularWeightKey;
-    private System.Windows.Forms.Label lblRegularWeightVal;
-    private System.Windows.Forms.Label lblMidtermWeightKey;
-    private System.Windows.Forms.Label lblMidtermWeightVal;
-    private System.Windows.Forms.Label lblFinalWeightKey;
-    private System.Windows.Forms.Label lblFinalWeightVal;
-    private System.Windows.Forms.Label lblTotalWeightKey;
-    private System.Windows.Forms.Label lblTotalWeightVal;
-    private System.Windows.Forms.Label lblPassScoreKey;
-    private System.Windows.Forms.Label lblPassScoreVal;
-    private System.Windows.Forms.Label lblAttendanceKey;
-    private System.Windows.Forms.Label lblAttendanceVal;
 }

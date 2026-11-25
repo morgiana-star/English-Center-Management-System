@@ -103,7 +103,7 @@ public partial class ManageSchedulesDialog : Form
 
     private void WireEvents()
     {
-        btnClose.Click += (s, e) => Close();
+       
         txtSearch.TextChanged += (s, e) => FilterAndBind();
 
         dgvSchedules.CellContentClick += async (s, e) =>

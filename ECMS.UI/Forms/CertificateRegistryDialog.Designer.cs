@@ -29,7 +29,6 @@ partial class CertificateRegistryDialog
         pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
         btnPreviewPrint = new ECMS.UI.Controls.AppButton();
         btnExportExcel = new ECMS.UI.Controls.AppButton();
-        btnClose = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlFilterBar = new System.Windows.Forms.Panel();
         cboYearFilter = new System.Windows.Forms.ComboBox();
@@ -64,11 +63,10 @@ partial class CertificateRegistryDialog
         pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         pnlTopActions.Controls.Add(btnPreviewPrint);
         pnlTopActions.Controls.Add(btnExportExcel);
-        pnlTopActions.Controls.Add(btnClose);
         pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlTopActions.Location = new System.Drawing.Point(780, 14);
+        pnlTopActions.Location = new System.Drawing.Point(938, 14);
         pnlTopActions.Name = "pnlTopActions";
-        pnlTopActions.Size = new System.Drawing.Size(460, 48);
+        pnlTopActions.Size = new System.Drawing.Size(302, 48);
         pnlTopActions.TabIndex = 3;
         // 
         // btnPreviewPrint
@@ -80,7 +78,7 @@ partial class CertificateRegistryDialog
         btnPreviewPrint.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPreviewPrint.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnPreviewPrint.ForeColor = System.Drawing.Color.White;
-        btnPreviewPrint.Location = new System.Drawing.Point(305, 3);
+        btnPreviewPrint.Location = new System.Drawing.Point(147, 3);
         btnPreviewPrint.Name = "btnPreviewPrint";
         btnPreviewPrint.Size = new System.Drawing.Size(152, 38);
         btnPreviewPrint.TabIndex = 0;
@@ -96,31 +94,14 @@ partial class CertificateRegistryDialog
         btnExportExcel.Cursor = System.Windows.Forms.Cursors.Hand;
         btnExportExcel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnExportExcel.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnExportExcel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
-        btnExportExcel.Location = new System.Drawing.Point(165, 3);
+        btnExportExcel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        btnExportExcel.Location = new System.Drawing.Point(7, 3);
         btnExportExcel.Name = "btnExportExcel";
         btnExportExcel.Size = new System.Drawing.Size(134, 38);
         btnExportExcel.TabIndex = 1;
-        btnExportExcel.Text = "📊 Xuất Excel";
+        btnExportExcel.Text = "Xuất Excel";
         btnExportExcel.UseVisualStyleBackColor = false;
         btnExportExcel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
-        // btnClose
-        // 
-        btnClose.BackColor = System.Drawing.Color.White;
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnClose.CornerRadius = 5;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnClose.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnClose.Location = new System.Drawing.Point(59, 3);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(100, 38);
-        btnClose.TabIndex = 1;
-        btnClose.Text = "Đóng";
-        btnClose.UseVisualStyleBackColor = false;
-        btnClose.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblTitle
         // 
@@ -174,7 +155,7 @@ partial class CertificateRegistryDialog
         txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtSearch.Location = new System.Drawing.Point(115, 10);
         txtSearch.Name = "txtSearch";
-        txtSearch.PlaceholderText = "Tìm theo số chứng chỉ, họ tên học viên, mã học viên, lớp...";
+        txtSearch.PlaceholderText = "Tìm theo số chứng chỉ, họ tên học viên, mã học viên, lớp";
         txtSearch.Size = new System.Drawing.Size(420, 29);
         txtSearch.TabIndex = 1;
         // 
@@ -279,8 +260,6 @@ partial class CertificateRegistryDialog
         Controls.Add(pnlFilterBar);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -303,7 +282,6 @@ partial class CertificateRegistryDialog
     private System.Windows.Forms.FlowLayoutPanel pnlTopActions;
     private ECMS.UI.Controls.AppButton btnPreviewPrint;
     private ECMS.UI.Controls.AppButton btnExportExcel;
-    private ECMS.UI.Controls.AppButton btnClose;
     private System.Windows.Forms.Panel pnlFilterBar;
     private System.Windows.Forms.Label lblSearch;
     private System.Windows.Forms.TextBox txtSearch;

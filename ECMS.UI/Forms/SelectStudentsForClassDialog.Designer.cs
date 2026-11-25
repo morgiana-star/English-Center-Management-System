@@ -93,7 +93,7 @@ partial class SelectStudentsForClassDialog
         txtSearch.HasError = false;
         txtSearch.Location = new System.Drawing.Point(114, 8);
         txtSearch.Name = "txtSearch";
-        txtSearch.Placeholder = "Nhập mã học viên, họ và tên, hoặc số điện thoại để tìm...";
+        txtSearch.Placeholder = "Nhập mã học viên, họ và tên, hoặc số điện thoại để tìm";
         txtSearch.ReadOnly = false;
         txtSearch.Size = new System.Drawing.Size(722, 36);
         txtSearch.TabIndex = 1;
@@ -285,8 +285,6 @@ partial class SelectStudentsForClassDialog
         Controls.Add(pnlFooter);
         Controls.Add(pnlFilter);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thêm học viên vào lớp · ECMS";

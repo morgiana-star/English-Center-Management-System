@@ -27,6 +27,20 @@ partial class AddTeacherDialog
         cardTeacherInfo = new ECMS.UI.Controls.AppCard();
         btnSave = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
+        pnlScheduleBox = new System.Windows.Forms.Panel();
+        chkSun = new System.Windows.Forms.CheckBox();
+        chkSat = new System.Windows.Forms.CheckBox();
+        chkFri = new System.Windows.Forms.CheckBox();
+        chkThu = new System.Windows.Forms.CheckBox();
+        chkWed = new System.Windows.Forms.CheckBox();
+        chkTue = new System.Windows.Forms.CheckBox();
+        chkMon = new System.Windows.Forms.CheckBox();
+        lblDaysTitle = new System.Windows.Forms.Label();
+        chkEvening = new System.Windows.Forms.CheckBox();
+        chkAfternoon = new System.Windows.Forms.CheckBox();
+        chkMorning = new System.Windows.Forms.CheckBox();
+        lblPreferredSlotTitle = new System.Windows.Forms.Label();
+        lblScheduleBoxTitle = new System.Windows.Forms.Label();
         txtBio = new ECMS.UI.Controls.AppTextBox();
         lblBio = new System.Windows.Forms.Label();
         cboStatus = new ECMS.UI.Controls.AppComboBox();
@@ -44,20 +58,6 @@ partial class AddTeacherDialog
         txtTeacherCode = new ECMS.UI.Controls.AppTextBox();
         lblTeacherCode = new System.Windows.Forms.Label();
         lblTeacherInfoTitle = new System.Windows.Forms.Label();
-        lblScheduleBoxTitle = new System.Windows.Forms.Label();
-        lblPreferredSlotTitle = new System.Windows.Forms.Label();
-        chkMorning = new System.Windows.Forms.CheckBox();
-        chkAfternoon = new System.Windows.Forms.CheckBox();
-        chkEvening = new System.Windows.Forms.CheckBox();
-        lblDaysTitle = new System.Windows.Forms.Label();
-        chkMon = new System.Windows.Forms.CheckBox();
-        chkTue = new System.Windows.Forms.CheckBox();
-        chkWed = new System.Windows.Forms.CheckBox();
-        chkThu = new System.Windows.Forms.CheckBox();
-        chkFri = new System.Windows.Forms.CheckBox();
-        chkSat = new System.Windows.Forms.CheckBox();
-        chkSun = new System.Windows.Forms.CheckBox();
-        pnlScheduleBox = new System.Windows.Forms.Panel();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
         cardTeacherInfo.SuspendLayout();
@@ -125,6 +125,7 @@ partial class AddTeacherDialog
         cardTeacherInfo.Controls.Add(lblTeacherCode);
         cardTeacherInfo.Controls.Add(lblTeacherInfoTitle);
         cardTeacherInfo.CornerRadius = 8;
+        cardTeacherInfo.ForeColor = System.Drawing.Color.White;
         cardTeacherInfo.Location = new System.Drawing.Point(24, 16);
         cardTeacherInfo.Name = "cardTeacherInfo";
         cardTeacherInfo.Padding = new System.Windows.Forms.Padding(20);
@@ -159,13 +160,192 @@ partial class AddTeacherDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnCancel.Location = new System.Drawing.Point(525, 665);
+        btnCancel.Location = new System.Drawing.Point(500, 665);
         btnCancel.Name = "btnCancel";
-        btnCancel.Size = new System.Drawing.Size(115, 42);
+        btnCancel.Size = new System.Drawing.Size(140, 42);
         btnCancel.TabIndex = 18;
         btnCancel.Text = "Hủy bỏ";
         btnCancel.UseVisualStyleBackColor = false;
         btnCancel.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
+        // pnlScheduleBox
+        // 
+        pnlScheduleBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        pnlScheduleBox.BackColor = System.Drawing.Color.White;
+        pnlScheduleBox.Controls.Add(chkSun);
+        pnlScheduleBox.Controls.Add(chkSat);
+        pnlScheduleBox.Controls.Add(chkFri);
+        pnlScheduleBox.Controls.Add(chkThu);
+        pnlScheduleBox.Controls.Add(chkWed);
+        pnlScheduleBox.Controls.Add(chkTue);
+        pnlScheduleBox.Controls.Add(chkMon);
+        pnlScheduleBox.Controls.Add(lblDaysTitle);
+        pnlScheduleBox.Controls.Add(chkEvening);
+        pnlScheduleBox.Controls.Add(chkAfternoon);
+        pnlScheduleBox.Controls.Add(chkMorning);
+        pnlScheduleBox.Controls.Add(lblPreferredSlotTitle);
+        pnlScheduleBox.Controls.Add(lblScheduleBoxTitle);
+        pnlScheduleBox.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        pnlScheduleBox.Location = new System.Drawing.Point(16, 338);
+        pnlScheduleBox.Name = "pnlScheduleBox";
+        pnlScheduleBox.Padding = new System.Windows.Forms.Padding(16);
+        pnlScheduleBox.Size = new System.Drawing.Size(774, 254);
+        pnlScheduleBox.TabIndex = 17;
+        // 
+        // chkSun
+        // 
+        chkSun.AutoSize = true;
+        chkSun.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkSun.Location = new System.Drawing.Point(273, 181);
+        chkSun.Name = "chkSun";
+        chkSun.Size = new System.Drawing.Size(92, 24);
+        chkSun.TabIndex = 16;
+        chkSun.Text = "Chủ Nhật";
+        chkSun.UseVisualStyleBackColor = true;
+        // 
+        // chkSat
+        // 
+        chkSat.AutoSize = true;
+        chkSat.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkSat.Location = new System.Drawing.Point(153, 181);
+        chkSat.Name = "chkSat";
+        chkSat.Size = new System.Drawing.Size(84, 24);
+        chkSat.TabIndex = 15;
+        chkSat.Text = "Thứ Bảy";
+        chkSat.UseVisualStyleBackColor = true;
+        // 
+        // chkFri
+        // 
+        chkFri.AutoSize = true;
+        chkFri.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkFri.Location = new System.Drawing.Point(9, 181);
+        chkFri.Name = "chkFri";
+        chkFri.Size = new System.Drawing.Size(84, 24);
+        chkFri.TabIndex = 14;
+        chkFri.Text = "Thứ Sáu";
+        chkFri.UseVisualStyleBackColor = true;
+        // 
+        // chkThu
+        // 
+        chkThu.AutoSize = true;
+        chkThu.Checked = true;
+        chkThu.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkThu.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkThu.Location = new System.Drawing.Point(393, 147);
+        chkThu.Name = "chkThu";
+        chkThu.Size = new System.Drawing.Size(92, 24);
+        chkThu.TabIndex = 13;
+        chkThu.Text = "Thứ Năm";
+        chkThu.UseVisualStyleBackColor = true;
+        // 
+        // chkWed
+        // 
+        chkWed.AutoSize = true;
+        chkWed.Checked = true;
+        chkWed.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkWed.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkWed.Location = new System.Drawing.Point(273, 147);
+        chkWed.Name = "chkWed";
+        chkWed.Size = new System.Drawing.Size(77, 24);
+        chkWed.TabIndex = 12;
+        chkWed.Text = "Thứ Tư";
+        chkWed.UseVisualStyleBackColor = true;
+        // 
+        // chkTue
+        // 
+        chkTue.AutoSize = true;
+        chkTue.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkTue.Location = new System.Drawing.Point(153, 147);
+        chkTue.Name = "chkTue";
+        chkTue.Size = new System.Drawing.Size(77, 24);
+        chkTue.TabIndex = 11;
+        chkTue.Text = "Thứ Ba";
+        chkTue.UseVisualStyleBackColor = true;
+        // 
+        // chkMon
+        // 
+        chkMon.AutoSize = true;
+        chkMon.Checked = true;
+        chkMon.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkMon.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkMon.Location = new System.Drawing.Point(9, 147);
+        chkMon.Name = "chkMon";
+        chkMon.Size = new System.Drawing.Size(83, 24);
+        chkMon.TabIndex = 10;
+        chkMon.Text = "Thứ Hai";
+        chkMon.UseVisualStyleBackColor = true;
+        // 
+        // lblDaysTitle
+        // 
+        lblDaysTitle.AutoSize = true;
+        lblDaysTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        lblDaysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblDaysTitle.Location = new System.Drawing.Point(1, 115);
+        lblDaysTitle.Name = "lblDaysTitle";
+        lblDaysTitle.Size = new System.Drawing.Size(194, 20);
+        lblDaysTitle.TabIndex = 9;
+        lblDaysTitle.Text = "Các ngày có thể giảng dạy *";
+        // 
+        // chkEvening
+        // 
+        chkEvening.AutoSize = true;
+        chkEvening.Checked = true;
+        chkEvening.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkEvening.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkEvening.Location = new System.Drawing.Point(418, 79);
+        chkEvening.Name = "chkEvening";
+        chkEvening.Size = new System.Drawing.Size(171, 24);
+        chkEvening.TabIndex = 8;
+        chkEvening.Text = "Ca Tối (18:00 - 21:00)";
+        chkEvening.UseVisualStyleBackColor = true;
+        // 
+        // chkAfternoon
+        // 
+        chkAfternoon.AutoSize = true;
+        chkAfternoon.Checked = true;
+        chkAfternoon.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkAfternoon.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkAfternoon.Location = new System.Drawing.Point(213, 79);
+        chkAfternoon.Name = "chkAfternoon";
+        chkAfternoon.Size = new System.Drawing.Size(187, 24);
+        chkAfternoon.TabIndex = 7;
+        chkAfternoon.Text = "Ca Chiều (13:30 - 17:30)";
+        chkAfternoon.UseVisualStyleBackColor = true;
+        // 
+        // chkMorning
+        // 
+        chkMorning.AutoSize = true;
+        chkMorning.Checked = true;
+        chkMorning.CheckState = System.Windows.Forms.CheckState.Checked;
+        chkMorning.Font = new System.Drawing.Font("Segoe UI", 9F);
+        chkMorning.Location = new System.Drawing.Point(9, 79);
+        chkMorning.Name = "chkMorning";
+        chkMorning.Size = new System.Drawing.Size(183, 24);
+        chkMorning.TabIndex = 6;
+        chkMorning.Text = "Ca Sáng (08:00 - 12:00)";
+        chkMorning.UseVisualStyleBackColor = true;
+        // 
+        // lblPreferredSlotTitle
+        // 
+        lblPreferredSlotTitle.AutoSize = true;
+        lblPreferredSlotTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        lblPreferredSlotTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblPreferredSlotTitle.Location = new System.Drawing.Point(1, 44);
+        lblPreferredSlotTitle.Name = "lblPreferredSlotTitle";
+        lblPreferredSlotTitle.Size = new System.Drawing.Size(330, 20);
+        lblPreferredSlotTitle.TabIndex = 5;
+        lblPreferredSlotTitle.Text = "Khung giờ ưu tiên giảng dạy (Có thể chọn nhiều)";
+        // 
+        // lblScheduleBoxTitle
+        // 
+        lblScheduleBoxTitle.AutoSize = true;
+        lblScheduleBoxTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
+        lblScheduleBoxTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblScheduleBoxTitle.Location = new System.Drawing.Point(1, 10);
+        lblScheduleBoxTitle.Name = "lblScheduleBoxTitle";
+        lblScheduleBoxTitle.Size = new System.Drawing.Size(167, 25);
+        lblScheduleBoxTitle.TabIndex = 0;
+        lblScheduleBoxTitle.Text = "Thời gian làm việc";
         // 
         // txtBio
         // 
@@ -374,193 +554,11 @@ partial class AddTeacherDialog
         lblTeacherInfoTitle.AutoSize = true;
         lblTeacherInfoTitle.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
         lblTeacherInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblTeacherInfoTitle.Location = new System.Drawing.Point(16, 16);
+        lblTeacherInfoTitle.Location = new System.Drawing.Point(17, 19);
         lblTeacherInfoTitle.Name = "lblTeacherInfoTitle";
         lblTeacherInfoTitle.Size = new System.Drawing.Size(185, 25);
         lblTeacherInfoTitle.TabIndex = 0;
         lblTeacherInfoTitle.Text = "Thông tin giáo viên";
-        // 
-        // lblScheduleBoxTitle
-        // 
-        lblScheduleBoxTitle.AutoSize = true;
-        lblScheduleBoxTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblScheduleBoxTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblScheduleBoxTitle.Location = new System.Drawing.Point(12, 12);
-        lblScheduleBoxTitle.Name = "lblScheduleBoxTitle";
-        lblScheduleBoxTitle.Size = new System.Drawing.Size(167, 25);
-        lblScheduleBoxTitle.TabIndex = 0;
-        lblScheduleBoxTitle.Text = "Thời gian làm việc";
-        // 
-        // lblMaxHoursTitle
-        // 
-        // 
-        // lblPreferredSlotTitle
-        // 
-        lblPreferredSlotTitle.AutoSize = true;
-        lblPreferredSlotTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblPreferredSlotTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblPreferredSlotTitle.Location = new System.Drawing.Point(14, 44);
-        lblPreferredSlotTitle.Name = "lblPreferredSlotTitle";
-        lblPreferredSlotTitle.Size = new System.Drawing.Size(349, 20);
-        lblPreferredSlotTitle.TabIndex = 5;
-        lblPreferredSlotTitle.Text = "Khung giờ ưu tiên giảng dạy (Có thể chọn nhiều)";
-        // 
-        // chkMorning
-        // 
-        chkMorning.AutoSize = true;
-        chkMorning.Checked = true;
-        chkMorning.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkMorning.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkMorning.Location = new System.Drawing.Point(16, 70);
-        chkMorning.Name = "chkMorning";
-        chkMorning.Size = new System.Drawing.Size(183, 24);
-        chkMorning.TabIndex = 6;
-        chkMorning.Text = "Ca Sáng (08:00 - 12:00)";
-        chkMorning.UseVisualStyleBackColor = true;
-        // 
-        // chkAfternoon
-        // 
-        chkAfternoon.AutoSize = true;
-        chkAfternoon.Checked = true;
-        chkAfternoon.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkAfternoon.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkAfternoon.Location = new System.Drawing.Point(220, 70);
-        chkAfternoon.Name = "chkAfternoon";
-        chkAfternoon.Size = new System.Drawing.Size(187, 24);
-        chkAfternoon.TabIndex = 7;
-        chkAfternoon.Text = "Ca Chiều (13:30 - 17:30)";
-        chkAfternoon.UseVisualStyleBackColor = true;
-        // 
-        // chkEvening
-        // 
-        chkEvening.AutoSize = true;
-        chkEvening.Checked = true;
-        chkEvening.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkEvening.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkEvening.Location = new System.Drawing.Point(425, 70);
-        chkEvening.Name = "chkEvening";
-        chkEvening.Size = new System.Drawing.Size(171, 24);
-        chkEvening.TabIndex = 8;
-        chkEvening.Text = "Ca Tối (18:00 - 21:00)";
-        chkEvening.UseVisualStyleBackColor = true;
-        // 
-        // lblDaysTitle
-        // 
-        lblDaysTitle.AutoSize = true;
-        lblDaysTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDaysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblDaysTitle.Location = new System.Drawing.Point(14, 108);
-        lblDaysTitle.Name = "lblDaysTitle";
-        lblDaysTitle.Size = new System.Drawing.Size(201, 20);
-        lblDaysTitle.TabIndex = 9;
-        lblDaysTitle.Text = "Các ngày có thể giảng dạy *";
-        // 
-        // chkMon
-        // 
-        chkMon.AutoSize = true;
-        chkMon.Checked = true;
-        chkMon.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkMon.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkMon.Location = new System.Drawing.Point(16, 136);
-        chkMon.Name = "chkMon";
-        chkMon.Size = new System.Drawing.Size(83, 24);
-        chkMon.TabIndex = 10;
-        chkMon.Text = "Thứ Hai";
-        chkMon.UseVisualStyleBackColor = true;
-        // 
-        // chkTue
-        // 
-        chkTue.AutoSize = true;
-        chkTue.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkTue.Location = new System.Drawing.Point(160, 136);
-        chkTue.Name = "chkTue";
-        chkTue.Size = new System.Drawing.Size(77, 24);
-        chkTue.TabIndex = 11;
-        chkTue.Text = "Thứ Ba";
-        chkTue.UseVisualStyleBackColor = true;
-        // 
-        // chkWed
-        // 
-        chkWed.AutoSize = true;
-        chkWed.Checked = true;
-        chkWed.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkWed.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkWed.Location = new System.Drawing.Point(280, 136);
-        chkWed.Name = "chkWed";
-        chkWed.Size = new System.Drawing.Size(77, 24);
-        chkWed.TabIndex = 12;
-        chkWed.Text = "Thứ Tư";
-        chkWed.UseVisualStyleBackColor = true;
-        // 
-        // chkThu
-        // 
-        chkThu.AutoSize = true;
-        chkThu.Checked = true;
-        chkThu.CheckState = System.Windows.Forms.CheckState.Checked;
-        chkThu.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkThu.Location = new System.Drawing.Point(400, 136);
-        chkThu.Name = "chkThu";
-        chkThu.Size = new System.Drawing.Size(92, 24);
-        chkThu.TabIndex = 13;
-        chkThu.Text = "Thứ Năm";
-        chkThu.UseVisualStyleBackColor = true;
-        // 
-        // chkFri
-        // 
-        chkFri.AutoSize = true;
-        chkFri.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkFri.Location = new System.Drawing.Point(16, 170);
-        chkFri.Name = "chkFri";
-        chkFri.Size = new System.Drawing.Size(84, 24);
-        chkFri.TabIndex = 14;
-        chkFri.Text = "Thứ Sáu";
-        chkFri.UseVisualStyleBackColor = true;
-        // 
-        // chkSat
-        // 
-        chkSat.AutoSize = true;
-        chkSat.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkSat.Location = new System.Drawing.Point(160, 170);
-        chkSat.Name = "chkSat";
-        chkSat.Size = new System.Drawing.Size(84, 24);
-        chkSat.TabIndex = 15;
-        chkSat.Text = "Thứ Bảy";
-        chkSat.UseVisualStyleBackColor = true;
-        // 
-        // chkSun
-        // 
-        chkSun.AutoSize = true;
-        chkSun.Font = new System.Drawing.Font("Segoe UI", 9F);
-        chkSun.Location = new System.Drawing.Point(280, 170);
-        chkSun.Name = "chkSun";
-        chkSun.Size = new System.Drawing.Size(92, 24);
-        chkSun.TabIndex = 16;
-        chkSun.Text = "Chủ Nhật";
-        chkSun.UseVisualStyleBackColor = true;
-        // 
-        // pnlScheduleBox
-        // 
-        pnlScheduleBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        pnlScheduleBox.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        pnlScheduleBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        pnlScheduleBox.Controls.Add(chkSun);
-        pnlScheduleBox.Controls.Add(chkSat);
-        pnlScheduleBox.Controls.Add(chkFri);
-        pnlScheduleBox.Controls.Add(chkThu);
-        pnlScheduleBox.Controls.Add(chkWed);
-        pnlScheduleBox.Controls.Add(chkTue);
-        pnlScheduleBox.Controls.Add(chkMon);
-        pnlScheduleBox.Controls.Add(lblDaysTitle);
-        pnlScheduleBox.Controls.Add(chkEvening);
-        pnlScheduleBox.Controls.Add(chkAfternoon);
-        pnlScheduleBox.Controls.Add(chkMorning);
-        pnlScheduleBox.Controls.Add(lblPreferredSlotTitle);
-        pnlScheduleBox.Controls.Add(lblScheduleBoxTitle);
-        pnlScheduleBox.Location = new System.Drawing.Point(16, 345);
-        pnlScheduleBox.Name = "pnlScheduleBox";
-        pnlScheduleBox.Padding = new System.Windows.Forms.Padding(16);
-        pnlScheduleBox.Size = new System.Drawing.Size(774, 305);
-        pnlScheduleBox.TabIndex = 17;
         // 
         // AddTeacherDialog
         // 
@@ -571,8 +569,6 @@ partial class AddTeacherDialog
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

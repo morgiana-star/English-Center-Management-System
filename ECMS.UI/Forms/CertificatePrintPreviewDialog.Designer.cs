@@ -22,7 +22,6 @@ partial class CertificatePrintPreviewDialog
         pnlHeader = new System.Windows.Forms.Panel();
         pnlTopActions = new System.Windows.Forms.FlowLayoutPanel();
         btnPrintCert = new ECMS.UI.Controls.AppButton();
-        btnClose = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
         pnlSettingsBar = new System.Windows.Forms.Panel();
         cboPaperSize = new ECMS.UI.Controls.AppComboBox();
@@ -68,11 +67,10 @@ partial class CertificatePrintPreviewDialog
         // 
         pnlTopActions.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         pnlTopActions.Controls.Add(btnPrintCert);
-        pnlTopActions.Controls.Add(btnClose);
         pnlTopActions.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
-        pnlTopActions.Location = new System.Drawing.Point(870, 14);
+        pnlTopActions.Location = new System.Drawing.Point(1032, 14);
         pnlTopActions.Name = "pnlTopActions";
-        pnlTopActions.Size = new System.Drawing.Size(300, 48);
+        pnlTopActions.Size = new System.Drawing.Size(138, 48);
         pnlTopActions.TabIndex = 3;
         // 
         // btnPrintCert
@@ -82,7 +80,7 @@ partial class CertificatePrintPreviewDialog
         btnPrintCert.Cursor = System.Windows.Forms.Cursors.Hand;
         btnPrintCert.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnPrintCert.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        btnPrintCert.Location = new System.Drawing.Point(167, 3);
+        btnPrintCert.Location = new System.Drawing.Point(5, 3);
         btnPrintCert.Name = "btnPrintCert";
         btnPrintCert.Size = new System.Drawing.Size(130, 38);
         btnPrintCert.TabIndex = 0;
@@ -90,27 +88,12 @@ partial class CertificatePrintPreviewDialog
         btnPrintCert.UseVisualStyleBackColor = true;
         btnPrintCert.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
-        // btnClose
-        // 
-        btnClose.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnClose.CornerRadius = 5;
-        btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnClose.Font = new System.Drawing.Font("Segoe UI", 9F);
-        btnClose.Location = new System.Drawing.Point(61, 3);
-        btnClose.Name = "btnClose";
-        btnClose.Size = new System.Drawing.Size(100, 38);
-        btnClose.TabIndex = 1;
-        btnClose.Text = "Đóng";
-        btnClose.UseVisualStyleBackColor = true;
-        btnClose.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(24, 28);
+        lblTitle.Location = new System.Drawing.Point(24, 20);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(262, 35);
         lblTitle.TabIndex = 1;
@@ -127,7 +110,7 @@ partial class CertificatePrintPreviewDialog
         pnlSettingsBar.Location = new System.Drawing.Point(0, 78);
         pnlSettingsBar.Name = "pnlSettingsBar";
         pnlSettingsBar.Padding = new System.Windows.Forms.Padding(24, 6, 24, 6);
-        pnlSettingsBar.Size = new System.Drawing.Size(1200, 68);
+        pnlSettingsBar.Size = new System.Drawing.Size(1200, 77);
         pnlSettingsBar.TabIndex = 1;
         // 
         // cboPaperSize
@@ -137,7 +120,7 @@ partial class CertificatePrintPreviewDialog
         cboPaperSize.DataSource = null;
         cboPaperSize.DisplayMember = "";
         cboPaperSize.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboPaperSize.Location = new System.Drawing.Point(370, 26);
+        cboPaperSize.Location = new System.Drawing.Point(370, 31);
         cboPaperSize.Name = "cboPaperSize";
         cboPaperSize.SelectedIndex = -1;
         cboPaperSize.SelectedItem = null;
@@ -163,7 +146,7 @@ partial class CertificatePrintPreviewDialog
         cboPrinter.DataSource = null;
         cboPrinter.DisplayMember = "";
         cboPrinter.Font = new System.Drawing.Font("Segoe UI", 9F);
-        cboPrinter.Location = new System.Drawing.Point(24, 26);
+        cboPrinter.Location = new System.Drawing.Point(24, 31);
         cboPrinter.Name = "cboPrinter";
         cboPrinter.SelectedIndex = -1;
         cboPrinter.SelectedItem = null;
@@ -188,10 +171,10 @@ partial class CertificatePrintPreviewDialog
         pnlCanvasWrapper.BackColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         pnlCanvasWrapper.Controls.Add(pnlA4Landscape);
         pnlCanvasWrapper.Dock = System.Windows.Forms.DockStyle.Fill;
-        pnlCanvasWrapper.Location = new System.Drawing.Point(0, 146);
+        pnlCanvasWrapper.Location = new System.Drawing.Point(0, 155);
         pnlCanvasWrapper.Name = "pnlCanvasWrapper";
         pnlCanvasWrapper.Padding = new System.Windows.Forms.Padding(24);
-        pnlCanvasWrapper.Size = new System.Drawing.Size(1200, 594);
+        pnlCanvasWrapper.Size = new System.Drawing.Size(1200, 585);
         pnlCanvasWrapper.TabIndex = 2;
         // 
         // pnlA4Landscape
@@ -380,9 +363,7 @@ partial class CertificatePrintPreviewDialog
         Controls.Add(pnlCanvasWrapper);
         Controls.Add(pnlSettingsBar);
         Controls.Add(pnlHeader);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Xem trước chứng chỉ hoàn thành · ECMS";
@@ -401,7 +382,6 @@ partial class CertificatePrintPreviewDialog
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.FlowLayoutPanel pnlTopActions;
     private ECMS.UI.Controls.AppButton btnPrintCert;
-    private ECMS.UI.Controls.AppButton btnClose;
 
     private System.Windows.Forms.Panel pnlSettingsBar;
     private System.Windows.Forms.Label lblPrinterTitle;

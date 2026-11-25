@@ -23,10 +23,6 @@ public partial class SystemConfigView : UserControl
 {
     private readonly ISystemConfigService _configService = new SystemConfigService();
     private bool _isLoading = false;
-    private AppTextBox _txtAppName = null!;
-    private AppTextBox _txtShortName = null!;
-    private PictureBox _picLogoPreview = null!;
-    private AppButton _btnBrowseLogo = null!;
     private string _selectedLogoPath = string.Empty;
 
     public SystemConfigView()
@@ -45,75 +41,7 @@ public partial class SystemConfigView : UserControl
 
     private void SimplifyLayoutControls()
     {
-        // Tab 1 - cardCenterInfo: ẩn Người đại diện/Ký duyệt và Chức vụ người ký
-        lblDirector.Visible = false;
-        txtDirector.Visible = false;
-        lblDirectorTitle.Visible = false;
-        txtDirectorTitle.Visible = false;
-
-        // Bổ sung cấu hình Thương hiệu ứng dụng: Tên App, Tên viết tắt, Ảnh Logo
-        var lblAppName = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(51, 65, 85),
-            Location = new Point(20, 238),
-            Text = "Tên ứng dụng (Tiêu đề cửa sổ)"
-        };
-        _txtAppName = new AppTextBox
-        {
-            Location = new Point(20, 260),
-            Size = new Size(400, 34),
-            CornerRadius = 5,
-            Placeholder = "ECMS — Hệ thống quản lý trung tâm Anh ngữ"
-        };
-
-        var lblShortName = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(51, 65, 85),
-            Location = new Point(440, 238),
-            Text = "Tên viết tắt"
-        };
-        _txtShortName = new AppTextBox
-        {
-            Location = new Point(440, 260),
-            Size = new Size(130, 34),
-            CornerRadius = 5,
-            Placeholder = "ECMS"
-        };
-
-        var lblLogo = new Label
-        {
-            AutoSize = true,
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(51, 65, 85),
-            Location = new Point(590, 238),
-            Anchor = AnchorStyles.Top | AnchorStyles.Right,
-            Text = "Ảnh Logo trung tâm (PNG / JPG)"
-        };
-        _picLogoPreview = new PictureBox
-        {
-            Location = new Point(590, 258),
-            Size = new Size(40, 40),
-            SizeMode = PictureBoxSizeMode.Zoom,
-            BorderStyle = BorderStyle.FixedSingle,
-            BackColor = Color.FromArgb(248, 250, 252),
-            Anchor = AnchorStyles.Top | AnchorStyles.Right
-        };
-        _btnBrowseLogo = new AppButton
-        {
-            Text = "Chọn ảnh logo",
-            Location = new Point(642, 260),
-            Size = new Size(140, 34),
-            CornerRadius = 5,
-            Variant = ButtonVariant.Secondary,
-            ButtonStyle = AppButtonStyle.Secondary,
-            Cursor = Cursors.Hand,
-            Anchor = AnchorStyles.Top | AnchorStyles.Right
-        };
-        _btnBrowseLogo.Click += (s, e) =>
+        btnBrowseLogo.Click += (s, e) =>
         {
             using var ofd = new OpenFileDialog
             {
@@ -126,29 +54,6 @@ public partial class SystemConfigView : UserControl
                 LoadLogoPreview(_selectedLogoPath);
             }
         };
-
-        cardCenterInfo.Controls.AddRange(new Control[]
-        {
-            lblAppName, _txtAppName, lblShortName, _txtShortName, lblLogo, _picLogoPreview, _btnBrowseLogo
-        });
-        cardCenterInfo.Size = new Size(cardCenterInfo.Width, 320);
-
-        // Tab 1 - cardDbInfo: đổi tiêu đề thành "Cơ sở dữ liệu", ẩn thư mục lưu tài liệu học tập
-        cardDbInfo.Location = new Point(cardDbInfo.Location.X, 340);
-        lblDbInfoTitle.Text = "Cơ sở dữ liệu";
-        lblStoragePath.Visible = false;
-        txtStoragePath.Visible = false;
-        btnBrowseStorage.Visible = false;
-        lblBackupDir.Location = new Point(20, 122);
-        txtBackupDir.Location = new Point(20, 145);
-        btnBrowseBackup.Location = new Point(btnBrowseBackup.Location.X, 145);
-        cardDbInfo.Size = new Size(cardDbInfo.Width, 205);
-
-        // Tab 2 - cardAttendanceRules: ẩn 3 checkbox tùy chọn nâng cao
-        chkLateCounted.Visible = false;
-        chkDebtCertRule.Visible = false;
-        chkAutoLockAttendance.Visible = false;
-        cardAttendanceRules.Size = new Size(cardAttendanceRules.Width, 160);
     }
 
     private void LoadLogoPreview(string? path)
@@ -158,7 +63,7 @@ public partial class SystemConfigView : UserControl
         {
             using var fs = new FileStream(path, FileMode.Open, FileAccess.Read);
             using var img = Image.FromStream(fs);
-            _picLogoPreview.Image = new Bitmap(img);
+            picLogoPreview.Image = new Bitmap(img);
         }
         catch { }
     }
@@ -181,8 +86,8 @@ public partial class SystemConfigView : UserControl
         {
             // 1. Nạp cấu hình Trung tâm & CSDL từ SQLite
             var center = await _configService.GetCenterConfigAsync();
-            _txtAppName.Text = center.AppName;
-            _txtShortName.Text = center.CenterShortName;
+            txtAppName.Text = center.AppName;
+            txtShortName.Text = center.CenterShortName;
             _selectedLogoPath = center.LogoPath;
             LoadLogoPreview(_selectedLogoPath);
             txtCenterName.Text = center.CenterName;
@@ -208,10 +113,6 @@ public partial class SystemConfigView : UserControl
             txtWeightFinal.Text = rules.WeightFinal.ToString();
             txtMinAttendance.Text = rules.MinAttendanceRate.ToString("0", CultureInfo.InvariantCulture);
             txtAbsenceAlert.Text = rules.MaxAbsencesAlert.ToString();
-
-            chkLateCounted.Checked = rules.IsLateCounted;
-            chkDebtCertRule.Checked = rules.IsDebtBlockCert;
-            chkAutoLockAttendance.Checked = rules.IsAutoLockAttendance;
 
             ValidateWeights();
 
@@ -563,8 +464,8 @@ public partial class SystemConfigView : UserControl
         {
             var centerDto = new CenterConfigDto
             {
-                AppName = _txtAppName.Text.Trim(),
-                CenterShortName = _txtShortName.Text.Trim(),
+                AppName = txtAppName.Text.Trim(),
+                CenterShortName = txtShortName.Text.Trim(),
                 LogoPath = _selectedLogoPath,
                 CenterName = txtCenterName.Text.Trim(),
                 CenterPhone = txtCenterPhone.Text.Trim(),
@@ -586,9 +487,9 @@ public partial class SystemConfigView : UserControl
                 WeightFinal = w3,
                 MinAttendanceRate = double.TryParse(txtMinAttendance.Text.Trim().Replace("%", ""), NumberStyles.Any, CultureInfo.InvariantCulture, out var ar) ? ar : 80.0,
                 MaxAbsencesAlert = int.TryParse(txtAbsenceAlert.Text.Trim().Replace("Nghỉ từ", "").Replace("buổi", "").Trim(), out var ma) ? ma : 3,
-                IsLateCounted = chkLateCounted.Checked,
-                IsDebtBlockCert = chkDebtCertRule.Checked,
-                IsAutoLockAttendance = chkAutoLockAttendance.Checked
+                IsLateCounted = true,
+                IsDebtBlockCert = true,
+                IsAutoLockAttendance = false
             };
 
             var schedDto = new BackupScheduleConfigDto

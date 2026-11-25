@@ -88,8 +88,6 @@ partial class CreateClassDialog
         // 
         // cardClassInfo
         // 
-        // cardClassInfo
-        // 
         cardClassInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         cardClassInfo.BackColor = System.Drawing.Color.White;
         cardClassInfo.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
@@ -374,7 +372,7 @@ partial class CreateClassDialog
         txtClassCode.HasError = false;
         txtClassCode.Location = new System.Drawing.Point(415, 68);
         txtClassCode.Name = "txtClassCode";
-        txtClassCode.Placeholder = "Ví dụ: IELTS-F04";
+        txtClassCode.Placeholder = "Nhập mã lớp học";
         txtClassCode.ReadOnly = false;
         txtClassCode.Size = new System.Drawing.Size(366, 35);
         txtClassCode.TabIndex = 4;
@@ -438,9 +436,7 @@ partial class CreateClassDialog
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = true;
         MinimizeBox = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Tạo lớp học";

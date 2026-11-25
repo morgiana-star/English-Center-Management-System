@@ -15,11 +15,16 @@ partial class RoomManagementDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnAddRoom = new ECMS.UI.Controls.AppButton();
         lblTitle = new System.Windows.Forms.Label();
@@ -121,7 +126,7 @@ partial class RoomManagementDialog
         dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
         dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         dgvRooms.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvRooms.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+        dgvRooms.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         dgvRooms.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvRooms.BackgroundColor = System.Drawing.Color.White;
         dgvRooms.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -151,6 +156,14 @@ partial class RoomManagementDialog
         dgvRooms.MultiSelect = false;
         dgvRooms.Name = "dgvRooms";
         dgvRooms.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
+        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+        dgvRooms.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvRooms.RowHeadersVisible = false;
         dgvRooms.RowHeadersWidth = 51;
         dgvRooms.RowTemplate.Height = 44;
@@ -161,72 +174,84 @@ partial class RoomManagementDialog
         // colCode
         // 
         colCode.HeaderText = "Mã phòng";
+        colCode.MinimumWidth = 6;
         colCode.Name = "colCode";
         colCode.ReadOnly = true;
-        colCode.Width = 110;
         // 
         // colName
         // 
         colName.HeaderText = "Tên phòng";
+        colName.MinimumWidth = 6;
         colName.Name = "colName";
         colName.ReadOnly = true;
-        colName.Width = 200;
         // 
         // colCapacity
         // 
         colCapacity.HeaderText = "Sức chứa";
+        colCapacity.MinimumWidth = 6;
         colCapacity.Name = "colCapacity";
         colCapacity.ReadOnly = true;
-        colCapacity.Width = 110;
         // 
         // colEquipment
         // 
         colEquipment.HeaderText = "Trang thiết bị";
+        colEquipment.MinimumWidth = 6;
         colEquipment.Name = "colEquipment";
         colEquipment.ReadOnly = true;
-        colEquipment.Width = 230;
         // 
         // colStatus
         // 
         colStatus.HeaderText = "Trạng thái";
+        colStatus.MinimumWidth = 6;
         colStatus.Name = "colStatus";
         colStatus.ReadOnly = true;
-        colStatus.Width = 130;
         // 
         // colAction
         // 
         colAction.HeaderText = "Thao tác";
+        colAction.MinimumWidth = 6;
         colAction.Name = "colAction";
         colAction.ReadOnly = true;
         colAction.Text = "Sửa";
         colAction.UseColumnTextForButtonValue = true;
-        colAction.Width = 90;
         // 
         // cboCapacityFilter
         // 
         cboCapacityFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboCapacityFilter.BackColor = System.Drawing.Color.Transparent;
         cboCapacityFilter.CornerRadius = 5;
+        cboCapacityFilter.DataSource = null;
+        cboCapacityFilter.DisplayMember = "";
         cboCapacityFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
         cboCapacityFilter.Location = new System.Drawing.Point(542, 52);
         cboCapacityFilter.Name = "cboCapacityFilter";
+        cboCapacityFilter.SelectedIndex = -1;
+        cboCapacityFilter.SelectedItem = null;
+        cboCapacityFilter.SelectedValue = null;
         cboCapacityFilter.Size = new System.Drawing.Size(185, 36);
         cboCapacityFilter.TabIndex = 2;
+        cboCapacityFilter.ValueMember = "";
         // 
         // cboStatusFilter
         // 
         cboStatusFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         cboStatusFilter.BackColor = System.Drawing.Color.Transparent;
         cboStatusFilter.CornerRadius = 5;
+        cboStatusFilter.DataSource = null;
+        cboStatusFilter.DisplayMember = "";
         cboStatusFilter.Font = new System.Drawing.Font("Segoe UI", 9F);
         cboStatusFilter.Location = new System.Drawing.Point(747, 52);
         cboStatusFilter.Name = "cboStatusFilter";
+        cboStatusFilter.SelectedIndex = -1;
+        cboStatusFilter.SelectedItem = null;
+        cboStatusFilter.SelectedValue = null;
         cboStatusFilter.Size = new System.Drawing.Size(185, 36);
         cboStatusFilter.TabIndex = 3;
+        cboStatusFilter.ValueMember = "";
         // 
         // txtSearchRoom
         // 
-        txtSearchRoom.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        txtSearchRoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
         txtSearchRoom.BackColor = System.Drawing.Color.Transparent;
         txtSearchRoom.CornerRadius = 5;
         txtSearchRoom.ErrorMessage = "";
@@ -234,7 +259,7 @@ partial class RoomManagementDialog
         txtSearchRoom.HasError = false;
         txtSearchRoom.Location = new System.Drawing.Point(20, 52);
         txtSearchRoom.Name = "txtSearchRoom";
-        txtSearchRoom.Placeholder = "Tìm kiếm theo mã hoặc tên phòng...";
+        txtSearchRoom.Placeholder = "Tìm kiếm theo mã hoặc tên phòng";
         txtSearchRoom.ReadOnly = false;
         txtSearchRoom.Size = new System.Drawing.Size(506, 36);
         txtSearchRoom.TabIndex = 1;
@@ -247,7 +272,7 @@ partial class RoomManagementDialog
         lblRoomListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
         lblRoomListTitle.Location = new System.Drawing.Point(20, 16);
         lblRoomListTitle.Name = "lblRoomListTitle";
-        lblRoomListTitle.Size = new System.Drawing.Size(206, 28);
+        lblRoomListTitle.Size = new System.Drawing.Size(216, 28);
         lblRoomListTitle.TabIndex = 0;
         lblRoomListTitle.Text = "Danh sách phòng học";
         // 
@@ -260,11 +285,8 @@ partial class RoomManagementDialog
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-        MaximizeBox = true;
         MinimizeBox = false;
-        Name = "RoomManagementDialog";
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Quản lý phòng học · ECMS";
         pnlHeader.ResumeLayout(false);

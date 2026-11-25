@@ -15,6 +15,10 @@ partial class StudentManagementView
 
     #region Component Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -29,9 +33,9 @@ partial class StudentManagementView
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardStudentList = new ECMS.UI.Controls.AppCard();
+        dgvStudents = new ECMS.UI.Controls.AppDataGrid();
         pnlGridFooter = new System.Windows.Forms.Panel();
         lblBottomSummary = new System.Windows.Forms.Label();
-        dgvStudents = new ECMS.UI.Controls.AppDataGrid();
         pnlStudentFilterBar = new System.Windows.Forms.Panel();
         lblClassFilter = new System.Windows.Forms.Label();
         cboClassFilter = new ECMS.UI.Controls.AppComboBox();
@@ -40,8 +44,8 @@ partial class StudentManagementView
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
         cardStudentList.SuspendLayout();
-        pnlGridFooter.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvStudents).BeginInit();
+        pnlGridFooter.SuspendLayout();
         pnlStudentFilterBar.SuspendLayout();
         SuspendLayout();
         // 
@@ -170,29 +174,6 @@ partial class StudentManagementView
         cardStudentList.Size = new System.Drawing.Size(1120, 689);
         cardStudentList.TabIndex = 0;
         // 
-        // pnlGridFooter
-        // 
-        pnlGridFooter.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        pnlGridFooter.Controls.Add(lblBottomSummary);
-        pnlGridFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlGridFooter.Location = new System.Drawing.Point(16, 637);
-        pnlGridFooter.Name = "pnlGridFooter";
-        pnlGridFooter.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
-        pnlGridFooter.Size = new System.Drawing.Size(1088, 36);
-        pnlGridFooter.TabIndex = 3;
-        // 
-        // lblBottomSummary
-        // 
-        lblBottomSummary.Dock = System.Windows.Forms.DockStyle.Fill;
-        lblBottomSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblBottomSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblBottomSummary.Location = new System.Drawing.Point(12, 8);
-        lblBottomSummary.Name = "lblBottomSummary";
-        lblBottomSummary.Size = new System.Drawing.Size(1064, 20);
-        lblBottomSummary.TabIndex = 0;
-        lblBottomSummary.Text = "Tổng: 0 học viên  |  Đang học: 0  |  Chờ xếp lớp: 0  |  Đã lưu trữ: 0";
-        lblBottomSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-        // 
         // dgvStudents
         // 
         dgvStudents.AllowUserToAddRows = false;
@@ -246,10 +227,32 @@ partial class StudentManagementView
         dgvStudents.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvStudents.RowHeadersVisible = false;
         dgvStudents.RowHeadersWidth = 51;
-        dgvStudents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvStudents.Size = new System.Drawing.Size(1088, 535);
         dgvStudents.TabIndex = 2;
+        // 
+        // pnlGridFooter
+        // 
+        pnlGridFooter.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        pnlGridFooter.Controls.Add(lblBottomSummary);
+        pnlGridFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlGridFooter.Location = new System.Drawing.Point(16, 637);
+        pnlGridFooter.Name = "pnlGridFooter";
+        pnlGridFooter.Padding = new System.Windows.Forms.Padding(12, 8, 12, 8);
+        pnlGridFooter.Size = new System.Drawing.Size(1088, 36);
+        pnlGridFooter.TabIndex = 3;
+        // 
+        // lblBottomSummary
+        // 
+        lblBottomSummary.Dock = System.Windows.Forms.DockStyle.Fill;
+        lblBottomSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblBottomSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblBottomSummary.Location = new System.Drawing.Point(12, 8);
+        lblBottomSummary.Name = "lblBottomSummary";
+        lblBottomSummary.Size = new System.Drawing.Size(1064, 20);
+        lblBottomSummary.TabIndex = 0;
+        lblBottomSummary.Text = "Tổng: 0 học viên  |  Đang học: 0  |  Chờ xếp lớp: 0  |  Đã lưu trữ: 0";
+        lblBottomSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
         // pnlStudentFilterBar
         // 
@@ -272,7 +275,7 @@ partial class StudentManagementView
         lblClassFilter.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblClassFilter.Location = new System.Drawing.Point(750, 17);
         lblClassFilter.Name = "lblClassFilter";
-        lblClassFilter.Size = new System.Drawing.Size(68, 20);
+        lblClassFilter.Size = new System.Drawing.Size(63, 20);
         lblClassFilter.TabIndex = 3;
         lblClassFilter.Text = "Lọc lớp:";
         // 
@@ -303,7 +306,7 @@ partial class StudentManagementView
         txtSearchStudent.HasError = false;
         txtSearchStudent.Location = new System.Drawing.Point(10, 10);
         txtSearchStudent.Name = "txtSearchStudent";
-        txtSearchStudent.Placeholder = "Tìm theo mã học viên, họ tên, số điện thoại...";
+        txtSearchStudent.Placeholder = "Tìm theo mã học viên, họ tên, số điện thoại";
         txtSearchStudent.ReadOnly = false;
         txtSearchStudent.Size = new System.Drawing.Size(720, 34);
         txtSearchStudent.TabIndex = 0;
@@ -333,8 +336,8 @@ partial class StudentManagementView
         pnlHeader.PerformLayout();
         pnlBody.ResumeLayout(false);
         cardStudentList.ResumeLayout(false);
-        pnlGridFooter.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvStudents).EndInit();
+        pnlGridFooter.ResumeLayout(false);
         pnlStudentFilterBar.ResumeLayout(false);
         pnlStudentFilterBar.PerformLayout();
         ResumeLayout(false);

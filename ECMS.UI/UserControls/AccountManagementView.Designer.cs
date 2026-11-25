@@ -51,7 +51,6 @@ partial class AccountManagementView
         btnResetMatrix = new ECMS.UI.Controls.AppButton();
         btnSaveRoles = new ECMS.UI.Controls.AppButton();
         dgvPermissions = new ECMS.UI.Controls.AppDataGrid();
-        lblMatrixSub = new System.Windows.Forms.Label();
         lblMatrixTitle = new System.Windows.Forms.Label();
         tabProfile = new System.Windows.Forms.TabPage();
         tabProfileSub = new System.Windows.Forms.TabControl();
@@ -70,7 +69,6 @@ partial class AccountManagementView
         lblAvatar = new System.Windows.Forms.Label();
         cardProfile = new ECMS.UI.Controls.AppCard();
         lblProfSub = new System.Windows.Forms.Label();
-        bannerProfileSuccess = new ECMS.UI.Controls.AppBanner();
         btnSaveProf = new ECMS.UI.Controls.AppButton();
         btnCancelProf = new ECMS.UI.Controls.AppButton();
         txtUserRole = new ECMS.UI.Controls.AppTextBox();
@@ -88,7 +86,6 @@ partial class AccountManagementView
         cardPass = new ECMS.UI.Controls.AppCard();
         chkShowPassword = new System.Windows.Forms.CheckBox();
         lblPassSub = new System.Windows.Forms.Label();
-        bannerPassSuccess = new ECMS.UI.Controls.AppBanner();
         lblPassNote = new System.Windows.Forms.Label();
         btnSavePass = new ECMS.UI.Controls.AppButton();
         btnCancelPass = new ECMS.UI.Controls.AppButton();
@@ -372,9 +369,9 @@ partial class AccountManagementView
         lblStatAdmin.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStatAdmin.Location = new System.Drawing.Point(496, 8);
         lblStatAdmin.Name = "lblStatAdmin";
-        lblStatAdmin.Size = new System.Drawing.Size(142, 21);
+        lblStatAdmin.Size = new System.Drawing.Size(116, 21);
         lblStatAdmin.TabIndex = 3;
-        lblStatAdmin.Text = "🛡️ Quản trị viên: 1";
+        lblStatAdmin.Text = "Quản trị viên: 1";
         // 
         // lblStatLocked
         // 
@@ -383,9 +380,9 @@ partial class AccountManagementView
         lblStatLocked.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)38)), ((int)((byte)38)));
         lblStatLocked.Location = new System.Drawing.Point(373, 8);
         lblStatLocked.Name = "lblStatLocked";
-        lblStatLocked.Size = new System.Drawing.Size(109, 21);
+        lblStatLocked.Size = new System.Drawing.Size(83, 21);
         lblStatLocked.TabIndex = 2;
-        lblStatLocked.Text = "🔴 Đã khóa: 1";
+        lblStatLocked.Text = "Đã khóa: 1";
         // 
         // lblStatActive
         // 
@@ -394,9 +391,9 @@ partial class AccountManagementView
         lblStatActive.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)22)), ((int)((byte)101)), ((int)((byte)52)));
         lblStatActive.Location = new System.Drawing.Point(203, 8);
         lblStatActive.Name = "lblStatActive";
-        lblStatActive.Size = new System.Drawing.Size(164, 21);
+        lblStatActive.Size = new System.Drawing.Size(138, 21);
         lblStatActive.TabIndex = 1;
-        lblStatActive.Text = "🟢 Đang hoạt động: 4";
+        lblStatActive.Text = "Đang hoạt động: 4";
         // 
         // lblStatTotal
         // 
@@ -405,9 +402,9 @@ partial class AccountManagementView
         lblStatTotal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblStatTotal.Location = new System.Drawing.Point(4, 8);
         lblStatTotal.Name = "lblStatTotal";
-        lblStatTotal.Size = new System.Drawing.Size(190, 21);
+        lblStatTotal.Size = new System.Drawing.Size(163, 21);
         lblStatTotal.TabIndex = 0;
-        lblStatTotal.Text = "👥 Tổng số: 5 tài khoản";
+        lblStatTotal.Text = "Tổng số: 5 tài khoản";
         // 
         // tabRoles
         // 
@@ -430,7 +427,6 @@ partial class AccountManagementView
         cardMatrix.Controls.Add(btnResetMatrix);
         cardMatrix.Controls.Add(btnSaveRoles);
         cardMatrix.Controls.Add(dgvPermissions);
-        cardMatrix.Controls.Add(lblMatrixSub);
         cardMatrix.Controls.Add(lblMatrixTitle);
         cardMatrix.CornerRadius = 6;
         cardMatrix.Location = new System.Drawing.Point(16, 15);
@@ -526,17 +522,6 @@ partial class AccountManagementView
         dgvPermissions.Size = new System.Drawing.Size(1128, 592);
         dgvPermissions.TabIndex = 2;
         // 
-        // lblMatrixSub
-        // 
-        lblMatrixSub.AutoSize = true;
-        lblMatrixSub.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblMatrixSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblMatrixSub.Location = new System.Drawing.Point(257, 19);
-        lblMatrixSub.Name = "lblMatrixSub";
-        lblMatrixSub.Size = new System.Drawing.Size(451, 20);
-        lblMatrixSub.TabIndex = 1;
-        lblMatrixSub.Text = "· 🟢 Q: Toàn quyền · 🔵 S: Sửa phạm vi · 🟡 X: Xem · ⚪ —: Không";
-        // 
         // lblMatrixTitle
         // 
         lblMatrixTitle.AutoSize = true;
@@ -544,9 +529,9 @@ partial class AccountManagementView
         lblMatrixTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblMatrixTitle.Location = new System.Drawing.Point(16, 14);
         lblMatrixTitle.Name = "lblMatrixTitle";
-        lblMatrixTitle.Size = new System.Drawing.Size(235, 28);
+        lblMatrixTitle.Size = new System.Drawing.Size(157, 28);
         lblMatrixTitle.TabIndex = 0;
-        lblMatrixTitle.Text = "Ma trận quyền truy cập";
+        lblMatrixTitle.Text = "Quyền truy cập";
         // 
         // tabProfile
         // 
@@ -738,7 +723,6 @@ partial class AccountManagementView
         cardProfile.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardProfile.BorderWidth = 1;
         cardProfile.Controls.Add(lblProfSub);
-        cardProfile.Controls.Add(bannerProfileSuccess);
         cardProfile.Controls.Add(btnSaveProf);
         cardProfile.Controls.Add(btnCancelProf);
         cardProfile.Controls.Add(txtUserRole);
@@ -770,21 +754,6 @@ partial class AccountManagementView
         lblProfSub.TabIndex = 13;
         lblProfSub.Text = "Cập nhật thông tin hiển thị và kênh liên lạc trong hệ thống trung tâm";
         // 
-        // bannerProfileSuccess
-        // 
-        bannerProfileSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        bannerProfileSuccess.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
-        bannerProfileSuccess.BannerType = ECMS.UI.Controls.BannerType.Success;
-        bannerProfileSuccess.Location = new System.Drawing.Point(20, 80);
-        bannerProfileSuccess.Message = "✓ Đã cập nhật hồ sơ cá nhân thành công.";
-        bannerProfileSuccess.Name = "bannerProfileSuccess";
-        bannerProfileSuccess.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-        bannerProfileSuccess.Size = new System.Drawing.Size(738, 48);
-        bannerProfileSuccess.TabIndex = 1;
-        bannerProfileSuccess.Title = "";
-        bannerProfileSuccess.Variant = ECMS.UI.Controls.BannerVariant.Success;
-        bannerProfileSuccess.Visible = false;
-        // 
         // btnSaveProf
         // 
         btnSaveProf.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
@@ -796,7 +765,7 @@ partial class AccountManagementView
         btnSaveProf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSaveProf.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSaveProf.ForeColor = System.Drawing.Color.White;
-        btnSaveProf.Location = new System.Drawing.Point(598, 420);
+        btnSaveProf.Location = new System.Drawing.Point(598, 529);
         btnSaveProf.Name = "btnSaveProf";
         btnSaveProf.Size = new System.Drawing.Size(160, 38);
         btnSaveProf.TabIndex = 12;
@@ -815,7 +784,7 @@ partial class AccountManagementView
         btnCancelProf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancelProf.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancelProf.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnCancelProf.Location = new System.Drawing.Point(432, 420);
+        btnCancelProf.Location = new System.Drawing.Point(432, 529);
         btnCancelProf.Name = "btnCancelProf";
         btnCancelProf.Size = new System.Drawing.Size(150, 38);
         btnCancelProf.TabIndex = 11;
@@ -831,7 +800,7 @@ partial class AccountManagementView
         txtUserRole.ErrorMessage = "";
         txtUserRole.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtUserRole.HasError = false;
-        txtUserRole.Location = new System.Drawing.Point(20, 345);
+        txtUserRole.Location = new System.Drawing.Point(20, 297);
         txtUserRole.Name = "txtUserRole";
         txtUserRole.Placeholder = "";
         txtUserRole.ReadOnly = true;
@@ -844,11 +813,11 @@ partial class AccountManagementView
         lblRole.AutoSize = true;
         lblRole.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblRole.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblRole.Location = new System.Drawing.Point(20, 322);
+        lblRole.Location = new System.Drawing.Point(20, 274);
         lblRole.Name = "lblRole";
-        lblRole.Size = new System.Drawing.Size(235, 20);
+        lblRole.Size = new System.Drawing.Size(55, 20);
         lblRole.TabIndex = 9;
-        lblRole.Text = "Tên đăng nhập & Vai trò (Cố định)";
+        lblRole.Text = "Vai trò";
         // 
         // txtJobTitle
         // 
@@ -858,7 +827,7 @@ partial class AccountManagementView
         txtJobTitle.ErrorMessage = "";
         txtJobTitle.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtJobTitle.HasError = false;
-        txtJobTitle.Location = new System.Drawing.Point(400, 255);
+        txtJobTitle.Location = new System.Drawing.Point(400, 207);
         txtJobTitle.Name = "txtJobTitle";
         txtJobTitle.Placeholder = "Nhập chức vụ / chức danh";
         txtJobTitle.ReadOnly = false;
@@ -871,7 +840,7 @@ partial class AccountManagementView
         lblJob.AutoSize = true;
         lblJob.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblJob.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblJob.Location = new System.Drawing.Point(400, 232);
+        lblJob.Location = new System.Drawing.Point(400, 184);
         lblJob.Name = "lblJob";
         lblJob.Size = new System.Drawing.Size(83, 20);
         lblJob.TabIndex = 7;
@@ -884,7 +853,7 @@ partial class AccountManagementView
         txtEmail.ErrorMessage = "";
         txtEmail.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtEmail.HasError = false;
-        txtEmail.Location = new System.Drawing.Point(20, 255);
+        txtEmail.Location = new System.Drawing.Point(20, 207);
         txtEmail.Name = "txtEmail";
         txtEmail.Placeholder = "name@ecms.edu.vn";
         txtEmail.ReadOnly = false;
@@ -897,7 +866,7 @@ partial class AccountManagementView
         lblEmail.AutoSize = true;
         lblEmail.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblEmail.Location = new System.Drawing.Point(20, 232);
+        lblEmail.Location = new System.Drawing.Point(20, 184);
         lblEmail.Name = "lblEmail";
         lblEmail.Size = new System.Drawing.Size(97, 20);
         lblEmail.TabIndex = 5;
@@ -911,7 +880,7 @@ partial class AccountManagementView
         txtPhone.ErrorMessage = "";
         txtPhone.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtPhone.HasError = false;
-        txtPhone.Location = new System.Drawing.Point(400, 168);
+        txtPhone.Location = new System.Drawing.Point(400, 120);
         txtPhone.Name = "txtPhone";
         txtPhone.Placeholder = "09xx xxx xxx";
         txtPhone.ReadOnly = false;
@@ -924,7 +893,7 @@ partial class AccountManagementView
         lblPhone.AutoSize = true;
         lblPhone.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblPhone.Location = new System.Drawing.Point(400, 145);
+        lblPhone.Location = new System.Drawing.Point(400, 97);
         lblPhone.Name = "lblPhone";
         lblPhone.Size = new System.Drawing.Size(111, 20);
         lblPhone.TabIndex = 3;
@@ -937,7 +906,7 @@ partial class AccountManagementView
         txtFullName.ErrorMessage = "";
         txtFullName.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtFullName.HasError = false;
-        txtFullName.Location = new System.Drawing.Point(20, 168);
+        txtFullName.Location = new System.Drawing.Point(20, 120);
         txtFullName.Name = "txtFullName";
         txtFullName.Placeholder = "Họ và tên của bạn";
         txtFullName.ReadOnly = false;
@@ -950,7 +919,7 @@ partial class AccountManagementView
         lblName.AutoSize = true;
         lblName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblName.Location = new System.Drawing.Point(20, 145);
+        lblName.Location = new System.Drawing.Point(20, 97);
         lblName.Name = "lblName";
         lblName.Size = new System.Drawing.Size(87, 20);
         lblName.TabIndex = 1;
@@ -987,7 +956,6 @@ partial class AccountManagementView
         cardPass.BorderWidth = 1;
         cardPass.Controls.Add(chkShowPassword);
         cardPass.Controls.Add(lblPassSub);
-        cardPass.Controls.Add(bannerPassSuccess);
         cardPass.Controls.Add(lblPassNote);
         cardPass.Controls.Add(btnSavePass);
         cardPass.Controls.Add(btnCancelPass);
@@ -1002,7 +970,7 @@ partial class AccountManagementView
         cardPass.Location = new System.Drawing.Point(16, 16);
         cardPass.Name = "cardPass";
         cardPass.Padding = new System.Windows.Forms.Padding(20);
-        cardPass.Size = new System.Drawing.Size(780, 480);
+        cardPass.Size = new System.Drawing.Size(613, 480);
         cardPass.TabIndex = 2;
         // 
         // chkShowPassword
@@ -1011,11 +979,11 @@ partial class AccountManagementView
         chkShowPassword.Cursor = System.Windows.Forms.Cursors.Hand;
         chkShowPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
         chkShowPassword.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        chkShowPassword.Location = new System.Drawing.Point(20, 345);
+        chkShowPassword.Location = new System.Drawing.Point(17, 317);
         chkShowPassword.Name = "chkShowPassword";
-        chkShowPassword.Size = new System.Drawing.Size(173, 24);
+        chkShowPassword.Size = new System.Drawing.Size(148, 24);
         chkShowPassword.TabIndex = 11;
-        chkShowPassword.Text = "👁️ Hiển thị mật khẩu";
+        chkShowPassword.Text = "Hiển thị mật khẩu";
         chkShowPassword.UseVisualStyleBackColor = true;
         // 
         // lblPassSub
@@ -1029,27 +997,12 @@ partial class AccountManagementView
         lblPassSub.TabIndex = 10;
         lblPassSub.Text = "Để bảo mật, vui lòng chọn mật khẩu mạnh có ít nhất 8 ký tự gồm cả chữ và số";
         // 
-        // bannerPassSuccess
-        // 
-        bannerPassSuccess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        bannerPassSuccess.BackColor = System.Drawing.Color.FromArgb(((int)((byte)220)), ((int)((byte)252)), ((int)((byte)231)));
-        bannerPassSuccess.BannerType = ECMS.UI.Controls.BannerType.Success;
-        bannerPassSuccess.Location = new System.Drawing.Point(20, 80);
-        bannerPassSuccess.Message = "✓ Mật khẩu tài khoản đã được đổi thành công.";
-        bannerPassSuccess.Name = "bannerPassSuccess";
-        bannerPassSuccess.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-        bannerPassSuccess.Size = new System.Drawing.Size(740, 48);
-        bannerPassSuccess.TabIndex = 3;
-        bannerPassSuccess.Title = "";
-        bannerPassSuccess.Variant = ECMS.UI.Controls.BannerVariant.Success;
-        bannerPassSuccess.Visible = false;
-        // 
         // lblPassNote
         // 
         lblPassNote.AutoSize = true;
         lblPassNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblPassNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblPassNote.Location = new System.Drawing.Point(20, 380);
+        lblPassNote.Location = new System.Drawing.Point(17, 352);
         lblPassNote.Name = "lblPassNote";
         lblPassNote.Size = new System.Drawing.Size(485, 20);
         lblPassNote.TabIndex = 9;
@@ -1066,11 +1019,11 @@ partial class AccountManagementView
         btnSavePass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSavePass.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSavePass.ForeColor = System.Drawing.Color.White;
-        btnSavePass.Location = new System.Drawing.Point(578, 415);
+        btnSavePass.Location = new System.Drawing.Point(411, 415);
         btnSavePass.Name = "btnSavePass";
         btnSavePass.Size = new System.Drawing.Size(182, 38);
         btnSavePass.TabIndex = 8;
-        btnSavePass.Text = "Xác nhận đổi mật khẩu";
+        btnSavePass.Text = "Đổi mật khẩu";
         btnSavePass.UseVisualStyleBackColor = false;
         btnSavePass.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
@@ -1085,7 +1038,7 @@ partial class AccountManagementView
         btnCancelPass.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancelPass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancelPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnCancelPass.Location = new System.Drawing.Point(468, 415);
+        btnCancelPass.Location = new System.Drawing.Point(301, 415);
         btnCancelPass.Name = "btnCancelPass";
         btnCancelPass.Size = new System.Drawing.Size(100, 38);
         btnCancelPass.TabIndex = 7;
@@ -1101,11 +1054,11 @@ partial class AccountManagementView
         txtConfirmPass.ErrorMessage = "";
         txtConfirmPass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtConfirmPass.HasError = false;
-        txtConfirmPass.Location = new System.Drawing.Point(20, 295);
+        txtConfirmPass.Location = new System.Drawing.Point(17, 267);
         txtConfirmPass.Name = "txtConfirmPass";
         txtConfirmPass.Placeholder = "Nhập lại mật khẩu mới để xác nhận";
         txtConfirmPass.ReadOnly = false;
-        txtConfirmPass.Size = new System.Drawing.Size(740, 36);
+        txtConfirmPass.Size = new System.Drawing.Size(573, 36);
         txtConfirmPass.TabIndex = 6;
         txtConfirmPass.UseSystemPasswordChar = true;
         // 
@@ -1114,7 +1067,7 @@ partial class AccountManagementView
         lblConfirmPass.AutoSize = true;
         lblConfirmPass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblConfirmPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblConfirmPass.Location = new System.Drawing.Point(20, 272);
+        lblConfirmPass.Location = new System.Drawing.Point(17, 244);
         lblConfirmPass.Name = "lblConfirmPass";
         lblConfirmPass.Size = new System.Drawing.Size(179, 20);
         lblConfirmPass.TabIndex = 5;
@@ -1128,11 +1081,11 @@ partial class AccountManagementView
         txtNewPass.ErrorMessage = "";
         txtNewPass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtNewPass.HasError = false;
-        txtNewPass.Location = new System.Drawing.Point(20, 220);
+        txtNewPass.Location = new System.Drawing.Point(17, 192);
         txtNewPass.Name = "txtNewPass";
         txtNewPass.Placeholder = "Tối thiểu 8 ký tự (bao gồm chữ và số)";
         txtNewPass.ReadOnly = false;
-        txtNewPass.Size = new System.Drawing.Size(740, 36);
+        txtNewPass.Size = new System.Drawing.Size(573, 36);
         txtNewPass.TabIndex = 4;
         txtNewPass.UseSystemPasswordChar = true;
         // 
@@ -1141,7 +1094,7 @@ partial class AccountManagementView
         lblNewPass.AutoSize = true;
         lblNewPass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblNewPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblNewPass.Location = new System.Drawing.Point(20, 197);
+        lblNewPass.Location = new System.Drawing.Point(17, 169);
         lblNewPass.Name = "lblNewPass";
         lblNewPass.Size = new System.Drawing.Size(117, 20);
         lblNewPass.TabIndex = 3;
@@ -1155,11 +1108,11 @@ partial class AccountManagementView
         txtCurrentPass.ErrorMessage = "";
         txtCurrentPass.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         txtCurrentPass.HasError = false;
-        txtCurrentPass.Location = new System.Drawing.Point(20, 145);
+        txtCurrentPass.Location = new System.Drawing.Point(17, 117);
         txtCurrentPass.Name = "txtCurrentPass";
         txtCurrentPass.Placeholder = "Nhập mật khẩu hiện tại của bạn";
         txtCurrentPass.ReadOnly = false;
-        txtCurrentPass.Size = new System.Drawing.Size(740, 36);
+        txtCurrentPass.Size = new System.Drawing.Size(573, 36);
         txtCurrentPass.TabIndex = 2;
         txtCurrentPass.UseSystemPasswordChar = true;
         // 
@@ -1168,7 +1121,7 @@ partial class AccountManagementView
         lblCurPass.AutoSize = true;
         lblCurPass.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblCurPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblCurPass.Location = new System.Drawing.Point(20, 122);
+        lblCurPass.Location = new System.Drawing.Point(17, 94);
         lblCurPass.Name = "lblCurPass";
         lblCurPass.Size = new System.Drawing.Size(142, 20);
         lblCurPass.TabIndex = 1;
@@ -1252,7 +1205,6 @@ partial class AccountManagementView
     // Tab 2 controls
     private ECMS.UI.Controls.AppCard cardMatrix;
     private System.Windows.Forms.Label lblMatrixTitle;
-    private System.Windows.Forms.Label lblMatrixSub;
     private ECMS.UI.Controls.AppDataGrid dgvPermissions;
     private ECMS.UI.Controls.AppButton btnResetMatrix;
     private ECMS.UI.Controls.AppButton btnSaveRoles;
@@ -1291,7 +1243,6 @@ partial class AccountManagementView
     private ECMS.UI.Controls.AppTextBox txtUserRole;
     private ECMS.UI.Controls.AppButton btnCancelProf;
     private ECMS.UI.Controls.AppButton btnSaveProf;
-    private ECMS.UI.Controls.AppBanner bannerProfileSuccess;
 
     // Sub-tab 2: Đổi mật khẩu
     private ECMS.UI.Controls.AppCard cardPass;
@@ -1307,5 +1258,4 @@ partial class AccountManagementView
     private System.Windows.Forms.Label lblPassNote;
     private ECMS.UI.Controls.AppButton btnCancelPass;
     private ECMS.UI.Controls.AppButton btnSavePass;
-    private ECMS.UI.Controls.AppBanner bannerPassSuccess;
 }

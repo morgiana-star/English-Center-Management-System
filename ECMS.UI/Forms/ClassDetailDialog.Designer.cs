@@ -15,6 +15,10 @@ partial class ClassDetailDialog
 
     #region Windows Form Designer generated code
 
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -33,16 +37,16 @@ partial class ClassDetailDialog
         btnTabStudents = new System.Windows.Forms.Button();
         pnlBody = new System.Windows.Forms.Panel();
         cardStudentList = new ECMS.UI.Controls.AppCard();
+        dgvClassStudents = new ECMS.UI.Controls.AppDataGrid();
         pnlGridFooter = new System.Windows.Forms.Panel();
         lblBottomSummary = new System.Windows.Forms.Label();
-        dgvClassStudents = new ECMS.UI.Controls.AppDataGrid();
         lblStudentListTitle = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlTabs.SuspendLayout();
         pnlBody.SuspendLayout();
         cardStudentList.SuspendLayout();
-        pnlGridFooter.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvClassStudents).BeginInit();
+        pnlGridFooter.SuspendLayout();
         SuspendLayout();
         // 
         // pnlHeader
@@ -225,16 +229,51 @@ partial class ClassDetailDialog
         cardStudentList.Size = new System.Drawing.Size(1140, 588);
         cardStudentList.TabIndex = 0;
         // 
-        // lblStudentListTitle
+        // dgvClassStudents
         // 
-        lblStudentListTitle.Dock = System.Windows.Forms.DockStyle.Top;
-        lblStudentListTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-        lblStudentListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        lblStudentListTitle.Location = new System.Drawing.Point(16, 16);
-        lblStudentListTitle.Name = "lblStudentListTitle";
-        lblStudentListTitle.Size = new System.Drawing.Size(1108, 34);
-        lblStudentListTitle.TabIndex = 0;
-        lblStudentListTitle.Text = "DANH SÁCH HỌC VIÊN TRONG LỚP";
+        dgvClassStudents.AllowUserToAddRows = false;
+        dgvClassStudents.AllowUserToDeleteRows = false;
+        dgvClassStudents.AllowUserToResizeColumns = false;
+        dgvClassStudents.AllowUserToResizeRows = false;
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dgvClassStudents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+        dgvClassStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+        dgvClassStudents.BackgroundColor = System.Drawing.Color.White;
+        dgvClassStudents.BorderStyle = System.Windows.Forms.BorderStyle.None;
+        dgvClassStudents.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+        dgvClassStudents.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+        dgvClassStudents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+        dgvClassStudents.ColumnHeadersHeight = 38;
+        dgvClassStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+        dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+        dgvClassStudents.DefaultCellStyle = dataGridViewCellStyle3;
+        dgvClassStudents.Dock = System.Windows.Forms.DockStyle.Fill;
+        dgvClassStudents.EnableHeadersVisualStyles = false;
+        dgvClassStudents.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        dgvClassStudents.Location = new System.Drawing.Point(16, 50);
+        dgvClassStudents.MultiSelect = false;
+        dgvClassStudents.Name = "dgvClassStudents";
+        dgvClassStudents.ReadOnly = true;
+        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+        dgvClassStudents.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+        dgvClassStudents.RowHeadersVisible = false;
+        dgvClassStudents.RowHeadersWidth = 51;
+        dgvClassStudents.RowTemplate.Height = 42;
+        dgvClassStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+        dgvClassStudents.Size = new System.Drawing.Size(1108, 486);
+        dgvClassStudents.TabIndex = 1;
         // 
         // pnlGridFooter
         // 
@@ -259,46 +298,16 @@ partial class ClassDetailDialog
         lblBottomSummary.Text = "Sĩ số lớp: 0 / 20 học viên";
         lblBottomSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
-        // dgvClassStudents
+        // lblStudentListTitle
         // 
-        dgvClassStudents.AllowUserToAddRows = false;
-        dgvClassStudents.AllowUserToDeleteRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
-        dgvClassStudents.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-        dgvClassStudents.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-        dgvClassStudents.BackgroundColor = System.Drawing.Color.White;
-        dgvClassStudents.BorderStyle = System.Windows.Forms.BorderStyle.None;
-        dgvClassStudents.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-        dgvClassStudents.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-        dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-        dgvClassStudents.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-        dgvClassStudents.ColumnHeadersHeight = 38;
-        dgvClassStudents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-        dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-        dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-        dgvClassStudents.DefaultCellStyle = dataGridViewCellStyle3;
-        dgvClassStudents.Dock = System.Windows.Forms.DockStyle.Fill;
-        dgvClassStudents.EnableHeadersVisualStyles = false;
-        dgvClassStudents.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
-        dgvClassStudents.Location = new System.Drawing.Point(16, 50);
-        dgvClassStudents.MultiSelect = false;
-        dgvClassStudents.Name = "dgvClassStudents";
-        dgvClassStudents.ReadOnly = true;
-        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dgvClassStudents.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-        dgvClassStudents.RowHeadersVisible = false;
-        dgvClassStudents.RowTemplate.Height = 42;
-        dgvClassStudents.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-        dgvClassStudents.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvClassStudents.Size = new System.Drawing.Size(1108, 486);
-        dgvClassStudents.TabIndex = 1;
+        lblStudentListTitle.Dock = System.Windows.Forms.DockStyle.Top;
+        lblStudentListTitle.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
+        lblStudentListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        lblStudentListTitle.Location = new System.Drawing.Point(16, 16);
+        lblStudentListTitle.Name = "lblStudentListTitle";
+        lblStudentListTitle.Size = new System.Drawing.Size(1108, 34);
+        lblStudentListTitle.TabIndex = 0;
+        lblStudentListTitle.Text = "Danh sách học viên";
         // 
         // ClassDetailDialog
         // 
@@ -310,8 +319,6 @@ partial class ClassDetailDialog
         Controls.Add(pnlTabs);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
-        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
-        MaximizeBox = true;
         MinimizeBox = false;
         MinimumSize = new System.Drawing.Size(1040, 640);
         ShowInTaskbar = false;
@@ -322,8 +329,8 @@ partial class ClassDetailDialog
         pnlTabs.ResumeLayout(false);
         pnlBody.ResumeLayout(false);
         cardStudentList.ResumeLayout(false);
-        pnlGridFooter.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvClassStudents).EndInit();
+        pnlGridFooter.ResumeLayout(false);
         ResumeLayout(false);
     }
 

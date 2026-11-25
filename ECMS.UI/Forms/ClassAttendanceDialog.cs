@@ -60,7 +60,6 @@ public partial class ClassAttendanceDialog : Form
         Text = $"Điểm danh lớp · {_classCode}";
         lblTitle.Text = $"{_classCode} · {_courseName}";
         lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: -- học viên";
-        btnClose.Location = new Point(Math.Max(200, pnlHeader.ClientSize.Width - btnClose.Width - 24), 18);
     }
 
     private void SetupSessionsGrid()
@@ -435,7 +434,6 @@ public partial class ClassAttendanceDialog : Form
 
     private void WireEvents()
     {
-        btnClose.Click += (s, e) => Close();
 
         btnTabSessions.Click += (s, e) => SwitchMainTab(0);
         btnTabOverview.Click += (s, e) => SwitchMainTab(1);
@@ -603,10 +601,7 @@ public partial class ClassAttendanceDialog : Form
         cardSessionsView.SetBounds(margin, margin, cardWidth, cardHeight);
         cardOverviewView.SetBounds(margin, margin, cardWidth, cardHeight);
 
-        if (pnlHeader != null && btnClose != null)
-        {
-            btnClose.Location = new Point(Math.Max(200, pnlHeader.ClientSize.Width - btnClose.Width - 24), 18);
-        }
+
     }
 
     protected override void OnLoad(EventArgs e)
