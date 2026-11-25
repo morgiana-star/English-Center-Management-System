@@ -200,18 +200,6 @@ public class AppTextBox : UserControl
         {
             g.DrawPath(pen, path);
         }
-
-        if (string.IsNullOrEmpty(_innerBox.Text) && !string.IsNullOrEmpty(_placeholder) && !_isFocused)
-        {
-            var textRect = new Rectangle(10, 8, Width - 20, 20);
-            TextRenderer.DrawText(
-                g,
-                _placeholder,
-                FigmaTheme.FontContent,
-                textRect,
-                FigmaTheme.TextMuted,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
-        }
     }
 
     private static GraphicsPath CreateRoundedRectangle(Rectangle bounds, int radius)

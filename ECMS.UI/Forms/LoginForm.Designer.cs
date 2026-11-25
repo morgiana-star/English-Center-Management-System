@@ -110,7 +110,7 @@ partial class LoginForm
         btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnLogin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
         btnLogin.ForeColor = System.Drawing.Color.White;
-        btnLogin.Location = new System.Drawing.Point(57, 308);
+        btnLogin.Location = new System.Drawing.Point(57, 315);
         btnLogin.Name = "btnLogin";
         btnLogin.Size = new System.Drawing.Size(474, 46);
         btnLogin.TabIndex = 7;
@@ -123,9 +123,9 @@ partial class LoginForm
         // 
         lblError.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         lblError.ForeColor = System.Drawing.Color.Red;
-        lblError.Location = new System.Drawing.Point(57, 278);
+        lblError.Location = new System.Drawing.Point(57, 285);
         lblError.Name = "lblError";
-        lblError.Size = new System.Drawing.Size(474, 27);
+        lblError.Size = new System.Drawing.Size(474, 25);
         lblError.TabIndex = 6;
         lblError.Text = "* Tên đăng nhập hoặc mật khẩu không đúng!";
         lblError.Visible = false;
@@ -136,7 +136,7 @@ partial class LoginForm
         chkShowPass.Cursor = System.Windows.Forms.Cursors.Hand;
         chkShowPass.Font = new System.Drawing.Font("Segoe UI", 8.5F);
         chkShowPass.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        chkShowPass.Location = new System.Drawing.Point(57, 251);
+        chkShowPass.Location = new System.Drawing.Point(57, 256);
         chkShowPass.Name = "chkShowPass";
         chkShowPass.Size = new System.Drawing.Size(148, 24);
         chkShowPass.TabIndex = 5;
