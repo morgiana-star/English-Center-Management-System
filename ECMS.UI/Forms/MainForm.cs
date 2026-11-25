@@ -49,6 +49,9 @@ public partial class MainForm : Form
 
         // Gắn sự kiện click cho các nút Header và Sidebar
         WireUpNavigationEvents();
+
+        // Tinh chỉnh icon các mục tiêu đề Sidebar (A, B, C, D) cho sắc nét và cân đối
+        FormatSidebarHeaderIcons();
     }
 
     private async void MainForm_Load(object sender, EventArgs e)
@@ -57,6 +60,8 @@ public partial class MainForm : Form
         await ApplyBrandingAsync();
         // Áp dụng phân quyền hiển thị Sidebar theo vai trò đang đăng nhập từ DB
         await ApplyRoleBasedAccessControlAsync(navigateDefault: true);
+        // Tinh chỉnh icon các mục tiêu đề Sidebar (A, B, C, D) cho sắc nét và cân đối
+        FormatSidebarHeaderIcons();
     }
 
     public async Task ApplyBrandingAsync()
@@ -520,5 +525,70 @@ public partial class MainForm : Form
             login.FormClosed += (sender, args) => Close();
             login.Show();
         }
+    }
+
+    private void lblGroupA_Click(object sender, EventArgs e)
+    {
+    }
+
+    private void pnlSidebarMenu_Paint(object sender, PaintEventArgs e)
+    {
+    }
+
+    /// <summary>
+    /// Tự động chuẩn hóa kích thước icon về 18x18 pixel sắc nét và căn chỉnh chữ cho 4 danh mục Sidebar (A, B, C, D)
+    /// </summary>
+    private void FormatSidebarHeaderIcons()
+    {
+        var headers = new (Label? lbl, string text)[]
+        {
+            (lblGroupA, "     A · TỔNG QUAN"),
+            (lblGroupB, "     B · ĐÀO TẠO"),
+            (lblGroupC, "     C · TÀI CHÍNH"),
+            (lblGroupD, "     D · HỆ THỐNG")
+        };
+
+        foreach (var (lbl, text) in headers)
+        {
+            if (lbl == null) continue;
+            lbl.TextAlign = ContentAlignment.MiddleLeft;
+            lbl.ImageAlign = ContentAlignment.MiddleLeft;
+            lbl.Text = text;
+            if (lbl.Image != null && (lbl.Image.Width > 20 || lbl.Image.Height > 20))
+            {
+                lbl.Image = ResizeImage(lbl.Image, 18, 18);
+            }
+        }
+    }
+
+    private static Image ResizeImage(Image src, int width, int height)
+    {
+        var destImage = new Bitmap(width, height);
+        using var g = Graphics.FromImage(destImage);
+        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+        g.DrawImage(src, 0, 0, width, height);
+        return destImage;
+    }
+
+    private void lblGroupC_Click(object sender, EventArgs e)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void lblUser_Click(object sender, EventArgs e)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void lblHeaderCenter_Click(object sender, EventArgs e)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void btnLogoutTop_Click(object sender, EventArgs e)
+    {
+        throw new System.NotImplementedException();
     }
 }
