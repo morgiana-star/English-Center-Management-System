@@ -437,10 +437,14 @@ public static class DatabaseInitializer
             INSERT OR IGNORE INTO Employees (EmployeeId, EmployeeCode, FullName, Department, Phone, Email) 
             VALUES (4, 'NV-0004', 'Đặng Thị Mai (Giáo vụ)', 'Phòng Đào tạo', '0904567890', 'academic@ecms.edu.vn');");
 
-        // Teacher 1
+        // Teachers
         conn.Execute(@"
             INSERT OR IGNORE INTO Teachers (TeacherId, TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker) 
-            VALUES (1, 'GV-0015', 'Thầy John Smith (GV Bản ngữ)', 'IELTS & Giao tiếp', '0905678901', 'john.smith@ecms.edu.vn', 350000, 1);");
+            VALUES 
+            (1, 'GV-0015', 'Thầy John Smith (GV Bản ngữ)', 'IELTS & Giao tiếp', '0905678901', 'john.smith@ecms.edu.vn', 350000, 1),
+            (2, 'GV-0016', 'Nguyễn Hoàng Anh', 'IELTS Foundation', '0908123456', 'hoanganh@ecms.edu.vn', 300000, 0),
+            (3, 'GV-0017', 'Trần Minh Tuấn', 'IELTS & TOEIC', '0912345678', 'minhtuan@ecms.edu.vn', 300000, 0),
+            (4, 'GV-0018', 'Lê Thu Hà', 'Giao tiếp cơ bản', '0933456789', 'thuha@ecms.edu.vn', 280000, 0);");
 
         // Student 1
         conn.Execute(@"
@@ -499,7 +503,11 @@ public static class DatabaseInitializer
         // 4. Seed Academic Data (Courses, ClassRooms, Classes, Schedules, Enrollments, Attendance, Exams, Scores)
         conn.Execute(@"
             INSERT OR IGNORE INTO Courses (CourseId, CourseCode, CourseName, Level, TotalHours, TotalSessions, BaseTuitionFee, PassingScore, IsActive)
-            VALUES (1, 'ENG-IELTS-5.5', 'IELTS Foundation 5.5+', 'Intermediate', 60, 24, 5500000, 5.0, 1);");
+            VALUES 
+            (1, 'ENG-IELTS-5.5', 'IELTS Foundation', 'Intermediate', 60, 24, 5500000, 5.0, 1),
+            (2, 'ENG-IELTS-7.0', 'IELTS Intensive', 'Advanced', 75, 30, 7500000, 6.5, 1),
+            (3, 'ENG-TOEIC-500', 'TOEIC 500+', 'Pre-Intermediate', 45, 20, 4200000, 500, 1),
+            (4, 'ENG-COM-BASIC', 'Giao tiếp cơ bản', 'Beginner', 40, 16, 3500000, 5.0, 1);");
 
         conn.Execute(@"
             INSERT OR IGNORE INTO ClassRooms (RoomId, RoomCode, RoomName, Floor, Capacity, Equipment, Status, HasProjector, IsActive)
@@ -519,14 +527,36 @@ public static class DatabaseInitializer
 
         conn.Execute(@"
             INSERT OR IGNORE INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
-            VALUES (1, 'IELTS-2026-K12', 'Lớp IELTS Foundation K12 (T2-T4-T6)', 1, 1, 1, '2026-10-01', '2026-12-30', 20, 'InProgress');");
+            VALUES 
+            (1, 'IELTS-F01', 'Lớp IELTS Foundation K12 (T3-T6)', 1, 2, 1, '2026-10-06', '2026-12-30', 20, 'InProgress'),
+            (2, 'IELTS-I01', 'Lớp IELTS Intensive K05 (T4-T7)', 2, 3, 3, '2026-10-15', '2027-01-15', 18, 'InProgress'),
+            (3, 'TOEIC-A01', 'Lớp TOEIC 500+ K08 (T3-T6)', 3, 3, 2, '2026-10-20', '2026-12-25', 20, 'InProgress'),
+            (4, 'COM-B01', 'Lớp Giao tiếp cơ bản K02 (T7-CN)', 4, 4, 5, '2026-11-01', '2026-12-28', 15, 'InProgress');");
 
         conn.Execute(@"
             INSERT OR IGNORE INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
             VALUES 
-            (1, 1, 1, '2026-10-05', '18:00', '20:00', 1, 1, 1, 'Unit 1: Listening - Note Completion & Phonetics'),
-            (2, 1, 2, '2026-10-07', '18:00', '20:00', 1, 1, 1, 'Unit 2: Reading - Skimming & Scanning Masterclass'),
-            (3, 1, 3, '2026-11-02', '18:00', '20:00', 1, 1, 0, 'Unit 3: Writing Task 1 - Line Graph & Bar Chart');");
+            -- Buổi cũ tháng 10
+            (1, 1, 1, '2026-10-06', '18:00', '20:00', 1, 2, 1, 'Unit 1: Listening - Note Completion & Phonetics'),
+            (2, 1, 2, '2026-10-09', '18:00', '20:00', 1, 2, 1, 'Unit 2: Reading - Skimming & Scanning Masterclass'),
+            -- Tuần 11 (09/11/2026 - 15/11/2026)
+            (10, 1, 11, '2026-11-10', '18:00', '20:00', 1, 2, 0, 'Unit 11: Speaking Part 2 - Describe a Place'),
+            (11, 3, 7,  '2026-11-10', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 5: Incomplete Sentences Grammar'),
+            (12, 2, 9,  '2026-11-11', '14:00', '17:00', 3, 3, 0, 'Writing Task 2: Opinion & Discussion Essays'),
+            (13, 1, 12, '2026-11-13', '18:00', '20:00', 1, 2, 0, 'Unit 12: Writing Task 1 - Process Diagram'),
+            (14, 3, 8,  '2026-11-13', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 7: Single Passages Reading Strategy'),
+            (15, 4, 3,  '2026-11-14', '08:30', '11:30', 5, 4, 0, 'Phát âm chuẩn IPA: Nguyên âm đơn và đôi'),
+            (16, 2, 10, '2026-11-14', '14:00', '17:00', 3, 3, 0, 'Speaking Part 3: Abstract Discussion & Fluency'),
+            (17, 4, 4,  '2026-11-15', '08:30', '11:30', 5, 4, 0, 'Giao tiếp hàng ngày: Chủ đề Restaurant & Ordering Food'),
+            -- Tuần 12 (16/11/2026 - 22/11/2026)
+            (18, 1, 13, '2026-11-17', '18:00', '20:00', 1, 2, 0, 'Unit 13: Listening Section 3 - Multiple Choice'),
+            (19, 3, 9,  '2026-11-17', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 6: Text Completion Tactics'),
+            (20, 2, 11, '2026-11-18', '14:00', '17:00', 3, 3, 0, 'Advanced Vocabulary: Academic Collocations'),
+            (21, 1, 14, '2026-11-20', '18:00', '20:00', 1, 2, 0, 'Unit 14: Reading - True / False / Not Given'),
+            (22, 3, 10, '2026-11-20', '18:30', '20:30', 2, 3, 0, 'TOEIC Listening Part 3: Conversations Practice'),
+            (23, 4, 5,  '2026-11-21', '08:30', '11:30', 5, 4, 0, 'Giao tiếp chủ đề: Shopping & Bargaining'),
+            (24, 2, 12, '2026-11-21', '14:00', '17:00', 3, 3, 0, 'Writing Task 2: Problem - Solution Structures'),
+            (25, 4, 6,  '2026-11-22', '08:30', '11:30', 5, 4, 0, 'Giao tiếp chủ đề: Travel & Directions');");
 
         conn.Execute(@"
             INSERT OR IGNORE INTO Enrollments (EnrollmentId, StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
