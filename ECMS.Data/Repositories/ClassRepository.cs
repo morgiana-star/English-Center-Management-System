@@ -408,7 +408,7 @@ public class ClassRepository : IClassRepository
                         InvCode = invCode,
                         EnrollmentId = enrollmentId,
                         Fee = clsInfo.Value.BaseTuitionFee,
-                        DueDate = DateTime.Today.AddDays(30).ToString("yyyy-MM-dd")
+                        DueDate = DateTime.Today.AddDays(7).ToString("yyyy-MM-dd")
                     }, tran);
 
                 added++;

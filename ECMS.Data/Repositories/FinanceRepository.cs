@@ -178,18 +178,40 @@ public class FinanceRepository : IFinanceRepository
                 Note = string.IsNullOrWhiteSpace(note) ? "Thu học phí" : note
             }, trans);
 
-            // 4. Cập nhật DiscountAmount, FinalAmount, BalanceDue trong Invoices
+            // 4. Cập nhật DiscountAmount, FinalAmount, BalanceDue và DueDate đợt kế tiếp theo thời lượng lớp học
             decimal appliedDisc = Math.Max(0, Math.Min(extraDiscount, curBalance));
             decimal newDiscount = curDiscount + appliedDisc;
             decimal newFinal = Math.Max(0, curFinal - appliedDisc);
             decimal newBalance = Math.Max(0, curBalance - appliedDisc - amount);
             string newStatus = newBalance <= 0 ? "Paid" : "PartiallyPaid";
 
+            var clsDur = await conn.QueryFirstOrDefaultAsync<(int TotalSessions, string? EndDate)>(@"
+                SELECT COALESCE(co.TotalSessions, 24) AS TotalSessions, c.EndDate
+                FROM Invoices i
+                INNER JOIN Enrollments e ON i.EnrollmentId = e.EnrollmentId
+                INNER JOIN Classes c ON e.ClassId = c.ClassId
+                LEFT JOIN Courses co ON c.CourseId = co.CourseId
+                WHERE i.InvoiceId = @InvoiceId;", new { InvoiceId = invoiceId }, trans);
+
+            int sessions = clsDur.TotalSessions > 0 ? clsDur.TotalSessions : 24;
+            int durationDays = Math.Max(21, (int)Math.Round(sessions / 3.0 * 7.0));
+            int nextStepDays = Math.Clamp((durationDays - 7) / 2, 10, 30);
+            DateTime nextDue = DateTime.Today.AddDays(nextStepDays);
+            if (!string.IsNullOrWhiteSpace(clsDur.EndDate) &&
+                DateTime.TryParse(clsDur.EndDate, out var clsEndDt) &&
+                clsEndDt > DateTime.Today.AddDays(10) &&
+                nextDue > clsEndDt.AddDays(-7))
+            {
+                nextDue = clsEndDt.AddDays(-7);
+            }
+            string newDueDate = newBalance <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : nextDue.ToString("yyyy-MM-dd");
+
             string updateInvSql = @"
                 UPDATE Invoices 
                 SET DiscountAmount = @NewDiscount,
                     FinalAmount = @NewFinal,
                     BalanceDue = @NewBalance, 
+                    DueDate = @NewDueDate,
                     Status = @Status,
                     UpdatedAt = datetime('now', 'localtime')
                 WHERE InvoiceId = @InvoiceId;";
@@ -199,6 +221,7 @@ public class FinanceRepository : IFinanceRepository
                 NewDiscount = newDiscount,
                 NewFinal = newFinal,
                 NewBalance = newBalance,
+                NewDueDate = newDueDate,
                 Status = newStatus,
                 InvoiceId = invoiceId
             }, trans);

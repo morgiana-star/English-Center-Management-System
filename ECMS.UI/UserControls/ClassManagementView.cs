@@ -51,7 +51,7 @@ public partial class ClassManagementView : UserControl
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
             ForeColor = Color.FromArgb(51, 65, 85),
             TextAlign = ContentAlignment.MiddleRight,
-            Text = "Đang hiển thị: 0  |  Tổng lớp học: 0  |  Đang học: 0  |  Sắp mở / Tuyển sinh: 0"
+            Text = "Đang hiển thị: 0  |  Tổng lớp học: 0  |  Đang học: 0  |  Sắp mở: 0"
         };
         _pnlFooter.Controls.Add(_lblBottomSummary);
 
@@ -218,6 +218,6 @@ public partial class ClassManagementView : UserControl
         int inProgressCnt = _allClasses.Count(x => x.Status == "Đang học");
         int openCnt = _allClasses.Count(x => x.Status == "Sắp mở" || x.Status == "Đang tuyển sinh");
         _lblBottomSummary.Text =
-            $"Đang hiển thị: {filtered.Count}  |  Tổng lớp học: {_allClasses.Count}  |  Đang học: {inProgressCnt}  |  Sắp mở / Tuyển sinh: {openCnt}";
+            $"Đang hiển thị: {filtered.Count}  |  Tổng lớp học: {_allClasses.Count}  |  Đang học: {inProgressCnt}  |  Sắp mở: {openCnt}";
     }
 }

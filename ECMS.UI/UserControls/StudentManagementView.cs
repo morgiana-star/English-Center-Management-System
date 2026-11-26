@@ -232,6 +232,14 @@ public partial class StudentManagementView : UserControl
 
             if (wizard.ShouldCollectTuition && shouldPrintReceipt && !string.IsNullOrWhiteSpace(enrollResult.ReceiptCode))
             {
+                string nextDueDisplay = "";
+                if (remainingDebt > 0)
+                {
+                    var profiles = await new FinanceService().GetTuitionProfilesAsync();
+                    var matchedProf = profiles.FirstOrDefault(p => p.StudentCode == enrollResult.StudentCode);
+                    nextDueDisplay = matchedProf?.DueDate ?? DateTime.Today.AddDays(14).ToString("dd/MM/yyyy");
+                }
+
                 using var printDlg = new ReceiptPrintPreviewDialog(
                     wizard.CreatedStudentName,
                     wizard.CreatedClassName,
@@ -244,7 +252,7 @@ public partial class StudentManagementView : UserControl
                     enrollDto.PaymentNote ?? "",
                     enrollResult.ReceiptCode,
                     remainingDebt,
-                    remainingDebt > 0 ? DateTime.Today.AddDays(30).ToString("dd/MM/yyyy") : ""
+                    nextDueDisplay
                 );
 
                 printDlg.ShowDialog(ParentForm);

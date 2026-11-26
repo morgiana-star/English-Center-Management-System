@@ -39,7 +39,7 @@ public partial class CreateBackupDialog : Form
             var status = await _configService.GetDatabaseStatusAsync();
             lblSizeVal.Text = status.FileSizeFormatted;
             lblCheckStatusVal.Text = status.IntegrityCheckResult == "OK" || status.IntegrityCheckResult == "ok"
-                ? "Thư mục có quyền ghi; CSDL tính toàn vẹn OK"
+                ? "Sẵn sàng sao lưu (Thư mục hợp lệ, CSDL toàn vẹn)"
                 : $"CSDL cảnh báo: {status.IntegrityCheckResult}";
         }
         catch (Exception ex)
@@ -50,11 +50,6 @@ public partial class CreateBackupDialog : Form
 
     private void WireEvents()
     {
-        {
-            DialogResult = DialogResult.Cancel;
-            Close();
-        };
-
         btnCancel.Click += (s, e) =>
         {
             DialogResult = DialogResult.Cancel;

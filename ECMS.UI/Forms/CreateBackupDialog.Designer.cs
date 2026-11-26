@@ -24,6 +24,7 @@ partial class CreateBackupDialog
         pnlHeader = new System.Windows.Forms.Panel();
         lblDialogTitle = new System.Windows.Forms.Label();
         pnlContent = new System.Windows.Forms.Panel();
+        pnlFooter = new System.Windows.Forms.Panel();
         btnConfirmBackup = new ECMS.UI.Controls.AppButton();
         btnCancel = new ECMS.UI.Controls.AppButton();
         lblCheckStatusVal = new System.Windows.Forms.Label();
@@ -38,6 +39,7 @@ partial class CreateBackupDialog
         lblSourceKey = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         pnlContent.SuspendLayout();
+        pnlFooter.SuspendLayout();
         SuspendLayout();
         // 
         // pnlHeader
@@ -48,7 +50,7 @@ partial class CreateBackupDialog
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-        pnlHeader.Size = new System.Drawing.Size(600, 56);
+        pnlHeader.Size = new System.Drawing.Size(640, 56);
         pnlHeader.TabIndex = 0;
         // 
         // lblDialogTitle
@@ -65,8 +67,6 @@ partial class CreateBackupDialog
         // pnlContent
         // 
         pnlContent.BackColor = System.Drawing.Color.White;
-        pnlContent.Controls.Add(btnConfirmBackup);
-        pnlContent.Controls.Add(btnCancel);
         pnlContent.Controls.Add(lblCheckStatusVal);
         pnlContent.Controls.Add(lblCheckStatusKey);
         pnlContent.Controls.Add(lblSizeVal);
@@ -81,12 +81,24 @@ partial class CreateBackupDialog
         pnlContent.Location = new System.Drawing.Point(0, 56);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new System.Windows.Forms.Padding(24);
-        pnlContent.Size = new System.Drawing.Size(600, 364);
+        pnlContent.Size = new System.Drawing.Size(640, 160);
         pnlContent.TabIndex = 1;
+        // 
+        // pnlFooter
+        // 
+        pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        pnlFooter.Controls.Add(btnConfirmBackup);
+        pnlFooter.Controls.Add(btnCancel);
+        pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
+        pnlFooter.Location = new System.Drawing.Point(0, 216);
+        pnlFooter.Name = "pnlFooter";
+        pnlFooter.Padding = new System.Windows.Forms.Padding(24, 12, 24, 12);
+        pnlFooter.Size = new System.Drawing.Size(640, 60);
+        pnlFooter.TabIndex = 2;
         // 
         // btnConfirmBackup
         // 
-        btnConfirmBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnConfirmBackup.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnConfirmBackup.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
         btnConfirmBackup.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnConfirmBackup.CornerRadius = 5;
@@ -95,7 +107,7 @@ partial class CreateBackupDialog
         btnConfirmBackup.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnConfirmBackup.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnConfirmBackup.ForeColor = System.Drawing.Color.White;
-        btnConfirmBackup.Location = new System.Drawing.Point(443, 310);
+        btnConfirmBackup.Location = new System.Drawing.Point(486, 13);
         btnConfirmBackup.Name = "btnConfirmBackup";
         btnConfirmBackup.Size = new System.Drawing.Size(130, 34);
         btnConfirmBackup.TabIndex = 13;
@@ -105,7 +117,7 @@ partial class CreateBackupDialog
         // 
         // btnCancel
         // 
-        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right));
+        btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
         btnCancel.BackColor = System.Drawing.Color.White;
         btnCancel.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnCancel.CornerRadius = 5;
@@ -114,7 +126,7 @@ partial class CreateBackupDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        btnCancel.Location = new System.Drawing.Point(356, 310);
+        btnCancel.Location = new System.Drawing.Point(398, 13);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(80, 34);
         btnCancel.TabIndex = 12;
@@ -124,14 +136,16 @@ partial class CreateBackupDialog
         // 
         // lblCheckStatusVal
         // 
-        lblCheckStatusVal.AutoSize = true;
+        lblCheckStatusVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        lblCheckStatusVal.AutoEllipsis = true;
+        lblCheckStatusVal.AutoSize = false;
         lblCheckStatusVal.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblCheckStatusVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblCheckStatusVal.Location = new System.Drawing.Point(140, 138);
+        lblCheckStatusVal.Location = new System.Drawing.Point(125, 138);
         lblCheckStatusVal.Name = "lblCheckStatusVal";
-        lblCheckStatusVal.Size = new System.Drawing.Size(292, 20);
+        lblCheckStatusVal.Size = new System.Drawing.Size(491, 22);
         lblCheckStatusVal.TabIndex = 9;
-        lblCheckStatusVal.Text = "Thư mục có quyền ghi; tên tệp chưa tồn tại";
+        lblCheckStatusVal.Text = "Đang kiểm tra quyền ghi và tính toàn vẹn CSDL...";
         // 
         // lblCheckStatusKey
         // 
@@ -149,7 +163,7 @@ partial class CreateBackupDialog
         lblSizeVal.AutoSize = true;
         lblSizeVal.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblSizeVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblSizeVal.Location = new System.Drawing.Point(140, 108);
+        lblSizeVal.Location = new System.Drawing.Point(125, 108);
         lblSizeVal.Name = "lblSizeVal";
         lblSizeVal.Size = new System.Drawing.Size(62, 20);
         lblSizeVal.TabIndex = 7;
@@ -168,14 +182,16 @@ partial class CreateBackupDialog
         // 
         // lblScopeVal
         // 
-        lblScopeVal.AutoSize = true;
+        lblScopeVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        lblScopeVal.AutoEllipsis = true;
+        lblScopeVal.AutoSize = false;
         lblScopeVal.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblScopeVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblScopeVal.Location = new System.Drawing.Point(140, 78);
+        lblScopeVal.Location = new System.Drawing.Point(125, 78);
         lblScopeVal.Name = "lblScopeVal";
-        lblScopeVal.Size = new System.Drawing.Size(290, 20);
+        lblScopeVal.Size = new System.Drawing.Size(491, 22);
         lblScopeVal.TabIndex = 5;
-        lblScopeVal.Text = "Học viên, lớp, điểm, tài khoản và giao dịch";
+        lblScopeVal.Text = "Toàn bộ dữ liệu hệ thống (đào tạo, học phí, tài khoản, cấu hình)";
         // 
         // lblScopeKey
         // 
@@ -190,12 +206,14 @@ partial class CreateBackupDialog
         // 
         // lblTargetVal
         // 
-        lblTargetVal.AutoSize = true;
+        lblTargetVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        lblTargetVal.AutoEllipsis = true;
+        lblTargetVal.AutoSize = false;
         lblTargetVal.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblTargetVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTargetVal.Location = new System.Drawing.Point(140, 48);
+        lblTargetVal.Location = new System.Drawing.Point(125, 48);
         lblTargetVal.Name = "lblTargetVal";
-        lblTargetVal.Size = new System.Drawing.Size(312, 20);
+        lblTargetVal.Size = new System.Drawing.Size(491, 22);
         lblTargetVal.TabIndex = 3;
         lblTargetVal.Text = "D:\\ECMS_Backup\\ecms_20261030_1625.db";
         // 
@@ -212,12 +230,14 @@ partial class CreateBackupDialog
         // 
         // lblSourceVal
         // 
-        lblSourceVal.AutoSize = true;
+        lblSourceVal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
+        lblSourceVal.AutoEllipsis = true;
+        lblSourceVal.AutoSize = false;
         lblSourceVal.Font = new System.Drawing.Font("Segoe UI", 9F);
         lblSourceVal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblSourceVal.Location = new System.Drawing.Point(140, 18);
+        lblSourceVal.Location = new System.Drawing.Point(125, 18);
         lblSourceVal.Name = "lblSourceVal";
-        lblSourceVal.Size = new System.Drawing.Size(164, 20);
+        lblSourceVal.Size = new System.Drawing.Size(491, 22);
         lblSourceVal.TabIndex = 1;
         lblSourceVal.Text = "C:\\ECMS\\Data\\ecms.db";
         // 
@@ -237,12 +257,16 @@ partial class CreateBackupDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.White;
-        ClientSize = new System.Drawing.Size(600, 420);
+        ClientSize = new System.Drawing.Size(640, 276);
         Controls.Add(pnlContent);
+        Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
+        FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
         Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+        MaximizeBox = false;
         MinimizeBox = false;
+        MinimumSize = new System.Drawing.Size(580, 310);
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Xác nhận tạo bản sao lưu";
@@ -250,6 +274,7 @@ partial class CreateBackupDialog
         pnlHeader.PerformLayout();
         pnlContent.ResumeLayout(false);
         pnlContent.PerformLayout();
+        pnlFooter.ResumeLayout(false);
         ResumeLayout(false);
     }
 
@@ -258,6 +283,7 @@ partial class CreateBackupDialog
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblDialogTitle;
     private System.Windows.Forms.Panel pnlContent;
+    private System.Windows.Forms.Panel pnlFooter;
     private System.Windows.Forms.Label lblSourceKey;
     private System.Windows.Forms.Label lblSourceVal;
     private System.Windows.Forms.Label lblTargetKey;

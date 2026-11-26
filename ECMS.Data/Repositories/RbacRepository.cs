@@ -199,7 +199,19 @@ public class RbacRepository : BaseRepository, IRbacRepository
             {
                 var parsed = JsonSerializer.Deserialize<List<RbacMatrixRowDto>>(json);
                 if (parsed != null && parsed.Count >= 10)
-                    return parsed;
+                {
+                    var cleaned = parsed
+                        .Where(r => !string.Equals(r.ModuleKey, "Materials", StringComparison.OrdinalIgnoreCase))
+                        .ToList();
+                    foreach (var row in cleaned)
+                    {
+                        if (string.Equals(row.ModuleKey, "Grades", StringComparison.OrdinalIgnoreCase))
+                        {
+                            row.ModuleDisplayName = "Điểm số";
+                        }
+                    }
+                    return cleaned;
+                }
             }
             catch
             {
@@ -241,8 +253,7 @@ public class RbacRepository : BaseRepository, IRbacRepository
             new() { ModuleKey = "Class", ModuleDisplayName = "Quản lý Lớp học", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Chỉ xem", AccountantAccess = "Chỉ xem", TeacherAccess = "Chỉ xem" },
             new() { ModuleKey = "Schedule", ModuleDisplayName = "Lịch học & Phòng học", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Chỉ xem", AccountantAccess = "Không có quyền", TeacherAccess = "Chỉ xem" },
             new() { ModuleKey = "Attendance", ModuleDisplayName = "Điểm danh lớp học", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Toàn quyền" },
-            new() { ModuleKey = "Grades", ModuleDisplayName = "Kiểm tra & Điểm số", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Toàn quyền" },
-            new() { ModuleKey = "Materials", ModuleDisplayName = "Tài liệu học tập", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Toàn quyền" },
+            new() { ModuleKey = "Grades", ModuleDisplayName = "Điểm số", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Toàn quyền" },
             new() { ModuleKey = "Certificates", ModuleDisplayName = "Quản lý Chứng chỉ", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Toàn quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Không có quyền" },
             new() { ModuleKey = "Tuition", ModuleDisplayName = "Học phí & Thanh toán", AdminAccess = "Toàn quyền", ManagerAccess = "Toàn quyền", AcademicAccess = "Chỉ xem", CounselorAccess = "Không có quyền", AccountantAccess = "Toàn quyền", TeacherAccess = "Không có quyền" },
             new() { ModuleKey = "Accounts", ModuleDisplayName = "Tài khoản & Phân quyền", AdminAccess = "Toàn quyền", ManagerAccess = "Chỉ xem", AcademicAccess = "Không có quyền", CounselorAccess = "Không có quyền", AccountantAccess = "Không có quyền", TeacherAccess = "Không có quyền" },

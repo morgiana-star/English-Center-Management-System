@@ -518,7 +518,18 @@ public partial class TuitionPaymentView : UserControl
 
             if (dialog.ShouldPrintReceipt)
             {
-                OpenReceiptPreview(receiptModel, remainingAfterPay, item.DueDate);
+                string updatedDueDate = item.DueDate;
+                if (remainingAfterPay > 0)
+                {
+                    var latestProfiles = await _financeService.GetTuitionProfilesAsync();
+                    var latestItem = latestProfiles.FirstOrDefault(p => p.StudentCode == targetCode && p.ClassName == targetClass)
+                                     ?? latestProfiles.FirstOrDefault(p => p.StudentCode == targetCode);
+                    if (latestItem != null && !string.IsNullOrWhiteSpace(latestItem.DueDate))
+                    {
+                        updatedDueDate = latestItem.DueDate;
+                    }
+                }
+                OpenReceiptPreview(receiptModel, remainingAfterPay, updatedDueDate);
             }
             else
             {

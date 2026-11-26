@@ -457,12 +457,13 @@ public static class DatabaseInitializer
 
         // Ensure Student 1 & Parent 1 exist for default student/parent login accounts
         conn.Execute(@"
-            INSERT OR IGNORE INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status) 
-            VALUES (1, 'HV-0001', 'Nguyễn Văn An', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1, TP.HCM', 'Active');
+            INSERT OR IGNORE INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt) 
+            VALUES (1, 'HV-0001', 'Nguyễn Văn An', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1, TP.HCM', 'Active', @Created1);
             INSERT OR IGNORE INTO Parents (ParentId, ParentCode, FullName, Phone, Email, Occupation) 
             VALUES (1, 'PH-0001', 'Trần Thị Mai', '0918765432', 'mai.tran@gmail.com', 'Kinh doanh');
             INSERT OR IGNORE INTO StudentParents (StudentId, ParentId, RelationshipType, IsPrimaryContact) 
-            VALUES (1, 1, 'Mẹ', 1);");
+            VALUES (1, 1, 'Mẹ', 1);",
+            new { Created1 = DateTime.Today.AddMonths(-5).ToString("yyyy-MM-dd 09:00:00") });
 
         // 3. Seed Users for All 8 Roles with BCrypt Hashes
         var sampleUsers = new[]
@@ -532,30 +533,33 @@ public static class DatabaseInitializer
                 (3, 'P202', 2, 22, 1, 1, 'Máy chiếu Epson, Điều hòa', 'Đang sử dụng'),
                 (4, 'P203', 2, 18, 1, 1, 'Máy chiếu, Loa Bluetooth', 'Đang sử dụng');");
 
-            // 4.3 Classes
+            // 4.3 Classes (4 lớp Đang học, 1 lớp Đã kết thúc, 1 lớp Sắp mở)
             conn.Execute(@"
                 INSERT INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
                 VALUES 
                 (1, 'IELTS-F01', 'Lớp IELTS Foundation F01', 1, 1, 1, @Start1, @End1, 20, 'InProgress'),
                 (2, 'IELTS-I01', 'Lớp IELTS Intensive I01', 2, 2, 2, @Start2, @End2, 15, 'InProgress'),
                 (3, 'TOEIC-A01', 'Lớp TOEIC 500+ A01', 3, 3, 3, @Start3, @End3, 20, 'InProgress'),
-                (4, 'COM-B01', 'Lớp Giao tiếp B01 (Sắp mở)', 4, 4, 4, @Start4, @End4, 18, 'OpenForEnrollment'),
-                (5, 'IELTS-F00', 'Lớp IELTS Foundation F00', 1, 1, 1, @Start5, @End5, 15, 'Completed');",
+                (4, 'COM-B01', 'Lớp Giao tiếp B01', 4, 4, 4, @Start4, @End4, 18, 'InProgress'),
+                (5, 'IELTS-F00', 'Lớp IELTS Foundation F00', 1, 1, 1, @Start5, @End5, 15, 'Completed'),
+                (6, 'TOEIC-B02', 'Lớp TOEIC 500+ B02', 3, 3, 3, @Start6, @End6, 20, 'OpenForEnrollment');",
                 new
                 {
-                    Start1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"),
+                    Start1 = lastMonday.AddDays(-21).ToString("yyyy-MM-dd"),
                     End1 = thisMonday.AddDays(45).ToString("yyyy-MM-dd"),
-                    Start2 = lastMonday.AddDays(-13).ToString("yyyy-MM-dd"),
+                    Start2 = lastMonday.AddDays(-20).ToString("yyyy-MM-dd"),
                     End2 = thisMonday.AddDays(60).ToString("yyyy-MM-dd"),
-                    Start3 = lastMonday.AddDays(-13).ToString("yyyy-MM-dd"),
+                    Start3 = lastMonday.AddDays(-20).ToString("yyyy-MM-dd"),
                     End3 = thisMonday.AddDays(40).ToString("yyyy-MM-dd"),
-                    Start4 = thisMonday.AddDays(7).ToString("yyyy-MM-dd"),
-                    End4 = thisMonday.AddDays(60).ToString("yyyy-MM-dd"),
-                    Start5 = lastMonday.AddDays(-90).ToString("yyyy-MM-dd"),
-                    End5 = lastMonday.AddDays(-10).ToString("yyyy-MM-dd")
+                    Start4 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"),
+                    End4 = thisMonday.AddDays(35).ToString("yyyy-MM-dd"),
+                    Start5 = lastMonday.AddDays(-120).ToString("yyyy-MM-dd"),
+                    End5 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"),
+                    Start6 = thisMonday.AddDays(14).ToString("yyyy-MM-dd"),
+                    End6 = thisMonday.AddDays(80).ToString("yyyy-MM-dd")
                 });
 
-            // 4.4 ClassSchedules (tuần trước + tuần này để Schedule & Attendance có sẵn dữ liệu test ngay)
+            // 4.4 ClassSchedules (tuần trước + tuần này + đảm bảo luôn có buổi học trùng ngày hôm nay cho Dashboard)
             var schSql = "INSERT INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic) VALUES (@Id, @ClassId, @Num, @Date, @Start, @End, @RoomId, @TeacherId, @Locked, @Topic);";
             DateTime[] c1Dates = { lastMonday, lastMonday.AddDays(2), lastMonday.AddDays(4), thisMonday, thisMonday.AddDays(2), thisMonday.AddDays(4) };
             for (int i = 0; i < c1Dates.Length; i++)
@@ -563,35 +567,64 @@ public static class DatabaseInitializer
 
             DateTime[] c2Dates = { lastMonday.AddDays(1), lastMonday.AddDays(3), lastMonday.AddDays(5), thisMonday.AddDays(1), thisMonday.AddDays(3), thisMonday.AddDays(5) };
             for (int i = 0; i < c2Dates.Length; i++)
-                conn.Execute(schSql, new { Id = 10 + i + 1, ClassId = 2, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "14:00", End = "16:00", RoomId = 2, TeacherId = 2, Locked = i < 2 ? 1 : 0, Topic = $"Buổi {i + 1} - IELTS Intensive" });
+                conn.Execute(schSql, new { Id = 10 + i + 1, ClassId = 2, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "14:00", End = "16:00", RoomId = 2, TeacherId = 2, Locked = i < 3 ? 1 : 0, Topic = $"Buổi {i + 1} - IELTS Intensive" });
 
             for (int i = 0; i < c2Dates.Length; i++)
-                conn.Execute(schSql, new { Id = 20 + i + 1, ClassId = 3, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "08:30", End = "10:30", RoomId = 3, TeacherId = 3, Locked = i < 2 ? 1 : 0, Topic = $"Buổi {i + 1} - TOEIC 500+" });
+                conn.Execute(schSql, new { Id = 20 + i + 1, ClassId = 3, Num = i + 1, Date = c2Dates[i].ToString("yyyy-MM-dd"), Start = "08:30", End = "10:30", RoomId = 3, TeacherId = 3, Locked = i < 3 ? 1 : 0, Topic = $"Buổi {i + 1} - TOEIC 500+" });
 
-            conn.Execute(schSql, new { Id = 31, ClassId = 4, Num = 1, Date = thisMonday.AddDays(7).ToString("yyyy-MM-dd"), Start = "18:00", End = "20:00", RoomId = 4, TeacherId = 4, Locked = 0, Topic = "Khai giảng Giao tiếp B01" });
+            for (int i = 0; i < c1Dates.Length; i++)
+                conn.Execute(schSql, new { Id = 30 + i + 1, ClassId = 4, Num = i + 1, Date = c1Dates[i].ToString("yyyy-MM-dd"), Start = "18:00", End = "20:00", RoomId = 4, TeacherId = 4, Locked = i < 3 ? 1 : 0, Topic = $"Buổi {i + 1} - Tiếng Anh giao tiếp" });
 
-            // 4.5 Students & Parents (HV-0002..HV-0013)
+            // Nếu hôm nay là Chủ nhật (chưa có lịch trong T2..T7), thêm 2 buổi phụ đạo/thực hành hôm nay để Dashboard luôn có Lịch học hôm nay
+            int todaySchCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM ClassSchedules WHERE Date = @Today;", new { Today = today.ToString("yyyy-MM-dd") });
+            if (todaySchCount == 0)
+            {
+                conn.Execute(schSql, new { Id = 41, ClassId = 1, Num = 7, Date = today.ToString("yyyy-MM-dd"), Start = "09:00", End = "11:00", RoomId = 1, TeacherId = 1, Locked = 0, Topic = "Buổi 7 - Luyện Speaking IELTS Foundation" });
+                conn.Execute(schSql, new { Id = 42, ClassId = 2, Num = 7, Date = today.ToString("yyyy-MM-dd"), Start = "14:00", End = "16:00", RoomId = 2, TeacherId = 2, Locked = 0, Topic = "Buổi 7 - Luyện Writing IELTS Intensive" });
+            }
+
+            string m5 = today.AddMonths(-5).ToString("yyyy-MM-10 09:00:00");
+            string m4 = today.AddMonths(-4).ToString("yyyy-MM-12 10:15:00");
+            string m3 = today.AddMonths(-3).ToString("yyyy-MM-14 14:20:00");
+            string m2 = today.AddMonths(-2).ToString("yyyy-MM-15 09:45:00");
+            string m1 = today.AddMonths(-1).ToString("yyyy-MM-16 15:30:00");
+            string m0 = today.AddDays(-5).ToString("yyyy-MM-dd 10:00:00");
+
+            // 4.5 Students & Parents (HV-0002..HV-0026: 26 học viên chân thật, rải đều 6 tháng)
             var students = new[]
             {
-                new { Id = 2, Code = "HV-0002", Name = "Nguyễn Minh Anh", Dob = "2004-05-20", Gender = "Nữ", Phone = "0908123456", Email = "minhanh@gmail.com", Addr = "12 Hoàng Diệu, Phú Nhuận", Status = "Active", PName = "Nguyễn Thu Hương", PPhone = "0911556889", Rel = "Mẹ" },
-                new { Id = 3, Code = "HV-0003", Name = "Lê Hoàng Nam", Dob = "2005-01-22", Gender = "Nam", Phone = "0904221678", Email = "hoangnam@gmail.com", Addr = "78 CMT8, Q.3", Status = "Active", PName = "Lê Thị Thảo", PPhone = "0903556778", Rel = "Mẹ" },
-                new { Id = 4, Code = "HV-0004", Name = "Phạm Khánh Linh", Dob = "2004-11-10", Gender = "Nữ", Phone = "0912450678", Email = "khanhlinh@gmail.com", Addr = "89 Nguyễn Đình Chiểu, Q.3", Status = "Active", PName = "Phạm Đức Thắng", PPhone = "0913889900", Rel = "Bố" },
-                new { Id = 5, Code = "HV-0005", Name = "Trần Gia Bảo", Dob = "2003-08-14", Gender = "Nam", Phone = "0915227330", Email = "giabao@gmail.com", Addr = "45 Lê Duẩn, Q.1", Status = "Active", PName = "Trần Văn Hùng", PPhone = "0918223344", Rel = "Bố" },
-                new { Id = 6, Code = "HV-0006", Name = "Võ Hoàng Yến", Dob = "2005-07-19", Gender = "Nữ", Phone = "0978112334", Email = "hoangyen@gmail.com", Addr = "234 Võ Văn Tần, Q.3", Status = "Active", PName = "Nguyễn Mỹ Lan", PPhone = "0977445566", Rel = "Mẹ" },
-                new { Id = 7, Code = "HV-0007", Name = "Nguyễn Tiến Đạt", Dob = "2002-12-01", Gender = "Nam", Phone = "0982334556", Email = "tiendat@gmail.com", Addr = "67 Trần Hưng Đạo, Q.5", Status = "Active", PName = "Nguyễn Tiến Thịnh", PPhone = "0983667788", Rel = "Bố" },
-                new { Id = 8, Code = "HV-0008", Name = "Bùi Mai Phương", Dob = "2004-09-30", Gender = "Nữ", Phone = "0903778990", Email = "maiphuong@gmail.com", Addr = "19 Pasteur, Q.1", Status = "Active", PName = "Vũ Bích Hạnh", PPhone = "0908990011", Rel = "Mẹ" },
-                new { Id = 9, Code = "HV-0009", Name = "Đỗ Thanh Tâm", Dob = "2003-03-05", Gender = "Nữ", Phone = "0935661220", Email = "thanhtam@gmail.com", Addr = "15 Phan Đăng Lưu, Bình Thạnh", Status = "Active", PName = "Đỗ Văn Kiên", PPhone = "0938112233", Rel = "Bố" },
-                new { Id = 10, Code = "HV-0010", Name = "Trần Thảo Nhi", Dob = "2005-04-12", Gender = "Nữ", Phone = "0909887766", Email = "thaonhi@gmail.com", Addr = "102 Hai Bà Trưng, Q.1", Status = "Active", PName = "Trần Minh Tuấn", PPhone = "0909112233", Rel = "Bố" },
-                new { Id = 11, Code = "HV-0011", Name = "Đặng Minh Trí", Dob = "2003-06-18", Gender = "Nam", Phone = "0917223344", Email = "minhtri@gmail.com", Addr = "55 Nguyễn Trãi, Q.5", Status = "Completed", PName = "Đặng Văn Long", PPhone = "0917556677", Rel = "Bố" },
-                new { Id = 12, Code = "HV-0012", Name = "Hoàng Đức An", Dob = "2004-02-25", Gender = "Nam", Phone = "0933445566", Email = "ducan@gmail.com", Addr = "30 Điện Biên Phủ, Q.3", Status = "Completed", PName = "Hoàng Thị Lan", PPhone = "0933778899", Rel = "Mẹ" },
-                new { Id = 13, Code = "HV-0013", Name = "Vũ Ngọc Lan", Dob = "2005-09-08", Gender = "Nữ", Phone = "0944556677", Email = "ngoclan@gmail.com", Addr = "11 Võ Thị Sáu, Q.3", Status = "Reserved", PName = "Vũ Văn Hải", PPhone = "0944889900", Rel = "Bố" }
+                new { Id = 2,  Code = "HV-0002", Name = "Nguyễn Minh Anh",   Dob = "2004-05-20", Gender = "Nữ",  Phone = "0908123456", Email = "minhanh.nguyen@gmail.com",  Addr = "12 Hoàng Diệu, Phú Nhuận",       Status = "Active",    PName = "Nguyễn Thu Hương", PPhone = "0911556889", Rel = "Mẹ", Created = m5 },
+                new { Id = 3,  Code = "HV-0003", Name = "Lê Hoàng Nam",      Dob = "2005-01-22", Gender = "Nam", Phone = "0904221678", Email = "hoangnam.le@gmail.com",     Addr = "78 Cách Mạng Tháng 8, Q.3",      Status = "Active",    PName = "Lê Thị Thảo",      PPhone = "0903556778", Rel = "Mẹ", Created = m5 },
+                new { Id = 4,  Code = "HV-0004", Name = "Phạm Khánh Linh",   Dob = "2004-11-10", Gender = "Nữ",  Phone = "0912450678", Email = "khanhlinh.pham@gmail.com",  Addr = "89 Nguyễn Đình Chiểu, Q.3",      Status = "Active",    PName = "Phạm Đức Thắng",   PPhone = "0913889900", Rel = "Bố", Created = m5 },
+                new { Id = 5,  Code = "HV-0005", Name = "Trần Gia Bảo",      Dob = "2003-08-14", Gender = "Nam", Phone = "0915227330", Email = "giabao.tran@gmail.com",     Addr = "45 Lê Duẩn, Q.1",                Status = "Active",    PName = "Trần Văn Hùng",    PPhone = "0918223344", Rel = "Bố", Created = m4 },
+                new { Id = 6,  Code = "HV-0006", Name = "Võ Hoàng Yến",      Dob = "2005-07-19", Gender = "Nữ",  Phone = "0978112334", Email = "hoangyen.vo@gmail.com",     Addr = "234 Võ Văn Tần, Q.3",            Status = "Active",    PName = "Nguyễn Mỹ Lan",    PPhone = "0977445566", Rel = "Mẹ", Created = m4 },
+                new { Id = 7,  Code = "HV-0007", Name = "Nguyễn Tiến Đạt",   Dob = "2002-12-01", Gender = "Nam", Phone = "0982334556", Email = "tiendat.nguyen@gmail.com",  Addr = "67 Trần Hưng Đạo, Q.5",          Status = "Active",    PName = "Nguyễn Tiến Thịnh",PPhone = "0983667788", Rel = "Bố", Created = m4 },
+                new { Id = 8,  Code = "HV-0008", Name = "Bùi Mai Phương",    Dob = "2004-09-30", Gender = "Nữ",  Phone = "0903778990", Email = "maiphuong.bui@gmail.com",   Addr = "19 Pasteur, Q.1",                Status = "Active",    PName = "Vũ Bích Hạnh",     PPhone = "0908990011", Rel = "Mẹ", Created = m4 },
+                new { Id = 9,  Code = "HV-0009", Name = "Đỗ Thanh Tâm",      Dob = "2003-03-05", Gender = "Nữ",  Phone = "0935661220", Email = "thanhtam.do@gmail.com",     Addr = "15 Phan Đăng Lưu, Bình Thạnh",   Status = "Active",    PName = "Đỗ Văn Kiên",      PPhone = "0938112233", Rel = "Bố", Created = m3 },
+                new { Id = 10, Code = "HV-0010", Name = "Trần Thảo Nhi",     Dob = "2005-04-12", Gender = "Nữ",  Phone = "0909887766", Email = "thaonhi.tran@gmail.com",    Addr = "102 Hai Bà Trưng, Q.1",          Status = "Active",    PName = "Trần Minh Tuấn",   PPhone = "0909112233", Rel = "Bố", Created = m3 },
+                new { Id = 11, Code = "HV-0011", Name = "Đặng Minh Trí",     Dob = "2003-06-18", Gender = "Nam", Phone = "0917223344", Email = "minhtri.dang@gmail.com",    Addr = "55 Nguyễn Trãi, Q.5",            Status = "Completed", PName = "Đặng Văn Long",    PPhone = "0917556677", Rel = "Bố", Created = m3 },
+                new { Id = 12, Code = "HV-0012", Name = "Hoàng Đức An",      Dob = "2004-02-25", Gender = "Nam", Phone = "0933445566", Email = "ducan.hoang@gmail.com",     Addr = "30 Điện Biên Phủ, Q.3",          Status = "Completed", PName = "Hoàng Thị Lan",    PPhone = "0933778899", Rel = "Mẹ", Created = m3 },
+                new { Id = 13, Code = "HV-0013", Name = "Vũ Ngọc Lan",       Dob = "2005-09-08", Gender = "Nữ",  Phone = "0944556677", Email = "ngoclan.vu@gmail.com",      Addr = "11 Võ Thị Sáu, Q.3",             Status = "Reserved",  PName = "Vũ Văn Hải",       PPhone = "0944889900", Rel = "Bố", Created = m2 },
+                new { Id = 14, Code = "HV-0014", Name = "Võ Trường Giang",   Dob = "2004-10-15", Gender = "Nam", Phone = "0937889123", Email = "truonggiang.vo@gmail.com",  Addr = "215 Nguyễn Văn Cừ, Q.5",         Status = "Active",    PName = "Võ Văn Sơn",       PPhone = "0937112244", Rel = "Bố", Created = m2 },
+                new { Id = 15, Code = "HV-0015", Name = "Lý Hải Đăng",       Dob = "2003-07-21", Gender = "Nam", Phone = "0988712345", Email = "haidang.ly@gmail.com",      Addr = "42 Đinh Tiên Hoàng, Q.1",        Status = "Active",    PName = "Lý Minh Hoàng",    PPhone = "0988114477", Rel = "Bố", Created = m2 },
+                new { Id = 16, Code = "HV-0016", Name = "Phan Thanh Trúc",   Dob = "2005-02-14", Gender = "Nữ",  Phone = "0902654789", Email = "thanhtruc.phan@gmail.com",  Addr = "168 Phan Xích Long, Phú Nhuận",  Status = "Active",    PName = "Phan Thị Tuyết",   PPhone = "0902998877", Rel = "Mẹ", Created = m2 },
+                new { Id = 17, Code = "HV-0017", Name = "Ngô Quốc Khánh",    Dob = "2004-09-02", Gender = "Nam", Phone = "0916543289", Email = "quockhanh.ngo@gmail.com",   Addr = "84 Nguyễn Thị Minh Khai, Q.3",   Status = "Active",    PName = "Ngô Đình Tuấn",    PPhone = "0916778899", Rel = "Bố", Created = m2 },
+                new { Id = 18, Code = "HV-0018", Name = "Đinh Bảo Ngọc",     Dob = "2005-11-28", Gender = "Nữ",  Phone = "0973456128", Email = "baongoc.dinh@gmail.com",    Addr = "50 Lê Văn Sỹ, Q.3",              Status = "Active",    PName = "Trương Ngọc Ánh",  PPhone = "0973889911", Rel = "Mẹ", Created = m1 },
+                new { Id = 19, Code = "HV-0019", Name = "Trịnh Tuấn Kiệt",   Dob = "2003-04-09", Gender = "Nam", Phone = "0938765412", Email = "tuankiet.trinh@gmail.com",  Addr = "129 Bạch Đằng, Bình Thạnh",      Status = "Active",    PName = "Trịnh Quốc Bảo",   PPhone = "0938223366", Rel = "Bố", Created = m1 },
+                new { Id = 20, Code = "HV-0020", Name = "Hồ Phương Thảo",    Dob = "2004-12-19", Gender = "Nữ",  Phone = "0906234891", Email = "phuongthao.ho@gmail.com",   Addr = "73 Nam Kỳ Khởi Nghĩa, Q.1",      Status = "Active",    PName = "Hồ Thị Kim Ngân",  PPhone = "0906554433", Rel = "Mẹ", Created = m1 },
+                new { Id = 21, Code = "HV-0021", Name = "Lương Gia Huy",     Dob = "2003-01-30", Gender = "Nam", Phone = "0919876543", Email = "giahuy.luong@gmail.com",    Addr = "28 Ba Tháng Hai, Q.10",          Status = "Completed", PName = "Lương Văn Tài",    PPhone = "0919223388", Rel = "Bố", Created = m1 },
+                new { Id = 22, Code = "HV-0022", Name = "Mai Bích Ngọc",     Dob = "2004-08-06", Gender = "Nữ",  Phone = "0984321789", Email = "bichngoc.mai@gmail.com",    Addr = "95 Sư Vạn Hạnh, Q.10",           Status = "Completed", PName = "Mai Thị Hồng",     PPhone = "0984665522", Rel = "Mẹ", Created = m0 },
+                new { Id = 23, Code = "HV-0023", Name = "Dương Minh Quân",   Dob = "2005-03-17", Gender = "Nam", Phone = "0932145698", Email = "minhquan.duong@gmail.com",  Addr = "140 Cộng Hòa, Tân Bình",         Status = "Active",    PName = "Dương Văn Lợi",    PPhone = "0932778844", Rel = "Bố", Created = m0 },
+                new { Id = 24, Code = "HV-0024", Name = "Cao Thùy Dương",    Dob = "2004-07-23", Gender = "Nữ",  Phone = "0975312468", Email = "thuyduong.cao@gmail.com",   Addr = "62 Hoàng Văn Thụ, Phú Nhuận",    Status = "Reserved",  PName = "Cao Minh Đức",     PPhone = "0975998811", Rel = "Bố", Created = m0 },
+                new { Id = 25, Code = "HV-0025", Name = "Tạ Quang Minh",     Dob = "2005-05-11", Gender = "Nam", Phone = "0907654321", Email = "quangminh.ta@gmail.com",    Addr = "18 Trần Quốc Thảo, Q.3",         Status = "Active",    PName = "Tạ Văn Hậu",       PPhone = "0907112299", Rel = "Bố", Created = m0 },
+                new { Id = 26, Code = "HV-0026", Name = "Lâm Nhã Kỳ",        Dob = "2004-09-25", Gender = "Nữ",  Phone = "0914789632", Email = "nhaky.lam@gmail.com",       Addr = "205 Nguyễn Thị Thập, Q.7",       Status = "Active",    PName = "Lâm Thị Thanh",    PPhone = "0914332211", Rel = "Mẹ", Created = m0 }
             };
 
             foreach (var s in students)
             {
                 conn.Execute(@"
-                    INSERT INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status)
-                    VALUES (@Id, @Code, @Name, @Dob, @Gender, @Phone, @Email, @Addr, @Status);", s);
+                    INSERT INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status, CreatedAt)
+                    VALUES (@Id, @Code, @Name, @Dob, @Gender, @Phone, @Email, @Addr, @Status, @Created);", s);
                 conn.Execute(@"
                     INSERT INTO Parents (ParentId, ParentCode, FullName, Phone, Email, Occupation)
                     VALUES (@Id, @PCode, @PName, @PPhone, '', 'Nhân viên văn phòng');",
@@ -601,24 +634,36 @@ public static class DatabaseInitializer
                     VALUES (@Id, @Id, @Rel, 1);", new { s.Id, s.Rel });
             }
 
-            // 4.6 Enrollments (HV-0009 & HV-0010 chưa xếp lớp để test Chờ xếp lớp)
+            // 4.6 Enrollments (HV-0025 & HV-0026 chưa xếp lớp để test Chờ xếp lớp)
             conn.Execute(@"
                 INSERT INTO Enrollments (EnrollmentId, StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
                 VALUES 
-                (1, 1, 1, @D1, 'Active', 8.5, 100.0),
-                (2, 2, 1, @D1, 'Active', 7.8, 100.0),
-                (3, 3, 1, @D1, 'Active', 7.2, 25.0),
-                (4, 4, 1, @D1, 'PendingPayment', NULL, 100.0),
-                (5, 5, 2, @D1, 'Active', 8.0, 100.0),
-                (6, 6, 2, @D1, 'Active', 8.4, 100.0),
-                (7, 7, 3, @D1, 'Active', 7.9, 100.0),
-                (8, 8, 3, @D1, 'Active', 7.4, 100.0),
-                (9, 11, 5, @D2, 'Completed', 8.6, 100.0),
-                (10, 12, 5, @D2, 'Completed', 8.2, 95.8),
-                (11, 13, 1, @D1, 'Reserved', NULL, 50.0);",
+                (1,  1,  1, @D1, 'Active',         8.5,  100.0),
+                (2,  2,  1, @D1, 'Active',         7.8,  100.0),
+                (3,  3,  1, @D1, 'Active',         7.2,  25.0),
+                (4,  4,  1, @D1, 'PendingPayment', NULL, 100.0),
+                (5,  5,  2, @D1, 'Active',         8.0,  100.0),
+                (6,  6,  2, @D1, 'Active',         8.4,  100.0),
+                (7,  7,  3, @D1, 'Active',         7.9,  100.0),
+                (8,  8,  3, @D1, 'Active',         7.4,  100.0),
+                (9,  11, 5, @D2, 'Completed',      8.6,  100.0),
+                (10, 12, 5, @D2, 'Completed',      8.2,  95.8),
+                (11, 13, 1, @D1, 'Reserved',       NULL, 50.0),
+                (12, 9,  4, @D1, 'Active',         8.1,  100.0),
+                (13, 10, 4, @D1, 'Active',         7.6,  100.0),
+                (14, 14, 4, @D1, 'Active',         8.0,  95.0),
+                (15, 15, 1, @D1, 'Active',         6.8,  25.0),
+                (16, 16, 2, @D1, 'Active',         8.3,  100.0),
+                (17, 17, 2, @D1, 'Active',         7.7,  100.0),
+                (18, 18, 2, @D1, 'PendingPayment', NULL, 100.0),
+                (19, 19, 3, @D1, 'Active',         8.1,  100.0),
+                (20, 20, 3, @D1, 'Active',         7.5,  100.0),
+                (21, 21, 5, @D2, 'Completed',      8.8,  100.0),
+                (22, 22, 5, @D2, 'Completed',      7.9,  91.7),
+                (23, 23, 3, @D1, 'Active',         7.8,  100.0);",
                 new { D1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd"), D2 = lastMonday.AddDays(-90).ToString("yyyy-MM-dd") });
 
-            // 4.7 AttendanceRecords (HV-0003 vắng 3 buổi để kích hoạt Cảnh báo chuyên cần)
+            // 4.7 AttendanceRecords (HV-0003 & HV-0015 vắng 3 buổi để kích hoạt Cảnh báo chuyên cần)
             conn.Execute(@"
                 INSERT INTO AttendanceRecords (ScheduleId, StudentId, Status, Note)
                 VALUES 
@@ -626,10 +671,18 @@ public static class DatabaseInitializer
                 (1, 2, 'Present', ''), (2, 2, 'Present', ''), (3, 2, 'Late', 'Đến trễ 10 phút'),
                 (1, 3, 'Absent', 'Nghỉ không phép'), (2, 3, 'Absent', 'Nghỉ không phép'), (3, 3, 'Absent', 'Nghỉ ốm'),
                 (1, 4, 'Present', ''), (2, 4, 'Present', ''), (3, 4, 'Present', ''),
-                (11, 5, 'Present', ''), (12, 5, 'Present', ''),
-                (11, 6, 'Present', ''), (12, 6, 'Present', ''),
-                (21, 7, 'Present', ''), (22, 7, 'Present', ''),
-                (21, 8, 'Present', ''), (22, 8, 'Present', '');");
+                (1, 15, 'Absent', 'Nghỉ không phép'), (2, 15, 'Absent', 'Việc gia đình'), (3, 15, 'Absent', 'Nghỉ không phép'),
+                (11, 5, 'Present', ''), (12, 5, 'Present', ''), (13, 5, 'Present', ''),
+                (11, 6, 'Present', ''), (12, 6, 'Present', ''), (13, 6, 'Present', ''),
+                (11, 16, 'Present', ''), (12, 16, 'Present', ''), (13, 16, 'Present', ''),
+                (11, 17, 'Present', ''), (12, 17, 'Present', ''), (13, 17, 'Present', ''),
+                (21, 7, 'Present', ''), (22, 7, 'Present', ''), (23, 7, 'Present', ''),
+                (21, 8, 'Present', ''), (22, 8, 'Present', ''), (23, 8, 'Present', ''),
+                (21, 19, 'Present', ''), (22, 19, 'Present', ''), (23, 19, 'Present', ''),
+                (21, 20, 'Present', ''), (22, 20, 'Present', ''), (23, 20, 'Present', ''),
+                (31, 9, 'Present', ''), (32, 9, 'Present', ''), (33, 9, 'Present', ''),
+                (31, 10, 'Present', ''), (32, 10, 'Present', ''), (33, 10, 'Present', ''),
+                (31, 14, 'Present', ''), (32, 14, 'Present', ''), (33, 14, 'Present', '');");
 
             // 4.8 Exams & ExamScores
             conn.Execute(@"
@@ -639,19 +692,31 @@ public static class DatabaseInitializer
                 (2, 1, 'Kiểm tra Cuối kỳ IELTS F01', 'Final', @FinDate, '18:00', '20:00', 1, 60.0),
                 (3, 2, 'Kiểm tra Giữa kỳ IELTS I01', 'Midterm', @MidDate, '14:00', '15:30', 2, 40.0),
                 (4, 3, 'Kiểm tra Giữa kỳ TOEIC A01', 'Midterm', @MidDate, '08:30', '10:00', 3, 40.0),
-                (5, 5, 'Thi Cuối khóa IELTS F00', 'Final', @DoneDate, '18:00', '20:00', 1, 100.0);
+                (5, 5, 'Thi Cuối khóa IELTS F00', 'Final', @DoneDate, '18:00', '20:00', 1, 100.0),
+                (6, 4, 'Kiểm tra Giữa kỳ Giao tiếp B01', 'Midterm', @MidDate, '18:00', '19:30', 4, 40.0);
 
                 INSERT INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments)
                 VALUES 
-                (1, 1, 8.5, 'Listening & Reading rất tốt'),
-                (1, 2, 7.8, 'Viết mạch lạc, cần tăng tốc độ đọc'),
-                (1, 3, 7.2, 'Cần đi học đầy đủ hơn'),
-                (3, 5, 8.0, 'Phản xạ Speaking tốt'),
-                (3, 6, 8.4, 'Tiến bộ rõ rệt'),
-                (4, 7, 7.9, 'Nắm chắc ngữ pháp TOEIC'),
-                (4, 8, 7.4, 'Cần luyện thêm Part 7'),
+                (1, 1,  8.5, 'Listening & Reading rất tốt'),
+                (1, 2,  7.8, 'Viết mạch lạc, cần tăng tốc độ đọc'),
+                (1, 3,  7.2, 'Cần đi học đầy đủ hơn'),
+                (1, 15, 6.8, 'Cần bổ sung bài tập do nghỉ học'),
+                (3, 5,  8.0, 'Phản xạ Speaking tốt'),
+                (3, 6,  8.4, 'Tiến bộ rõ rệt'),
+                (3, 16, 8.3, 'Phát âm chuẩn, từ vựng phong phú'),
+                (3, 17, 7.7, 'Ngữ pháp vững, cần tăng tốc Writing'),
+                (4, 7,  7.9, 'Nắm chắc ngữ pháp TOEIC'),
+                (4, 8,  7.4, 'Cần luyện thêm Part 7'),
+                (4, 19, 8.1, 'Làm bài đọc hiểu nhanh và chính xác'),
+                (4, 20, 7.5, 'Cần cải thiện phần nghe Part 3-4'),
+                (4, 23, 7.8, 'Tiến bộ đều qua từng tuần'),
                 (5, 11, 8.6, 'Xuất sắc, đủ điều kiện tốt nghiệp'),
-                (5, 12, 8.2, 'Giỏi, đủ điều kiện tốt nghiệp');",
+                (5, 12, 8.2, 'Giỏi, đủ điều kiện tốt nghiệp'),
+                (5, 21, 8.8, 'Xuất sắc, đạt mục tiêu đầu ra'),
+                (5, 22, 7.9, 'Khá giỏi, hoàn thành tốt khóa học'),
+                (6, 9,  8.1, 'Giao tiếp tự nhiên, phản xạ tốt'),
+                (6, 10, 7.6, 'Tự tin thuyết trình nhóm'),
+                (6, 14, 8.0, 'Phát âm rõ ràng, ngữ điệu tốt');",
                 new
                 {
                     MidDate = thisMonday.AddDays(5).ToString("yyyy-MM-dd"),
@@ -667,53 +732,80 @@ public static class DatabaseInitializer
                 (2, 'NHOM15', 'Đăng ký theo nhóm (>= 2 người)', 15, 0, 'Giảm 15% học phí khi đăng ký theo nhóm', 1, 1),
                 (3, 'EARLY500', 'Ưu đãi đăng ký sớm (Early Bird)', 0, 500000, 'Giảm trực tiếp 500.000đ khi đăng ký sớm', 0, 1);");
 
-            // 4.10 Invoices & Payments (khớp 100% học phí & công nợ)
+            // 4.10 Invoices & Payments (22 hóa đơn, phiếu thu rải đều 6 tháng để Biểu đồ doanh thu hiển thị đủ 6 cột)
             conn.Execute(@"
                 INSERT INTO Invoices (InvoiceId, InvoiceCode, EnrollmentId, OriginalAmount, DiscountAmount, FinalAmount, BalanceDue, DueDate, Status)
                 VALUES 
-                (1, 'INV-2026-0001', 1, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
-                (2, 'INV-2026-0002', 2, 5500000, 0, 5500000, 3300000, @DueSoon, 'PartiallyPaid'),
-                (3, 'INV-2026-0003', 3, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
-                (4, 'INV-2026-0004', 4, 5500000, 0, 5500000, 5500000, @DueOver, 'Unpaid'),
-                (5, 'INV-2026-0005', 5, 8500000, 850000, 7650000, 4590000, @DueSoon, 'PartiallyPaid'),
-                (6, 'INV-2026-0006', 6, 8500000, 0, 8500000, 0, @DuePaid, 'Paid'),
-                (7, 'INV-2026-0007', 7, 4800000, 0, 4800000, 0, @DuePaid, 'Paid'),
-                (8, 'INV-2026-0008', 8, 4800000, 0, 4800000, 2400000, @DueSoon, 'PartiallyPaid'),
-                (9, 'INV-2026-0009', 9, 5500000, 0, 5500000, 0, @DuePaid, 'Paid'),
-                (10, 'INV-2026-0010', 10, 5500000, 0, 5500000, 0, @DuePaid, 'Paid');",
+                (1,  'INV-2026-0001', 1,  5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (2,  'INV-2026-0002', 2,  5500000, 0,      5500000, 3300000, @DueSoon, 'PartiallyPaid'),
+                (3,  'INV-2026-0003', 3,  5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (4,  'INV-2026-0004', 4,  5500000, 0,      5500000, 5500000, @DueOver, 'Unpaid'),
+                (5,  'INV-2026-0005', 5,  8500000, 850000, 7650000, 4590000, @DueSoon, 'PartiallyPaid'),
+                (6,  'INV-2026-0006', 6,  8500000, 0,      8500000, 0,       @DuePaid, 'Paid'),
+                (7,  'INV-2026-0007', 7,  4800000, 0,      4800000, 0,       @DuePaid, 'Paid'),
+                (8,  'INV-2026-0008', 8,  4800000, 0,      4800000, 2400000, @DueSoon, 'PartiallyPaid'),
+                (9,  'INV-2026-0009', 9,  5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (10, 'INV-2026-0010', 10, 5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (11, 'INV-2026-0011', 12, 3600000, 0,      3600000, 0,       @DuePaid, 'Paid'),
+                (12, 'INV-2026-0012', 13, 3600000, 0,      3600000, 0,       @DuePaid, 'Paid'),
+                (13, 'INV-2026-0013', 14, 3600000, 0,      3600000, 0,       @DuePaid, 'Paid'),
+                (14, 'INV-2026-0014', 15, 5500000, 0,      5500000, 2750000, @DueOver, 'PartiallyPaid'),
+                (15, 'INV-2026-0015', 16, 8500000, 0,      8500000, 0,       @DuePaid, 'Paid'),
+                (16, 'INV-2026-0016', 17, 8500000, 500000, 8000000, 0,       @DuePaid, 'Paid'),
+                (17, 'INV-2026-0017', 18, 8500000, 0,      8500000, 4250000, @DueOver, 'PartiallyPaid'),
+                (18, 'INV-2026-0018', 19, 4800000, 0,      4800000, 0,       @DuePaid, 'Paid'),
+                (19, 'INV-2026-0019', 20, 4800000, 0,      4800000, 2400000, @DueSoon, 'PartiallyPaid'),
+                (20, 'INV-2026-0020', 21, 5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (21, 'INV-2026-0021', 22, 5500000, 0,      5500000, 0,       @DuePaid, 'Paid'),
+                (22, 'INV-2026-0022', 23, 4800000, 0,      4800000, 0,       @DuePaid, 'Paid');",
                 new
                 {
                     DuePaid = lastMonday.AddDays(-7).ToString("yyyy-MM-dd"),
                     DueSoon = thisMonday.AddDays(5).ToString("yyyy-MM-dd"),
-                    DueOver = lastMonday.AddDays(-2).ToString("yyyy-MM-dd")
+                    DueOver = lastMonday.AddDays(-3).ToString("yyyy-MM-dd")
                 });
 
             conn.Execute(@"
                 INSERT INTO Payments (PaymentId, PaymentCode, InvoiceId, PaidAmount, PaymentDate, PaymentMethod, CashierId, Status, Note)
                 VALUES 
-                (1, 'PT-2026-0001', 1, 5500000, @P1, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
-                (2, 'PT-2026-0002', 2, 2200000, @P2, 'Tiền mặt', @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Foundation F01'),
-                (3, 'PT-2026-0003', 3, 5500000, @P2, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
-                (4, 'PT-2026-0004', 5, 3060000, @P3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Intensive I01 (Ưu đãi HVCU10)'),
-                (5, 'PT-2026-0005', 6, 8500000, @P3, 'POS', @CashierId, 'Valid', 'Thu trọn khóa IELTS Intensive I01'),
-                (6, 'PT-2026-0006', 7, 4800000, @P3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa TOEIC 500+ A01'),
-                (7, 'PT-2026-0007', 8, 2400000, @P4, 'Tiền mặt', @CashierId, 'Valid', 'Thu đợt 1 (50%) TOEIC 500+ A01'),
-                (8, 'PT-2026-0008', 9, 5500000, @P0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
-                (9, 'PT-2026-0009', 10, 5500000, @P0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00');",
+                (1,  'PT-2026-0001', 9,  5500000, @PM5, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
+                (2,  'PT-2026-0002', 10, 5500000, @PM5, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
+                (3,  'PT-2026-0003', 20, 5500000, @PM5, 'Tiền mặt',     @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
+                (4,  'PT-2026-0004', 21, 5500000, @PM4, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F00'),
+                (5,  'PT-2026-0005', 1,  5500000, @PM4, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
+                (6,  'PT-2026-0006', 3,  5500000, @PM4, 'Tiền mặt',     @CashierId, 'Valid', 'Thu trọn khóa IELTS Foundation F01'),
+                (7,  'PT-2026-0007', 7,  4800000, @PM4, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa TOEIC 500+ A01'),
+                (8,  'PT-2026-0008', 6,  8500000, @PM3, 'POS',          @CashierId, 'Valid', 'Thu trọn khóa IELTS Intensive I01'),
+                (9,  'PT-2026-0009', 11, 3600000, @PM3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa Giao tiếp B01'),
+                (10, 'PT-2026-0010', 12, 3600000, @PM3, 'Tiền mặt',     @CashierId, 'Valid', 'Thu trọn khóa Giao tiếp B01'),
+                (11, 'PT-2026-0011', 15, 8500000, @PM3, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Intensive I01'),
+                (12, 'PT-2026-0012', 16, 8000000, @PM2, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa IELTS Intensive I01 (Ưu đãi EARLY500)'),
+                (13, 'PT-2026-0013', 18, 4800000, @PM2, 'POS',          @CashierId, 'Valid', 'Thu trọn khóa TOEIC 500+ A01'),
+                (14, 'PT-2026-0014', 13, 3600000, @PM2, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa Giao tiếp B01'),
+                (15, 'PT-2026-0015', 14, 2750000, @PM1, 'Tiền mặt',     @CashierId, 'Valid', 'Thu đợt 1 (50%) IELTS Foundation F01'),
+                (16, 'PT-2026-0016', 17, 4250000, @PM1, 'Chuyển khoản', @CashierId, 'Valid', 'Thu đợt 1 (50%) IELTS Intensive I01'),
+                (17, 'PT-2026-0017', 22, 4800000, @PM1, 'Chuyển khoản', @CashierId, 'Valid', 'Thu trọn khóa TOEIC 500+ A01'),
+                (18, 'PT-2026-0018', 2,  2200000, @PM0, 'Tiền mặt',     @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Foundation F01'),
+                (19, 'PT-2026-0019', 5,  3060000, @PM0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu đợt 1 (40%) IELTS Intensive I01 (Ưu đãi HVCU10)'),
+                (20, 'PT-2026-0020', 8,  2400000, @PM0, 'Tiền mặt',     @CashierId, 'Valid', 'Thu đợt 1 (50%) TOEIC 500+ A01'),
+                (21, 'PT-2026-0021', 19, 2400000, @PM0, 'Chuyển khoản', @CashierId, 'Valid', 'Thu đợt 1 (50%) TOEIC 500+ A01');",
                 new
                 {
                     CashierId = cashierId,
-                    P0 = lastMonday.AddDays(-85).ToString("yyyy-MM-dd 09:30:00"),
-                    P1 = lastMonday.AddDays(-14).ToString("yyyy-MM-dd 09:30:00"),
-                    P2 = lastMonday.AddDays(-10).ToString("yyyy-MM-dd 14:15:00"),
-                    P3 = lastMonday.AddDays(-5).ToString("yyyy-MM-dd 10:20:00"),
-                    P4 = thisMonday.ToString("yyyy-MM-dd 15:00:00")
+                    PM5 = m5,
+                    PM4 = m4,
+                    PM3 = m3,
+                    PM2 = m2,
+                    PM1 = m1,
+                    PM0 = m0
                 });
 
-            // 4.11 Certificates (1 đã cấp, HV-0012 đủ điều kiện chờ cấp)
+            // 4.11 Certificates (2 đã cấp cho HV-0011 & HV-0021; HV-0012 & HV-0022 đủ điều kiện chờ cấp)
             conn.Execute(@"
                 INSERT INTO Certificates (CertificateId, CertificateNo, EnrollmentId, StudentId, IssueDate, GraduationGrade)
-                VALUES (1, 'CC-2026-0001', 9, 11, @IssueDate, 'Xuất sắc');",
+                VALUES 
+                (1, 'CC-2026-0001', 9,  11, @IssueDate, 'Giỏi'),
+                (2, 'CC-2026-0002', 21, 21, @IssueDate, 'Giỏi');",
                 new { IssueDate = lastMonday.AddDays(-5).ToString("yyyy-MM-dd") });
 
             // 4.12 StudyMaterials

@@ -55,7 +55,39 @@ public partial class ScheduleManagementView : UserControl
         SetupFilters();
         SetupMatrixGrid();
         WireEvents();
-        _ = RefreshScheduleAsync();
+        _ = InitializeScheduleViewAsync();
+    }
+
+    private async Task InitializeScheduleViewAsync()
+    {
+        if (string.Equals(AppSession.RoleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase))
+        {
+            _isUpdatingFilters = true;
+            cboScheduleType.SelectedIndex = 3; // Thời khóa biểu theo giảng viên
+            _isUpdatingFilters = false;
+            await UpdateTargetFilterAsync();
+
+            if (!string.IsNullOrWhiteSpace(AppSession.FullName))
+            {
+                int idx = -1;
+                for (int i = 0; i < cboTargetFilter.Items.Count; i++)
+                {
+                    string itemText = cboTargetFilter.Items[i]?.ToString() ?? "";
+                    if (itemText.Contains(AppSession.FullName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        idx = i;
+                        break;
+                    }
+                }
+                if (idx >= 0)
+                {
+                    _isUpdatingFilters = true;
+                    cboTargetFilter.SelectedIndex = idx;
+                    _isUpdatingFilters = false;
+                }
+            }
+        }
+        await RefreshScheduleAsync();
     }
 
     private void SetupManageSchedulesButton()
@@ -63,6 +95,12 @@ public partial class ScheduleManagementView : UserControl
         btnCreateSession.Text = "Tạo buổi học";
         btnManageRooms.Text = "Quản lý phòng";
         btnManageSchedules.Text = "Quản lý lịch học";
+
+        if (string.Equals(AppSession.RoleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase))
+        {
+            btnManageRooms.Visible = false;
+            btnManageSchedules.Visible = false;
+        }
     }
 
     private void SetupFilters()
@@ -93,6 +131,9 @@ public partial class ScheduleManagementView : UserControl
             cboTargetFilter.Items.Add("-- Xem tất cả thời khóa biểu --");
             cboTargetFilter.SelectedIndex = 0;
             cboTargetFilter.Enabled = false;
+            cboTargetFilter.DropDownStyle = ComboBoxStyle.DropDown;
+            cboTargetFilter.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cboTargetFilter.AutoCompleteSource = AutoCompleteSource.ListItems;
 
             PopulateWeeksForSelectedSemester();
         }
@@ -226,7 +267,10 @@ public partial class ScheduleManagementView : UserControl
             3 => "Teacher",
             _ => "All"
         };
-        string? filterVal = filterType == "All" ? null : cboTargetFilter.SelectedItem?.ToString();
+        string? filterVal = filterType == "All"
+            ? null
+            : (cboTargetFilter.SelectedItem?.ToString() ?? cboTargetFilter.Text.Trim());
+        if (string.IsNullOrWhiteSpace(filterVal)) filterVal = null;
 
         try
         {
@@ -339,6 +383,16 @@ public partial class ScheduleManagementView : UserControl
         cboTargetFilter.SelectedIndexChanged += async (s, e) =>
         {
             if (!_isUpdatingFilters) await RefreshScheduleAsync();
+        };
+
+        cboTargetFilter.KeyDown += async (s, e) =>
+        {
+            if (e.KeyCode == Keys.Enter && !_isUpdatingFilters)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                await RefreshScheduleAsync();
+            }
         };
 
         cboWeek.SelectedIndexChanged += async (s, e) =>

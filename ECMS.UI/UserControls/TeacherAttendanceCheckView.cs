@@ -70,10 +70,13 @@ public partial class TeacherAttendanceCheckView : UserControl
             HeaderText = "Thao tác",
             Text = "Điểm danh",
             UseColumnTextForButtonValue = true,
+            FlatStyle = FlatStyle.Flat,
             Width = 110,
             MinimumWidth = 100,
             FillWeight = 11F
         };
+        actionCol.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        actionCol.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
         dgvAttendanceClasses.Columns.Add(actionCol);
 
         dgvAttendanceClasses.CellFormatting += (s, e) =>

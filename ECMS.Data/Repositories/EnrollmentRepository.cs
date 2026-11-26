@@ -455,13 +455,34 @@ public class EnrollmentRepository : BaseRepository, IEnrollmentRepository
                 EnrollStatus = enrollmentStatus
             }, tran);
 
-            // 6. Insert bảng Invoices (hỗ trợ DiscountAmount và trường hợp chưa thu phí)
+            // 6. Insert bảng Invoices (tính hạn đóng đợt tiếp theo dựa trên số buổi / ngày kết thúc lớp)
             decimal discountAmount = Math.Max(0, dto.DiscountAmount);
             decimal finalAmount = Math.Max(0, dto.TotalTuitionFee - discountAmount);
             decimal paidNow = dto.PayNow ? Math.Max(0, dto.AmountPaidNow) : 0m;
             decimal balanceDue = Math.Max(0, finalAmount - paidNow);
 
-            string dueDate = balanceDue <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : DateTime.Today.AddDays(30).ToString("yyyy-MM-dd");
+            var classDurationInfo = await conn.QueryFirstOrDefaultAsync<(int TotalSessions, string? EndDate)>(@"
+                SELECT COALESCE(co.TotalSessions, 24) AS TotalSessions, c.EndDate
+                FROM Classes c
+                LEFT JOIN Courses co ON c.CourseId = co.CourseId
+                WHERE c.ClassId = @ClassId;", new { ClassId = classId }, tran);
+
+            int totalSessions = classDurationInfo.TotalSessions > 0 ? classDurationInfo.TotalSessions : 24;
+            int courseDurationDays = Math.Max(21, (int)Math.Round(totalSessions / 3.0 * 7.0));
+            int stepDays = paidNow <= 0
+                ? 7
+                : Math.Clamp((courseDurationDays - 7) / 2, 10, 30);
+
+            DateTime nextDueDt = DateTime.Today.AddDays(stepDays);
+            if (!string.IsNullOrWhiteSpace(classDurationInfo.EndDate) &&
+                DateTime.TryParse(classDurationInfo.EndDate, out var endDt) &&
+                endDt > DateTime.Today.AddDays(10) &&
+                nextDueDt > endDt.AddDays(-7))
+            {
+                nextDueDt = endDt.AddDays(-7);
+            }
+
+            string dueDate = balanceDue <= 0 ? DateTime.Today.ToString("yyyy-MM-dd") : nextDueDt.ToString("yyyy-MM-dd");
             string invoiceStatus = balanceDue <= 0 ? "Paid" : (paidNow > 0 ? "PartiallyPaid" : "Unpaid");
 
             const string insertInvoiceSql = @"

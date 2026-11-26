@@ -179,14 +179,13 @@ public partial class DashboardOverviewView : UserControl
                 QuickDetailGridDialog.ShowDialog(
                     ParentForm,
                     "Chi tiết doanh thu 6 tháng gần nhất",
-                    "Dữ liệu thực thu từ bảng Payments và lượt ghi danh mới trong tháng",
+                    "Dữ liệu thực thu từ các phiếu thu học phí trong từng tháng",
                     dgv =>
                     {
                         dgv.Columns.Clear();
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tháng", FillWeight = 22, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số phiếu thu", FillWeight = 20, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng thực thu", FillWeight = 34, ReadOnly = true });
-                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số lượt đăng ký", FillWeight = 24, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tháng", FillWeight = 30, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số phiếu thu", FillWeight = 30, ReadOnly = true });
+                        dgv.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tổng thực thu", FillWeight = 40, ReadOnly = true });
 
                         foreach (var r in revList)
                         {
@@ -196,8 +195,7 @@ public partial class DashboardOverviewView : UserControl
                             dgv.Rows.Add(
                                 $"Tháng {monthDisplay}",
                                 $"{r.PaymentCount} phiếu",
-                                $"{r.ActualRevenueAmount:N0} đ",
-                                $"{r.NewStudentsCount} lượt");
+                                $"{r.ActualRevenueAmount:N0} đ");
                         }
 
                         dgv.ClearSelection();
