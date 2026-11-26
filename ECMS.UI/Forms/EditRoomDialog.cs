@@ -14,7 +14,7 @@ public partial class EditRoomDialog : Form
 
     public EditRoomDialog() : this(false, 0, "", "", "24", "Đang sử dụng", "")
     {
-    }
+    } 
 
     public EditRoomDialog(bool isEditMode, string roomCode, string roomName, string capacity, string status, string notes)
         : this(isEditMode, 0, roomCode, roomName, capacity, status, notes)

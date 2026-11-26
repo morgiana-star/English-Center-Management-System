@@ -396,6 +396,253 @@ public static class DatabaseInitializer
 
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);
+
+        // 3. Tự động kiểm tra và làm mới dữ liệu lớp học & sinh viên nếu dữ liệu cũ còn thiếu
+        EnsureFullAcademicSeed(conn);
+    }
+
+    private static void EnsureFullAcademicSeed(SqliteConnection conn)
+    {
+        int studentCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Students;");
+        int enrollmentCount = conn.ExecuteScalar<int>("SELECT COUNT(*) FROM Enrollments;");
+
+        // Nếu số học viên < 12 hoặc số lượt ghi danh < 40 thì tự động làm mới toàn bộ dữ liệu lớp học và học viên
+        if (studentCount < 12 || enrollmentCount < 40)
+        {
+            conn.Execute(@"
+                DELETE FROM AttendanceRecords;
+                DELETE FROM ExamScores;
+                DELETE FROM Exams;
+                DELETE FROM Payments;
+                DELETE FROM Invoices;
+                DELETE FROM Enrollments;
+                DELETE FROM ClassSchedules;
+                DELETE FROM Classes;
+                DELETE FROM Students;");
+
+            SeedStudentsAndClasses(conn);
+        }
+    }
+
+    private static void SeedStudentsAndClasses(SqliteConnection conn)
+    {
+        // 1. Thêm 15 Học viên mẫu chuẩn
+        conn.Execute(@"
+            INSERT INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status) 
+            VALUES 
+            (1,  'HV-2026-0001', 'Nguyễn Văn An',       '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1', 'Active'),
+            (2,  'HV-0241',      'Nguyễn Minh Anh',     '2004-03-12', 'Nữ',  '0912111222', 'minhanh@gmail.com', '12 Lê Lợi, Q.1', 'Active'),
+            (3,  'HV-0237',      'Lê Hoàng Nam',        '2003-08-20', 'Nam', '0912333444', 'hoangnam@gmail.com', '45 Hai Bà Trưng, Q.3', 'Active'),
+            (4,  'HV-0238',      'Phạm Khánh Linh',     '2005-01-15', 'Nữ',  '0912555666', 'khanhlinh@gmail.com', '78 Nguyễn Trãi, Q.5', 'Active'),
+            (5,  'HV-0240',      'Vũ Quang Huy',        '2004-11-09', 'Nam', '0912777888', 'quanghuy@gmail.com', '101 Cách Mạng T8, Q.10', 'Active'),
+            (6,  'HV-0242',      'Đặng Thị Thảo',       '2005-04-25', 'Nữ',  '0912999000', 'thao.dang@gmail.com', '56 Trần Phú, Q.5', 'Active'),
+            (7,  'HV-0245',      'Trần Bảo Long',       '2003-12-30', 'Nam', '0913111222', 'baolong@gmail.com', '89 Lý Thường Kiệt, Q.11', 'Active'),
+            (8,  'HV-0246',      'Hoàng Ngọc Mai',      '2004-07-14', 'Nữ',  '0913333444', 'ngocmai@gmail.com', '23 Võ Thị Sáu, Q.3', 'Active'),
+            (9,  'HV-0247',      'Đỗ Quốc Cường',       '2002-09-18', 'Nam', '0913555666', 'cuong.do@gmail.com', '67 Hoàng Văn Thụ, Q.Phú Nhuận', 'Active'),
+            (10, 'HV-0248',      'Bùi Phương Uyên',     '2005-05-22', 'Nữ',  '0913777888', 'uyen.bui@gmail.com', '34 Pasteur, Q.1', 'Active'),
+            (11, 'HV-0249',      'Ngô Gia Huy',         '2004-10-02', 'Nam', '0913999000', 'giahuy@gmail.com', '88 Nam Kỳ Khởi Nghĩa, Q.1', 'Active'),
+            (12, 'HV-0250',      'Dương Thùy Trang',    '2003-03-19', 'Nữ',  '0914111222', 'thuytrang@gmail.com', '15 Điện Biên Phủ, Q.Bình Thạnh', 'Active'),
+            (13, 'HV-0251',      'Phan Tuấn Kiệt',      '2004-06-11', 'Nam', '0914333444', 'tuankiet@gmail.com', '42 Đinh Tiên Hoàng, Q.1', 'Active'),
+            (14, 'HV-0252',      'Lâm Gia Hân',         '2005-08-08', 'Nữ',  '0914555666', 'giahan@gmail.com', '99 Nguyễn Thị Minh Khai, Q.3', 'Active'),
+            (15, 'HV-0253',      'Trịnh Minh Khôi',     '2004-12-14', 'Nam', '0914777888', 'minhkhoi@gmail.com', '124 Ba Tháng Hai, Q.10', 'Active');");
+
+        // 2. Thêm Danh sách Lớp học với đầy đủ trạng thái (Đang học, Đã kết thúc/Đã khóa, Sắp mở)
+        conn.Execute(@"
+            INSERT INTO Classes (ClassId, ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status, SchedulePattern, StartTime, EndTime)
+            VALUES 
+            (1, 'IELTS-F01', 'Lớp IELTS Foundation K12 (T3-T6)', 1, 1, 1, '2026-10-06', '2026-12-30', 20, 'InProgress', 'T3,T6', '18:00', '20:00'),
+            (2, 'IELTS-I01', 'Lớp IELTS Intensive K05 (T4-T7)', 2, 1, 3, '2026-10-15', '2027-01-15', 18, 'InProgress', 'T4,T7', '14:00', '17:00'),
+            (3, 'TOEIC-A01', 'Lớp TOEIC 500+ K08 (T3-T6)', 3, 3, 2, '2026-10-20', '2026-12-25', 20, 'InProgress', 'T3,T6', '18:30', '20:30'),
+            (4, 'COM-B01', 'Lớp Giao tiếp cơ bản K02 (T7-CN)', 4, 4, 5, '2026-11-01', '2026-12-28', 15, 'InProgress', 'T7,CN', '08:30', '11:30'),
+            (5, 'IELTS-F02', 'Lớp IELTS Foundation K11 (Đã khóa / Hoàn thành)', 1, 2, 2, '2026-06-01', '2026-08-30', 20, 'Completed', 'T2,T5', '18:00', '20:00'),
+            (6, 'COM-B02', 'Lớp Giao tiếp cơ bản K03 (T7-CN)', 4, 4, 1, '2026-11-21', '2027-01-21', 15, 'Planning', 'T7,CN', '08:30', '11:30');");
+
+        // 3. Ghi danh (Enrollments) - Mỗi lớp có từ 10 đến 12 học viên, không lớp nào bị thiếu người
+        conn.Execute(@"
+            INSERT INTO Enrollments (StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
+            VALUES 
+            -- Lớp 1 (IELTS-F01: 12 học viên)
+            (1,  1, '2026-09-28', 'Active', 8.5, 100.0),
+            (2,  1, '2026-09-28', 'Active', 8.0, 100.0),
+            (3,  1, '2026-09-29', 'Active', 7.5, 100.0),
+            (4,  1, '2026-09-29', 'Active', 8.2, 100.0),
+            (5,  1, '2026-09-30', 'Active', 6.8, 75.0),
+            (6,  1, '2026-09-30', 'Active', 5.5, 50.0),
+            (7,  1, '2026-10-01', 'Active', 8.8, 100.0),
+            (8,  1, '2026-10-01', 'Active', 7.9, 87.5),
+            (9,  1, '2026-10-02', 'Active', 7.6, 87.5),
+            (10, 1, '2026-10-02', 'Active', 8.4, 100.0),
+            (11, 1, '2026-10-03', 'Active', 7.8, 100.0),
+            (12, 1, '2026-10-03', 'Active', 8.1, 100.0),
+
+            -- Lớp 2 (IELTS-I01: 11 học viên)
+            (1,  2, '2026-10-05', 'Active', 8.0, 100.0),
+            (3,  2, '2026-10-05', 'Active', 7.5, 100.0),
+            (4,  2, '2026-10-06', 'Active', 8.2, 100.0),
+            (5,  2, '2026-10-06', 'Active', 7.0, 100.0),
+            (7,  2, '2026-10-07', 'Active', 8.5, 100.0),
+            (8,  2, '2026-10-07', 'Active', 7.8, 100.0),
+            (10, 2, '2026-10-08', 'Active', 8.0, 100.0),
+            (12, 2, '2026-10-08', 'Active', 7.6, 100.0),
+            (13, 2, '2026-10-09', 'Active', 8.3, 100.0),
+            (14, 2, '2026-10-09', 'Active', 7.9, 100.0),
+            (15, 2, '2026-10-10', 'Active', 8.1, 100.0),
+
+            -- Lớp 3 (TOEIC-A01: 10 học viên)
+            (2,  3, '2026-10-10', 'Active', 7.0, 100.0),
+            (3,  3, '2026-10-10', 'Active', 7.5, 100.0),
+            (5,  3, '2026-10-11', 'Active', 6.8, 100.0),
+            (6,  3, '2026-10-11', 'Active', 7.2, 100.0),
+            (7,  3, '2026-10-11', 'Active', 8.0, 100.0),
+            (8,  3, '2026-10-11', 'Active', 8.5, 100.0),
+            (9,  3, '2026-10-12', 'Active', 7.2, 100.0),
+            (11, 3, '2026-10-12', 'Active', 6.9, 100.0),
+            (12, 3, '2026-10-13', 'Active', 7.7, 100.0),
+            (14, 3, '2026-10-13', 'Active', 8.0, 100.0),
+
+            -- Lớp 4 (COM-B01: 10 học viên)
+            (1,  4, '2026-10-25', 'Active', 7.5, 100.0),
+            (2,  4, '2026-10-25', 'Active', 8.0, 100.0),
+            (4,  4, '2026-10-26', 'Active', 7.2, 100.0),
+            (6,  4, '2026-10-26', 'Active', 6.9, 100.0),
+            (8,  4, '2026-10-27', 'Active', 8.1, 100.0),
+            (9,  4, '2026-10-27', 'Active', 7.4, 100.0),
+            (10, 4, '2026-10-28', 'Active', 8.3, 100.0),
+            (13, 4, '2026-10-28', 'Active', 7.6, 100.0),
+            (14, 4, '2026-10-29', 'Active', 8.0, 100.0),
+            (15, 4, '2026-10-29', 'Active', 7.8, 100.0),
+
+            -- Lớp 5 (IELTS-F02: Lớp đã khóa / Hoàn thành - 10 học viên)
+            (1,  5, '2026-05-20', 'Completed', 8.5, 100.0),
+            (2,  5, '2026-05-20', 'Completed', 8.0, 95.0),
+            (3,  5, '2026-05-21', 'Completed', 7.8, 90.0),
+            (4,  5, '2026-05-21', 'Completed', 8.2, 100.0),
+            (5,  5, '2026-05-22', 'Completed', 7.0, 85.0),
+            (6,  5, '2026-05-22', 'Completed', 6.5, 80.0),
+            (7,  5, '2026-05-23', 'Completed', 8.8, 100.0),
+            (8,  5, '2026-05-23', 'Completed', 7.9, 87.5),
+            (9,  5, '2026-05-24', 'Completed', 7.6, 87.5),
+            (10, 5, '2026-05-24', 'Completed', 8.4, 100.0),
+
+            -- Lớp 6 (COM-B02: 9 học viên)
+            (3,  6, '2026-11-10', 'Active', 7.0, 100.0),
+            (5,  6, '2026-11-10', 'Active', 7.5, 100.0),
+            (6,  6, '2026-11-11', 'Active', 7.2, 100.0),
+            (7,  6, '2026-11-11', 'Active', 8.0, 100.0),
+            (9,  6, '2026-11-12', 'Active', 7.8, 100.0),
+            (11, 6, '2026-11-12', 'Active', 7.1, 100.0),
+            (12, 6, '2026-11-13', 'Active', 8.3, 100.0),
+            (13, 6, '2026-11-13', 'Active', 7.6, 100.0),
+            (15, 6, '2026-11-14', 'Active', 8.0, 100.0);");
+
+        // 4. Lịch học các lớp (ClassSchedules)
+        conn.Execute(@"
+            INSERT INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
+            VALUES 
+            -- Lớp 1 (IELTS-F01)
+            (1,  1, 1,  '2026-10-06', '18:00', '20:00', 1, 1, 1, 'Unit 1: Listening - Note Completion & Phonetics'),
+            (2,  1, 2,  '2026-10-09', '18:00', '20:00', 1, 1, 1, 'Unit 2: Reading - Skimming & Scanning Masterclass'),
+            (3,  1, 3,  '2026-11-10', '18:00', '20:00', 1, 1, 0, 'Unit 3: Speaking Part 2 - Describe a Place'),
+            (4,  1, 4,  '2026-11-13', '18:00', '20:00', 1, 1, 0, 'Unit 4: Writing Task 1 - Process Diagram'),
+            (5,  1, 5,  '2026-11-17', '18:00', '20:00', 1, 1, 0, 'Unit 5: Listening Section 3 - Multiple Choice'),
+            (6,  1, 6,  '2026-11-20', '18:00', '20:00', 1, 1, 0, 'Unit 6: Reading - True / False / Not Given'),
+
+            -- Lớp 2 (IELTS-I01)
+            (10, 2, 1,  '2026-10-15', '14:00', '17:00', 3, 1, 1, 'Unit 1: Advanced Academic Lexicon & Collocations'),
+            (11, 2, 2,  '2026-11-11', '14:00', '17:00', 3, 1, 0, 'Unit 2: Writing Task 2 - Discussion Essays'),
+            (12, 2, 3,  '2026-11-14', '14:00', '17:00', 3, 1, 0, 'Unit 3: Speaking Part 3 - Abstract Discussion'),
+            (13, 2, 4,  '2026-11-18', '14:00', '17:00', 3, 1, 0, 'Unit 4: Reading - Headings & Inference'),
+
+            -- Lớp 3 (TOEIC-A01)
+            (20, 3, 1,  '2026-10-20', '18:30', '20:30', 2, 3, 1, 'TOEIC Part 1 & 2: Photographs & Question-Response'),
+            (21, 3, 2,  '2026-11-10', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 5: Incomplete Sentences Grammar'),
+            (22, 3, 3,  '2026-11-13', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 7: Single Passages Reading'),
+            (23, 3, 4,  '2026-11-17', '18:30', '20:30', 2, 3, 0, 'TOEIC Part 6: Text Completion Tactics'),
+
+            -- Lớp 4 (COM-B01)
+            (30, 4, 1,  '2026-11-01', '08:30', '11:30', 5, 4, 1, 'Chủ đề: Greetings, Small Talk & Introducing Self'),
+            (31, 4, 2,  '2026-11-14', '08:30', '11:30', 5, 4, 0, 'Chủ đề: Restaurant & Ordering Food'),
+            (32, 4, 3,  '2026-11-15', '08:30', '11:30', 5, 4, 0, 'Chủ đề: Shopping, Inquiries & Prices'),
+
+            -- Lớp 5 (IELTS-F02: Lớp đã khóa / Hoàn thành - Tất cả các buổi đều đã khóa IsAttendanceLocked = 1)
+            (40, 5, 1,  '2026-06-02', '18:00', '20:00', 2, 2, 1, 'Unit 1: Introduction to IELTS (Khóa sổ)'),
+            (41, 5, 2,  '2026-06-05', '18:00', '20:00', 2, 2, 1, 'Unit 2: Core Vocabulary & Phonetics (Khóa sổ)'),
+            (42, 5, 3,  '2026-06-09', '18:00', '20:00', 2, 2, 1, 'Unit 3: Listening Section 1 (Khóa sổ)'),
+
+            -- Lớp 6 (COM-B02)
+            (50, 6, 1,  '2026-11-21', '08:30', '11:30', 1, 4, 0, 'Buổi 1: Định hướng học phần & Phát âm IPA'),
+            (51, 6, 2,  '2026-11-22', '08:30', '11:30', 1, 4, 0, 'Buổi 2: Giao tiếp làm quen & Phản xạ cơ bản');");
+
+        // 5. Bản ghi điểm danh các buổi đã hoàn thành / đã khóa
+        conn.Execute(@"
+            INSERT INTO AttendanceRecords (ScheduleId, StudentId, Status, Note)
+            VALUES 
+            -- Buổi 1 Lớp 1 (12 học viên)
+            (1, 1,  'Present', 'Đi học đúng giờ, tích cực phát biểu'),
+            (1, 2,  'Present', 'Nắm vững kiến thức bài học'),
+            (1, 3,  'Present', 'Luyện tập phát âm chuẩn'),
+            (1, 4,  'Present', 'Tích cực tương tác trong nhóm'),
+            (1, 5,  'Excused', 'Có đơn xin nghỉ phép vì ốm'),
+            (1, 6,  'Absent',  'Vắng không phép'),
+            (1, 7,  'Present', 'Hoàn thành bài tập tốt'),
+            (1, 8,  'Present', 'Tập trung nghe giảng'),
+            (1, 9,  'Present', 'Có tiến bộ rõ rệt'),
+            (1, 10, 'Present', 'Rất chăm chỉ'),
+            (1, 11, 'Present', 'Luyện tập tốt'),
+            (1, 12, 'Present', 'Đúng giờ'),
+
+            -- Buổi 2 Lớp 1 (12 học viên)
+            (2, 1,  'Present', 'Nắm vững kỹ thuật Skimming'),
+            (2, 2,  'Present', 'Làm bài đọc nhanh và chuẩn'),
+            (2, 3,  'Present', 'Đạt điểm test mini cao'),
+            (2, 4,  'Present', 'Tham gia thảo luận sôi nổi'),
+            (2, 5,  'Present', 'Đi học bù đầy đủ'),
+            (2, 6,  'Absent',  'Vắng không phép buổi 2'),
+            (2, 7,  'Present', 'Xuất sắc'),
+            (2, 8,  'Excused', 'Xin phép bận việc gia đình'),
+            (2, 9,  'Present', 'Đạt yêu cầu'),
+            (2, 10, 'Present', 'Chăm chỉ'),
+            (2, 11, 'Present', 'Tiến bộ'),
+            (2, 12, 'Present', 'Tốt'),
+
+            -- Buổi 1 Lớp 2 (11 học viên)
+            (10, 1,  'Present', 'Đầy đủ'),
+            (10, 3,  'Present', 'Đầy đủ'),
+            (10, 4,  'Present', 'Đầy đủ'),
+            (10, 5,  'Excused', 'Xin phép'),
+            (10, 7,  'Present', 'Đầy đủ'),
+            (10, 8,  'Present', 'Đầy đủ'),
+            (10, 10, 'Present', 'Đầy đủ'),
+            (10, 12, 'Present', 'Đầy đủ'),
+            (10, 13, 'Present', 'Đầy đủ'),
+            (10, 14, 'Present', 'Đầy đủ'),
+            (10, 15, 'Present', 'Đầy đủ'),
+
+            -- Buổi 1 Lớp 5 (10 học viên)
+            (40, 1,  'Present', 'Hoàn thành'),
+            (40, 2,  'Present', 'Hoàn thành'),
+            (40, 3,  'Present', 'Hoàn thành'),
+            (40, 4,  'Present', 'Hoàn thành'),
+            (40, 5,  'Present', 'Hoàn thành'),
+            (40, 6,  'Present', 'Hoàn thành'),
+            (40, 7,  'Present', 'Hoàn thành'),
+            (40, 8,  'Present', 'Hoàn thành'),
+            (40, 9,  'Present', 'Hoàn thành'),
+            (40, 10, 'Present', 'Hoàn thành');");
+
+        // Exams & Scores
+        conn.Execute(@"
+            INSERT INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, WeightPercentage)
+            VALUES 
+            (1, 1, 'Kiểm tra Giữa kỳ (Midterm Test)', 'Midterm', '2026-10-25', 40.0),
+            (2, 1, 'Kiểm tra Cuối kỳ (Final Test)', 'Final', '2026-12-28', 60.0);");
+
+        conn.Execute(@"
+            INSERT INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments)
+            VALUES 
+            (1, 1, 8.5, 'Listening 8.5, Reading 8.5. Rất tốt.'),
+            (1, 2, 8.0, 'Speaking 8.0, Writing 7.5. Chăm chỉ.'),
+            (1, 3, 7.5, 'Tiến bộ nhanh.');");
     }
 
     private static void SeedInitialData(SqliteConnection conn)
