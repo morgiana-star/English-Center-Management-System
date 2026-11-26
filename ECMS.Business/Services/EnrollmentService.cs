@@ -28,37 +28,100 @@ public class EnrollmentService : IEnrollmentService
         return await _enrollmentRepo.GetClassByIdAsync(classId);
     }
 
-    public async Task<(bool Success, string Message, int StudentId, string StudentCode, int EnrollmentId)> EnrollStudentAsync(StudentEnrollmentDto dto, int? currentUserId = null)
+    public async Task<IEnumerable<FeeDiscountDto>> GetActiveDiscountsAsync()
+    {
+        return await _enrollmentRepo.GetActiveDiscountsAsync();
+    }
+
+    public async Task<IEnumerable<FeeDiscountDto>> GetAllDiscountsAsync()
+    {
+        return await _enrollmentRepo.GetAllDiscountsAsync();
+    }
+
+    public async Task<FeeDiscountDto?> GetDiscountByCodeAsync(string discountCode)
+    {
+        return await _enrollmentRepo.GetDiscountByCodeAsync(discountCode);
+    }
+
+    public async Task<(bool Success, string Message)> CreateDiscountAsync(FeeDiscountDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.DiscountCode))
+            return (false, "Vui lòng nhập mã giảm giá.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountName))
+            return (false, "Vui lòng nhập tên chương trình ưu đãi.");
+        if (dto.Percentage < 0 || dto.Percentage > 100)
+            return (false, "Phần trăm giảm giá phải nằm trong khoảng từ 0 đến 100.");
+        if (dto.FixedAmount < 0)
+            return (false, "Số tiền giảm cố định không được âm.");
+        if (dto.Percentage == 0 && dto.FixedAmount == 0)
+            return (false, "Vui lòng nhập mức giảm theo phần trăm hoặc số tiền cố định.");
+
+        return await _enrollmentRepo.CreateDiscountAsync(dto);
+    }
+
+    public async Task<(bool Success, string Message)> UpdateDiscountAsync(FeeDiscountDto dto)
+    {
+        if (dto.DiscountId <= 0)
+            return (false, "Mã định danh ưu đãi không hợp lệ.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountCode))
+            return (false, "Vui lòng nhập mã giảm giá.");
+        if (string.IsNullOrWhiteSpace(dto.DiscountName))
+            return (false, "Vui lòng nhập tên chương trình ưu đãi.");
+        if (dto.Percentage < 0 || dto.Percentage > 100)
+            return (false, "Phần trăm giảm giá phải nằm trong khoảng từ 0 đến 100.");
+        if (dto.FixedAmount < 0)
+            return (false, "Số tiền giảm cố định không được âm.");
+        if (dto.Percentage == 0 && dto.FixedAmount == 0)
+            return (false, "Vui lòng nhập mức giảm theo phần trăm hoặc số tiền cố định.");
+
+        return await _enrollmentRepo.UpdateDiscountAsync(dto);
+    }
+
+    public async Task<(bool Success, string Message)> DeleteDiscountAsync(int discountId)
+    {
+        if (discountId <= 0)
+            return (false, "Mã ưu đãi không hợp lệ.");
+        return await _enrollmentRepo.DeleteDiscountAsync(discountId);
+    }
+
+    public async Task<bool> IsExistingStudentByPhoneAsync(string phone)
+    {
+        return await _enrollmentRepo.IsExistingStudentByPhoneAsync(phone);
+    }
+
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode, int EnrollmentId, string InvoiceCode, decimal FinalAmount)> EnrollStudentAsync(
+        StudentEnrollmentDto dto,
+        int? currentUserId = null)
     {
         // 1. Validate Họ và tên
         if (string.IsNullOrWhiteSpace(dto.FullName) || dto.FullName.Trim().Length < 2)
         {
-            return (false, "Họ và tên học viên không được để trống và phải có ít nhất 2 ký tự.", 0, string.Empty, 0);
+            return (false, "Họ và tên học viên không được để trống và phải có ít nhất 2 ký tự.", 0, string.Empty, 0, string.Empty, 0);
         }
 
         // 2. Validate Số điện thoại
         string phone = dto.Phone?.Trim() ?? string.Empty;
         if (string.IsNullOrWhiteSpace(phone) || !Regex.IsMatch(phone, @"^0\d{9,10}$"))
         {
-            return (false, "Số điện thoại không hợp lệ (Phải bắt đầu bằng số 0 và có từ 10 đến 11 chữ số).", 0, string.Empty, 0);
+            return (false, "Số điện thoại không hợp lệ (Phải bắt đầu bằng số 0 và có từ 10 đến 11 chữ số).", 0, string.Empty, 0, string.Empty, 0);
         }
 
         // 3. Validate Lớp học
         if (dto.ClassId <= 0)
         {
-            return (false, "Vui lòng chọn một lớp học để đăng ký xếp lớp.", 0, string.Empty, 0);
+            return (false, "Vui lòng chọn một lớp học để đăng ký xếp lớp.", 0, string.Empty, 0, string.Empty, 0);
         }
 
         var classInfo = await _enrollmentRepo.GetClassByIdAsync(dto.ClassId);
         if (classInfo == null)
         {
-            return (false, "Lớp học đã chọn không tồn tại trong hệ thống.", 0, string.Empty, 0);
+            return (false, "Lớp học đã chọn không tồn tại trong hệ thống.", 0, string.Empty, 0, string.Empty, 0);
         }
 
         // 4. Thuật toán kiểm tra sức chứa lớp (Capacity check)
         if (classInfo.CurrentStudents >= classInfo.MaxStudents)
         {
-            return (false, $"Lớp học '{classInfo.ClassName}' đã đủ sĩ số tối đa ({classInfo.CurrentStudents}/{classInfo.MaxStudents} học viên)! Vui lòng chọn lớp học khác.", 0, string.Empty, 0);
+            return (false, $"Lớp học '{classInfo.ClassName}' đã đủ sĩ số tối đa ({classInfo.CurrentStudents}/{classInfo.MaxStudents} học viên)! Vui lòng chọn lớp học khác.", 0, string.Empty, 0, string.Empty, 0);
         }
 
         // 5. Kiểm tra học viên đã tồn tại theo số điện thoại chưa
@@ -72,6 +135,7 @@ public class EnrollmentService : IEnrollmentService
             {
                 targetStudentId = existingStudentId.Value;
                 dto.StudentId = targetStudentId;
+                finalStudentCode = $"HV (Đã tồn tại - ID #{targetStudentId})";
             }
             else
             {
@@ -86,32 +150,87 @@ public class EnrollmentService : IEnrollmentService
             bool isAlreadyEnrolled = await _enrollmentRepo.CheckStudentEnrolledAsync(targetStudentId, dto.ClassId);
             if (isAlreadyEnrolled)
             {
-                return (false, $"Học viên '{dto.FullName}' ({phone}) đã được xếp vào lớp '{classInfo.ClassName}' trước đó rồi!", 0, string.Empty, 0);
+                return (false, $"Học viên '{dto.FullName}' ({phone}) đã được xếp vào lớp '{classInfo.ClassName}' trước đó rồi!", 0, string.Empty, 0, string.Empty, 0);
             }
         }
 
-        // 7. Thực thi Transaction Đăng ký lớp
+        // 7. Tính toán Học phí & Chính sách Ưu đãi (Ngày 8)
+        decimal originalAmount = classInfo.TuitionFee;
+        decimal discountAmount = 0;
+        string discountNameApplied = "Không có";
+
+        if (dto.DiscountId.HasValue && dto.DiscountId.Value > 0)
+        {
+            var discount = await _enrollmentRepo.GetDiscountByIdAsync(dto.DiscountId.Value);
+            if (discount != null)
+            {
+                discountAmount = discount.CalculateDiscount(originalAmount);
+                discountNameApplied = discount.DisplayText;
+            }
+        }
+
+        decimal finalAmount = Math.Max(0, originalAmount - discountAmount);
+
+        dto.OriginalAmount = originalAmount;
+        dto.DiscountAmount = discountAmount;
+        dto.FinalAmount = finalAmount;
         dto.FullName = dto.FullName.Trim();
         dto.Phone = phone;
         dto.Email = string.IsNullOrWhiteSpace(dto.Email) ? null : dto.Email.Trim();
         dto.Address = string.IsNullOrWhiteSpace(dto.Address) ? null : dto.Address.Trim();
 
-        var (success, msg, studentId, enrollmentId) = await _enrollmentRepo.ExecuteEnrollmentTransactionAsync(dto, finalStudentCode);
+        // 8. Sinh mã Hóa đơn chuẩn INV-yyyyMMdd-xxx
+        string invoiceCode = await _enrollmentRepo.GenerateNextInvoiceCodeAsync();
+
+        // 9. Thực thi Transaction Đăng ký lớp + Tự động sinh Hóa đơn
+        var (success, msg, studentId, enrollmentId, invoiceId, createdInvoiceCode) =
+            await _enrollmentRepo.ExecuteEnrollmentTransactionAsync(dto, finalStudentCode, invoiceCode);
+
         if (!success)
         {
-            return (false, msg, 0, string.Empty, 0);
+            return (false, msg, 0, string.Empty, 0, string.Empty, 0);
         }
 
-        // 8. Ghi vết Audit Log
+        // 10. Ghi vết Audit Log
         await _auditLogRepo.LogAsync(
             currentUserId,
-            "ENROLL_STUDENT",
-            "Enrollments",
-            enrollmentId.ToString(),
+            "ENROLL_AND_CREATE_INVOICE",
+            "Invoices",
+            invoiceId.ToString(),
             null,
-            $"Xếp lớp thành công: Học viên {dto.FullName} (ID: {studentId}) vào lớp {classInfo.ClassName} ({classInfo.CourseName}) - Sĩ số mới: {classInfo.CurrentStudents + 1}/{classInfo.MaxStudents}");
+            $"Đăng ký HV '{dto.FullName}' vào lớp {classInfo.ClassName}. Gốc: {originalAmount:N0}đ | Ưu đãi: {discountNameApplied} (-{discountAmount:N0}đ) | Thực thu: {finalAmount:N0}đ | Mã HĐ: {createdInvoiceCode}");
 
-        return (true, $"Đăng ký xếp lớp thành công!\nMã học viên: {finalStudentCode}\nLớp: {classInfo.ClassName} ({classInfo.CourseName})", studentId, finalStudentCode, enrollmentId);
+        return (true,
+            $"Đăng ký xếp lớp & Xuất hóa đơn thành công!",
+            studentId,
+            finalStudentCode,
+            enrollmentId,
+            createdInvoiceCode,
+            finalAmount);
+    }
+
+    public async Task<(bool Success, string Message, int StudentId, string StudentCode, string InvoiceCode, string ReceiptCode)> EnrollStudentWithTuitionAsync(
+        StudentEnrollmentWithTuitionDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.FullName))
+            return (false, "Họ và tên học viên không được để trống.", 0, "", "", "");
+
+        if (string.IsNullOrWhiteSpace(dto.Phone))
+            return (false, "Số điện thoại học viên không được để trống.", 0, "", "", "");
+
+        var result = await _enrollmentRepo.ExecuteEnrollmentAndTuitionTransactionAsync(dto);
+        if (result.Success)
+        {
+            await _auditLogRepo.LogAsync(
+                dto.CashierId,
+                "ENROLL_AND_PAYMENT",
+                "Enrollments",
+                result.StudentId.ToString(),
+                null,
+                $"Đăng ký & Thu phí học viên '{dto.FullName}' ({result.StudentCode}) vào lớp {dto.ClassCode}. Thực thu: {dto.AmountPaidNow:N0}đ | Nợ: {dto.RemainingDebt:N0}đ | Phiếu thu: {result.ReceiptCode}");
+        }
+
+        return result;
     }
 
     public async Task<IEnumerable<EnrollmentListItemDto>> GetRecentEnrollmentsAsync(int limit = 50)

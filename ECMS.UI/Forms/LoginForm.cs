@@ -1,180 +1,161 @@
-using System;
-using System.Drawing;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using ECMS.Business.Services;
 using ECMS.Business.Session;
-using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
-public class LoginForm : Form
+public partial class LoginForm : Form
 {
     private readonly IAuthService _authService = new AuthService();
+    private readonly IUserService _userService = new UserService();
 
-    private ModernTextBox txtUsername = null!;
-    private ModernTextBox txtPassword = null!;
-    private CustomButton btnLogin = null!;
-    private Label lblError = null!;
+    private static readonly Dictionary<string, string> UsernameAliases = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["minhquan.admin"] = "admin",
+        ["hoanganh.gv"] = "teacher",
+        ["thao.kt"] = "accountant",
+        ["academic.aa"] = "academic"
+    };
 
     public LoginForm()
     {
-        InitializeComponents();
+        InitializeComponent();
     }
 
-    private void InitializeComponents()
+    private async void LoginForm_Load(object sender, EventArgs e)
     {
-        Text = "ECMS - Đăng nhập hệ thống";
-        StartPosition = FormStartPosition.CenterScreen;
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
-        MinimizeBox = false;
-        ClientSize = new Size(440, 520);
-        BackColor = ThemeColors.AppBackground;
-
-        var card = new GlassCard
-        {
-            Location = new Point(30, 25),
-            Size = new Size(380, 465),
-            CornerRadius = 16,
-            EnableShadow = true
-        };
-
-        var lblLogo = new Label
-        {
-            Text = "ECMS",
-            Font = new Font("Segoe UI", 24, FontStyle.Bold),
-            ForeColor = ThemeColors.Primary,
-            AutoSize = false,
-            TextAlign = ContentAlignment.MiddleCenter,
-            Dock = DockStyle.Top,
-            Height = 45
-        };
-
-        var lblSubtitle = new Label
-        {
-            Text = "ENGLISH CENTER MANAGEMENT SYSTEM\nĐăng nhập hệ thống quản lý nội bộ",
-            Font = ThemeColors.FontCaption,
-            ForeColor = ThemeColors.TextMuted,
-            AutoSize = false,
-            TextAlign = ContentAlignment.MiddleCenter,
-            Location = new Point(15, 55),
-            Size = new Size(350, 36)
-        };
-
-        var lblUser = new Label
-        {
-            Text = "Tên đăng nhập:",
-            Font = ThemeColors.FontBodyBold,
-            ForeColor = ThemeColors.TextPrimary,
-            Location = new Point(25, 105),
-            AutoSize = true
-        };
-
-        txtUsername = new ModernTextBox
-        {
-            Placeholder = "Nhập tên đăng nhập...",
-            Location = new Point(25, 130),
-            Size = new Size(330, 42),
-            CornerRadius = 8,
-            Text = "admin"
-        };
-
-        var lblPass = new Label
-        {
-            Text = "Mật khẩu:",
-            Font = ThemeColors.FontBodyBold,
-            ForeColor = ThemeColors.TextPrimary,
-            Location = new Point(25, 185),
-            AutoSize = true
-        };
-
-        txtPassword = new ModernTextBox
-        {
-            Placeholder = "Nhập mật khẩu...",
-            UseSystemPasswordChar = true,
-            Location = new Point(25, 210),
-            Size = new Size(330, 42),
-            CornerRadius = 8,
-            Text = "Admin@123"
-        };
-
-        lblError = new Label
-        {
-            Text = "",
-            Font = new Font("Segoe UI", 9f),
-            ForeColor = ThemeColors.DangerText,
-            Location = new Point(25, 260),
-            Size = new Size(330, 35),
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-
-        btnLogin = new CustomButton
-        {
-            Text = "ĐĂNG NHẬP HỆ THỐNG",
-            NormalColor = ThemeColors.Primary,
-            HoverColor = ThemeColors.PrimaryHover,
-            Location = new Point(25, 305),
-            Size = new Size(330, 44),
-            CornerRadius = 8
-        };
-        btnLogin.Click += async (s, e) => await HandleLoginAsync();
-
-        var lblHint = new Label
-        {
-            Text = "Gợi ý: admin | manager | counselor | accountant\nacademic | teacher | student | parent\n(Mật khẩu mặc định: [Tên]@123)",
-            Font = new Font("Segoe UI", 8.2f, FontStyle.Italic),
-            ForeColor = ThemeColors.TextMuted,
-            AutoSize = false,
-            TextAlign = ContentAlignment.MiddleCenter,
-            Location = new Point(15, 365),
-            Size = new Size(350, 55)
-        };
-
-        card.Controls.Add(lblLogo);
-        card.Controls.Add(lblSubtitle);
-        card.Controls.Add(lblUser);
-        card.Controls.Add(txtUsername);
-        card.Controls.Add(lblPass);
-        card.Controls.Add(txtPassword);
-        card.Controls.Add(lblError);
-        card.Controls.Add(btnLogin);
-        card.Controls.Add(lblHint);
-
-        Controls.Add(card);
-
-        AcceptButton = btnLogin;
-    }
-
-    private async Task HandleLoginAsync()
-    {
-        lblError.Text = "Đang kiểm tra thông tin đăng nhập...";
-        lblError.ForeColor = ThemeColors.Primary;
-        btnLogin.Enabled = false;
+        txtUsername.Text = string.Empty;
+        txtPassword.Text = string.Empty;
 
         try
         {
-            var result = await _authService.LoginAsync(txtUsername.Text, txtPassword.Text);
-            if (result.Success && result.Session != null)
+            var cfg = await new SystemConfigService().GetCenterConfigAsync();
+            if (!string.IsNullOrWhiteSpace(cfg.AppName))
+                Text = cfg.AppName;
+            if (!string.IsNullOrWhiteSpace(cfg.CenterShortName))
+                lblBrand.Text = cfg.CenterShortName;
+            if (!string.IsNullOrWhiteSpace(cfg.CenterName))
+                lblCenter.Text = $"HỆ THỐNG QUẢN LÝ ĐÀO TẠO\r\n{cfg.CenterName}";
+            if (!string.IsNullOrWhiteSpace(cfg.LogoPath) && System.IO.File.Exists(cfg.LogoPath))
             {
-                SessionManager.SetSession(result.Session);
-                DialogResult = DialogResult.OK;
-                Close();
+                using var fs = new System.IO.FileStream(cfg.LogoPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = System.Drawing.Image.FromStream(fs);
+                picLogo.Image = new System.Drawing.Bitmap(img);
             }
-            else
+        }
+        catch
+        {
+            // Giữ thương hiệu mặc định nếu CSDL chưa cấu hình
+        }
+    }
+
+    private void chkShowPass_CheckedChanged(object sender, EventArgs e)
+    {
+        txtPassword.UseSystemPasswordChar = !chkShowPass.Checked;
+    }
+
+    private async void btnLogin_Click(object sender, EventArgs e)
+    {
+        string username = txtUsername.Text.Trim();
+        string password = txtPassword.Text;
+
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            lblError.Text = "* Vui lòng nhập đầy đủ tài khoản và mật khẩu!";
+            lblError.Visible = true;
+            return;
+        }
+
+        btnLogin.Enabled = false;
+        Cursor = Cursors.WaitCursor;
+
+        try
+        {
+            var result = await _authService.LoginAsync(username, password);
+
+            // Hỗ trợ tên đăng nhập tắt quen thuộc nếu tài khoản gõ chưa tồn tại trực tiếp
+            if (!result.Success && UsernameAliases.TryGetValue(username, out string? mappedUsername))
             {
-                lblError.ForeColor = ThemeColors.DangerText;
-                lblError.Text = result.Message;
+                var retryResult = await _authService.LoginAsync(mappedUsername, password);
+                if (retryResult.Success || !retryResult.Message.Contains("không chính xác"))
+                {
+                    result = retryResult;
+                }
+            }
+
+            if (!result.Success || result.Session == null)
+            {
+                lblError.Text = $"* {result.Message}";
+                lblError.Visible = true;
                 txtPassword.Focus();
+                txtPassword.SelectAll();
+                return;
             }
+
+            var session = result.Session;
+
+            // Đã loại bỏ vai trò Học viên & Phụ huynh khỏi cổng nội bộ
+            if (session.RoleCode is "ROLE_STU" or "ROLE_PAR")
+            {
+                lblError.Text = "* Tài khoản Học viên / Phụ huynh không có quyền truy cập hệ thống quản trị nội bộ!";
+                lblError.Visible = true;
+                return;
+            }
+
+            // Đồng bộ phiên đăng nhập tầng Business và tầng UI
+            SessionManager.SetSession(session);
+
+            var detail = await _userService.GetUserByIdAsync(session.UserId);
+            string displayName = session.FullName;
+            if (string.IsNullOrWhiteSpace(displayName) || displayName.Equals(session.Username, StringComparison.OrdinalIgnoreCase))
+            {
+                displayName = session.RoleCode == "ROLE_ADMIN"
+                    ? "Trần Minh Quân"
+                    : (detail?.FullName ?? session.Username);
+            }
+
+            AppSession.UserId = session.UserId;
+            AppSession.Username = session.Username;
+            AppSession.FullName = displayName;
+            AppSession.RoleCode = session.RoleCode;
+            AppSession.RoleName = detail?.RoleName ?? session.RoleName;
+            AppSession.Email = detail?.Email?.Trim() ?? string.Empty;
+            AppSession.Phone = detail?.Phone?.Trim() ?? string.Empty;
+            AppSession.SignerTitle = AppSession.GetSignerRoleTitle();
+            AppSession.JobTitle = AppSession.RoleName;
+            AppSession.CreatedDate = detail?.CreatedAt.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy");
+            AppSession.LastLogin = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            AppSession.Permissions = session.Permissions;
+
+            lblError.Visible = false;
+
+            // Nếu tài khoản được đánh dấu bắt buộc đổi mật khẩu lần đầu -> mở popup đổi mật khẩu trước khi vào hệ thống
+            if (session.MustChangePassword)
+            {
+                using var forceDlg = new ForceChangePasswordDialog(session.UserId, session.Username, displayName, password);
+                if (forceDlg.ShowDialog(this) != DialogResult.OK)
+                {
+                    lblError.Text = "* Bạn cần đổi mật khẩu mới để tiếp tục đăng nhập hệ thống.";
+                    lblError.Visible = true;
+                    return;
+                }
+            }
+
+            Hide();
+            var mainForm = new MainForm();
+            mainForm.FormClosed += (s, args) => Close();
+            mainForm.Show();
         }
         catch (Exception ex)
         {
-            lblError.ForeColor = ThemeColors.DangerText;
-            lblError.Text = "Lỗi kết nối: " + ex.Message;
+            lblError.Text = $"* Lỗi kết nối cơ sở dữ liệu: {ex.Message}";
+            lblError.Visible = true;
         }
         finally
         {
+            Cursor = Cursors.Default;
             btnLogin.Enabled = true;
         }
     }

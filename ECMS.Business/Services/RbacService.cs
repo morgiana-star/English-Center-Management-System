@@ -108,4 +108,64 @@ public class RbacService : IRbacService
 
         return (true, $"Đã khôi phục phân quyền mặc định thành công cho vai trò '{role.RoleName}'.");
     }
+
+    public Task<List<RbacMatrixRowDto>> GetSidebarMatrixAsync()
+        => _rbacRepo.GetSidebarMatrixAsync();
+
+    public async Task<List<RbacMatrixRowDto>> ResetSidebarMatrixToDefaultAsync()
+    {
+        var defaults = RbacRepository.GetDefaultSidebarMatrix();
+        int currentAdminId = SessionManager.CurrentUser?.UserId ?? 1;
+        await _rbacRepo.SaveSidebarMatrixAsync(defaults, currentAdminId);
+        return defaults;
+    }
+
+    public async Task<(bool Success, string Message)> SaveSidebarMatrixAsync(List<RbacMatrixRowDto> rows, int currentAdminId)
+    {
+        foreach (var r in rows)
+        {
+            r.AdminAccess = "Toàn quyền";
+        }
+        bool ok = await _rbacRepo.SaveSidebarMatrixAsync(rows, currentAdminId);
+        return ok
+            ? (true, "Đã lưu ma trận phân quyền vào cơ sở dữ liệu. Thay đổi sẽ có hiệu lực ngay khi đăng nhập.")
+            : (false, "Lưu ma trận phân quyền thất bại.");
+    }
+
+    public async Task<Dictionary<string, string>> GetModuleAccessMapForRoleAsync(string roleCode)
+    {
+        var rows = await _rbacRepo.GetSidebarMatrixAsync();
+        var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var r in rows)
+        {
+            string val = roleCode switch
+            {
+                "ROLE_ADMIN" => "Toàn quyền",
+                "ROLE_MGR" => r.ManagerAccess,
+                "ROLE_AA" => r.AcademicAccess,
+                "ROLE_EC" => r.CounselorAccess,
+                "ROLE_ACC" => r.AccountantAccess,
+                "ROLE_TEA" => r.TeacherAccess,
+                _ => "Không có quyền"
+            };
+            map[r.ModuleKey] = string.IsNullOrWhiteSpace(val) ? "Không có quyền" : val.Trim();
+        }
+
+        return map;
+    }
+
+    public async Task<HashSet<string>> GetAllowedModuleKeysForRoleAsync(string roleCode)
+    {
+        var map = await GetModuleAccessMapForRoleAsync(roleCode);
+        var allowed = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kv in map)
+        {
+            if (!kv.Value.Contains("Không", StringComparison.OrdinalIgnoreCase))
+            {
+                allowed.Add(kv.Key);
+            }
+        }
+        return allowed;
+    }
 }

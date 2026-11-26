@@ -1,5 +1,5 @@
 # DỰ ÁN: ENGLISH CENTER MANAGEMENT SYSTEM (ECMS)
-> Hệ thống Quản lý Trung tâm Anh ngữ toàn diện trên nền tảng Desktop C# (.NET 8 WinForms, SQLite 100% Offline).
+> Hệ thống Quản lý Trung tâm Anh ngữ toàn diện trên nền tảng Desktop C# (.NET 10 WinForms, SQLite 100% Offline).
 
 ---
 
@@ -12,12 +12,17 @@
 4. Khi ứng dụng khởi chạy lần đầu:
    - `DatabaseInitializer` sẽ tự động tạo thư mục và tệp CSDL SQLite tại: `%APPDATA%\ECMS\ecms_data.db`.
    - Tự động sinh đầy đủ **26 bảng dữ liệu chuẩn 3NF**, khóa ngoại và thiết lập cờ `PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;`.
-   - Nạp sẵn tài khoản Admin mặc định và danh mục 6 vai trò chuẩn.
+   - Nạp sẵn tài khoản kiểm thử mặc định cho các vai trò nhân sự.
 
-### Tài khoản đăng nhập mặc định:
-- **Tên đăng nhập (Username)**: `admin`
-- **Mật khẩu (Password)**: `Admin@123`
-- **Vai trò**: `ROLE_ADMIN` (Quản trị hệ thống)
+### Danh sách tài khoản đăng nhập kiểm thử (Seed Data):
+| Tên đăng nhập | Mật khẩu mặc định | Mã vai trò | Vai trò / Bộ phận |
+| :--- | :--- | :--- | :--- |
+| **`admin`** | `Admin@123` | `ROLE_ADMIN` | Quản trị hệ thống (Toàn quyền) |
+| **`manager`** | `Manager@123` | `ROLE_MGR` | Quản lý trung tâm (Giám đốc) |
+| **`counselor`** | `Counselor@123` | `ROLE_EC` | Tư vấn tuyển sinh |
+| **`accountant`** | `Accountant@123` | `ROLE_ACC` | Kế toán / Thu ngân |
+| **`academic`** | `Academic@123` | `ROLE_AA` | Giáo vụ đào tạo |
+| **`teacher`** | `Teacher@123` | `ROLE_TEA` | Giáo viên giảng dạy |
 
 ---
 
@@ -27,7 +32,8 @@ Dự án được tổ chức theo 4 tầng tách biệt rõ ràng:
 
 ```
 ECMS/
-├── Docs/                               # Bộ tài liệu đặc tả nghiệp vụ
+├── Docs/                               # Bộ tài liệu đặc tả nghiệp vụ & Kịch bản kiểm thử
+│   ├── ECMS_Testing_Scenarios_And_QA_Guide.md (Bộ Test Cases & Checklist nghiệm thu)
 │   ├── ECMS_Requirements_Analysis_and_Project_Roadmap.xlsx (12 Sheets chi tiết)
 │   └── ECMS_Requirements_Analysis_and_Project_Roadmap.docx (11 Chương tài liệu SRS)
 │
@@ -44,10 +50,10 @@ ECMS/
 │   ├── Services/                       # AuthService, ScheduleService, AttendanceService, FinanceService, StudentService...
 │   └── Session/                        # SessionManager (Lưu vết phiên làm việc người dùng hiện tại)
 │
-└── ECMS.UI/                            # Tầng giao diện người dùng WinForms (.NET 8)
+└── ECMS.UI/                            # Tầng giao diện người dùng WinForms (.NET 10)
     ├── Controls/                       # Custom Controls Glassmorphism (RoundedPanel, GlassCard...)
-    ├── Forms/                          # MainForm, LoginForm
-    └── UserControls/                   # DashboardView, StudentListView, ScheduleCalendarView...
+    ├── Forms/                          # MainForm, LoginForm, Dialogs
+    └── UserControls/                   # DashboardOverviewView, StudentManagementView, SystemConfigView...
 ```
 
 ---
@@ -62,7 +68,8 @@ ECMS/
 
 ---
 
-## 4. TÀI LIỆU NGHIỆP VỤ ĐÍNH KÈM
-Toàn bộ chi tiết về 23 phân hệ, ma trận phân quyền, thiết kế 26 bảng và 20 luồng End-to-End đã có sẵn tại thư mục `Docs/`:
+## 4. TÀI LIỆU NGHIỆP VỤ & KIỂM THỬ ĐÍNH KÈM
+Toàn bộ chi tiết về phân hệ, ma trận phân quyền, thiết kế CSDL và kịch bản kiểm thử có sẵn tại thư mục `Docs/`:
+- [`ECMS_Testing_Scenarios_And_QA_Guide.md`](Docs/ECMS_Testing_Scenarios_And_QA_Guide.md) - **Tài liệu kịch bản kiểm thử chi tiết & Checklist nghiệm thu**
 - [`ECMS_Requirements_Analysis_and_Project_Roadmap.xlsx`](Docs/ECMS_Requirements_Analysis_and_Project_Roadmap.xlsx)
 - [`ECMS_Requirements_Analysis_and_Project_Roadmap.docx`](Docs/ECMS_Requirements_Analysis_and_Project_Roadmap.docx)

@@ -9,7 +9,6 @@ public enum UserRoleType
     AcademicAffairs,
     Teacher,
     Student,
-    Parent
 }
 
 public enum StudentStatus

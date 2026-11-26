@@ -35,7 +35,7 @@ public class UserRepository : BaseRepository, IUserRepository
             LEFT JOIN Teachers t ON u.TeacherId = t.TeacherId
             LEFT JOIN Students s ON u.StudentId = s.StudentId
             LEFT JOIN Parents p ON u.ParentId = p.ParentId
-            WHERE 1=1 ");
+            WHERE COALESCE(r.RoleCode, '') NOT IN ('ROLE_STU', 'ROLE_PAR') ");
 
         var param = new DynamicParameters();
 
@@ -121,7 +121,8 @@ public class UserRepository : BaseRepository, IUserRepository
     public async Task<IEnumerable<Role>> GetRolesAsync()
     {
         using var conn = CreateConnection();
-        return await conn.QueryAsync<Role>("SELECT * FROM Roles ORDER BY RoleId ASC;");
+        return await conn.QueryAsync<Role>(
+            "SELECT * FROM Roles WHERE RoleCode NOT IN ('ROLE_STU', 'ROLE_PAR') ORDER BY RoleId ASC;");
     }
 
     public async Task<int> CreateUserWithProfileAsync(CreateUserDto dto, string passwordHash, int currentAdminId)
@@ -143,7 +144,7 @@ public class UserRepository : BaseRepository, IUserRepository
             if (role != null && role.RoleCode == "ROLE_TEA")
             {
                 int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
-                string teacherCode = $"GV-{(teacherCount + 1):D4}";
+                string teacherCode = $"GV-{(teacherCount + 1):D3}";
 
                 string insTeacherSql = @"
                     INSERT INTO Teachers (TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive)
@@ -162,7 +163,7 @@ public class UserRepository : BaseRepository, IUserRepository
             else
             {
                 int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
-                string empCode = $"NV-{(empCount + 1):D4}";
+                string empCode = $"NV-{(empCount + 1):D3}";
 
                 string dept = role?.RoleCode switch
                 {
@@ -192,8 +193,8 @@ public class UserRepository : BaseRepository, IUserRepository
 
             // 2. Insert into Users
             string insUserSql = @"
-                INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, IsActive, FailedLoginAttempts)
-                VALUES (@Username, @PasswordHash, 'salt', @EmployeeId, @TeacherId, @IsActive, 0);
+                INSERT INTO Users (Username, PasswordHash, PasswordSalt, EmployeeId, TeacherId, IsActive, FailedLoginAttempts, MustChangePassword)
+                VALUES (@Username, @PasswordHash, 'salt', @EmployeeId, @TeacherId, @IsActive, 0, @MustChangePassword);
                 SELECT last_insert_rowid();";
 
             int newUserId = (int)await conn.ExecuteScalarAsync<long>(insUserSql, new
@@ -202,7 +203,8 @@ public class UserRepository : BaseRepository, IUserRepository
                 PasswordHash = passwordHash,
                 EmployeeId = employeeId,
                 TeacherId = teacherId,
-                IsActive = dto.IsActive ? 1 : 0
+                IsActive = dto.IsActive ? 1 : 0,
+                MustChangePassword = dto.MustChangePassword ? 1 : 0
             }, transaction: trans);
 
             // 3. Assign Role in UserRoles
@@ -287,6 +289,25 @@ public class UserRepository : BaseRepository, IUserRepository
                         user.TeacherId
                     },
                     transaction: trans);
+            }
+            else
+            {
+                int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
+                int newEmpId = (int)await conn.ExecuteScalarAsync<long>(@"
+                    INSERT INTO Employees (EmployeeCode, FullName, Department, Phone, Email, IsActive)
+                    VALUES (@Code, @FullName, 'Quản trị hệ thống', @Phone, @Email, 1);
+                    SELECT last_insert_rowid();",
+                    new
+                    {
+                        Code = $"NV-{(empCount + 10):D4}",
+                        FullName = dto.FullName.Trim(),
+                        Phone = dto.Phone?.Trim() ?? string.Empty,
+                        Email = dto.Email?.Trim()
+                    },
+                    transaction: trans);
+
+                await conn.ExecuteAsync("UPDATE Users SET EmployeeId = @EmpId WHERE UserId = @UserId;",
+                    new { EmpId = newEmpId, dto.UserId }, transaction: trans);
             }
 
             if (!string.IsNullOrWhiteSpace(newPasswordHash))
@@ -487,7 +508,7 @@ public class UserRepository : BaseRepository, IUserRepository
             new { UserId = userId });
     }
 
-    public async Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason)
+    public async Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason, bool mustChangePassword = true)
     {
         using var conn = CreateConnection();
         using var trans = conn.BeginTransaction();
@@ -506,9 +527,10 @@ public class UserRepository : BaseRepository, IUserRepository
                 SET PasswordHash = @PasswordHash, 
                     FailedLoginAttempts = 0, 
                     LockoutEnd = NULL, 
+                    MustChangePassword = @MustChange,
                     UpdatedAt = CURRENT_TIMESTAMP 
                 WHERE UserId = @UserId;",
-                new { PasswordHash = newPasswordHash, UserId = targetUserId },
+                new { PasswordHash = newPasswordHash, MustChange = mustChangePassword ? 1 : 0, UserId = targetUserId },
                 transaction: trans);
 
             await conn.ExecuteAsync(@"
@@ -551,6 +573,7 @@ public class UserRepository : BaseRepository, IUserRepository
                 SET PasswordHash = @PasswordHash, 
                     FailedLoginAttempts = 0, 
                     LockoutEnd = NULL, 
+                    MustChangePassword = 0,
                     UpdatedAt = CURRENT_TIMESTAMP 
                 WHERE UserId = @UserId;",
                 new { PasswordHash = newPasswordHash, UserId = userId },
@@ -577,17 +600,165 @@ public class UserRepository : BaseRepository, IUserRepository
         }
     }
 
+    public async Task<bool> UpdateOwnProfileAsync(int userId, string fullName, string? email, string? phone)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = userId },
+                transaction: trans);
+
+            if (user == null) return false;
+
+            if (user.EmployeeId.HasValue)
+            {
+                await conn.ExecuteAsync(@"
+                    UPDATE Employees 
+                    SET FullName = @FullName, Email = @Email, Phone = @Phone, UpdatedAt = CURRENT_TIMESTAMP
+                    WHERE EmployeeId = @EmpId;",
+                    new { FullName = fullName.Trim(), Email = email?.Trim(), Phone = phone?.Trim() ?? "", EmpId = user.EmployeeId.Value },
+                    transaction: trans);
+            }
+            else if (user.TeacherId.HasValue)
+            {
+                await conn.ExecuteAsync(@"
+                    UPDATE Teachers 
+                    SET FullName = @FullName, Email = @Email, Phone = @Phone, UpdatedAt = CURRENT_TIMESTAMP
+                    WHERE TeacherId = @TeaId;",
+                    new { FullName = fullName.Trim(), Email = email?.Trim(), Phone = phone?.Trim() ?? "", TeaId = user.TeacherId.Value },
+                    transaction: trans);
+            }
+            else
+            {
+                int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
+                int newEmpId = (int)await conn.ExecuteScalarAsync<long>(@"
+                    INSERT INTO Employees (EmployeeCode, FullName, Department, Phone, Email, IsActive)
+                    VALUES (@Code, @FullName, 'Quản trị hệ thống', @Phone, @Email, 1);
+                    SELECT last_insert_rowid();",
+                    new { Code = $"NV-{(empCount + 10):D4}", FullName = fullName.Trim(), Phone = phone?.Trim() ?? "", Email = email?.Trim() },
+                    transaction: trans);
+
+                await conn.ExecuteAsync("UPDATE Users SET EmployeeId = @EmpId WHERE UserId = @UserId;",
+                    new { EmpId = newEmpId, UserId = userId }, transaction: trans);
+            }
+
+            trans.Commit();
+            return true;
+        }
+        catch
+        {
+            trans.Rollback();
+            throw;
+        }
+    }
+
+    public async Task<(bool Success, string Message)> DeleteUserAsync(int targetUserId, int currentAdminId)
+    {
+        using var conn = CreateConnection();
+        using var trans = conn.BeginTransaction();
+
+        try
+        {
+            var user = await conn.QuerySingleOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE UserId = @UserId;",
+                new { UserId = targetUserId },
+                transaction: trans);
+
+            if (user == null)
+            {
+                return (false, "Không tìm thấy tài khoản cần xóa.");
+            }
+
+            if (user.Username.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return (false, "Không thể xóa tài khoản quản trị gốc (admin).");
+            }
+
+            int paymentRefs = await conn.ExecuteScalarAsync<int>(
+                "SELECT COUNT(*) FROM Payments WHERE CashierId = @UserId;",
+                new { UserId = targetUserId }, transaction: trans);
+
+            int teacherRefs = 0;
+            if (user.TeacherId.HasValue)
+            {
+                teacherRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM Classes WHERE MainTeacherId = @TId;",
+                    new { TId = user.TeacherId.Value }, transaction: trans);
+                teacherRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM ClassSchedules WHERE TeacherId = @TId;",
+                    new { TId = user.TeacherId.Value }, transaction: trans);
+            }
+
+            int empRefs = 0;
+            if (user.EmployeeId.HasValue)
+            {
+                empRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM Leads WHERE AssignedEmployeeId = @EId;",
+                    new { EId = user.EmployeeId.Value }, transaction: trans);
+                empRefs += await conn.ExecuteScalarAsync<int>(
+                    "SELECT COUNT(*) FROM ConsultationLogs WHERE CounselorId = @EId;",
+                    new { EId = user.EmployeeId.Value }, transaction: trans);
+            }
+
+            if (paymentRefs > 0 || teacherRefs > 0 || empRefs > 0)
+            {
+                return (false, "Tài khoản này đã phát sinh dữ liệu nghiệp vụ (hóa đơn, lớp học, lịch dạy hoặc tư vấn). Vui lòng dùng chức năng 'Khóa' thay vì xóa vĩnh viễn.");
+            }
+
+            await conn.ExecuteAsync("UPDATE AuditLogs SET UserId = NULL WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+            await conn.ExecuteAsync("DELETE FROM UserRoles WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+            await conn.ExecuteAsync("DELETE FROM Users WHERE UserId = @UserId;", new { UserId = targetUserId }, transaction: trans);
+
+            if (user.TeacherId.HasValue)
+            {
+                await conn.ExecuteAsync("DELETE FROM Teachers WHERE TeacherId = @TId;", new { TId = user.TeacherId.Value }, transaction: trans);
+            }
+            if (user.EmployeeId.HasValue)
+            {
+                await conn.ExecuteAsync("DELETE FROM Employees WHERE EmployeeId = @EId;", new { EId = user.EmployeeId.Value }, transaction: trans);
+            }
+
+            await conn.ExecuteAsync(@"
+                INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
+                VALUES (@AdminId, 'DELETE_USER', 'Users', @RecordId, @NewValues);",
+                new
+                {
+                    AdminId = currentAdminId,
+                    RecordId = targetUserId.ToString(),
+                    NewValues = $"Đã xóa tài khoản '{user.Username}'"
+                },
+                transaction: trans);
+
+            trans.Commit();
+            return (true, $"Đã xóa thành công tài khoản '{user.Username}'.");
+        }
+        catch (Exception ex)
+        {
+            trans.Rollback();
+            return (false, $"Lỗi khi xóa tài khoản: {ex.Message}");
+        }
+    }
+
     public async Task<AdminTelemetryDto> GetTelemetryAsync()
     {
         using var conn = CreateConnection();
 
-        int totalUsers = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users;");
-        int activeUsers = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users WHERE IsActive = 1;");
-        int lockedUsers = await conn.ExecuteScalarAsync<int>(@"
-            SELECT COUNT(*) FROM Users 
-            WHERE IsActive = 0 
-               OR FailedLoginAttempts >= 5 
-               OR (LockoutEnd IS NOT NULL AND (LockoutEnd > datetime('now', 'localtime') OR LockoutEnd > CURRENT_TIMESTAMP));");
+        const string internalWhere = @"
+            FROM Users u
+            LEFT JOIN UserRoles ur ON u.UserId = ur.UserId
+            LEFT JOIN Roles r ON ur.RoleId = r.RoleId
+            WHERE COALESCE(r.RoleCode, '') NOT IN ('ROLE_STU', 'ROLE_PAR')";
+
+        int totalUsers = await conn.ExecuteScalarAsync<int>($"SELECT COUNT(*) {internalWhere};");
+        int activeUsers = await conn.ExecuteScalarAsync<int>($"SELECT COUNT(*) {internalWhere} AND u.IsActive = 1;");
+        int lockedUsers = await conn.ExecuteScalarAsync<int>($@"
+            SELECT COUNT(*) {internalWhere}
+              AND (u.IsActive = 0 
+               OR u.FailedLoginAttempts >= 5 
+               OR (u.LockoutEnd IS NOT NULL AND (u.LockoutEnd > datetime('now', 'localtime') OR u.LockoutEnd > CURRENT_TIMESTAMP)));");
         int auditCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM AuditLogs;");
 
         return new AdminTelemetryDto

@@ -13,6 +13,7 @@ public class UserSession
     public int? TeacherId { get; set; }
     public int? StudentId { get; set; }
     public int? ParentId { get; set; }
+    public bool MustChangePassword { get; set; }
     public HashSet<string> Permissions { get; set; } = new();
 
     public bool HasPermission(string permissionCode)

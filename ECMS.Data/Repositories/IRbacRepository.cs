@@ -14,4 +14,6 @@ public interface IRbacRepository
     Task<IEnumerable<string>> GetModulesAsync();
     Task<bool> UpdateRolePermissionsAsync(int roleId, IEnumerable<int> permissionIds, int currentAdminId);
     Task<bool> ResetRolePermissionsToDefaultAsync(int roleId, int currentAdminId);
+    Task<List<RbacMatrixRowDto>> GetSidebarMatrixAsync();
+    Task<bool> SaveSidebarMatrixAsync(List<RbacMatrixRowDto> rows, int currentAdminId);
 }

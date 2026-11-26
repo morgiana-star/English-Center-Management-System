@@ -1,0 +1,465 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
+using ECMS.UI.Controls;
+using ECMS.UI.Forms;
+
+namespace ECMS.UI.UserControls;
+
+/// <summary>
+/// UserControl Quản lý học viên (100% Dữ liệu thật SQLite)
+/// </summary>
+public partial class StudentManagementView : UserControl
+{
+    private readonly IStudentService _studentService = new StudentService();
+    private readonly IEnrollmentService _enrollmentService = new EnrollmentService();
+    private List<StudentListItemDto> _allStudents = new();
+    private List<ClassFilterItemDto> _classFilterOptions = new();
+    private StudentOverviewStatsDto _latestStats = new();
+    private bool _isLoadingFilter = false;
+
+    public StudentManagementView()
+    {
+        InitializeComponent();
+
+        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
+            return;
+
+        SetupGridColumns();
+        WireUpEvents();
+        _ = LoadInitialDataAsync();
+    }
+
+    private void SetupGridColumns()
+    {
+        AppGridHelper.ApplyStyle(dgvStudents);
+        dgvStudents.Columns.Clear();
+        dgvStudents.Columns.Add("ColCode", "Mã HV");
+        dgvStudents.Columns.Add("ColName", "Họ và tên");
+        dgvStudents.Columns.Add("ColPhone", "Điện thoại");
+        dgvStudents.Columns.Add("ColClass", "Lớp");
+        dgvStudents.Columns.Add("ColAttendance", "Chuyên cần");
+        dgvStudents.Columns.Add("ColDebt", "Công nợ");
+
+        var colAction = new DataGridViewButtonColumn
+        {
+            Name = "ColAction",
+            HeaderText = "Thao tác",
+            Text = "Xem chi tiết",
+            UseColumnTextForButtonValue = true,
+            FlatStyle = FlatStyle.Flat
+        };
+        colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        colAction.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
+        dgvStudents.Columns.Add(colAction);
+
+        dgvStudents.Columns["ColCode"]!.FillWeight = 12;
+        dgvStudents.Columns["ColName"]!.FillWeight = 22;
+        dgvStudents.Columns["ColPhone"]!.FillWeight = 14;
+        dgvStudents.Columns["ColClass"]!.FillWeight = 15;
+        dgvStudents.Columns["ColAttendance"]!.FillWeight = 12;
+        dgvStudents.Columns["ColDebt"]!.FillWeight = 13;
+        dgvStudents.Columns["ColAction"]!.FillWeight = 12;
+    }
+
+    private async Task LoadInitialDataAsync()
+    {
+        await LoadClassFilterAsync();
+        await LoadStudentsAsync();
+    }
+
+    private async Task LoadClassFilterAsync()
+    {
+        try
+        {
+            _isLoadingFilter = true;
+            var classes = (await _studentService.GetClassesForFilterAsync()).ToList();
+            _classFilterOptions = new List<ClassFilterItemDto>
+            {
+                new() { ClassId = 0, ClassCode = "", ClassName = "Tất cả lớp học" },
+                new() { ClassId = -1, ClassCode = "", ClassName = "Chờ xếp lớp" }
+            };
+            _classFilterOptions.AddRange(classes);
+
+            cboClassFilter.Items.Clear();
+            foreach (var c in _classFilterOptions)
+            {
+                cboClassFilter.Items.Add(c.DisplayText);
+            }
+            cboClassFilter.SelectedIndex = 0;
+        }
+        catch
+        {
+            // Ignore filter load errors
+        }
+        finally
+        {
+            _isLoadingFilter = false;
+        }
+    }
+
+    private async Task LoadStudentsAsync()
+    {
+        try
+        {
+            var list = await _studentService.GetStudentListAsync();
+            _allStudents = list.ToList();
+            _latestStats = await _studentService.GetStudentStatsAsync();
+            FilterStudents();
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách học viên", ex.Message);
+        }
+    }
+
+    private void PopulateGrid(IReadOnlyCollection<StudentListItemDto> items)
+    {
+        dgvStudents.Rows.Clear();
+        foreach (var s in items)
+        {
+            int idx = dgvStudents.Rows.Add(
+                s.StudentCode,
+                s.FullName,
+                s.Phone,
+                s.ClassName,
+                s.AttendanceRateDisplay,
+                s.DebtDisplay
+            );
+            dgvStudents.Rows[idx].Tag = s.StudentId;
+        }
+
+        dgvStudents.ClearSelection();
+        dgvStudents.CurrentCell = null;
+
+        lblBottomSummary.Text =
+            $"Đang hiển thị: {items.Count}  |  Tổng hồ sơ: {_latestStats.TotalStudents}  |  Đang học: {_latestStats.StudyingStudents}  |  Chờ xếp lớp: {_latestStats.WaitingClassStudents}  |  Đã lưu trữ: {_latestStats.ArchivedStudents}";
+    }
+
+    private void WireUpEvents()
+    {
+        // 1. Nút "Đăng ký học": Bước 1 -> Bước 2 -> (Xác nhận chưa thu phí HOẶC Thu phí ngay) -> Lưu SQLite
+        btnAddStudent.Click += async (s, e) =>
+        {
+            using var wizard = new StudentEnrollmentWizardDialog();
+            if (wizard.ShowDialog(ParentForm) != DialogResult.OK)
+                return;
+
+            var enrollDto = new StudentEnrollmentWithTuitionDto
+            {
+                StudentCode = wizard.CreatedStudentCode,
+                FullName = wizard.CreatedStudentName,
+                Phone = wizard.CreatedStudentPhone,
+                Email = wizard.CreatedStudentEmail,
+                DateOfBirth = wizard.CreatedStudentDob,
+                Gender = wizard.CreatedStudentGender,
+                Address = wizard.CreatedStudentAddress,
+                ParentFullName = wizard.CreatedParentName,
+                ParentPhone = wizard.CreatedParentPhone,
+                ParentRelationship = wizard.CreatedParentRelationship,
+                Notes = wizard.CreatedNotes,
+                ClassId = wizard.SelectedClassId,
+                ClassCode = wizard.CreatedClassName,
+                CourseName = wizard.SelectedCourseTitle,
+                TotalTuitionFee = wizard.CourseFee,
+                CashierId = AppSession.UserId,
+                PayNow = wizard.ShouldCollectTuition
+            };
+
+            if (wizard.SaveWaitingOnly)
+            {
+                var waitRes = await _studentService.CreateWaitingStudentAsync(enrollDto);
+                if (!waitRes.Success)
+                {
+                    AppDialog.ShowError(ParentForm, "Lỗi lưu hồ sơ học viên", waitRes.Message);
+                    return;
+                }
+
+                AppDialog.ShowSuccess(ParentForm, "Thành công",
+                    $"Đã thêm học viên {wizard.CreatedStudentName} ({waitRes.StudentCode}) thành công.\n{waitRes.Message}");
+                await LoadInitialDataAsync();
+                return;
+            }
+
+            bool shouldPrintReceipt = false;
+            decimal remainingDebt = wizard.CourseFee;
+
+            if (wizard.ShouldCollectTuition)
+            {
+                using var collectDlg = new CollectTuitionDialog(
+                    wizard.CreatedStudentName,
+                    wizard.CreatedClassName,
+                    wizard.CourseFee,
+                    wizard.CourseFee,
+                    wizard.CreatedStudentCode,
+                    wizard.SelectedCourseTitle
+                );
+
+                if (collectDlg.ShowDialog(ParentForm) != DialogResult.OK)
+                    return;
+
+                enrollDto.DiscountId = collectDlg.AppliedDiscountId;
+                enrollDto.DiscountCode = collectDlg.AppliedDiscountCode;
+                enrollDto.DiscountAmount = collectDlg.DiscountAmount;
+                enrollDto.AmountPaidNow = collectDlg.CollectedAmount;
+                enrollDto.RemainingDebt = collectDlg.RemainingDebt;
+                enrollDto.PaymentMethod = collectDlg.PaymentMethod;
+                enrollDto.ReceiptCode = collectDlg.ReceiptCode;
+                enrollDto.PaymentNote = collectDlg.ContentNote;
+                shouldPrintReceipt = collectDlg.ShouldPrintReceipt;
+                remainingDebt = collectDlg.RemainingDebt;
+            }
+            else
+            {
+                enrollDto.AmountPaidNow = 0;
+                enrollDto.RemainingDebt = wizard.CourseFee;
+            }
+
+            var enrollResult = await _enrollmentService.EnrollStudentWithTuitionAsync(enrollDto);
+            if (!enrollResult.Success)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi lưu hồ sơ đăng ký", enrollResult.Message);
+                return;
+            }
+
+            if (wizard.ShouldCollectTuition && shouldPrintReceipt && !string.IsNullOrWhiteSpace(enrollResult.ReceiptCode))
+            {
+                string nextDueDisplay = "";
+                if (remainingDebt > 0)
+                {
+                    var profiles = await new FinanceService().GetTuitionProfilesAsync();
+                    var matchedProf = profiles.FirstOrDefault(p => p.StudentCode == enrollResult.StudentCode);
+                    nextDueDisplay = matchedProf?.DueDate ?? DateTime.Today.AddDays(14).ToString("dd/MM/yyyy");
+                }
+
+                using var printDlg = new ReceiptPrintPreviewDialog(
+                    wizard.CreatedStudentName,
+                    wizard.CreatedClassName,
+                    enrollDto.AmountPaidNow,
+                    enrollResult.ReceiptCode,
+                    enrollResult.StudentCode,
+                    enrollDto.PaymentMethod,
+                    AppSession.FullName,
+                    wizard.SelectedCourseTitle,
+                    enrollDto.PaymentNote ?? "",
+                    enrollResult.ReceiptCode,
+                    remainingDebt,
+                    nextDueDisplay
+                );
+
+                printDlg.ShowDialog(ParentForm);
+            }
+
+            AppDialog.ShowSuccess(ParentForm, "Thành công",
+                $"Đã thêm học viên {wizard.CreatedStudentName} ({enrollResult.StudentCode}) thành công.\n{enrollResult.Message}");
+            await LoadInitialDataAsync();
+        };
+
+        // 2. Nút "Xem hồ sơ lưu trữ"
+        btnViewArchived.Click += async (s, e) => await OpenArchivedStudentsDialogAsync();
+
+        // 3. Nút "Xuất danh sách" ra tệp CSV chuẩn UTF-8 BOM
+        btnExport.Click += async (s, e) => await ExportStudentsCsvAsync();
+
+        // 4. Nút "Nhập Excel"
+        btnImport.Click += async (s, e) =>
+        {
+            using var importDlg = new ImportStudentsDialog();
+            if (importDlg.ShowDialog(ParentForm) == DialogResult.OK)
+            {
+                await LoadInitialDataAsync();
+            }
+        };
+
+        // 5. Mở chi tiết học viên
+        dgvStudents.CellContentClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0 && dgvStudents.Columns[e.ColumnIndex].Name == "ColAction")
+            {
+                OpenStudentDetail(e.RowIndex);
+            }
+        };
+
+        dgvStudents.CellDoubleClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0)
+            {
+                OpenStudentDetail(e.RowIndex);
+            }
+        };
+
+        // 6. Tìm kiếm realtime + Lọc theo lớp
+        txtSearchStudent.TextChanged += (s, e) => FilterStudents();
+        cboClassFilter.SelectedIndexChanged += (s, e) =>
+        {
+            if (!_isLoadingFilter) FilterStudents();
+        };
+    }
+
+    private async Task OpenArchivedStudentsDialogAsync()
+    {
+        try
+        {
+            var archivedList = (await _studentService.GetStudentListAsync(status: "Archived")).ToList();
+
+            using var dlg = new QuickDetailGridDialog(
+                $"Danh sách hồ sơ học viên đã lưu trữ ({archivedList.Count})",
+                "Các học viên đang bảo lưu hoặc đã lưu trữ. Bấm Khôi phục để đưa học viên quay lại danh sách chính.");
+
+            dlg.SetGridData(dgv =>
+            {
+                dgv.Columns.Clear();
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã HV", FillWeight = 14, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColName", HeaderText = "Họ và tên", FillWeight = 24, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColPhone", HeaderText = "Điện thoại", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Lớp gần nhất", FillWeight = 16, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColDebt", HeaderText = "Công nợ", FillWeight = 14, ReadOnly = true });
+                dgv.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 14, ReadOnly = true });
+
+                var colRestore = new DataGridViewButtonColumn
+                {
+                    Name = "ColRestore",
+                    HeaderText = "Khôi phục",
+                    Text = "Khôi phục",
+                    UseColumnTextForButtonValue = true,
+                    FillWeight = 14,
+                    FlatStyle = FlatStyle.Flat
+                };
+                colRestore.DefaultCellStyle.ForeColor = Color.FromArgb(22, 163, 74);
+                dgv.Columns.Add(colRestore);
+
+                foreach (var item in archivedList)
+                {
+                    int rowIdx = dgv.Rows.Add(item.StudentCode, item.FullName, item.Phone, item.ClassName, item.DebtDisplay, item.Status);
+                    dgv.Rows[rowIdx].Tag = item.StudentId;
+                }
+
+                dgv.CellContentClick += async (sender, args) =>
+                {
+                    if (args.RowIndex < 0 || dgv.Columns[args.ColumnIndex].Name != "ColRestore") return;
+                    if (dgv.Rows[args.RowIndex].Tag is int stId)
+                    {
+                        string stName = dgv.Rows[args.RowIndex].Cells["ColName"].Value?.ToString() ?? "";
+                        if (AppDialog.ShowConfirm(dlg, "Khôi phục học viên",
+                            $"Bạn có muốn khôi phục hồ sơ học viên '{stName}' không?") == DialogResult.OK)
+                        {
+                            var res = await _studentService.RestoreStudentAsync(stId);
+                            if (res.Success)
+                            {
+                                dgv.Rows.RemoveAt(args.RowIndex);
+                                await LoadStudentsAsync();
+                                AppDialog.ShowSuccess(dlg, "Thành công", res.Message);
+                            }
+                            else
+                            {
+                                AppDialog.ShowError(dlg, "Lỗi khôi phục", res.Message);
+                            }
+                        }
+                    }
+                };
+
+                dgv.ClearSelection();
+            });
+
+            dlg.ShowDialog(ParentForm);
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi tải hồ sơ lưu trữ", ex.Message);
+        }
+    }
+
+    private async Task ExportStudentsCsvAsync()
+    {
+        try
+        {
+            using var sfd = new SaveFileDialog
+            {
+                Title = "Xuất danh sách học viên",
+                Filter = "Tệp Excel CSV (*.csv)|*.csv",
+                FileName = $"DanhSach_HocVien_ECMS_{DateTime.Now:yyyyMMdd_HHmm}.csv"
+            };
+
+            if (sfd.ShowDialog(ParentForm) != DialogResult.OK)
+                return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("DANH SÁCH HỌC VIÊN TRUNG TÂM ANH NGỮ ECMS");
+            sb.AppendLine($"Ngày xuất,{DateTime.Now:dd/MM/yyyy HH:mm}");
+            sb.AppendLine("Mã học viên,Họ và tên,Điện thoại,Lớp học,Chuyên cần,Công nợ");
+
+            foreach (DataGridViewRow row in dgvStudents.Rows)
+            {
+                string c0 = row.Cells[0].Value?.ToString() ?? "";
+                string c1 = row.Cells[1].Value?.ToString() ?? "";
+                string c2 = row.Cells[2].Value?.ToString() ?? "";
+                string c3 = row.Cells[3].Value?.ToString() ?? "";
+                string c4 = row.Cells[4].Value?.ToString() ?? "";
+                string c5 = row.Cells[5].Value?.ToString() ?? "";
+                sb.AppendLine($"\"{c0}\",\"{c1}\",\"{c2}\",\"{c3}\",\"{c4}\",\"{c5}\"");
+            }
+
+            await File.WriteAllTextAsync(sfd.FileName, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
+
+            if (AppDialog.ShowConfirm(ParentForm, "Xuất danh sách thành công",
+                $"Đã xuất danh sách {dgvStudents.Rows.Count} học viên ra tệp:\n{sfd.FileName}\n\nBạn có muốn mở tệp ngay bây giờ không?") == DialogResult.OK)
+            {
+                Process.Start(new ProcessStartInfo(sfd.FileName) { UseShellExecute = true });
+            }
+        }
+        catch (Exception ex)
+        {
+            AppDialog.ShowError(ParentForm, "Lỗi xuất danh sách", ex.Message);
+        }
+    }
+
+    private async void OpenStudentDetail(int rowIndex)
+    {
+        if (rowIndex < 0 || rowIndex >= dgvStudents.Rows.Count) return;
+
+        int studentId = dgvStudents.Rows[rowIndex].Tag is int id ? id : 0;
+        string name = dgvStudents.Rows[rowIndex].Cells["ColName"].Value?.ToString() ?? "";
+        string code = dgvStudents.Rows[rowIndex].Cells["ColCode"].Value?.ToString() ?? "";
+
+        using var dlg = new StudentDetailDialog(studentId, name, code);
+        dlg.ShowDialog(ParentForm);
+        await LoadStudentsAsync();
+    }
+
+    private void FilterStudents()
+    {
+        string kw = txtSearchStudent.Text.Trim().ToLowerInvariant();
+        int selectedClassId = 0;
+        if (cboClassFilter.SelectedIndex >= 0 && cboClassFilter.SelectedIndex < _classFilterOptions.Count)
+        {
+            selectedClassId = _classFilterOptions[cboClassFilter.SelectedIndex].ClassId;
+        }
+
+        var filtered = _allStudents.Where(s =>
+        {
+            bool matchKw = string.IsNullOrEmpty(kw) ||
+                           s.StudentCode.ToLowerInvariant().Contains(kw) ||
+                           s.FullName.ToLowerInvariant().Contains(kw) ||
+                           (s.Phone != null && s.Phone.ToLowerInvariant().Contains(kw));
+
+            bool matchClass = selectedClassId switch
+            {
+                0 => true,
+                -1 => !s.ClassId.HasValue || s.ClassId.Value <= 0,
+                _ => s.ClassId == selectedClassId
+            };
+
+            return matchKw && matchClass;
+        }).ToList();
+
+        PopulateGrid(filtered);
+    }
+}

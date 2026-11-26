@@ -17,7 +17,9 @@ public interface IUserRepository
     Task<bool> ToggleUserActiveAsync(int userId, bool newStatus, int currentAdminId);
     Task<bool> UnlockUserAsync(int targetUserId, int currentAdminId);
     Task<IEnumerable<UserListItemDto>> GetLockedUsersAsync();
-    Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason);
+    Task<bool> ResetPasswordAsync(int targetUserId, string newPasswordHash, int currentAdminId, string reason, bool mustChangePassword = true);
     Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
+    Task<bool> UpdateOwnProfileAsync(int userId, string fullName, string? email, string? phone);
+    Task<(bool Success, string Message)> DeleteUserAsync(int targetUserId, int currentAdminId);
     Task<AdminTelemetryDto> GetTelemetryAsync();
 }

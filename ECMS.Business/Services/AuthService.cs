@@ -41,48 +41,21 @@ public class AuthService : IAuthService
             return (false, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ Quản trị viên để mở khóa.", null);
         }
 
-        // 3. Check lockout
-        if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTime.Now)
-        {
-            var remaining = (int)Math.Ceiling((user.LockoutEnd.Value - DateTime.Now).TotalMinutes);
-            if (remaining <= 0) remaining = 1;
-            return (false, $"Tài khoản đang bị tạm khóa an toàn do nhập sai quá 5 lần. Vui lòng thử lại sau {remaining} phút hoặc liên hệ Admin.", null);
-        }
-
-        // 4. Verify password with BCrypt
+        // 3. Verify password with BCrypt (không đếm số lần sai hay tự khóa tài khoản)
         bool passwordMatches = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
 
         if (!passwordMatches)
         {
-            int failedAttempts = user.FailedLoginAttempts + 1;
-            DateTime? lockout = null;
-
-            if (failedAttempts >= 5)
-            {
-                lockout = DateTime.Now.AddMinutes(15);
-            }
-
-            await conn.ExecuteAsync(
-                "UPDATE Users SET FailedLoginAttempts = @Failed, LockoutEnd = @Lockout WHERE UserId = @Id;",
-                new { Failed = failedAttempts, Lockout = lockout, Id = user.UserId });
-
-            if (failedAttempts >= 5)
-            {
-                await conn.ExecuteAsync(@"
-                    INSERT INTO AuditLogs (UserId, ActionName, TableName, RecordId, NewValues)
-                    VALUES (@UserId, 'BRUTE_FORCE_LOCKOUT', 'Users', @RecordId, 'Tài khoản bị tạm khóa 15 phút do nhập sai mật khẩu 5 lần');",
-                    new { UserId = user.UserId, RecordId = user.UserId.ToString() });
-
-                return (false, "Bạn đã nhập sai mật khẩu 5 lần liên tiếp. Tài khoản bị tạm khóa 15 phút để bảo vệ an toàn.", null);
-            }
-
-            return (false, $"Mật khẩu không chính xác. Bạn còn {5 - failedAttempts} lần thử trước khi tài khoản bị khóa tạm thời.", null);
+            return (false, "Tên đăng nhập hoặc mật khẩu không chính xác.", null);
         }
 
-        // 5. Login success: Reset failed attempts
-        await conn.ExecuteAsync(
-            "UPDATE Users SET FailedLoginAttempts = 0, LockoutEnd = NULL WHERE UserId = @Id;",
-            new { Id = user.UserId });
+        // 4. Login success: Reset any legacy lockout flags
+        if (user.FailedLoginAttempts > 0 || user.LockoutEnd.HasValue)
+        {
+            await conn.ExecuteAsync(
+                "UPDATE Users SET FailedLoginAttempts = 0, LockoutEnd = NULL WHERE UserId = @Id;",
+                new { Id = user.UserId });
+        }
 
         // 6. Fetch Roles and Permissions
         var role = await conn.QueryFirstOrDefaultAsync<Role>(@"
@@ -133,6 +106,7 @@ public class AuthService : IAuthService
             TeacherId = user.TeacherId,
             StudentId = user.StudentId,
             ParentId = user.ParentId,
+            MustChangePassword = user.MustChangePassword,
             Permissions = new HashSet<string>(permissions)
         };
 
