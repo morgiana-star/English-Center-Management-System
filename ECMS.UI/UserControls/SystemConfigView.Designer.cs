@@ -50,10 +50,6 @@ partial class SystemConfigView
         lblShortName = new System.Windows.Forms.Label();
         txtAppName = new ECMS.UI.Controls.AppTextBox();
         lblAppName = new System.Windows.Forms.Label();
-        txtDirectorTitle = new ECMS.UI.Controls.AppTextBox();
-        lblDirectorTitle = new System.Windows.Forms.Label();
-        txtDirector = new ECMS.UI.Controls.AppTextBox();
-        lblDirector = new System.Windows.Forms.Label();
         txtCenterAddress = new ECMS.UI.Controls.AppTextBox();
         lblCenterAddress = new System.Windows.Forms.Label();
         txtCenterWebsite = new ECMS.UI.Controls.AppTextBox();
@@ -103,7 +99,6 @@ partial class SystemConfigView
         btnOpenBackupFolder = new ECMS.UI.Controls.AppButton();
         btnRestoreBackup = new ECMS.UI.Controls.AppButton();
         btnCreateBackupNow = new ECMS.UI.Controls.AppButton();
-        lblDbInfoSub = new System.Windows.Forms.Label();
         pnlHeader.SuspendLayout();
         tabMainConfig.SuspendLayout();
         tabCenter.SuspendLayout();
@@ -220,7 +215,6 @@ partial class SystemConfigView
         cardDbInfo.Controls.Add(btnBrowseDb);
         cardDbInfo.Controls.Add(txtDatabasePath);
         cardDbInfo.Controls.Add(lblDatabasePath);
-        cardDbInfo.Controls.Add(lblDbInfoSub);
         cardDbInfo.Controls.Add(lblDbInfoTitle);
         cardDbInfo.CornerRadius = 6;
         cardDbInfo.Location = new System.Drawing.Point(0, 340);
@@ -393,7 +387,7 @@ partial class SystemConfigView
         lblDbInfoTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblDbInfoTitle.Location = new System.Drawing.Point(20, 10);
         lblDbInfoTitle.Name = "lblDbInfoTitle";
-        lblDbInfoTitle.Size = new System.Drawing.Size(145, 28);
+        lblDbInfoTitle.Size = new System.Drawing.Size(137, 28);
         lblDbInfoTitle.TabIndex = 0;
         lblDbInfoTitle.Text = "Cơ sở dữ liệu";
         // 
@@ -410,10 +404,6 @@ partial class SystemConfigView
         cardCenterInfo.Controls.Add(lblShortName);
         cardCenterInfo.Controls.Add(txtAppName);
         cardCenterInfo.Controls.Add(lblAppName);
-        cardCenterInfo.Controls.Add(txtDirectorTitle);
-        cardCenterInfo.Controls.Add(lblDirectorTitle);
-        cardCenterInfo.Controls.Add(txtDirector);
-        cardCenterInfo.Controls.Add(lblDirector);
         cardCenterInfo.Controls.Add(txtCenterAddress);
         cardCenterInfo.Controls.Add(lblCenterAddress);
         cardCenterInfo.Controls.Add(txtCenterWebsite);
@@ -433,80 +423,6 @@ partial class SystemConfigView
         cardCenterInfo.Size = new System.Drawing.Size(1140, 320);
         cardCenterInfo.TabIndex = 1;
         // 
-        // lblAppName
-        // 
-        lblAppName.AutoSize = true;
-        lblAppName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblAppName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblAppName.Location = new System.Drawing.Point(20, 238);
-        lblAppName.Name = "lblAppName";
-        lblAppName.Size = new System.Drawing.Size(228, 20);
-        lblAppName.TabIndex = 16;
-        lblAppName.Text = "Tên ứng dụng (Tiêu đề cửa sổ)";
-        // 
-        // txtAppName
-        // 
-        txtAppName.BackColor = System.Drawing.Color.Transparent;
-        txtAppName.CornerRadius = 5;
-        txtAppName.ErrorMessage = "";
-        txtAppName.HasError = false;
-        txtAppName.Location = new System.Drawing.Point(20, 260);
-        txtAppName.Name = "txtAppName";
-        txtAppName.Placeholder = "ECMS — Hệ thống quản lý trung tâm Anh ngữ";
-        txtAppName.ReadOnly = false;
-        txtAppName.Size = new System.Drawing.Size(400, 34);
-        txtAppName.TabIndex = 17;
-        txtAppName.UseSystemPasswordChar = false;
-        // 
-        // lblShortName
-        // 
-        lblShortName.AutoSize = true;
-        lblShortName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblShortName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblShortName.Location = new System.Drawing.Point(440, 238);
-        lblShortName.Name = "lblShortName";
-        lblShortName.Size = new System.Drawing.Size(91, 20);
-        lblShortName.TabIndex = 18;
-        lblShortName.Text = "Tên viết tắt";
-        // 
-        // txtShortName
-        // 
-        txtShortName.BackColor = System.Drawing.Color.Transparent;
-        txtShortName.CornerRadius = 5;
-        txtShortName.ErrorMessage = "";
-        txtShortName.HasError = false;
-        txtShortName.Location = new System.Drawing.Point(440, 260);
-        txtShortName.Name = "txtShortName";
-        txtShortName.Placeholder = "ECMS";
-        txtShortName.ReadOnly = false;
-        txtShortName.Size = new System.Drawing.Size(130, 34);
-        txtShortName.TabIndex = 19;
-        txtShortName.UseSystemPasswordChar = false;
-        // 
-        // lblLogo
-        // 
-        lblLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblLogo.AutoSize = true;
-        lblLogo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblLogo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblLogo.Location = new System.Drawing.Point(590, 238);
-        lblLogo.Name = "lblLogo";
-        lblLogo.Size = new System.Drawing.Size(230, 20);
-        lblLogo.TabIndex = 20;
-        lblLogo.Text = "Ảnh Logo trung tâm (PNG / JPG)";
-        // 
-        // picLogoPreview
-        // 
-        picLogoPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        picLogoPreview.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        picLogoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        picLogoPreview.Location = new System.Drawing.Point(590, 258);
-        picLogoPreview.Name = "picLogoPreview";
-        picLogoPreview.Size = new System.Drawing.Size(40, 40);
-        picLogoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-        picLogoPreview.TabIndex = 21;
-        picLogoPreview.TabStop = false;
-        // 
         // btnBrowseLogo
         // 
         btnBrowseLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
@@ -525,62 +441,79 @@ partial class SystemConfigView
         btnBrowseLogo.UseVisualStyleBackColor = false;
         btnBrowseLogo.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
-        // txtDirectorTitle
+        // picLogoPreview
         // 
-        txtDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        txtDirectorTitle.BackColor = System.Drawing.Color.Transparent;
-        txtDirectorTitle.CornerRadius = 5;
-        txtDirectorTitle.ErrorMessage = "";
-        txtDirectorTitle.HasError = false;
-        txtDirectorTitle.Location = new System.Drawing.Point(590, 241);
-        txtDirectorTitle.Name = "txtDirectorTitle";
-        txtDirectorTitle.Placeholder = "GIÁM ĐỐC TRUNG TÂM";
-        txtDirectorTitle.ReadOnly = false;
-        txtDirectorTitle.Size = new System.Drawing.Size(530, 34);
-        txtDirectorTitle.TabIndex = 15;
-        txtDirectorTitle.UseSystemPasswordChar = false;
-        txtDirectorTitle.Visible = false;
+        picLogoPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        picLogoPreview.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        picLogoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+        picLogoPreview.Location = new System.Drawing.Point(590, 258);
+        picLogoPreview.Name = "picLogoPreview";
+        picLogoPreview.Size = new System.Drawing.Size(40, 40);
+        picLogoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+        picLogoPreview.TabIndex = 21;
+        picLogoPreview.TabStop = false;
         // 
-        // lblDirectorTitle
+        // lblLogo
         // 
-        lblDirectorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblDirectorTitle.AutoSize = true;
-        lblDirectorTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDirectorTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblDirectorTitle.Location = new System.Drawing.Point(590, 219);
-        lblDirectorTitle.Name = "lblDirectorTitle";
-        lblDirectorTitle.Size = new System.Drawing.Size(141, 20);
-        lblDirectorTitle.TabIndex = 14;
-        lblDirectorTitle.Text = "Chức vụ người ký *";
-        lblDirectorTitle.Visible = false;
+        lblLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        lblLogo.AutoSize = true;
+        lblLogo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblLogo.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblLogo.Location = new System.Drawing.Point(590, 238);
+        lblLogo.Name = "lblLogo";
+        lblLogo.Size = new System.Drawing.Size(242, 20);
+        lblLogo.TabIndex = 20;
+        lblLogo.Text = "Ảnh Logo trung tâm (PNG / JPG)";
         // 
-        // txtDirector
+        // txtShortName
         // 
-        txtDirector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right));
-        txtDirector.BackColor = System.Drawing.Color.Transparent;
-        txtDirector.CornerRadius = 5;
-        txtDirector.ErrorMessage = "";
-        txtDirector.HasError = false;
-        txtDirector.Location = new System.Drawing.Point(20, 241);
-        txtDirector.Name = "txtDirector";
-        txtDirector.Placeholder = "Trần Minh Quân";
-        txtDirector.ReadOnly = false;
-        txtDirector.Size = new System.Drawing.Size(540, 34);
-        txtDirector.TabIndex = 13;
-        txtDirector.UseSystemPasswordChar = false;
-        txtDirector.Visible = false;
+        txtShortName.BackColor = System.Drawing.Color.Transparent;
+        txtShortName.CornerRadius = 5;
+        txtShortName.ErrorMessage = "";
+        txtShortName.HasError = false;
+        txtShortName.Location = new System.Drawing.Point(440, 260);
+        txtShortName.Name = "txtShortName";
+        txtShortName.Placeholder = "ECMS";
+        txtShortName.ReadOnly = false;
+        txtShortName.Size = new System.Drawing.Size(130, 34);
+        txtShortName.TabIndex = 19;
+        txtShortName.UseSystemPasswordChar = false;
         // 
-        // lblDirector
+        // lblShortName
         // 
-        lblDirector.AutoSize = true;
-        lblDirector.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDirector.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
-        lblDirector.Location = new System.Drawing.Point(20, 219);
-        lblDirector.Name = "lblDirector";
-        lblDirector.Size = new System.Drawing.Size(199, 20);
-        lblDirector.TabIndex = 12;
-        lblDirector.Text = "Người đại diện / Ký duyệt *";
-        lblDirector.Visible = false;
+        lblShortName.AutoSize = true;
+        lblShortName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblShortName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblShortName.Location = new System.Drawing.Point(440, 238);
+        lblShortName.Name = "lblShortName";
+        lblShortName.Size = new System.Drawing.Size(88, 20);
+        lblShortName.TabIndex = 18;
+        lblShortName.Text = "Tên viết tắt";
+        // 
+        // txtAppName
+        // 
+        txtAppName.BackColor = System.Drawing.Color.Transparent;
+        txtAppName.CornerRadius = 5;
+        txtAppName.ErrorMessage = "";
+        txtAppName.HasError = false;
+        txtAppName.Location = new System.Drawing.Point(20, 260);
+        txtAppName.Name = "txtAppName";
+        txtAppName.Placeholder = "ECMS — Hệ thống quản lý trung tâm Anh ngữ";
+        txtAppName.ReadOnly = false;
+        txtAppName.Size = new System.Drawing.Size(400, 34);
+        txtAppName.TabIndex = 17;
+        txtAppName.UseSystemPasswordChar = false;
+        // 
+        // lblAppName
+        // 
+        lblAppName.AutoSize = true;
+        lblAppName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblAppName.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)51)), ((int)((byte)65)), ((int)((byte)85)));
+        lblAppName.Location = new System.Drawing.Point(20, 238);
+        lblAppName.Name = "lblAppName";
+        lblAppName.Size = new System.Drawing.Size(222, 20);
+        lblAppName.TabIndex = 16;
+        lblAppName.Text = "Tên ứng dụng (Tiêu đề cửa sổ)";
         // 
         // txtCenterAddress
         // 
@@ -591,7 +524,7 @@ partial class SystemConfigView
         txtCenterAddress.HasError = false;
         txtCenterAddress.Location = new System.Drawing.Point(590, 171);
         txtCenterAddress.Name = "txtCenterAddress";
-        txtCenterAddress.Placeholder = "25 Nguyễn Văn Cừ, Quận 5, TP.HCM";
+        txtCenterAddress.Placeholder = "Khu phố 33, phường Linh Xuân, TP. Hồ Chí Minh";
         txtCenterAddress.ReadOnly = false;
         txtCenterAddress.Size = new System.Drawing.Size(530, 34);
         txtCenterAddress.TabIndex = 11;
@@ -644,7 +577,7 @@ partial class SystemConfigView
         txtCenterEmail.HasError = false;
         txtCenterEmail.Location = new System.Drawing.Point(590, 101);
         txtCenterEmail.Name = "txtCenterEmail";
-        txtCenterEmail.Placeholder = "contact@ecms.edu.vn";
+        txtCenterEmail.Placeholder = "dhnonglam@hcmuaf.edu.vn";
         txtCenterEmail.ReadOnly = false;
         txtCenterEmail.Size = new System.Drawing.Size(250, 34);
         txtCenterEmail.TabIndex = 7;
@@ -1280,17 +1213,6 @@ partial class SystemConfigView
         btnCreateBackupNow.UseVisualStyleBackColor = false;
         btnCreateBackupNow.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
         // 
-        // lblDbInfoSub
-        // 
-        lblDbInfoSub.AutoSize = true;
-        lblDbInfoSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblDbInfoSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDbInfoSub.Location = new System.Drawing.Point(20, 36);
-        lblDbInfoSub.Name = "lblDbInfoSub";
-        lblDbInfoSub.Size = new System.Drawing.Size(502, 20);
-        lblDbInfoSub.TabIndex = 1;
-        lblDbInfoSub.Text = "Cấu hình vị trí tệp cơ sở dữ liệu SQLite và các thư mục lưu trữ của hệ thống";
-        // 
         // SystemConfigView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -1354,10 +1276,6 @@ partial class SystemConfigView
     private ECMS.UI.Controls.AppTextBox txtCenterWebsite;
     private System.Windows.Forms.Label lblCenterAddress;
     private ECMS.UI.Controls.AppTextBox txtCenterAddress;
-    private System.Windows.Forms.Label lblDirector;
-    private ECMS.UI.Controls.AppTextBox txtDirector;
-    private System.Windows.Forms.Label lblDirectorTitle;
-    private ECMS.UI.Controls.AppTextBox txtDirectorTitle;
     private System.Windows.Forms.Label lblAppName;
     private ECMS.UI.Controls.AppTextBox txtAppName;
     private System.Windows.Forms.Label lblShortName;
@@ -1368,7 +1286,6 @@ partial class SystemConfigView
 
     private ECMS.UI.Controls.AppCard cardDbInfo;
     private System.Windows.Forms.Label lblDbInfoTitle;
-    private System.Windows.Forms.Label lblDbInfoSub;
     private System.Windows.Forms.Label lblDatabasePath;
     private ECMS.UI.Controls.AppTextBox txtDatabasePath;
     private ECMS.UI.Controls.AppButton btnBrowseDb;

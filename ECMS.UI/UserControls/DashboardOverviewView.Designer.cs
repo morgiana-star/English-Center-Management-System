@@ -173,7 +173,7 @@ partial class DashboardOverviewView
         _pnlFilterToolbar.Location = new System.Drawing.Point(24, 88);
         _pnlFilterToolbar.Name = "_pnlFilterToolbar";
         _pnlFilterToolbar.Padding = new System.Windows.Forms.Padding(16);
-        _pnlFilterToolbar.Size = new System.Drawing.Size(1152, 50);
+        _pnlFilterToolbar.Size = new System.Drawing.Size(1152, 56);
         _pnlFilterToolbar.TabIndex = 3;
         // 
         // _txtSearch

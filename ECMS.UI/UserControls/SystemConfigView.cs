@@ -41,6 +41,9 @@ public partial class SystemConfigView : UserControl
 
     private void SimplifyLayoutControls()
     {
+        LayoutCenterInfoFields();
+        cardCenterInfo.Resize += (_, _) => LayoutCenterInfoFields();
+
         btnBrowseLogo.Click += (s, e) =>
         {
             using var ofd = new OpenFileDialog
@@ -54,6 +57,72 @@ public partial class SystemConfigView : UserControl
                 LoadLogoPreview(_selectedLogoPath);
             }
         };
+    }
+
+    private void LayoutCenterInfoFields()
+    {
+        int cardWidth = cardCenterInfo.ClientSize.Width;
+        if (cardWidth < 400) return;
+
+        const int pad = 20;
+        const int colGap = 24;
+        const int innerGap = 16;
+
+        int colWidth = (cardWidth - pad * 2 - colGap) / 2;
+        int leftX = pad;
+        int rightX = pad + colWidth + colGap;
+
+        // Tắt Anchor Right cố định để kiểm soát bố cục 2 cột 50%-50% đều nhau
+        foreach (Control ctrl in new Control[]
+        {
+            txtCenterName, txtCenterWebsite, txtAppName, txtShortName,
+            lblCenterEmail, txtCenterEmail, lblCenterPhone, txtCenterPhone,
+            lblCenterAddress, txtCenterAddress, lblLogo, picLogoPreview, btnBrowseLogo
+        })
+        {
+            ctrl.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+        }
+
+        // Hàng 1: Tên trung tâm (trái) | Email + Số điện thoại (phải)
+        lblCenterName.Location = new Point(leftX, 79);
+        txtCenterName.Location = new Point(leftX, 101);
+        txtCenterName.Width = colWidth;
+
+        int emailWidth = (colWidth - innerGap) / 2;
+        int phoneWidth = colWidth - emailWidth - innerGap;
+        lblCenterEmail.Location = new Point(rightX, 79);
+        txtCenterEmail.Location = new Point(rightX, 101);
+        txtCenterEmail.Width = emailWidth;
+
+        int phoneX = rightX + emailWidth + innerGap;
+        lblCenterPhone.Location = new Point(phoneX, 79);
+        txtCenterPhone.Location = new Point(phoneX, 101);
+        txtCenterPhone.Width = phoneWidth;
+
+        // Hàng 2: Website (trái) | Địa chỉ trụ sở (phải)
+        lblCenterWebsite.Location = new Point(leftX, 149);
+        txtCenterWebsite.Location = new Point(leftX, 171);
+        txtCenterWebsite.Width = colWidth;
+
+        lblCenterAddress.Location = new Point(rightX, 149);
+        txtCenterAddress.Location = new Point(rightX, 171);
+        txtCenterAddress.Width = colWidth;
+
+        // Hàng 3: Tên ứng dụng + Tên viết tắt (trái) | Ảnh Logo (phải)
+        int shortWidth = Math.Min(140, Math.Max(90, colWidth / 3));
+        int appWidth = colWidth - shortWidth - innerGap;
+        lblAppName.Location = new Point(leftX, 238);
+        txtAppName.Location = new Point(leftX, 260);
+        txtAppName.Width = appWidth;
+
+        int shortX = leftX + appWidth + innerGap;
+        lblShortName.Location = new Point(shortX, 238);
+        txtShortName.Location = new Point(shortX, 260);
+        txtShortName.Width = shortWidth;
+
+        lblLogo.Location = new Point(rightX, 238);
+        picLogoPreview.Location = new Point(rightX, 258);
+        btnBrowseLogo.Location = new Point(rightX + picLogoPreview.Width + 12, 260);
     }
 
     private void LoadLogoPreview(string? path)
@@ -95,8 +164,7 @@ public partial class SystemConfigView : UserControl
             txtCenterEmail.Text = center.CenterEmail;
             txtCenterWebsite.Text = center.CenterWebsite;
             txtCenterAddress.Text = center.CenterAddress;
-            txtDirector.Text = center.DirectorName;
-            txtDirectorTitle.Text = center.DirectorTitle;
+        
 
             txtDatabasePath.Text = DatabaseConfig.DatabasePath;
             txtStoragePath.Text = center.StoragePath;
@@ -466,8 +534,6 @@ public partial class SystemConfigView : UserControl
                 CenterEmail = txtCenterEmail.Text.Trim(),
                 CenterWebsite = txtCenterWebsite.Text.Trim(),
                 CenterAddress = txtCenterAddress.Text.Trim(),
-                DirectorName = txtDirector.Text.Trim(),
-                DirectorTitle = txtDirectorTitle.Text.Trim(),
                 StoragePath = txtStoragePath.Text.Trim(),
                 BackupDir = txtBackupDir.Text.Trim()
             };
@@ -500,16 +566,6 @@ public partial class SystemConfigView : UserControl
             if (FindForm() is MainForm mf)
             {
                 await mf.ApplyBrandingAsync();
-            }
-
-            // Đồng bộ AppSession nếu có thông tin người đại diện
-            if (!string.IsNullOrWhiteSpace(txtDirector.Text))
-            {
-                AppSession.FullName = txtDirector.Text.Trim();
-            }
-            if (!string.IsNullOrWhiteSpace(txtDirectorTitle.Text))
-            {
-                AppSession.SignerTitle = txtDirectorTitle.Text.Trim();
             }
 
             // bannerCenterSuccess.Visible = true;

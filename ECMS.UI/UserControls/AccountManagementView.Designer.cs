@@ -69,7 +69,6 @@ partial class AccountManagementView
         btnChangeAvatar = new ECMS.UI.Controls.AppButton();
         lblAvatar = new System.Windows.Forms.Label();
         cardProfile = new ECMS.UI.Controls.AppCard();
-        lblProfSub = new System.Windows.Forms.Label();
         btnSaveProf = new ECMS.UI.Controls.AppButton();
         btnCancelProf = new ECMS.UI.Controls.AppButton();
         txtUserRole = new ECMS.UI.Controls.AppTextBox();
@@ -135,9 +134,9 @@ partial class AccountManagementView
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
         lblTitle.Location = new System.Drawing.Point(24, 12);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(304, 37);
+        lblTitle.Size = new System.Drawing.Size(270, 37);
         lblTitle.TabIndex = 1;
-        lblTitle.Text = "Tài khoản & Phân quyền";
+        lblTitle.Text = "Quản lý người dùng";
         // 
         // tabMain
         // 
@@ -212,7 +211,7 @@ partial class AccountManagementView
         dgvAccounts.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
         dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
@@ -598,23 +597,6 @@ partial class AccountManagementView
         cardProfileSummary.Size = new System.Drawing.Size(320, 590);
         cardProfileSummary.TabIndex = 1;
         // 
-        // btnChangeAvatar
-        // 
-        btnChangeAvatar.BackColor = System.Drawing.Color.White;
-        btnChangeAvatar.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
-        btnChangeAvatar.CornerRadius = 5;
-        btnChangeAvatar.Cursor = System.Windows.Forms.Cursors.Hand;
-        btnChangeAvatar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnChangeAvatar.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        btnChangeAvatar.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        btnChangeAvatar.Location = new System.Drawing.Point(85, 420);
-        btnChangeAvatar.Name = "btnChangeAvatar";
-        btnChangeAvatar.Size = new System.Drawing.Size(150, 32);
-        btnChangeAvatar.TabIndex = 11;
-        btnChangeAvatar.Text = "Đổi ảnh đại diện";
-        btnChangeAvatar.UseVisualStyleBackColor = false;
-        btnChangeAvatar.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
-        // 
         // lblSummaryBranch
         // 
         lblSummaryBranch.AutoSize = true;
@@ -622,7 +604,7 @@ partial class AccountManagementView
         lblSummaryBranch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryBranch.Location = new System.Drawing.Point(20, 380);
         lblSummaryBranch.Name = "lblSummaryBranch";
-        lblSummaryBranch.Size = new System.Drawing.Size(193, 20);
+        lblSummaryBranch.Size = new System.Drawing.Size(168, 20);
         lblSummaryBranch.TabIndex = 10;
         lblSummaryBranch.Text = "Chi nhánh: Quận 1, HCM";
         // 
@@ -633,7 +615,7 @@ partial class AccountManagementView
         lblSummaryPerm.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryPerm.Location = new System.Drawing.Point(20, 345);
         lblSummaryPerm.Name = "lblSummaryPerm";
-        lblSummaryPerm.Size = new System.Drawing.Size(214, 20);
+        lblSummaryPerm.Size = new System.Drawing.Size(189, 20);
         lblSummaryPerm.TabIndex = 9;
         lblSummaryPerm.Text = "Quyền: Quản trị toàn quyền";
         // 
@@ -644,7 +626,7 @@ partial class AccountManagementView
         lblSummaryLastLogin.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryLastLogin.Location = new System.Drawing.Point(20, 310);
         lblSummaryLastLogin.Name = "lblSummaryLastLogin";
-        lblSummaryLastLogin.Size = new System.Drawing.Size(229, 20);
+        lblSummaryLastLogin.Size = new System.Drawing.Size(204, 20);
         lblSummaryLastLogin.TabIndex = 8;
         lblSummaryLastLogin.Text = "Đăng nhập: 16/11/2026 08:30";
         // 
@@ -655,7 +637,7 @@ partial class AccountManagementView
         lblSummaryCreated.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryCreated.Location = new System.Drawing.Point(20, 275);
         lblSummaryCreated.Name = "lblSummaryCreated";
-        lblSummaryCreated.Size = new System.Drawing.Size(178, 20);
+        lblSummaryCreated.Size = new System.Drawing.Size(153, 20);
         lblSummaryCreated.TabIndex = 7;
         lblSummaryCreated.Text = "Ngày tạo: 01/01/2024";
         // 
@@ -666,7 +648,7 @@ partial class AccountManagementView
         lblSummaryPhone.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryPhone.Location = new System.Drawing.Point(20, 240);
         lblSummaryPhone.Name = "lblSummaryPhone";
-        lblSummaryPhone.Size = new System.Drawing.Size(156, 20);
+        lblSummaryPhone.Size = new System.Drawing.Size(131, 20);
         lblSummaryPhone.TabIndex = 6;
         lblSummaryPhone.Text = "SĐT: 0912 345 678";
         // 
@@ -677,7 +659,7 @@ partial class AccountManagementView
         lblSummaryEmail.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
         lblSummaryEmail.Location = new System.Drawing.Point(20, 205);
         lblSummaryEmail.Name = "lblSummaryEmail";
-        lblSummaryEmail.Size = new System.Drawing.Size(238, 20);
+        lblSummaryEmail.Size = new System.Drawing.Size(213, 20);
         lblSummaryEmail.TabIndex = 5;
         lblSummaryEmail.Text = "Email: minhquan@ecms.edu.vn";
         // 
@@ -723,6 +705,23 @@ partial class AccountManagementView
         lblSummaryName.Text = "Trần Minh Quân";
         lblSummaryName.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
+        // btnChangeAvatar
+        // 
+        btnChangeAvatar.BackColor = System.Drawing.Color.White;
+        btnChangeAvatar.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnChangeAvatar.CornerRadius = 5;
+        btnChangeAvatar.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnChangeAvatar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnChangeAvatar.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        btnChangeAvatar.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        btnChangeAvatar.Location = new System.Drawing.Point(85, 420);
+        btnChangeAvatar.Name = "btnChangeAvatar";
+        btnChangeAvatar.Size = new System.Drawing.Size(150, 32);
+        btnChangeAvatar.TabIndex = 11;
+        btnChangeAvatar.Text = "Đổi ảnh đại diện";
+        btnChangeAvatar.UseVisualStyleBackColor = false;
+        btnChangeAvatar.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
+        // 
         // lblAvatar
         // 
         lblAvatar.BackColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
@@ -732,7 +731,6 @@ partial class AccountManagementView
         lblAvatar.Name = "lblAvatar";
         lblAvatar.Size = new System.Drawing.Size(68, 68);
         lblAvatar.TabIndex = 0;
-        lblAvatar.Text = "TMQ";
         lblAvatar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
         // 
         // cardProfile
@@ -741,7 +739,6 @@ partial class AccountManagementView
         cardProfile.BackColor = System.Drawing.Color.White;
         cardProfile.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
         cardProfile.BorderWidth = 1;
-        cardProfile.Controls.Add(lblProfSub);
         cardProfile.Controls.Add(btnSaveProf);
         cardProfile.Controls.Add(btnCancelProf);
         cardProfile.Controls.Add(txtUserRole);
@@ -761,17 +758,6 @@ partial class AccountManagementView
         cardProfile.Padding = new System.Windows.Forms.Padding(20);
         cardProfile.Size = new System.Drawing.Size(780, 590);
         cardProfile.TabIndex = 0;
-        // 
-        // lblProfSub
-        // 
-        lblProfSub.AutoSize = true;
-        lblProfSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblProfSub.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblProfSub.Location = new System.Drawing.Point(20, 48);
-        lblProfSub.Name = "lblProfSub";
-        lblProfSub.Size = new System.Drawing.Size(462, 20);
-        lblProfSub.TabIndex = 13;
-        lblProfSub.Text = "Cập nhật thông tin hiển thị và kênh liên lạc trong hệ thống trung tâm";
         // 
         // btnSaveProf
         // 
@@ -874,7 +860,7 @@ partial class AccountManagementView
         txtEmail.HasError = false;
         txtEmail.Location = new System.Drawing.Point(20, 207);
         txtEmail.Name = "txtEmail";
-        txtEmail.Placeholder = "name@ecms.edu.vn";
+        txtEmail.Placeholder = "Email liên hệ của bạn";
         txtEmail.ReadOnly = false;
         txtEmail.Size = new System.Drawing.Size(360, 36);
         txtEmail.TabIndex = 6;
@@ -901,7 +887,7 @@ partial class AccountManagementView
         txtPhone.HasError = false;
         txtPhone.Location = new System.Drawing.Point(400, 120);
         txtPhone.Name = "txtPhone";
-        txtPhone.Placeholder = "09xx xxx xxx";
+        txtPhone.Placeholder = "Số điện thoại của bạn";
         txtPhone.ReadOnly = false;
         txtPhone.Size = new System.Drawing.Size(358, 36);
         txtPhone.TabIndex = 4;
@@ -1250,7 +1236,6 @@ partial class AccountManagementView
 
     private ECMS.UI.Controls.AppCard cardProfile;
     private System.Windows.Forms.Label lblProfTitle;
-    private System.Windows.Forms.Label lblProfSub;
     private System.Windows.Forms.Label lblName;
     private ECMS.UI.Controls.AppTextBox txtFullName;
     private System.Windows.Forms.Label lblPhone;

@@ -101,7 +101,6 @@ public partial class CertificateManagementView : UserControl
     private void UpdateSignerNote()
     {
         string signer = cboSigner.SelectedItem?.ToString() ?? $"{AppSession.FullName} · {AppSession.GetSignerRoleTitle()}";
-        lblFooterNote.Text = $"📌 Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học phí 100%  |  Người ký duyệt: {signer}";
     }
 
     private void SetupFilters()
@@ -525,7 +524,6 @@ public partial class CertificateManagementView : UserControl
         int totalEligible = _students.Count(s => s.IsEligible);
 
         btnIssueSelectedTop.Text = $"Cấp chứng chỉ ({checkedCount})";
-        lblSelectedSummary.Text = $"Đang chọn: {checkedCount} học viên đủ ĐK / Tổng {totalEligible} đủ ĐK";
     }
 
     private void OpenPreviewForRow(int rowIndex)

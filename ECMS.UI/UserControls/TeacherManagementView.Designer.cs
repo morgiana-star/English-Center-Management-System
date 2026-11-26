@@ -186,7 +186,7 @@ partial class TeacherManagementView
         cboSpecialtyFilter.CornerRadius = 5;
         cboSpecialtyFilter.DataSource = null;
         cboSpecialtyFilter.DisplayMember = "";
-        cboSpecialtyFilter.Location = new System.Drawing.Point(848, 6);
+        cboSpecialtyFilter.Location = new System.Drawing.Point(596, 6);
         cboSpecialtyFilter.Name = "cboSpecialtyFilter";
         cboSpecialtyFilter.SelectedIndex = -1;
         cboSpecialtyFilter.SelectedItem = null;
@@ -201,7 +201,7 @@ partial class TeacherManagementView
         cboStatusFilter.CornerRadius = 5;
         cboStatusFilter.DataSource = null;
         cboStatusFilter.DisplayMember = "";
-        cboStatusFilter.Location = new System.Drawing.Point(648, 6);
+        cboStatusFilter.Location = new System.Drawing.Point(400, 6);
         cboStatusFilter.Name = "cboStatusFilter";
         cboStatusFilter.SelectedIndex = -1;
         cboStatusFilter.SelectedItem = null;

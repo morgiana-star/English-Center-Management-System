@@ -833,7 +833,8 @@ public static class DatabaseInitializer
             var configs = new[]
             {
                 new { Key = "CenterName", Val = "Trung tâm Anh ngữ Quốc tế ECMS", Desc = "Tên hiển thị trung tâm" },
-                new { Key = "CenterAddress", Val = "123 Đường Sáng Tạo, Quận 1, TP. Hồ Chí Minh", Desc = "Địa chỉ cơ sở" },
+                new { Key = "CenterAddress", Val = "Khu phố 33, phường Linh Xuân, TP. Hồ Chí Minh", Desc = "Địa chỉ cơ sở" },
+                new { Key = "CenterEmail", Val = "dhnonglam@hcmuaf.edu.vn", Desc = "Email liên hệ trung tâm" },
                 new { Key = "CenterPhone", Val = "028 1234 5678", Desc = "Số điện thoại hotline" },
                 new { Key = "MaxAbsencesAlert", Val = "3", Desc = "Số buổi vắng tối đa kích hoạt cảnh báo chuyên cần" },
                 new { Key = "MinPassingGPA", Val = "5.0", Desc = "Điểm GPA tối thiểu để xét tốt nghiệp" },
@@ -848,6 +849,20 @@ public static class DatabaseInitializer
             {
                 conn.Execute("INSERT INTO SystemConfigs (ConfigKey, ConfigValue, Description) VALUES (@Key, @Val, @Desc);", c);
             }
+        }
+        else
+        {
+            conn.Execute(@"
+                UPDATE SystemConfigs
+                SET ConfigValue = 'Khu phố 33, phường Linh Xuân, TP. Hồ Chí Minh'
+                WHERE ConfigKey = 'CenterAddress'
+                  AND ConfigValue IN ('123 Đường Sáng Tạo, Quận 1, TP. Hồ Chí Minh', '25 Nguyễn Văn Cừ, Phường 4, Quận 5, TP. Hồ Chí Minh');
+                INSERT OR IGNORE INTO SystemConfigs (ConfigKey, ConfigValue, Description)
+                VALUES ('CenterEmail', 'dhnonglam@hcmuaf.edu.vn', 'Email liên hệ trung tâm');
+                UPDATE SystemConfigs
+                SET ConfigValue = 'dhnonglam@hcmuaf.edu.vn'
+                WHERE ConfigKey = 'CenterEmail'
+                  AND ConfigValue = 'contact@ecms.edu.vn';");
         }
 
         // 6. Seed RBAC Permissions Catalog & Default Mappings

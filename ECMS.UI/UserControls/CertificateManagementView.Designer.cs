@@ -35,10 +35,7 @@ partial class CertificateManagementView
         cardStudentList = new ECMS.UI.Controls.AppCard();
         dgvEligible = new ECMS.UI.Controls.AppDataGrid();
         pnlCardHeader = new System.Windows.Forms.Panel();
-        lblSelectedSummary = new System.Windows.Forms.Label();
         lblTableTitle = new System.Windows.Forms.Label();
-        pnlFooterNote = new System.Windows.Forms.Panel();
-        lblFooterNote = new System.Windows.Forms.Label();
         pnlFilterBar = new System.Windows.Forms.Panel();
         btnDeselectAll = new ECMS.UI.Controls.AppButton();
         btnSelectAllEligible = new ECMS.UI.Controls.AppButton();
@@ -52,7 +49,6 @@ partial class CertificateManagementView
         cardStudentList.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvEligible).BeginInit();
         pnlCardHeader.SuspendLayout();
-        pnlFooterNote.SuspendLayout();
         pnlFilterBar.SuspendLayout();
         SuspendLayout();
         // 
@@ -159,7 +155,6 @@ partial class CertificateManagementView
         cardStudentList.BorderWidth = 1;
         cardStudentList.Controls.Add(dgvEligible);
         cardStudentList.Controls.Add(pnlCardHeader);
-        cardStudentList.Controls.Add(pnlFooterNote);
         cardStudentList.CornerRadius = 8;
         cardStudentList.Location = new System.Drawing.Point(24, 76);
         cardStudentList.Name = "cardStudentList";
@@ -219,30 +214,17 @@ partial class CertificateManagementView
         dgvEligible.RowHeadersWidth = 51;
         dgvEligible.RowTemplate.Height = 42;
         dgvEligible.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvEligible.Size = new System.Drawing.Size(1120, 527);
+        dgvEligible.Size = new System.Drawing.Size(1120, 559);
         dgvEligible.TabIndex = 1;
         // 
         // pnlCardHeader
         // 
-        pnlCardHeader.Controls.Add(lblSelectedSummary);
         pnlCardHeader.Controls.Add(lblTableTitle);
         pnlCardHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlCardHeader.Location = new System.Drawing.Point(16, 16);
         pnlCardHeader.Name = "pnlCardHeader";
         pnlCardHeader.Size = new System.Drawing.Size(1120, 34);
         pnlCardHeader.TabIndex = 0;
-        // 
-        // lblSelectedSummary
-        // 
-        lblSelectedSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        lblSelectedSummary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSelectedSummary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblSelectedSummary.Location = new System.Drawing.Point(740, 6);
-        lblSelectedSummary.Name = "lblSelectedSummary";
-        lblSelectedSummary.Size = new System.Drawing.Size(370, 20);
-        lblSelectedSummary.TabIndex = 1;
-        lblSelectedSummary.Text = "Đang chọn: 0 học viên đủ điều kiện";
-        lblSelectedSummary.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
         // 
         // lblTableTitle
         // 
@@ -254,26 +236,6 @@ partial class CertificateManagementView
         lblTableTitle.Size = new System.Drawing.Size(596, 23);
         lblTableTitle.TabIndex = 0;
         lblTableTitle.Text = "DANH SÁCH HỌC VIÊN HOÀN THÀNH KHÓA HỌC CHỜ CẤP CHỨNG CHỈ";
-        // 
-        // pnlFooterNote
-        // 
-        pnlFooterNote.Controls.Add(lblFooterNote);
-        pnlFooterNote.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlFooterNote.Location = new System.Drawing.Point(16, 577);
-        pnlFooterNote.Name = "pnlFooterNote";
-        pnlFooterNote.Size = new System.Drawing.Size(1120, 32);
-        pnlFooterNote.TabIndex = 2;
-        // 
-        // lblFooterNote
-        // 
-        lblFooterNote.AutoSize = true;
-        lblFooterNote.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblFooterNote.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblFooterNote.Location = new System.Drawing.Point(4, 7);
-        lblFooterNote.Name = "lblFooterNote";
-        lblFooterNote.Size = new System.Drawing.Size(676, 20);
-        lblFooterNote.TabIndex = 0;
-        lblFooterNote.Text = ("Tiêu chuẩn cấp chứng chỉ: Điểm TB cuối khóa ≥ 6.5  |  Chuyên cần ≥ 80%  |  Học ph" + "í hoàn thành 100%");
         // 
         // pnlFilterBar
         // 
@@ -396,8 +358,6 @@ partial class CertificateManagementView
         ((System.ComponentModel.ISupportInitialize)dgvEligible).EndInit();
         pnlCardHeader.ResumeLayout(false);
         pnlCardHeader.PerformLayout();
-        pnlFooterNote.ResumeLayout(false);
-        pnlFooterNote.PerformLayout();
         pnlFilterBar.ResumeLayout(false);
         pnlFilterBar.PerformLayout();
         ResumeLayout(false);
@@ -423,8 +383,5 @@ partial class CertificateManagementView
     private ECMS.UI.Controls.AppCard cardStudentList;
     private System.Windows.Forms.Panel pnlCardHeader;
     private System.Windows.Forms.Label lblTableTitle;
-    private System.Windows.Forms.Label lblSelectedSummary;
     private ECMS.UI.Controls.AppDataGrid dgvEligible;
-    private System.Windows.Forms.Panel pnlFooterNote;
-    private System.Windows.Forms.Label lblFooterNote;
 }

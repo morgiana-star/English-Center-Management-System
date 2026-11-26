@@ -228,7 +228,7 @@ partial class ScheduleManagementView
         cboSemester.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboSemester.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboSemester.FormattingEnabled = true;
-        cboSemester.Location = new System.Drawing.Point(12, 10);
+        cboSemester.Location = new System.Drawing.Point(62, 11);
         cboSemester.Name = "cboSemester";
         cboSemester.Size = new System.Drawing.Size(295, 29);
         cboSemester.TabIndex = 1;
