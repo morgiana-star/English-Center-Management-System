@@ -264,6 +264,11 @@ public static class DatabaseInitializer
             ScoreId INTEGER PRIMARY KEY AUTOINCREMENT,
             ExamId INTEGER NOT NULL,
             StudentId INTEGER NOT NULL,
+            ListeningScore REAL,
+            ReadingScore REAL,
+            WritingScore REAL,
+            SpeakingScore REAL,
+            OverallScore REAL,
             ScoreValue REAL NOT NULL CHECK(ScoreValue BETWEEN 0 AND 10),
             TeacherComments TEXT,
             CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -403,6 +408,13 @@ public static class DatabaseInitializer
 
     private static void EnsureFullAcademicSeed(SqliteConnection conn)
     {
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN ListeningScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN ReadingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN WritingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN SpeakingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN OverallScore REAL;"); } catch { }
+        try { conn.Execute("UPDATE ExamScores SET TeacherComments = NULL;"); } catch { }
+
         int countF01 = 0;
         int sessionCountF01 = 0;
         try
@@ -665,19 +677,21 @@ public static class DatabaseInitializer
             (31, 13, 'Present', 'Tốt'), (31, 14, 'Present', 'Tốt'), (31, 15, 'Present', 'Tốt'),
             (31, 16, 'Present', 'Tốt'), (31, 17, 'Present', 'Tốt'), (31, 18, 'Present', 'Tốt');");
 
-        // Exams & Scores
+        // Exams & Scores chuẩn format IELTS 4 kỹ năng
         conn.Execute(@"
             INSERT INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, WeightPercentage)
             VALUES 
-            (1, 1, 'Kiểm tra Giữa kỳ (Midterm Test)', 'Midterm', '2026-10-25', 40.0),
-            (2, 1, 'Kiểm tra Cuối kỳ (Final Test)', 'Final', '2026-12-28', 60.0);");
+            (1, 1, 'Thi thử IELTS Giữa khóa (Midterm Mock Test)', 'Midterm', '2026-10-25', 50.0),
+            (2, 1, 'Thi thử IELTS Cuối khóa (Final Mock Test)', 'Final', '2026-12-28', 50.0);");
 
         conn.Execute(@"
-            INSERT INTO ExamScores (ExamId, StudentId, ScoreValue, TeacherComments)
+            INSERT INTO ExamScores (ExamId, StudentId, ListeningScore, ReadingScore, WritingScore, SpeakingScore, OverallScore, ScoreValue, TeacherComments)
             VALUES 
-            (1, 1, 8.5, 'Listening 8.5, Reading 8.5. Rất tốt.'),
-            (1, 2, 8.0, 'Speaking 8.0, Writing 7.5. Chăm chỉ.'),
-            (1, 3, 7.5, 'Tiến bộ nhanh.');");
+            (1, 1, 6.5, 6.5, 6.0, 6.0, 6.5, 6.5, NULL),
+            (1, 2, 5.5, 6.0, 5.0, 5.5, 5.5, 5.5, NULL),
+            (1, 3, 7.0, 7.5, 6.5, 7.0, 7.0, 7.0, NULL),
+            (1, 4, 5.0, 5.5, 4.5, 5.0, 5.0, 5.0, NULL),
+            (1, 5, 4.5, 4.5, 4.0, 4.5, 4.5, 4.5, NULL);");
     }
 
     private static void SeedInitialData(SqliteConnection conn)

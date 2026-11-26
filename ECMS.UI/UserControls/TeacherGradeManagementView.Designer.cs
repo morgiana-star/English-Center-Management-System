@@ -27,8 +27,6 @@ partial class TeacherGradeManagementView
         pnlBody = new System.Windows.Forms.Panel();
         cardAssessmentList = new ECMS.UI.Controls.AppCard();
         dgvAssessments = new ECMS.UI.Controls.AppDataGrid();
-        pnlRuleNote = new System.Windows.Forms.Panel();
-        lblRuleText = new System.Windows.Forms.Label();
         pnlFilterBar = new System.Windows.Forms.Panel();
         cboClassFilter = new System.Windows.Forms.ComboBox();
         cboTypeFilter = new System.Windows.Forms.ComboBox();
@@ -38,7 +36,6 @@ partial class TeacherGradeManagementView
         pnlBody.SuspendLayout();
         cardAssessmentList.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvAssessments).BeginInit();
-        pnlRuleNote.SuspendLayout();
         pnlFilterBar.SuspendLayout();
         SuspendLayout();
         // 
@@ -120,7 +117,6 @@ partial class TeacherGradeManagementView
         cardAssessmentList.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
         cardAssessmentList.BorderWidth = 1;
         cardAssessmentList.Controls.Add(dgvAssessments);
-        cardAssessmentList.Controls.Add(pnlRuleNote);
         cardAssessmentList.CornerRadius = 8;
         cardAssessmentList.Location = new System.Drawing.Point(24, 76);
         cardAssessmentList.Name = "cardAssessmentList";
@@ -173,28 +169,8 @@ partial class TeacherGradeManagementView
         dgvAssessments.RowTemplate.Height = 40;
         dgvAssessments.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvAssessments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-        dgvAssessments.Size = new System.Drawing.Size(1080, 521);
+        dgvAssessments.Size = new System.Drawing.Size(1080, 553);
         dgvAssessments.TabIndex = 0;
-        // 
-        // pnlRuleNote
-        // 
-        pnlRuleNote.Controls.Add(lblRuleText);
-        pnlRuleNote.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlRuleNote.Location = new System.Drawing.Point(16, 537);
-        pnlRuleNote.Name = "pnlRuleNote";
-        pnlRuleNote.Size = new System.Drawing.Size(1080, 32);
-        pnlRuleNote.TabIndex = 1;
-        // 
-        // lblRuleText
-        // 
-        lblRuleText.AutoSize = true;
-        lblRuleText.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-        lblRuleText.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
-        lblRuleText.Location = new System.Drawing.Point(6, 7);
-        lblRuleText.Name = "lblRuleText";
-        lblRuleText.Size = new System.Drawing.Size(650, 20);
-        lblRuleText.TabIndex = 0;
-        lblRuleText.Text = "📌 Công thức tính điểm: TX × 20% + GK × 30% + CK × 50%  |  Chuẩn xếp loại: ≥8.0 Giỏi; ≥6.5 Khá; Đạt khóa: TB ≥ 6.5";
         // 
         // pnlFilterBar
         // 
@@ -266,8 +242,6 @@ partial class TeacherGradeManagementView
         pnlBody.ResumeLayout(false);
         cardAssessmentList.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvAssessments).EndInit();
-        pnlRuleNote.ResumeLayout(false);
-        pnlRuleNote.PerformLayout();
         pnlFilterBar.ResumeLayout(false);
         pnlFilterBar.PerformLayout();
         ResumeLayout(false);
@@ -287,6 +261,4 @@ partial class TeacherGradeManagementView
     private System.Windows.Forms.ComboBox cboClassFilter;
     private ECMS.UI.Controls.AppCard cardAssessmentList;
     private ECMS.UI.Controls.AppDataGrid dgvAssessments;
-    private System.Windows.Forms.Panel pnlRuleNote;
-    private System.Windows.Forms.Label lblRuleText;
 }

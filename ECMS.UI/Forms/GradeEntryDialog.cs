@@ -17,7 +17,9 @@ public partial class GradeEntryDialog : Form
     private List<ClassExamLookupDto> _classList = new();
     private int _currentClassId = 1;
     private string _currentClassCode = "IELTS-F01";
+    private decimal _currentPassingScore = 5.0m;
     private bool _isCalculating = false;
+    private bool _isClassChanging = false;
 
     public GradeEntryDialog() : this("IELTS-F01")
     {
@@ -30,8 +32,13 @@ public partial class GradeEntryDialog : Form
         _currentClassCode = string.IsNullOrEmpty(defaultClass) ? "IELTS-F01" : defaultClass;
 
         SetupGrid();
-        _ = LoadClassesDataAsync(_currentClassCode);
         WireEvents();
+    }
+
+    protected override async void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        await LoadClassesDataAsync(_currentClassCode);
     }
 
     private void SetupGrid()
@@ -48,70 +55,83 @@ public partial class GradeEntryDialog : Form
         // Cột ẩn StudentId
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStudentId", Visible = false });
 
-        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 50, MinimumWidth = 45, FillWeight = 4F, ReadOnly = true });
-        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã HV", Width = 100, MinimumWidth = 90, FillWeight = 9F, ReadOnly = true });
-        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colName", HeaderText = "Họ và tên", MinimumWidth = 160, FillWeight = 19F, ReadOnly = true });
+        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colStt", HeaderText = "STT", Width = 45, MinimumWidth = 40, FillWeight = 4F, ReadOnly = true, DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter } });
+        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colCode", HeaderText = "Mã HV", Width = 95, MinimumWidth = 85, FillWeight = 9F, ReadOnly = true, DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9F, FontStyle.Bold) } });
+        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn { Name = "colName", HeaderText = "Họ và tên", MinimumWidth = 160, FillWeight = 20F, ReadOnly = true });
 
-        // 3 Cột điểm có thể nhập trực tiếp
+        // 4 Cột chấm điểm chuẩn IELTS
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colRegular",
-            HeaderText = "Thường xuyên (TX · 20%)",
-            Width = 145,
-            MinimumWidth = 130,
-            FillWeight = 14F,
+            Name = "colListening",
+            HeaderText = "Listening (Nghe · 0-9)",
+            Width = 135,
+            MinimumWidth = 120,
+            FillWeight = 13F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
         });
 
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colMidterm",
-            HeaderText = "Giữa khóa (GK · 30%)",
-            Width = 145,
-            MinimumWidth = 130,
-            FillWeight = 14F,
+            Name = "colReading",
+            HeaderText = "Reading (Đọc · 0-9)",
+            Width = 135,
+            MinimumWidth = 120,
+            FillWeight = 13F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
         });
 
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colFinal",
-            HeaderText = "Cuối khóa (CK · 50%)",
-            Width = 145,
-            MinimumWidth = 130,
-            FillWeight = 14F,
+            Name = "colWriting",
+            HeaderText = "Writing (Viết · 0-9)",
+            Width = 135,
+            MinimumWidth = 120,
+            FillWeight = 13F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
         });
 
-        // Điểm TB và Kết quả (Tự động tính)
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "colAverage",
-            HeaderText = "Điểm TB",
-            Width = 95,
-            MinimumWidth = 85,
-            FillWeight = 9F,
+            Name = "colSpeaking",
+            HeaderText = "Speaking (Nói · 0-9)",
+            Width = 135,
+            MinimumWidth = 120,
+            FillWeight = 13F,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
+        });
+
+        // Điểm IELTS Overall (Tự động tính theo chuẩn làm tròn IDP/BC)
+        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            Name = "colOverall",
+            HeaderText = "IELTS Overall",
+            Width = 115,
+            MinimumWidth = 105,
+            FillWeight = 11F,
             ReadOnly = true,
-            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 10F, FontStyle.Bold), BackColor = Color.FromArgb(248, 250, 252) }
+            DefaultCellStyle = new DataGridViewCellStyle
+            {
+                Alignment = DataGridViewContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 10.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(239, 246, 255),
+                ForeColor = Color.FromArgb(29, 78, 216)
+            }
         });
 
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colResult",
-            HeaderText = "Kết quả",
-            Width = 120,
-            MinimumWidth = 110,
-            FillWeight = 11F,
+            HeaderText = "Kết quả đạt chuẩn",
+            Width = 145,
+            MinimumWidth = 130,
+            FillWeight = 14F,
             ReadOnly = true,
-            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold), BackColor = Color.FromArgb(248, 250, 252) }
-        });
-
-        dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
-        {
-            Name = "colComment",
-            HeaderText = "Ghi chú học vụ",
-            MinimumWidth = 160,
-            FillWeight = 20F
+            DefaultCellStyle = new DataGridViewCellStyle
+            {
+                Alignment = DataGridViewContentAlignment.MiddleCenter,
+                Font = new Font("Segoe UI", 9.5F, FontStyle.Bold),
+                BackColor = Color.FromArgb(248, 250, 252)
+            }
         });
 
         dgvStudentGrades.CellValueChanged += DgvStudentGrades_CellValueChanged;
@@ -125,13 +145,14 @@ public partial class GradeEntryDialog : Form
             var classes = (await _examService.GetClassesLookupAsync()).ToList();
             _classList = classes;
 
+            _isClassChanging = true;
             cboClass.Items.Clear();
             int selectedIndex = 0;
 
             for (int i = 0; i < classes.Count; i++)
             {
                 cboClass.Items.Add(classes[i].ClassCode);
-                if (classes[i].ClassCode == defaultClass)
+                if (classes[i].ClassCode.Equals(defaultClass, StringComparison.OrdinalIgnoreCase))
                 {
                     selectedIndex = i;
                 }
@@ -140,10 +161,19 @@ public partial class GradeEntryDialog : Form
             if (cboClass.Items.Count > 0)
             {
                 cboClass.SelectedIndex = selectedIndex;
+                var targetClass = _classList[selectedIndex];
+                _isClassChanging = false;
+                await LoadClassGradesAsync(targetClass.ClassId, targetClass.ClassCode);
+            }
+            else
+            {
+                _isClassChanging = false;
+                await LoadClassGradesAsync(1, defaultClass);
             }
         }
         catch (Exception ex)
         {
+            _isClassChanging = false;
             MessageBox.Show("Lỗi tải danh sách lớp học: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
@@ -153,11 +183,17 @@ public partial class GradeEntryDialog : Form
         _currentClassId = classId;
         _currentClassCode = classCode;
 
-        var cls = _classList.FirstOrDefault(c => c.ClassId == classId);
-        lblTitle.Text = $"Sổ điểm lớp học · {_currentClassCode}";
+        var cls = _classList.FirstOrDefault(c => c.ClassId == classId || c.ClassCode == classCode);
+        _currentPassingScore = cls?.PassingScore ?? 5.0m;
+
+        lblTitle.Text = $"Sổ điểm IELTS 4 Kỹ năng · {_currentClassCode}";
         if (cls != null)
         {
-            lblSub.Text = $"Khóa học: {cls.CourseName} | Giáo viên: {cls.TeacherName} | Sĩ số: {cls.StudentCount} học viên";
+            lblSub.Text = $"Khóa học: {cls.CourseName} | Giáo viên: {cls.TeacherName} | Sĩ số: {cls.StudentCount} học viên | Chuẩn đạt: Overall ≥ {_currentPassingScore:0.0}";
+        }
+        else
+        {
+            lblSub.Text = $"Lớp học: {_currentClassCode} | Thang điểm: IELTS Band 0.0 – 9.0";
         }
         lblSaveNotice.Visible = false;
 
@@ -170,10 +206,11 @@ public partial class GradeEntryDialog : Form
             int stt = 1;
             foreach (var r in rows)
             {
-                string regText = r.RegularScore.HasValue ? r.RegularScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
-                string midText = r.MidtermScore.HasValue ? r.MidtermScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
-                string finText = r.FinalScore.HasValue ? r.FinalScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
-                string avgText = r.AverageScore.HasValue ? r.AverageScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
+                string lText = r.ListeningScore.HasValue ? r.ListeningScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
+                string rText = r.ReadingScore.HasValue ? r.ReadingScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
+                string wText = r.WritingScore.HasValue ? r.WritingScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
+                string sText = r.SpeakingScore.HasValue ? r.SpeakingScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
+                string overallText = r.OverallScore.HasValue ? r.OverallScore.Value.ToString("0.0", CultureInfo.InvariantCulture) : "";
                 string resultText = string.IsNullOrEmpty(r.ResultText) ? "--" : r.ResultText;
 
                 dgvStudentGrades.Rows.Add(
@@ -181,19 +218,19 @@ public partial class GradeEntryDialog : Form
                     stt.ToString(),
                     r.StudentCode,
                     r.FullName,
-                    regText,
-                    midText,
-                    finText,
-                    avgText,
-                    resultText,
-                    r.Comment ?? ""
+                    lText,
+                    rText,
+                    wText,
+                    sText,
+                    overallText,
+                    resultText
                 );
                 stt++;
             }
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Lỗi tải điểm học viên từ CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("Lỗi tải bảng điểm học viên từ CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {
@@ -206,47 +243,58 @@ public partial class GradeEntryDialog : Form
         if (_isCalculating || e.RowIndex < 0) return;
 
         string colName = dgvStudentGrades.Columns[e.ColumnIndex].Name;
-        if (colName == "colRegular" || colName == "colMidterm" || colName == "colFinal")
+        if (colName == "colListening" || colName == "colReading" || colName == "colWriting" || colName == "colSpeaking")
         {
-            CalculateRowAverage(e.RowIndex);
+            CalculateIeltsRow(e.RowIndex);
         }
     }
 
-    private void CalculateRowAverage(int rowIndex)
+    private void CalculateIeltsRow(int rowIndex)
     {
         _isCalculating = true;
         try
         {
             var row = dgvStudentGrades.Rows[rowIndex];
-            double? regular = ParseNullableScore(row.Cells["colRegular"].Value);
-            double? mid = ParseNullableScore(row.Cells["colMidterm"].Value);
-            double? final = ParseNullableScore(row.Cells["colFinal"].Value);
+            double? l = ParseIeltsScore(row.Cells["colListening"].Value);
+            double? r = ParseIeltsScore(row.Cells["colReading"].Value);
+            double? w = ParseIeltsScore(row.Cells["colWriting"].Value);
+            double? s = ParseIeltsScore(row.Cells["colSpeaking"].Value);
 
-            if (regular.HasValue || mid.HasValue || final.HasValue)
+            var skills = new List<double>();
+            if (l.HasValue) skills.Add(l.Value);
+            if (r.HasValue) skills.Add(r.Value);
+            if (w.HasValue) skills.Add(w.Value);
+            if (s.HasValue) skills.Add(s.Value);
+
+            if (skills.Count > 0)
             {
-                double rVal = regular ?? 0;
-                double mVal = mid ?? 0;
-                double fVal = final ?? 0;
+                // Quy tắc làm tròn IELTS chuẩn quốc tế
+                double mean = skills.Average();
+                double intPart = Math.Floor(mean);
+                double frac = mean - intPart;
 
-                double avg = (rVal * 0.2) + (mVal * 0.3) + (fVal * 0.5);
-                row.Cells["colAverage"].Value = avg.ToString("0.0", CultureInfo.InvariantCulture);
+                double overall;
+                if (frac < 0.25)
+                    overall = intPart;
+                else if (frac < 0.75)
+                    overall = intPart + 0.5;
+                else
+                    overall = intPart + 1.0;
 
-                if (avg >= 8.5)
+                row.Cells["colOverall"].Value = overall.ToString("0.0", CultureInfo.InvariantCulture);
+
+                if ((decimal)overall >= _currentPassingScore)
                 {
-                    row.Cells["colResult"].Value = "✓ Xuất sắc";
-                }
-                else if (avg >= 6.5)
-                {
-                    row.Cells["colResult"].Value = "✓ Đạt";
+                    row.Cells["colResult"].Value = $"✓ Đạt (Band {overall:0.0})";
                 }
                 else
                 {
-                    row.Cells["colResult"].Value = "✕ Chưa đạt";
+                    row.Cells["colResult"].Value = $"✕ Chưa đạt ({overall:0.0})";
                 }
             }
             else
             {
-                row.Cells["colAverage"].Value = "";
+                row.Cells["colOverall"].Value = "";
                 row.Cells["colResult"].Value = "--";
             }
         }
@@ -256,7 +304,7 @@ public partial class GradeEntryDialog : Form
         }
     }
 
-    private static double? ParseNullableScore(object? val)
+    private static double? ParseIeltsScore(object? val)
     {
         if (val == null) return null;
         string s = val.ToString()?.Trim().Replace(',', '.') ?? "";
@@ -264,7 +312,7 @@ public partial class GradeEntryDialog : Form
 
         if (double.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out double res))
         {
-            return Math.Clamp(res, 0, 10);
+            return Math.Clamp(res, 0.0, 9.0);
         }
         return null;
     }
@@ -277,7 +325,7 @@ public partial class GradeEntryDialog : Form
 
         if (decimal.TryParse(s, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal res))
         {
-            return Math.Clamp(res, 0m, 10m);
+            return Math.Clamp(res, 0m, 9.0m);
         }
         return null;
     }
@@ -309,6 +357,7 @@ public partial class GradeEntryDialog : Form
 
         cboClass.SelectedIndexChanged += async (s, e) =>
         {
+            if (_isClassChanging) return;
             string selected = cboClass.SelectedItem?.ToString() ?? "IELTS-F01";
             var cls = _classList.FirstOrDefault(c => c.ClassCode == selected);
             if (cls != null)
@@ -330,24 +379,25 @@ public partial class GradeEntryDialog : Form
                     int studentId = Convert.ToInt32(row.Cells["colStudentId"].Value);
                     string code = row.Cells["colCode"].Value?.ToString() ?? "";
                     string name = row.Cells["colName"].Value?.ToString() ?? "";
-                    decimal? reg = ParseNullableDecimal(row.Cells["colRegular"].Value);
-                    decimal? mid = ParseNullableDecimal(row.Cells["colMidterm"].Value);
-                    decimal? fin = ParseNullableDecimal(row.Cells["colFinal"].Value);
-                    decimal? avg = ParseNullableDecimal(row.Cells["colAverage"].Value);
+                    decimal? lis = ParseNullableDecimal(row.Cells["colListening"].Value);
+                    decimal? read = ParseNullableDecimal(row.Cells["colReading"].Value);
+                    decimal? writ = ParseNullableDecimal(row.Cells["colWriting"].Value);
+                    decimal? spk = ParseNullableDecimal(row.Cells["colSpeaking"].Value);
+                    decimal? overall = ParseNullableDecimal(row.Cells["colOverall"].Value);
                     string result = row.Cells["colResult"].Value?.ToString() ?? "";
-                    string comment = row.Cells["colComment"].Value?.ToString() ?? "";
 
                     rowsToSave.Add(new ClassGradeRowDto
                     {
                         StudentId = studentId,
                         StudentCode = code,
                         FullName = name,
-                        RegularScore = reg,
-                        MidtermScore = mid,
-                        FinalScore = fin,
-                        AverageScore = avg,
+                        ListeningScore = lis,
+                        ReadingScore = read,
+                        WritingScore = writ,
+                        SpeakingScore = spk,
+                        OverallScore = overall,
                         ResultText = result,
-                        Comment = comment
+                        Comment = null // Xóa hoàn toàn ghi chú học vụ
                     });
                 }
 
@@ -355,8 +405,8 @@ public partial class GradeEntryDialog : Form
 
                 lblSaveNotice.Visible = true;
                 MessageBox.Show(
-                    $"Đã lưu bảng điểm thành công cho toàn bộ {rowsToSave.Count} học viên lớp {_currentClassCode} vào hệ thống CSDL!",
-                    "Lưu bảng điểm thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    $"Đã lưu bảng điểm IELTS 4 kỹ năng thành công cho toàn bộ {rowsToSave.Count} học viên lớp {_currentClassCode} vào hệ thống CSDL!",
+                    "Lưu bảng điểm IELTS thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 DialogResult = DialogResult.OK;
             }

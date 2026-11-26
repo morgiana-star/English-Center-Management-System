@@ -106,7 +106,7 @@ partial class GradeEntryDialog
         lblSub.Name = "lblSub";
         lblSub.Size = new System.Drawing.Size(434, 20);
         lblSub.TabIndex = 1;
-        lblSub.Text = "Khóa học: IELTS Foundation | Giáo viên: Nguyễn Hoàng Anh | Phòng: P201";
+        lblSub.Text = "Khóa học: IELTS Foundation | Giáo viên: Nguyễn Hoàng Anh | Thang điểm: IELTS Band 0 – 9.0";
         // 
         // lblTitle
         // 
@@ -264,7 +264,7 @@ partial class GradeEntryDialog
         lblGridTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 9);
         lblGridTitle.Size = new System.Drawing.Size(657, 32);
         lblGridTitle.TabIndex = 0;
-        lblGridTitle.Text = "BẢNG ĐIỂM HỌC VIÊN (CÔNG THỨC: TX × 20% + GK × 30% + CK × 50% | ĐẠT: TB ≥ 6.5)";
+        lblGridTitle.Text = "BẢNG ĐIỂM THI IELTS 4 KỸ NĂNG: LISTENING · READING · WRITING · SPEAKING ➔ OVERALL BAND";
         // 
         // GradeEntryDialog
         // 

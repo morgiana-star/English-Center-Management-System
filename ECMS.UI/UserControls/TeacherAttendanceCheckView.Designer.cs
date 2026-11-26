@@ -21,7 +21,6 @@ partial class TeacherAttendanceCheckView
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
-        lblSub = new System.Windows.Forms.Label();
         lblTitle = new System.Windows.Forms.Label();
         pnlBody = new System.Windows.Forms.Panel();
         cardClasses = new ECMS.UI.Controls.AppCard();
@@ -41,32 +40,20 @@ partial class TeacherAttendanceCheckView
         // pnlHeader
         // 
         pnlHeader.BackColor = System.Drawing.Color.White;
-        pnlHeader.Controls.Add(lblSub);
         pnlHeader.Controls.Add(lblTitle);
         pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
         pnlHeader.Location = new System.Drawing.Point(0, 0);
         pnlHeader.Name = "pnlHeader";
         pnlHeader.Padding = new System.Windows.Forms.Padding(24, 16, 24, 16);
-        pnlHeader.Size = new System.Drawing.Size(1160, 75);
+        pnlHeader.Size = new System.Drawing.Size(1160, 64);
         pnlHeader.TabIndex = 0;
-        // 
-        // lblSub
-        // 
-        lblSub.AutoSize = true;
-        lblSub.Font = new System.Drawing.Font("Segoe UI", 9F);
-        lblSub.ForeColor = System.Drawing.Color.FromArgb(108, 117, 125);
-        lblSub.Location = new System.Drawing.Point(24, 46);
-        lblSub.Name = "lblSub";
-        lblSub.Size = new System.Drawing.Size(515, 20);
-        lblSub.TabIndex = 2;
-        lblSub.Text = "Theo dõi chuyên cần, tiến độ và thực hiện điểm danh chi tiết theo từng lớp học";
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
-        lblTitle.Location = new System.Drawing.Point(22, 12);
+        lblTitle.Location = new System.Drawing.Point(22, 14);
         lblTitle.Name = "lblTitle";
         lblTitle.Size = new System.Drawing.Size(340, 35);
         lblTitle.TabIndex = 1;
@@ -224,7 +211,6 @@ partial class TeacherAttendanceCheckView
 
     private System.Windows.Forms.Panel pnlHeader;
     private System.Windows.Forms.Label lblTitle;
-    private System.Windows.Forms.Label lblSub;
     private System.Windows.Forms.Panel pnlBody;
     private ECMS.UI.Controls.AppCard cardClasses;
     private ECMS.UI.Controls.AppDataGrid dgvAttendanceClasses;
