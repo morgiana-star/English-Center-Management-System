@@ -213,6 +213,44 @@ public partial class CreateScheduleDialog : Form
             }
         };
 
+        rbAutoStandard.CheckedChanged += (s, e) =>
+        {
+            if (rbAutoStandard.Checked)
+            {
+                nudExtraCount.Enabled = false;
+                txtExtraTopic.Enabled = false;
+                btnCreateSessions.Text = "+ Tạo buổi học cho lớp";
+            }
+        };
+
+        rbExtraSessions.CheckedChanged += (s, e) =>
+        {
+            if (rbExtraSessions.Checked)
+            {
+                nudExtraCount.Enabled = true;
+                txtExtraTopic.Enabled = true;
+                nudExtraCount.Focus();
+                btnCreateSessions.Text = "+ Thêm buổi phát sinh";
+            }
+        };
+
+        dgvClasses.SelectionChanged += (s, e) =>
+        {
+            if (dgvClasses.SelectedRows.Count > 0)
+            {
+                var row = dgvClasses.SelectedRows[0];
+                int existing = 0;
+                int total = 0;
+                if (int.TryParse(row.Cells["colExistingSessions"].Value?.ToString(), out int exVal)) existing = exVal;
+                if (int.TryParse(row.Cells["colTotalSessions"].Value?.ToString(), out int totVal)) total = totVal;
+
+                if (existing >= total && total > 0)
+                {
+                    rbExtraSessions.Checked = true;
+                }
+            }
+        };
+
         txtSearch.TextChanged += (s, e) =>
         {
             string kw = txtSearch.Text.Trim().ToLowerInvariant();
@@ -273,17 +311,142 @@ public partial class CreateScheduleDialog : Form
         {
             using var conn = DatabaseConfig.GetConnection();
 
+            if (rbExtraSessions.Checked)
+            {
+                // ==================== CHẾ ĐỘ BUỔI PHÁT SINH / BỔ SUNG ====================
+                int extraCount = (int)nudExtraCount.Value;
+                if (extraCount <= 0)
+                {
+                    MessageBox.Show("Vui lòng nhập số buổi muốn bổ sung lớn hơn 0!", "Số buổi không hợp lệ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string customTopic = string.IsNullOrWhiteSpace(txtExtraTopic.Text)
+                    ? "Bổ trợ kiến thức & ôn tập chuyên đề"
+                    : txtExtraTopic.Text.Trim();
+
+                // Lấy số thứ tự buổi học lớn nhất và ngày của buổi học cuối cùng
+                int maxSessionNum = await conn.ExecuteScalarAsync<int>(
+                    "SELECT COALESCE(MAX(SessionNumber), 0) FROM ClassSchedules WHERE ClassId = @ClassId;",
+                    new { ClassId = classId });
+
+                string? lastDateStr = await conn.ExecuteScalarAsync<string?>(
+                    "SELECT MAX(Date) FROM ClassSchedules WHERE ClassId = @ClassId;",
+                    new { ClassId = classId });
+
+                DateTime currentScanDate;
+                if (!string.IsNullOrEmpty(lastDateStr) && DateTime.TryParse(lastDateStr.Split('T')[0], out var lastDate))
+                {
+                    currentScanDate = lastDate.AddDays(1);
+                }
+                else
+                {
+                    currentScanDate = startDate;
+                }
+
+                var newExtraSessions = new List<(int SessionNum, string Date, string Topic)>();
+                DateTime lastCreatedDate = currentScanDate;
+                int generated = 0;
+
+                while (generated < extraCount)
+                {
+                    if (targetDays.Contains(currentScanDate.DayOfWeek))
+                    {
+                        int sNum = maxSessionNum + generated + 1;
+                        string topic = $"Buổi {sNum} (Phát sinh): {customTopic}";
+                        newExtraSessions.Add((sNum, currentScanDate.ToString("yyyy-MM-dd"), topic));
+                        lastCreatedDate = currentScanDate;
+                        generated++;
+                    }
+                    currentScanDate = currentScanDate.AddDays(1);
+                }
+
+                string firstDateStr = newExtraSessions.Count > 0 ? DateTime.Parse(newExtraSessions[0].Date).ToString("dd/MM/yyyy") : "";
+                string lastDateDisplay = lastCreatedDate.ToString("dd/MM/yyyy");
+
+                var askConfirm = MessageBox.Show(
+                    $"XÁC NHẬN TẠO BUỔI HỌC PHÁT SINH CHO LỚP {code}:\n\n" +
+                    $"• Khóa học: {course}\n" +
+                    $"• Số buổi bổ sung: {extraCount} buổi (Từ Buổi {maxSessionNum + 1} đến Buổi {maxSessionNum + extraCount})\n" +
+                    $"• Thời gian diễn ra: Từ {firstDateStr} đến {lastDateDisplay}\n" +
+                    $"• Lịch định kỳ: {pattern.Replace(",", " / ")} ({startTime} – {endTime})\n" +
+                    $"• Phòng học: {room} | Giáo viên: {teacher}\n" +
+                    $"• Nội dung/Chủ đề: {customTopic}\n\n" +
+                    "Bạn có muốn tiến hành tạo lịch học phát sinh này?",
+                    "Xác nhận tạo buổi học phát sinh", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (askConfirm != DialogResult.Yes) return;
+
+                btnCreateSessions.Enabled = false;
+
+                using var trans = conn.BeginTransaction();
+                try
+                {
+                    foreach (var s in newExtraSessions)
+                    {
+                        await conn.ExecuteAsync(@"
+                            INSERT INTO ClassSchedules (ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
+                            VALUES (@ClassId, @SessionNum, @Date, @StartTime, @EndTime, @RoomId, @TeacherId, 0, @Topic);",
+                            new
+                            {
+                                ClassId = classId,
+                                SessionNum = s.SessionNum,
+                                Date = s.Date,
+                                StartTime = startTime,
+                                EndTime = endTime,
+                                RoomId = roomId,
+                                TeacherId = teacherId,
+                                Topic = s.Topic
+                            }, trans);
+                    }
+
+                    // Cập nhật EndDate của lớp nếu ngày cuối cùng vượt quá EndDate hiện tại
+                    await conn.ExecuteAsync(@"
+                        UPDATE Classes 
+                        SET EndDate = CASE WHEN EndDate IS NULL OR @EndDate > EndDate THEN @EndDate ELSE EndDate END,
+                            UpdatedAt = CURRENT_TIMESTAMP 
+                        WHERE ClassId = @ClassId;",
+                        new { EndDate = lastCreatedDate.ToString("yyyy-MM-dd"), ClassId = classId }, trans);
+
+                    trans.Commit();
+                }
+                catch
+                {
+                    trans.Rollback();
+                    throw;
+                }
+
+                string successMsg = $"ĐÃ TẠO THÀNH CÔNG {extraCount} BUỔI HỌC PHÁT SINH!\n\n" +
+                                   $"• Lớp: {code} ({course})\n" +
+                                   $"• Tổng số buổi sau bổ sung: {maxSessionNum + extraCount} buổi\n" +
+                                   $"• Các buổi mới: Buổi {maxSessionNum + 1} ➔ Buổi {maxSessionNum + extraCount}\n" +
+                                   $"• Thời gian diễn ra: Từ {firstDateStr} đến {lastDateDisplay}\n" +
+                                   $"• Giảng viên: {teacher} | Phòng: {room}";
+
+                MessageBox.Show(successMsg, "Tạo buổi học phát sinh thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+                return;
+            }
+
+            // ==================== CHẾ ĐỘ THEO KHUNG CHUẨN KHÓA HỌC ====================
             int startSessionNum = 1;
-            DateTime currentScanDate = startDate;
+            DateTime currentScanDateStd = startDate;
 
             if (existingCount >= totalSessions)
             {
                 var ask = MessageBox.Show(
-                    $"Lớp '{code}' hiện đã có đủ {existingCount}/{totalSessions} buổi học trong hệ thống.\n\n" +
-                    "Bạn có muốn XÓA TOÀN BỘ các buổi học chưa khóa và sinh lại từ ngày khai giảng không?",
+                    $"Lớp '{code}' hiện đã có đủ {existingCount}/{totalSessions} buổi học theo khung chuẩn.\n\n" +
+                    "• Để thêm các buổi học ngoài khung (học bù, bổ trợ chuyên đề), vui lòng chọn chế độ 'Buổi học phát sinh / bổ sung' ở góc dưới và nhập số buổi muốn bổ sung.\n\n" +
+                    "• Bạn có muốn XÓA TOÀN BỘ các buổi học chưa khóa và sinh lại từ ngày khai giảng không?",
                     "Lớp đã có đủ lịch học", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (ask != DialogResult.Yes) return;
+                if (ask != DialogResult.Yes)
+                {
+                    rbExtraSessions.Checked = true;
+                    nudExtraCount.Focus();
+                    return;
+                }
 
                 // Xóa các buổi học chưa khóa sổ
                 await conn.ExecuteAsync(
@@ -315,29 +478,29 @@ public partial class CreateScheduleDialog : Form
 
                 if (!string.IsNullOrEmpty(lastDateStr) && DateTime.TryParse(lastDateStr.Split('T')[0], out var lastDate))
                 {
-                    currentScanDate = lastDate.AddDays(1);
+                    currentScanDateStd = lastDate.AddDays(1);
                 }
             }
 
-            // Sinh các buổi học
+            // Sinh các buổi học chuẩn
             btnCreateSessions.Enabled = false;
             var newSessions = new List<(int SessionNum, string Date, string Topic)>();
-            DateTime lastCreatedDate = currentScanDate;
+            DateTime lastCreatedDateStd = currentScanDateStd;
 
             while (startSessionNum <= totalSessions)
             {
-                if (targetDays.Contains(currentScanDate.DayOfWeek))
+                if (targetDays.Contains(currentScanDateStd.DayOfWeek))
                 {
                     string topic = $"Buổi {startSessionNum}: Bài học chương trình {course}";
-                    newSessions.Add((startSessionNum, currentScanDate.ToString("yyyy-MM-dd"), topic));
-                    lastCreatedDate = currentScanDate;
+                    newSessions.Add((startSessionNum, currentScanDateStd.ToString("yyyy-MM-dd"), topic));
+                    lastCreatedDateStd = currentScanDateStd;
                     startSessionNum++;
                 }
-                currentScanDate = currentScanDate.AddDays(1);
+                currentScanDateStd = currentScanDateStd.AddDays(1);
             }
 
             // Thực hiện ghi vào CSDL trong Transaction
-            using var trans = conn.BeginTransaction();
+            using var transStd = conn.BeginTransaction();
             try
             {
                 foreach (var s in newSessions)
@@ -355,24 +518,24 @@ public partial class CreateScheduleDialog : Form
                             RoomId = roomId,
                             TeacherId = teacherId,
                             Topic = s.Topic
-                        }, trans);
+                        }, transStd);
                 }
 
                 // Cập nhật ngày kết thúc dự kiến của lớp
                 await conn.ExecuteAsync(
                     "UPDATE Classes SET EndDate = @EndDate, UpdatedAt = CURRENT_TIMESTAMP WHERE ClassId = @ClassId;",
-                    new { EndDate = lastCreatedDate.ToString("yyyy-MM-dd"), ClassId = classId }, trans);
+                    new { EndDate = lastCreatedDateStd.ToString("yyyy-MM-dd"), ClassId = classId }, transStd);
 
-                trans.Commit();
+                transStd.Commit();
             }
             catch
             {
-                trans.Rollback();
+                transStd.Rollback();
                 throw;
             }
 
-            string firstDateStr = newSessions.Count > 0 ? DateTime.Parse(newSessions[0].Date).ToString("dd/MM/yyyy") : "";
-            string lastDateDisplay = lastCreatedDate.ToString("dd/MM/yyyy");
+            string firstDateStrStd = newSessions.Count > 0 ? DateTime.Parse(newSessions[0].Date).ToString("dd/MM/yyyy") : "";
+            string lastDateDisplayStd = lastCreatedDateStd.ToString("dd/MM/yyyy");
 
             string message = $"ĐÃ TẠO LỊCH HỌC THÀNH CÔNG!\n\n" +
                              $"• Lớp: {code} ({course})\n" +
@@ -380,7 +543,7 @@ public partial class CreateScheduleDialog : Form
                              $"• Phòng học: {room}\n" +
                              $"• Lịch định kỳ: {pattern.Replace(",", " / ")} ({startTime} – {endTime})\n" +
                              $"• Số buổi đã tạo: {newSessions.Count} buổi học\n" +
-                             $"• Thời gian diễn ra: Từ {firstDateStr} đến {lastDateDisplay}";
+                             $"• Thời gian diễn ra: Từ {firstDateStrStd} đến {lastDateDisplayStd}";
 
             MessageBox.Show(message, "Tạo buổi học thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;

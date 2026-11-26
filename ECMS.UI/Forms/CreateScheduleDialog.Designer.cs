@@ -32,12 +32,20 @@ partial class CreateScheduleDialog
         pnlFooter = new System.Windows.Forms.Panel();
         btnCancel = new ECMS.UI.Controls.AppButton();
         btnCreateSessions = new ECMS.UI.Controls.AppButton();
+        lblOptionTitle = new System.Windows.Forms.Label();
+        rbAutoStandard = new System.Windows.Forms.RadioButton();
+        rbExtraSessions = new System.Windows.Forms.RadioButton();
+        lblExtraCount = new System.Windows.Forms.Label();
+        nudExtraCount = new System.Windows.Forms.NumericUpDown();
+        lblExtraTopic = new System.Windows.Forms.Label();
+        txtExtraTopic = new System.Windows.Forms.TextBox();
         pnlHeader.SuspendLayout();
         pnlBody.SuspendLayout();
         cardClasses.SuspendLayout();
         pnlFilter.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvClasses).BeginInit();
         pnlFooter.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)nudExtraCount).BeginInit();
         SuspendLayout();
         // 
         // pnlHeader
@@ -181,14 +189,105 @@ partial class CreateScheduleDialog
         // pnlFooter
         // 
         pnlFooter.BackColor = System.Drawing.Color.White;
+        pnlFooter.Controls.Add(lblOptionTitle);
+        pnlFooter.Controls.Add(rbAutoStandard);
+        pnlFooter.Controls.Add(rbExtraSessions);
+        pnlFooter.Controls.Add(lblExtraCount);
+        pnlFooter.Controls.Add(nudExtraCount);
+        pnlFooter.Controls.Add(lblExtraTopic);
+        pnlFooter.Controls.Add(txtExtraTopic);
         pnlFooter.Controls.Add(btnCancel);
         pnlFooter.Controls.Add(btnCreateSessions);
         pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlFooter.Location = new System.Drawing.Point(0, 600);
+        pnlFooter.Location = new System.Drawing.Point(0, 595);
         pnlFooter.Name = "pnlFooter";
-        pnlFooter.Padding = new System.Windows.Forms.Padding(24, 12, 24, 12);
-        pnlFooter.Size = new System.Drawing.Size(1080, 60);
+        pnlFooter.Padding = new System.Windows.Forms.Padding(20, 10, 20, 10);
+        pnlFooter.Size = new System.Drawing.Size(1080, 85);
         pnlFooter.TabIndex = 2;
+        // 
+        // lblOptionTitle
+        // 
+        lblOptionTitle.AutoSize = true;
+        lblOptionTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        lblOptionTitle.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
+        lblOptionTitle.Location = new System.Drawing.Point(20, 13);
+        lblOptionTitle.Name = "lblOptionTitle";
+        lblOptionTitle.Size = new System.Drawing.Size(92, 20);
+        lblOptionTitle.TabIndex = 2;
+        lblOptionTitle.Text = "Chế độ tạo:";
+        // 
+        // rbAutoStandard
+        // 
+        rbAutoStandard.AutoSize = true;
+        rbAutoStandard.Checked = true;
+        rbAutoStandard.Font = new System.Drawing.Font("Segoe UI", 9F);
+        rbAutoStandard.ForeColor = System.Drawing.Color.FromArgb(51, 65, 85);
+        rbAutoStandard.Location = new System.Drawing.Point(118, 11);
+        rbAutoStandard.Name = "rbAutoStandard";
+        rbAutoStandard.Size = new System.Drawing.Size(188, 24);
+        rbAutoStandard.TabIndex = 3;
+        rbAutoStandard.TabStop = true;
+        rbAutoStandard.Text = "Khung chuẩn khóa học";
+        rbAutoStandard.UseVisualStyleBackColor = true;
+        // 
+        // rbExtraSessions
+        // 
+        rbExtraSessions.AutoSize = true;
+        rbExtraSessions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+        rbExtraSessions.ForeColor = System.Drawing.Color.FromArgb(24, 119, 242);
+        rbExtraSessions.Location = new System.Drawing.Point(318, 11);
+        rbExtraSessions.Name = "rbExtraSessions";
+        rbExtraSessions.Size = new System.Drawing.Size(232, 24);
+        rbExtraSessions.TabIndex = 4;
+        rbExtraSessions.Text = "Buổi học phát sinh / bổ sung";
+        rbExtraSessions.UseVisualStyleBackColor = true;
+        // 
+        // lblExtraCount
+        // 
+        lblExtraCount.AutoSize = true;
+        lblExtraCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblExtraCount.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblExtraCount.Location = new System.Drawing.Point(20, 48);
+        lblExtraCount.Name = "lblExtraCount";
+        lblExtraCount.Size = new System.Drawing.Size(155, 20);
+        lblExtraCount.TabIndex = 5;
+        lblExtraCount.Text = "Số buổi muốn bổ sung:";
+        // 
+        // nudExtraCount
+        // 
+        nudExtraCount.Enabled = false;
+        nudExtraCount.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+        nudExtraCount.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        nudExtraCount.Location = new System.Drawing.Point(180, 45);
+        nudExtraCount.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+        nudExtraCount.Maximum = new decimal(new int[] { 50, 0, 0, 0 });
+        nudExtraCount.Name = "nudExtraCount";
+        nudExtraCount.Size = new System.Drawing.Size(65, 29);
+        nudExtraCount.TabIndex = 6;
+        nudExtraCount.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+        nudExtraCount.Value = new decimal(new int[] { 1, 0, 0, 0 });
+        // 
+        // lblExtraTopic
+        // 
+        lblExtraTopic.AutoSize = true;
+        lblExtraTopic.Font = new System.Drawing.Font("Segoe UI", 9F);
+        lblExtraTopic.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
+        lblExtraTopic.Location = new System.Drawing.Point(260, 48);
+        lblExtraTopic.Name = "lblExtraTopic";
+        lblExtraTopic.Size = new System.Drawing.Size(123, 20);
+        lblExtraTopic.TabIndex = 7;
+        lblExtraTopic.Text = "Chủ đề / Ghi chú:";
+        // 
+        // txtExtraTopic
+        // 
+        txtExtraTopic.Enabled = false;
+        txtExtraTopic.Font = new System.Drawing.Font("Segoe UI", 9F);
+        txtExtraTopic.ForeColor = System.Drawing.Color.FromArgb(15, 23, 42);
+        txtExtraTopic.Location = new System.Drawing.Point(388, 45);
+        txtExtraTopic.Name = "txtExtraTopic";
+        txtExtraTopic.Size = new System.Drawing.Size(325, 27);
+        txtExtraTopic.TabIndex = 8;
+        txtExtraTopic.Text = "Bổ trợ kiến thức & ôn tập chuyên đề";
         // 
         // btnCancel
         // 
@@ -200,9 +299,9 @@ partial class CreateScheduleDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
-        btnCancel.Location = new System.Drawing.Point(750, 12);
+        btnCancel.Location = new System.Drawing.Point(732, 28);
         btnCancel.Name = "btnCancel";
-        btnCancel.Size = new System.Drawing.Size(100, 36);
+        btnCancel.Size = new System.Drawing.Size(100, 38);
         btnCancel.TabIndex = 1;
         btnCancel.Text = "Hủy bỏ";
         btnCancel.UseVisualStyleBackColor = false;
@@ -218,9 +317,9 @@ partial class CreateScheduleDialog
         btnCreateSessions.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCreateSessions.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnCreateSessions.ForeColor = System.Drawing.Color.White;
-        btnCreateSessions.Location = new System.Drawing.Point(860, 12);
+        btnCreateSessions.Location = new System.Drawing.Point(842, 28);
         btnCreateSessions.Name = "btnCreateSessions";
-        btnCreateSessions.Size = new System.Drawing.Size(196, 36);
+        btnCreateSessions.Size = new System.Drawing.Size(218, 38);
         btnCreateSessions.TabIndex = 0;
         btnCreateSessions.Text = "+ Tạo buổi học cho lớp";
         btnCreateSessions.UseVisualStyleBackColor = false;
@@ -231,7 +330,7 @@ partial class CreateScheduleDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
-        ClientSize = new System.Drawing.Size(1080, 660);
+        ClientSize = new System.Drawing.Size(1080, 680);
         Controls.Add(pnlBody);
         Controls.Add(pnlFooter);
         Controls.Add(pnlHeader);
@@ -250,6 +349,8 @@ partial class CreateScheduleDialog
         pnlFilter.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvClasses).EndInit();
         pnlFooter.ResumeLayout(false);
+        pnlFooter.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)nudExtraCount).EndInit();
         ResumeLayout(false);
     }
 
@@ -267,4 +368,11 @@ partial class CreateScheduleDialog
     private System.Windows.Forms.Panel pnlFooter;
     private ECMS.UI.Controls.AppButton btnCancel;
     private ECMS.UI.Controls.AppButton btnCreateSessions;
+    private System.Windows.Forms.Label lblOptionTitle;
+    private System.Windows.Forms.RadioButton rbAutoStandard;
+    private System.Windows.Forms.RadioButton rbExtraSessions;
+    private System.Windows.Forms.Label lblExtraCount;
+    private System.Windows.Forms.NumericUpDown nudExtraCount;
+    private System.Windows.Forms.Label lblExtraTopic;
+    private System.Windows.Forms.TextBox txtExtraTopic;
 }

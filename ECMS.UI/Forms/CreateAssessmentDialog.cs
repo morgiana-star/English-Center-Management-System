@@ -1,12 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class CreateAssessmentDialog : Form
 {
+    private readonly IExamService _examService;
+    private List<ClassExamLookupDto> _availableClasses = new();
+
     public string AssessmentName { get; private set; } = string.Empty;
     public string AssessmentType { get; private set; } = string.Empty;
     public string ExamDate { get; private set; } = string.Empty;
@@ -17,9 +24,10 @@ public partial class CreateAssessmentDialog : Form
     public CreateAssessmentDialog(string defaultClass = "IELTS-F01")
     {
         InitializeComponent();
+        _examService = new ExamService();
 
         SetupTypes();
-        SetupClasses(defaultClass);
+        _ = SetupClassesAsync(defaultClass);
         WireEvents();
     }
 
@@ -55,31 +63,32 @@ public partial class CreateAssessmentDialog : Form
         txtWeight.Text = "20%";
     }
 
-    private void SetupClasses(string defaultClass)
+    private async Task SetupClassesAsync(string defaultClass)
     {
-        chkListClasses.Items.Clear();
-        string[] classes =
+        try
         {
-            "IELTS-F01 · IELTS Foundation (GV: Nguyễn Hoàng Anh)",
-            "IELTS-F02 · IELTS Foundation (GV: Trần Minh Tuấn)",
-            "IELTS-I01 · IELTS Intensive (GV: Trần Minh Tuấn)",
-            "TOEIC-A01 · TOEIC 500+ (GV: Lê Thu Hà)",
-            "COM-B01 · Giao tiếp cơ bản (GV: Lê Thu Hà)",
-            "IELTS-F04 · IELTS Foundation (GV: Võ Tấn Toàn)"
-        };
+            chkListClasses.Items.Clear();
+            var classes = (await _examService.GetClassesLookupAsync()).ToList();
+            _availableClasses = classes;
 
-        for (int i = 0; i < classes.Length; i++)
-        {
-            chkListClasses.Items.Add(classes[i]);
-            if (!string.IsNullOrEmpty(defaultClass) && classes[i].Contains(defaultClass))
+            for (int i = 0; i < classes.Count; i++)
             {
-                chkListClasses.SetItemChecked(i, true);
+                var c = classes[i];
+                chkListClasses.Items.Add(c.DisplayText);
+                if (!string.IsNullOrEmpty(defaultClass) && (c.ClassCode == defaultClass || c.DisplayText.Contains(defaultClass)))
+                {
+                    chkListClasses.SetItemChecked(i, true);
+                }
+            }
+
+            if (chkListClasses.CheckedItems.Count == 0 && chkListClasses.Items.Count > 0)
+            {
+                chkListClasses.SetItemChecked(0, true);
             }
         }
-
-        if (chkListClasses.CheckedItems.Count == 0 && chkListClasses.Items.Count > 0)
+        catch (Exception ex)
         {
-            chkListClasses.SetItemChecked(0, true);
+            MessageBox.Show("Lỗi tải danh sách lớp học: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -107,7 +116,7 @@ public partial class CreateAssessmentDialog : Form
             Close();
         };
 
-        btnSave.Click += (s, e) =>
+        btnSave.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtAssessmentName.Text))
             {
@@ -128,19 +137,50 @@ public partial class CreateAssessmentDialog : Form
             ScoreScale = string.IsNullOrWhiteSpace(txtScale.Text) ? "10" : txtScale.Text.Trim();
             Weight = string.IsNullOrWhiteSpace(txtWeight.Text) ? "20%" : txtWeight.Text.Trim();
 
-            SelectedClasses.Clear();
-            foreach (var item in chkListClasses.CheckedItems)
+            decimal weightVal = 20.0m;
+            if (decimal.TryParse(Weight.Replace("%", "").Trim(), out var parsedWeight))
             {
-                string text = item.ToString() ?? "";
-                string code = text.Split('·')[0].Trim();
-                SelectedClasses.Add(code);
+                weightVal = parsedWeight;
             }
 
-            MessageBox.Show($"Đã tạo bài kiểm tra \"{AssessmentName}\" ({AssessmentType}) thành công cho {SelectedClasses.Count} lớp học!",
-                "Tạo bài kiểm tra", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            btnSave.Enabled = false;
+            try
+            {
+                SelectedClasses.Clear();
+                foreach (int index in chkListClasses.CheckedIndices)
+                {
+                    if (index >= 0 && index < _availableClasses.Count)
+                    {
+                        var cls = _availableClasses[index];
+                        await _examService.CreateExamAsync(new CreateExamDto
+                        {
+                            ClassId = cls.ClassId,
+                            ExamName = AssessmentName,
+                            Type = AssessmentType,
+                            ExamDate = dtpExamDate.Value.ToString("yyyy-MM-dd"),
+                            WeightPercentage = weightVal
+                        });
+                        SelectedClasses.Add(cls.ClassCode);
+                    }
+                }
 
-            DialogResult = DialogResult.OK;
-            Close();
+                MessageBox.Show(
+                    $"Đã tạo thành công bài kiểm tra \"{AssessmentName}\" ({AssessmentType}) cho {SelectedClasses.Count} lớp học:\n" +
+                    $"{string.Join(", ", SelectedClasses)}\n\n" +
+                    "Bài kiểm tra đã được lưu vào hệ thống cơ sở dữ liệu.",
+                    "Tạo bài kiểm tra thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi lưu bài kiểm tra vào CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnSave.Enabled = true;
+            }
         };
     }
 }

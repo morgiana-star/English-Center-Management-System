@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using ECMS.Business.Services;
+using ECMS.Core.DTOs;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -10,12 +13,14 @@ namespace ECMS.UI.UserControls;
 
 public partial class TeacherGradeManagementView : UserControl
 {
-    private class AssessmentItem
+    private class AssessmentDisplayItem
     {
         public int Stt { get; set; }
+        public int ExamId { get; set; }
+        public int ClassId { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string ClassCode { get; set; } = string.Empty;
         public string ClassesDisplay { get; set; } = string.Empty;
-        public List<string> ClassList { get; set; } = new();
         public string Type { get; set; } = string.Empty;
         public string Date { get; set; } = string.Empty;
         public string Weight { get; set; } = string.Empty;
@@ -23,15 +28,17 @@ public partial class TeacherGradeManagementView : UserControl
         public string Status { get; set; } = string.Empty;
     }
 
-    private readonly List<AssessmentItem> _items = new();
+    private readonly IExamService _examService;
+    private readonly List<AssessmentDisplayItem> _items = new();
+    private List<ClassExamLookupDto> _classList = new();
 
     public TeacherGradeManagementView()
     {
         InitializeComponent();
+        _examService = new ExamService();
 
-        SetupFilters();
         SetupGrid();
-        LoadSampleData();
+        _ = InitializeViewAsync();
         WireEvents();
     }
 
@@ -62,30 +69,43 @@ public partial class TeacherGradeManagementView : UserControl
         cardAssessmentList.SetBounds(pad, cardY, availWidth, cardHeight);
     }
 
-    private void SetupFilters()
+    private async Task InitializeViewAsync()
     {
-        cboClassFilter.Items.Clear();
-        cboClassFilter.Items.AddRange(new object[]
-        {
-            "Tất cả lớp",
-            "IELTS-F01",
-            "IELTS-F02",
-            "IELTS-I01",
-            "TOEIC-A01",
-            "COM-B01"
-        });
-        cboClassFilter.SelectedIndex = 0;
+        await SetupFiltersAsync();
+        await LoadExamsDataAsync();
+    }
 
-        cboTypeFilter.Items.Clear();
-        cboTypeFilter.Items.AddRange(new object[]
+    private async Task SetupFiltersAsync()
+    {
+        try
         {
-            "Tất cả loại bài thi",
-            "Thường xuyên (TX)",
-            "Giữa khóa (GK)",
-            "Cuối khóa (CK)",
-            "Đầu vào"
-        });
-        cboTypeFilter.SelectedIndex = 0;
+            var classes = (await _examService.GetClassesLookupAsync()).ToList();
+            _classList = classes;
+
+            cboClassFilter.Items.Clear();
+            cboClassFilter.Items.Add("Tất cả lớp");
+
+            foreach (var c in classes)
+            {
+                cboClassFilter.Items.Add(c.ClassCode);
+            }
+            cboClassFilter.SelectedIndex = 0;
+
+            cboTypeFilter.Items.Clear();
+            cboTypeFilter.Items.AddRange(new object[]
+            {
+                "Tất cả loại bài thi",
+                "Thường xuyên (TX)",
+                "Giữa khóa (GK)",
+                "Cuối khóa (CK)",
+                "Đầu vào"
+            });
+            cboTypeFilter.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải bộ lọc kỳ thi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void SetupGrid()
@@ -204,91 +224,96 @@ public partial class TeacherGradeManagementView : UserControl
         };
     }
 
-    private void OpenGradeEntryForRow(int rowIndex)
+    private async Task LoadExamsDataAsync()
     {
-        if (dgvAssessments.Rows[rowIndex].DataBoundItem is AssessmentItem item)
+        try
         {
-            string targetClass = item.ClassList.FirstOrDefault() ?? "IELTS-F01";
-            using var dlg = new GradeEntryDialog(targetClass);
-            dlg.ShowDialog(ParentForm);
+            var exams = (await _examService.GetExamsAsync()).ToList();
+
+            // Nếu trong CSDL chưa có bài thi nào, tự động tạo mẫu các bài thi chuẩn cho các lớp để người dùng trải nghiệm ngay
+            if (exams.Count == 0 && _classList.Count > 0)
+            {
+                foreach (var cls in _classList.Take(3))
+                {
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Bài kiểm tra thường xuyên số 1",
+                        Type = "Quiz",
+                        ExamDate = DateTime.Today.AddDays(-20).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 20.0m
+                    });
+
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Kiểm tra Giữa kỳ (Midterm Test)",
+                        Type = "Midterm",
+                        ExamDate = DateTime.Today.AddDays(-5).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 30.0m
+                    });
+
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Kiểm tra Cuối kỳ (Final Exam)",
+                        Type = "Final",
+                        ExamDate = DateTime.Today.AddDays(25).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 50.0m
+                    });
+                }
+
+                exams = (await _examService.GetExamsAsync()).ToList();
+            }
+
+            _items.Clear();
+            int stt = 1;
+            foreach (var ex in exams)
+            {
+                _items.Add(new AssessmentDisplayItem
+                {
+                    Stt = stt++,
+                    ExamId = ex.ExamId,
+                    ClassId = ex.ClassId,
+                    Title = ex.ExamName,
+                    ClassCode = ex.ClassCode,
+                    ClassesDisplay = $"{ex.ClassCode} ({ex.CourseName})",
+                    Type = ex.TypeDisplay,
+                    Date = ex.DateDisplay,
+                    Weight = ex.WeightDisplay,
+                    GradedRatio = ex.GradedRatioDisplay,
+                    Status = ex.StatusDisplay
+                });
+            }
+
+            ApplyFilter();
         }
-        else
+        catch (Exception ex)
         {
-            using var dlg = new GradeEntryDialog("IELTS-F01");
-            dlg.ShowDialog(ParentForm);
+            MessageBox.Show("Lỗi tải danh sách bài kiểm tra từ CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    private void LoadSampleData()
+    private void OpenGradeEntryForRow(int rowIndex)
     {
-        _items.Clear();
-        _items.Add(new AssessmentItem
+        if (rowIndex >= 0 && rowIndex < dgvAssessments.Rows.Count)
         {
-            Stt = 1,
-            Title = "Đánh giá xếp lớp đầu vào",
-            ClassesDisplay = "IELTS-F01, IELTS-F02",
-            ClassList = new List<string> { "IELTS-F01", "IELTS-F02" },
-            Type = "Đầu vào",
-            Date = "01/08/2026",
-            Weight = "0%",
-            GradedRatio = "38/38",
-            Status = "✓ Đã có điểm"
-        });
+            if (dgvAssessments.Rows[rowIndex].DataBoundItem is AssessmentDisplayItem item)
+            {
+                using var dlg = new GradeEntryDialog(item.ClassCode);
+                if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
+                {
+                    _ = LoadExamsDataAsync();
+                }
+                return;
+            }
+        }
 
-        _items.Add(new AssessmentItem
+        using var fallbackDlg = new GradeEntryDialog("IELTS-F01");
+        if (fallbackDlg.ShowDialog(ParentForm) == DialogResult.OK)
         {
-            Stt = 2,
-            Title = "Bài kiểm tra thường xuyên số 1",
-            ClassesDisplay = "IELTS-F01, IELTS-F02",
-            ClassList = new List<string> { "IELTS-F01", "IELTS-F02" },
-            Type = "Thường xuyên (TX)",
-            Date = "25/08/2026",
-            Weight = "20%",
-            GradedRatio = "38/38",
-            Status = "✓ Đã có điểm"
-        });
-
-        _items.Add(new AssessmentItem
-        {
-            Stt = 3,
-            Title = "Kiểm tra giữa khóa (Mid-term)",
-            ClassesDisplay = "IELTS-F01, IELTS-F02, TOEIC-A01",
-            ClassList = new List<string> { "IELTS-F01", "IELTS-F02", "TOEIC-A01" },
-            Type = "Giữa khóa (GK)",
-            Date = "15/09/2026",
-            Weight = "30%",
-            GradedRatio = "38/53",
-            Status = "✓ Đã có điểm"
-        });
-
-        _items.Add(new AssessmentItem
-        {
-            Stt = 4,
-            Title = "Kiểm tra cuối khóa (Final Exam)",
-            ClassesDisplay = "IELTS-F01, IELTS-F02",
-            ClassList = new List<string> { "IELTS-F01", "IELTS-F02" },
-            Type = "Cuối khóa (CK)",
-            Date = "20/10/2026",
-            Weight = "50%",
-            GradedRatio = "0/38",
-            Status = "⏳ Chờ nhập điểm"
-        });
-
-        _items.Add(new AssessmentItem
-        {
-            Stt = 5,
-            Title = "Mini-test ngữ pháp & từ vựng",
-            ClassesDisplay = "COM-B01",
-            ClassList = new List<string> { "COM-B01" },
-            Type = "Thường xuyên (TX)",
-            Date = "05/09/2026",
-            Weight = "20%",
-            GradedRatio = "12/12",
-            Status = "✓ Đã có điểm"
-        });
-
-        dgvAssessments.DataSource = null;
-        dgvAssessments.DataSource = _items;
+            _ = LoadExamsDataAsync();
+        }
     }
 
     private void WireEvents()
@@ -298,44 +323,28 @@ public partial class TeacherGradeManagementView : UserControl
             var selectedClass = cboClassFilter.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedClass) || selectedClass == "Tất cả lớp")
             {
-                selectedClass = "IELTS-F01";
+                selectedClass = _classList.FirstOrDefault()?.ClassCode ?? "IELTS-F01";
             }
+
             using var dlg = new GradeEntryDialog(selectedClass);
-            dlg.ShowDialog(ParentForm);
+            if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
+            {
+                _ = LoadExamsDataAsync();
+            }
         };
 
-        btnCreateAssessmentTop.Click += (s, e) =>
+        btnCreateAssessmentTop.Click += async (s, e) =>
         {
             var selectedClass = cboClassFilter.SelectedItem?.ToString();
             if (string.IsNullOrEmpty(selectedClass) || selectedClass == "Tất cả lớp")
             {
-                selectedClass = "IELTS-F01";
+                selectedClass = _classList.FirstOrDefault()?.ClassCode ?? "IELTS-F01";
             }
 
             using var dlg = new CreateAssessmentDialog(selectedClass);
             if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
             {
-                var assignedClasses = dlg.SelectedClasses.Count > 0 ? dlg.SelectedClasses : new List<string> { selectedClass };
-                var newItem = new AssessmentItem
-                {
-                    Stt = _items.Count + 1,
-                    Title = dlg.AssessmentName,
-                    ClassList = assignedClasses,
-                    ClassesDisplay = string.Join(", ", assignedClasses),
-                    Type = dlg.AssessmentType,
-                    Date = dlg.ExamDate,
-                    Weight = dlg.Weight,
-                    GradedRatio = "0/" + (assignedClasses.Count * 18),
-                    Status = "⏳ Chờ nhập điểm"
-                };
-
-                _items.Add(newItem);
-                ApplyFilter();
-
-                AppDialog.ShowSuccess(ParentForm, "Tạo bài kiểm tra",
-                    $"Đã tạo thành công bài kiểm tra '{newItem.Title}' cho {assignedClasses.Count} lớp:\n" +
-                    $"{newItem.ClassesDisplay}.\n\n" +
-                    "Bạn có thể ấn 'Nhập điểm' trên bảng để ghi nhận điểm số học viên.");
+                await LoadExamsDataAsync();
             }
         };
 
@@ -355,9 +364,15 @@ public partial class TeacherGradeManagementView : UserControl
              i.Title.ToLowerInvariant().Contains(q) ||
              i.ClassesDisplay.ToLowerInvariant().Contains(q) ||
              i.Type.ToLowerInvariant().Contains(q)) &&
-            (selectedClass == "Tất cả lớp" || i.ClassList.Contains(selectedClass) || i.ClassesDisplay.Contains(selectedClass)) &&
+            (selectedClass == "Tất cả lớp" || i.ClassCode == selectedClass || i.ClassesDisplay.Contains(selectedClass)) &&
             (selectedType == "Tất cả loại bài thi" || i.Type.Contains(selectedType.Replace("Tất cả loại bài thi", "")) || selectedType.Contains(i.Type))
         ).ToList();
+
+        // Cập nhật lại STT sau khi lọc
+        for (int i = 0; i < filtered.Count; i++)
+        {
+            filtered[i].Stt = i + 1;
+        }
 
         dgvAssessments.DataSource = null;
         dgvAssessments.DataSource = filtered;
