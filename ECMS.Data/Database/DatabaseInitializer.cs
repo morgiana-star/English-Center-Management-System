@@ -451,10 +451,22 @@ public static class DatabaseInitializer
             (3, 'GV-0017', 'Trần Minh Tuấn', 'IELTS & TOEIC', '0912345678', 'minhtuan@ecms.edu.vn', 300000, 0),
             (4, 'GV-0018', 'Lê Thu Hà', 'Giao tiếp cơ bản', '0933456789', 'thuha@ecms.edu.vn', 280000, 0);");
 
-        // Student 1
+        // Students (Danh sách sinh viên / học viên mẫu chuẩn)
         conn.Execute(@"
             INSERT OR IGNORE INTO Students (StudentId, StudentCode, FullName, DateOfBirth, Gender, Phone, Email, Address, Status) 
-            VALUES (1, 'HV-2026-0001', 'Nguyễn Văn An (Học viên)', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1', 'Active');");
+            VALUES 
+            (1,  'HV-2026-0001', 'Nguyễn Văn An (Học viên)', '2005-06-15', 'Nam', '0912345678', 'an.nguyen@gmail.com', '123 Lê Lợi, Q.1', 'Active'),
+            (2,  'HV-0241',      'Nguyễn Minh Anh',         '2004-03-12', 'Nữ',  '0912111222', 'minhanh@gmail.com', '12 Lê Lợi, Q.1', 'Active'),
+            (3,  'HV-0237',      'Lê Hoàng Nam',            '2003-08-20', 'Nam', '0912333444', 'hoangnam@gmail.com', '45 Hai Bà Trưng, Q.3', 'Active'),
+            (4,  'HV-0238',      'Phạm Khánh Linh',         '2005-01-15', 'Nữ',  '0912555666', 'khanhlinh@gmail.com', '78 Nguyễn Trãi, Q.5', 'Active'),
+            (5,  'HV-0240',      'Vũ Quang Huy',            '2004-11-09', 'Nam', '0912777888', 'quanghuy@gmail.com', '101 Cách Mạng T8, Q.10', 'Active'),
+            (6,  'HV-0242',      'Đặng Thị Thảo',           '2005-04-25', 'Nữ',  '0912999000', 'thao.dang@gmail.com', '56 Trần Phú, Q.5', 'Active'),
+            (7,  'HV-0245',      'Trần Bảo Long',           '2003-12-30', 'Nam', '0913111222', 'baolong@gmail.com', '89 Lý Thường Kiệt, Q.11', 'Active'),
+            (8,  'HV-0246',      'Hoàng Ngọc Mai',          '2004-07-14', 'Nữ',  '0913333444', 'ngocmai@gmail.com', '23 Võ Thị Sáu, Q.3', 'Active'),
+            (9,  'HV-0247',      'Đỗ Quốc Cường',           '2002-09-18', 'Nam', '0913555666', 'cuong.do@gmail.com', '67 Hoàng Văn Thụ, Q.Phú Nhuận', 'Active'),
+            (10, 'HV-0248',      'Bùi Phương Uyên',         '2005-05-22', 'Nữ',  '0913777888', 'uyen.bui@gmail.com', '34 Pasteur, Q.1', 'Active'),
+            (11, 'HV-0249',      'Ngô Gia Huy',             '2004-10-02', 'Nam', '0913999000', 'giahuy@gmail.com', '88 Nam Kỳ Khởi Nghĩa, Q.1', 'Active'),
+            (12, 'HV-0250',      'Dương Thùy Trang',        '2003-03-19', 'Nữ',  '0914111222', 'thuytrang@gmail.com', '15 Điện Biên Phủ, Q.Bình Thạnh', 'Active');");
 
         // Parent 1
         conn.Execute(@"
@@ -537,7 +549,7 @@ public static class DatabaseInitializer
             (2, 'IELTS-I01', 'Lớp IELTS Intensive K05 (T4-T7)', 2, 3, 3, '2026-10-15', '2027-01-15', 18, 'InProgress', 'T4,T7', '14:00', '17:00'),
             (3, 'TOEIC-A01', 'Lớp TOEIC 500+ K08 (T3-T6)', 3, 3, 2, '2026-10-20', '2026-12-25', 20, 'InProgress', 'T3,T6', '18:30', '20:30'),
             (4, 'COM-B01', 'Lớp Giao tiếp cơ bản K02 (T7-CN)', 4, 4, 5, '2026-11-01', '2026-12-28', 15, 'InProgress', 'T7,CN', '08:30', '11:30'),
-            (5, 'IELTS-F02', 'Lớp IELTS Foundation K13 (T2-T5)', 1, 3, 2, '2026-11-16', '2027-02-16', 20, 'OpenForEnrollment', 'T2,T5', '18:00', '20:00'),
+            (5, 'IELTS-F02', 'Lớp IELTS Foundation K11 (Đã khóa / Hoàn thành)', 1, 3, 2, '2026-06-01', '2026-08-30', 20, 'Completed', 'T2,T5', '18:00', '20:00'),
             (6, 'COM-B02', 'Lớp Giao tiếp cơ bản K03 (T7-CN)', 4, 4, 1, '2026-11-21', '2027-01-21', 15, 'Planning', 'T7,CN', '08:30', '11:30');");
 
         try
@@ -546,13 +558,14 @@ public static class DatabaseInitializer
             conn.Execute("UPDATE Classes SET SchedulePattern = 'T4,T7', StartTime = '14:00', EndTime = '17:00' WHERE ClassId = 2;");
             conn.Execute("UPDATE Classes SET SchedulePattern = 'T3,T6', StartTime = '18:30', EndTime = '20:30' WHERE ClassId = 3;");
             conn.Execute("UPDATE Classes SET SchedulePattern = 'T7,CN', StartTime = '08:30', EndTime = '11:30' WHERE ClassId = 4;");
+            conn.Execute("UPDATE Classes SET Status = 'Completed', ClassName = 'Lớp IELTS Foundation K11 (Đã khóa / Hoàn thành)', SchedulePattern = 'T2,T5', StartTime = '18:00', EndTime = '20:00' WHERE ClassId = 5;");
         }
         catch { }
 
         conn.Execute(@"
             INSERT OR IGNORE INTO ClassSchedules (ScheduleId, ClassId, SessionNumber, Date, StartTime, EndTime, RoomId, TeacherId, IsAttendanceLocked, Topic)
             VALUES 
-            -- Buổi cũ tháng 10
+            -- Buổi cũ tháng 10 của lớp 1
             (1, 1, 1, '2026-10-06', '18:00', '20:00', 1, 2, 1, 'Unit 1: Listening - Note Completion & Phonetics'),
             (2, 1, 2, '2026-10-09', '18:00', '20:00', 1, 2, 1, 'Unit 2: Reading - Skimming & Scanning Masterclass'),
             -- Tuần 11 (09/11/2026 - 15/11/2026)
@@ -572,17 +585,74 @@ public static class DatabaseInitializer
             (22, 3, 10, '2026-11-20', '18:30', '20:30', 2, 3, 0, 'TOEIC Listening Part 3: Conversations Practice'),
             (23, 4, 5,  '2026-11-21', '08:30', '11:30', 5, 4, 0, 'Giao tiếp chủ đề: Shopping & Bargaining'),
             (24, 2, 12, '2026-11-21', '14:00', '17:00', 3, 3, 0, 'Writing Task 2: Problem - Solution Structures'),
-            (25, 4, 6,  '2026-11-22', '08:30', '11:30', 5, 4, 0, 'Giao tiếp chủ đề: Travel & Directions');");
+            (25, 4, 6,  '2026-11-22', '08:30', '11:30', 5, 4, 0, 'Giao tiếp chủ đề: Travel & Directions'),
+            -- Lịch học của Lớp 5 (IELTS-F02: Lớp đã khóa / Hoàn thành - Tất cả các buổi đều đã khóa IsAttendanceLocked = 1)
+            (30, 5, 1, '2026-06-02', '18:00', '20:00', 2, 3, 1, 'Unit 1: Introduction to IELTS & Diagnostics (Khóa sổ)'),
+            (31, 5, 2, '2026-06-05', '18:00', '20:00', 2, 3, 1, 'Unit 2: Vocabulary & Core Phonetics (Khóa sổ)'),
+            (32, 5, 3, '2026-06-09', '18:00', '20:00', 2, 3, 1, 'Unit 3: Listening Strategies - Section 1 (Khóa sổ)');");
 
+        // Enrollments cho các lớp
         conn.Execute(@"
             INSERT OR IGNORE INTO Enrollments (EnrollmentId, StudentId, ClassId, EnrollDate, Status, FinalGPA, AttendanceRate)
-            VALUES (1, 1, 1, '2026-09-28', 'Active', 8.5, 100.0);");
+            VALUES 
+            -- Lớp 1 (IELTS-F01, InProgress)
+            (1,  1,  1, '2026-09-28', 'Active', 8.5, 100.0),
+            (2,  2,  1, '2026-09-28', 'Active', 8.0, 100.0),
+            (3,  3,  1, '2026-09-29', 'Active', 7.5, 100.0),
+            (4,  4,  1, '2026-09-29', 'Active', 8.2, 100.0),
+            (5,  5,  1, '2026-09-30', 'Active', 6.8, 75.0),
+            (6,  6,  1, '2026-09-30', 'Active', 5.5, 50.0),
+            (7,  7,  1, '2026-10-01', 'Active', 8.8, 100.0),
+            (8,  8,  1, '2026-10-01', 'Active', 7.9, 87.5),
+            (9,  9,  1, '2026-10-02', 'Active', 7.6, 87.5),
+            (10, 10, 1, '2026-10-02', 'Active', 8.4, 100.0),
+            -- Lớp 5 (IELTS-F02, Lớp đã hoàn thành / Đã khóa sổ)
+            (11, 1,  5, '2026-05-20', 'Completed', 8.5, 100.0),
+            (12, 2,  5, '2026-05-20', 'Completed', 8.0, 95.0),
+            (13, 3,  5, '2026-05-21', 'Completed', 7.8, 90.0),
+            (14, 4,  5, '2026-05-21', 'Completed', 8.2, 100.0),
+            (15, 5,  5, '2026-05-22', 'Completed', 7.0, 85.0),
+            (16, 6,  5, '2026-05-22', 'Completed', 6.5, 80.0),
+            -- Lớp 3 (TOEIC-A01, InProgress)
+            (17, 3,  3, '2026-10-10', 'Active', 7.0, 100.0),
+            (18, 4,  3, '2026-10-10', 'Active', 7.5, 100.0),
+            (19, 7,  3, '2026-10-11', 'Active', 8.0, 100.0),
+            (20, 8,  3, '2026-10-11', 'Active', 8.5, 100.0),
+            (21, 9,  3, '2026-10-12', 'Active', 7.2, 100.0),
+            (22, 11, 3, '2026-10-12', 'Active', 6.9, 100.0);");
 
         conn.Execute(@"
             INSERT OR IGNORE INTO AttendanceRecords (ScheduleId, StudentId, Status, Note)
             VALUES 
-            (1, 1, 'Present', 'Đi học đúng giờ, tích cực luyện phát âm'),
-            (2, 1, 'Present', 'Nắm vững kỹ thuật Skimming');");
+            -- Buổi 1 Lớp 1 (Đã khóa)
+            (1, 1, 'Present', 'Đi học đúng giờ, tích cực phát biểu'),
+            (1, 2, 'Present', 'Nắm vững kiến thức'),
+            (1, 3, 'Present', 'Luyện tập tốt'),
+            (1, 4, 'Present', 'Tích cực tương tác'),
+            (1, 5, 'Excused', 'Xin nghỉ có phép vì lý do sức khỏe'),
+            (1, 6, 'Absent',  'Vắng không phép'),
+            (1, 7, 'Present', 'Hoàn thành bài tập tốt'),
+            (1, 8, 'Present', 'Tập trung nghe giảng'),
+            (1, 9, 'Present', 'Có tiến bộ phát âm'),
+            (1, 10, 'Present', 'Rất chăm chỉ'),
+            -- Buổi 2 Lớp 1 (Đã khóa)
+            (2, 1, 'Present', 'Nắm vững kỹ thuật Skimming'),
+            (2, 2, 'Present', 'Làm bài đọc nhanh và chuẩn'),
+            (2, 3, 'Present', 'Đạt điểm test mini cao'),
+            (2, 4, 'Present', 'Tham gia thảo luận nhóm tích cực'),
+            (2, 5, 'Present', 'Đi học bù chăm chỉ'),
+            (2, 6, 'Absent',  'Vắng không phép lần 2'),
+            (2, 7, 'Present', 'Xuất sắc'),
+            (2, 8, 'Excused', 'Có đơn xin phép bận việc gia đình'),
+            (2, 9, 'Present', 'Đạt yêu cầu'),
+            (2, 10, 'Present', 'Tốt'),
+            -- Buổi 1 Lớp 5 (Lớp đã khóa)
+            (30, 1, 'Present', 'Đầy đủ'),
+            (30, 2, 'Present', 'Đầy đủ'),
+            (30, 3, 'Present', 'Đầy đủ'),
+            (30, 4, 'Present', 'Đầy đủ'),
+            (30, 5, 'Present', 'Đầy đủ'),
+            (30, 6, 'Present', 'Đầy đủ');");
 
         conn.Execute(@"
             INSERT OR IGNORE INTO Exams (ExamId, ClassId, ExamName, Type, ExamDate, WeightPercentage)

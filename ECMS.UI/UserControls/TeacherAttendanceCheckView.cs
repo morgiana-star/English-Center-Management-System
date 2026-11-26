@@ -73,9 +73,8 @@ public partial class TeacherAttendanceCheckView : UserControl
         {
             Name = "colAction",
             HeaderText = "Thao tác",
-            Text = "Điểm danh",
-            UseColumnTextForButtonValue = true,
-            Width = 110,
+            UseColumnTextForButtonValue = false,
+            Width = 115,
             MinimumWidth = 100,
             FillWeight = 11F
         };
@@ -99,6 +98,16 @@ public partial class TeacherAttendanceCheckView : UserControl
                 {
                     e.CellStyle.ForeColor = Color.FromArgb(220, 38, 38); // Đỏ cảnh báo
                     e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                }
+            }
+
+            if (e.RowIndex >= 0 && dgvAttendanceClasses.Columns[e.ColumnIndex].Name == "colStatus" && e.Value != null)
+            {
+                string statusVal = e.Value.ToString() ?? "";
+                if (statusVal.Contains("Đã khóa") || statusVal.Contains("Đã kết thúc"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(156, 163, 175); // Xám khóa
+                    e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Italic);
                 }
             }
         };
@@ -197,13 +206,17 @@ public partial class TeacherAttendanceCheckView : UserControl
                 }
 
                 // Dịch trạng thái hiển thị
+                bool isClassLocked = rawStatus == "Completed" || rawStatus == "Cancelled";
                 string displayStatus = rawStatus switch
                 {
                     "InProgress" => "Đang học",
                     "OpenForEnrollment" or "Planning" => "Sắp mở",
-                    "Completed" => "Đã kết thúc",
+                    "Completed" => "Đã khóa (Xong)",
+                    "Cancelled" => "Đã hủy",
                     _ => rawStatus
                 };
+
+                string actionBtnText = isClassLocked ? "Xem điểm danh" : "Điểm danh";
 
                 dgvAttendanceClasses.Rows.Add(
                     classId.ToString(),
@@ -216,7 +229,7 @@ public partial class TeacherAttendanceCheckView : UserControl
                     progress,
                     rateStr,
                     displayStatus,
-                    "Điểm danh"
+                    actionBtnText
                 );
 
                 stt++;
@@ -288,8 +301,10 @@ public partial class TeacherAttendanceCheckView : UserControl
         string courseName = row.Cells["colCourse"].Value?.ToString() ?? "IELTS Foundation";
         string teacher = row.Cells["colTeacher"].Value?.ToString() ?? "Thầy John Smith";
         string room = row.Cells["colRoom"].Value?.ToString() ?? "P.201";
+        string statusText = row.Cells["colStatus"].Value?.ToString() ?? "";
+        bool isLocked = statusText.Contains("Đã khóa") || statusText.Contains("Đã kết thúc") || statusText.Contains("Đã hủy");
 
-        using var dlg = new ClassAttendanceDialog(classId, classCode, courseName, teacher, room);
+        using var dlg = new ClassAttendanceDialog(classId, classCode, courseName, teacher, room, isLocked);
         dlg.ShowDialog(FindForm());
         _ = LoadClassesDataAsync(); // Cập nhật lại số liệu sau khi đóng dialog
     }

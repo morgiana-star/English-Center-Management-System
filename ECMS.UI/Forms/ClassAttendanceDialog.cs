@@ -20,18 +20,19 @@ public partial class ClassAttendanceDialog : Form
     private readonly string _courseName = "IELTS Foundation";
     private readonly string _teacher = "Thầy John Smith";
     private readonly string _room = "Phòng P.201";
+    private bool _isClassLocked = false;
     private int _currentScheduleId = 0;
 
-    public ClassAttendanceDialog() : this(1, "IELTS-2026-K12", "IELTS Foundation", "Thầy John Smith", "Phòng P.201")
+    public ClassAttendanceDialog() : this(1, "IELTS-2026-K12", "IELTS Foundation", "Thầy John Smith", "Phòng P.201", false)
     {
     }
 
     public ClassAttendanceDialog(string classCode, string courseName, string teacher, string room) 
-        : this(1, classCode, courseName, teacher, room)
+        : this(1, classCode, courseName, teacher, room, false)
     {
     }
 
-    public ClassAttendanceDialog(int classId, string classCode, string courseName, string teacher, string room)
+    public ClassAttendanceDialog(int classId, string classCode, string courseName, string teacher, string room, bool isClassLocked = false)
     {
         InitializeComponent();
 
@@ -40,6 +41,7 @@ public partial class ClassAttendanceDialog : Form
         _courseName = string.IsNullOrEmpty(courseName) ? "IELTS Foundation" : courseName;
         _teacher = string.IsNullOrEmpty(teacher) ? "Thầy John Smith" : teacher;
         _room = string.IsNullOrEmpty(room) ? "Phòng P.201" : room;
+        _isClassLocked = isClassLocked;
 
         SetupHeader();
         SetupSessionsGrid();
@@ -47,7 +49,7 @@ public partial class ClassAttendanceDialog : Form
         SetupMatrixGrid();
 
         _ = LoadSessionsDataAsync();
-        LoadMatrixData();
+        _ = LoadMatrixDataAsync();
 
         WireEvents();
         SwitchMainTab(0);
@@ -56,7 +58,16 @@ public partial class ClassAttendanceDialog : Form
     private void SetupHeader()
     {
         Text = $"Điểm danh lớp · {_classCode}";
-        lblTitle.Text = $"{_classCode} · {_courseName}";
+        if (_isClassLocked)
+        {
+            lblTitle.Text = $"{_classCode} · {_courseName} 🔒 [ĐÃ KẾT THÚC - KHÓA SỔ]";
+            lblTitle.ForeColor = Color.FromArgb(185, 28, 28);
+        }
+        else
+        {
+            lblTitle.Text = $"{_classCode} · {_courseName}";
+            lblTitle.ForeColor = Color.FromArgb(33, 37, 41);
+        }
         lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: 20 học viên";
     }
 
@@ -84,8 +95,7 @@ public partial class ClassAttendanceDialog : Form
         {
             Name = "colAction",
             HeaderText = "Thao tác",
-            Text = "Điểm danh / Sửa",
-            UseColumnTextForButtonValue = true,
+            UseColumnTextForButtonValue = false,
             Width = 135,
             MinimumWidth = 120,
             FillWeight = 13F
@@ -97,7 +107,12 @@ public partial class ClassAttendanceDialog : Form
             if (e.RowIndex >= 0 && dgvSessions.Columns[e.ColumnIndex].Name == "colStatus" && e.Value != null)
             {
                 string val = e.Value.ToString() ?? "";
-                if (val.Contains("Đã điểm danh"))
+                if (val.Contains("Đã khóa") || val.Contains("🔒"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(185, 28, 28); // Đỏ khóa sổ
+                    e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+                }
+                else if (val.Contains("Đã điểm danh"))
                 {
                     e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52); // Xanh lá
                     e.CellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
@@ -234,10 +249,20 @@ public partial class ClassAttendanceDialog : Form
 
             using var conn = DatabaseConfig.GetConnection();
 
+            // Kiểm tra trạng thái lớp học từ CSDL
+            string? classStatus = await conn.ExecuteScalarAsync<string>(@"
+                SELECT Status FROM Classes WHERE ClassId = @ClassId;", new { ClassId = _classId });
+            if (classStatus == "Completed" || classStatus == "Cancelled")
+            {
+                _isClassLocked = true;
+                lblTitle.Text = $"{_classCode} · {_courseName} 🔒 [ĐÃ KẾT THÚC - KHÓA SỔ]";
+                lblTitle.ForeColor = Color.FromArgb(185, 28, 28);
+            }
+
             // Lấy sĩ số thực tế của lớp
             int totalStudents = await conn.ExecuteScalarAsync<int>(@"
                 SELECT COUNT(*) FROM Enrollments WHERE ClassId = @ClassId;", new { ClassId = _classId });
-            if (totalStudents == 0) totalStudents = 20; // fallback mặc định nếu lớp mới tạo chưa có HV
+            if (totalStudents == 0) totalStudents = 20;
 
             lblSub.Text = $"Giáo viên: {_teacher} | Phòng: {_room} | Sĩ số: {totalStudents} học viên";
 
@@ -263,7 +288,6 @@ public partial class ClassAttendanceDialog : Form
 
             if (sessions.Count == 0)
             {
-                // Nếu chưa có lịch trong CSDL, thông báo hoặc để trống
                 return;
             }
 
@@ -296,18 +320,28 @@ public partial class ClassAttendanceDialog : Form
 
                 int totalAtt = Convert.ToInt32(s.TotalAttRecords);
                 int present = Convert.ToInt32(s.PresentCount);
-                bool isLocked = Convert.ToInt32(s.IsAttendanceLocked) == 1;
+                bool isSessionLocked = Convert.ToInt32(s.IsAttendanceLocked) == 1 || _isClassLocked;
 
                 string presentRatio = totalAtt > 0 ? $"{present} / {totalStudents}" : $"-- / {totalStudents}";
                 string rateStr = "--";
                 string statusStr = "Chưa điểm danh";
 
-                if (totalAtt > 0 || isLocked)
+                if (isSessionLocked)
+                {
+                    statusStr = "🔒 Đã khóa sổ";
+                }
+                else if (totalAtt > 0)
+                {
+                    statusStr = "Đã điểm danh";
+                }
+
+                if (totalAtt > 0)
                 {
                     double rate = totalStudents > 0 ? (present * 100.0 / totalStudents) : 0;
                     rateStr = $"{rate:0.#}%";
-                    statusStr = isLocked ? "🔒 Đã khóa sổ" : "Đã điểm danh";
                 }
+
+                string actionText = isSessionLocked ? "Xem điểm danh" : "Điểm danh / Sửa";
 
                 dgvSessions.Rows.Add(
                     scheduleId.ToString(),
@@ -318,7 +352,7 @@ public partial class ClassAttendanceDialog : Form
                     presentRatio,
                     rateStr,
                     statusStr,
-                    "Điểm danh / Sửa"
+                    actionText
                 );
             }
         }
@@ -328,11 +362,45 @@ public partial class ClassAttendanceDialog : Form
         }
     }
 
-    private async Task LoadStudentCheckDataAsync(int scheduleId, string sessionNum, string sessionDate)
+    private async Task LoadStudentCheckDataAsync(int scheduleId, string sessionNum, string sessionDate, bool isLocked = false)
     {
-        lblCurrentSessionTitle.Text = $"ĐIỂM DANH {sessionNum.ToUpper()} · {sessionDate}";
-        lblSaveStatus.Visible = false;
         dgvStudentCheck.Rows.Clear();
+
+        if (isLocked)
+        {
+            lblCurrentSessionTitle.Text = $"🔒 [ĐÃ KHÓA SỔ] {sessionNum.ToUpper()} · {sessionDate} (CHỈ XEM)";
+            lblCurrentSessionTitle.ForeColor = Color.FromArgb(185, 28, 28);
+            dgvStudentCheck.ReadOnly = true;
+            if (dgvStudentCheck.Columns["colStatus"] != null) dgvStudentCheck.Columns["colStatus"].ReadOnly = true;
+            if (dgvStudentCheck.Columns["colNote"] != null) dgvStudentCheck.Columns["colNote"].ReadOnly = true;
+
+            btnMarkAllPresent.Visible = false;
+            btnMarkAllPresent.Enabled = false;
+
+            btnSaveAttendance.Visible = false;
+            btnSaveAttendance.Enabled = false;
+
+            lblSaveStatus.Text = "🔒 Buổi học / Lớp học này đã bị khóa sổ điểm danh (Chỉ xem, không thể chỉnh sửa dữ liệu).";
+            lblSaveStatus.ForeColor = Color.FromArgb(185, 28, 28);
+            lblSaveStatus.Visible = true;
+        }
+        else
+        {
+            lblCurrentSessionTitle.Text = $"ĐIỂM DANH {sessionNum.ToUpper()} · {sessionDate}";
+            lblCurrentSessionTitle.ForeColor = Color.FromArgb(33, 37, 41);
+            dgvStudentCheck.ReadOnly = false;
+            if (dgvStudentCheck.Columns["colStatus"] != null) dgvStudentCheck.Columns["colStatus"].ReadOnly = false;
+            if (dgvStudentCheck.Columns["colNote"] != null) dgvStudentCheck.Columns["colNote"].ReadOnly = false;
+
+            btnMarkAllPresent.Visible = true;
+            btnMarkAllPresent.Enabled = true;
+
+            btnSaveAttendance.Visible = true;
+            btnSaveAttendance.Enabled = true;
+            btnSaveAttendance.Text = "💾 Lưu điểm danh";
+
+            lblSaveStatus.Visible = false;
+        }
 
         try
         {
@@ -344,7 +412,7 @@ public partial class ClassAttendanceDialog : Form
                 FROM Enrollments e
                 JOIN Students s ON e.StudentId = s.StudentId
                 WHERE e.ClassId = @ClassId
-                ORDER BY s.FullName ASC;", new { ClassId = _classId })).ToList();
+                ORDER BY s.StudentCode ASC;", new { ClassId = _classId })).ToList();
 
             // Lấy dữ liệu điểm danh đã có cho buổi này
             var existingRecords = (await conn.QueryAsync<dynamic>(@"
@@ -390,18 +458,106 @@ public partial class ClassAttendanceDialog : Form
         }
     }
 
-    private void LoadMatrixData()
+    private async Task LoadMatrixDataAsync()
     {
-        dgvMatrix.Rows.Clear();
+        try
+        {
+            dgvMatrix.Rows.Clear();
+            using var conn = DatabaseConfig.GetConnection();
 
-        AddMatrixRow("1", "HV-0241", "Nguyễn Minh Anh", new[] { "✓", "✓", "✓", "✓", "✓", "✓", "✓", "✓" }, 8, 0, "100%", "✓ Đủ ĐK thi");
-        AddMatrixRow("2", "HV-0237", "Lê Hoàng Nam", new[] { "✓", "✓", "✓", "✓", "✓", "✓", "✓", "✓" }, 8, 0, "100%", "✓ Đủ ĐK thi");
-        AddMatrixRow("3", "HV-0238", "Phạm Khánh Linh", new[] { "✓", "✓", "✓", "✓", "✓", "✓", "✓", "✓" }, 8, 0, "100%", "✓ Đủ ĐK thi");
-        AddMatrixRow("4", "HV-0240", "Vũ Quang Huy", new[] { "✓", "✓", "✓", "P", "✓", "✓", "✓", "P" }, 6, 2, "75,0%", "✓ Đạt yêu cầu");
-        AddMatrixRow("5", "HV-0242", "Đặng Thị Thảo", new[] { "✓", "P", "K", "P", "✓", "K", "✓", "K" }, 4, 4, "50,0%", "⚠ Cảnh báo vắng 4 buổi");
-        AddMatrixRow("6", "HV-0245", "Trần Bảo Long", new[] { "✓", "✓", "✓", "✓", "✓", "✓", "✓", "✓" }, 8, 0, "100%", "✓ Đủ ĐK thi");
-        AddMatrixRow("7", "HV-0246", "Hoàng Ngọc Mai", new[] { "✓", "✓", "P", "✓", "✓", "✓", "✓", "✓" }, 7, 1, "87,5%", "✓ Đạt yêu cầu");
-        AddMatrixRow("8", "HV-0247", "Đỗ Quốc Cường", new[] { "✓", "✓", "✓", "✓", "✓", "P", "✓", "✓" }, 7, 1, "87,5%", "✓ Đạt yêu cầu");
+            var students = (await conn.QueryAsync<dynamic>(@"
+                SELECT s.StudentId, s.StudentCode, s.FullName
+                FROM Enrollments e
+                JOIN Students s ON e.StudentId = s.StudentId
+                WHERE e.ClassId = @ClassId
+                ORDER BY s.StudentCode ASC;", new { ClassId = _classId })).ToList();
+
+            if (students.Count == 0) return;
+
+            var schedules = (await conn.QueryAsync<dynamic>(@"
+                SELECT ScheduleId, SessionNumber 
+                FROM ClassSchedules 
+                WHERE ClassId = @ClassId 
+                ORDER BY SessionNumber ASC;", new { ClassId = _classId })).ToList();
+
+            var attendanceList = (await conn.QueryAsync<dynamic>(@"
+                SELECT ar.ScheduleId, ar.StudentId, ar.Status
+                FROM AttendanceRecords ar
+                JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId
+                WHERE cs.ClassId = @ClassId;", new { ClassId = _classId })).ToList();
+
+            var attDict = attendanceList.ToDictionary(
+                a => ((int)a.StudentId, (int)a.ScheduleId),
+                a => (string)a.Status);
+
+            int stt = 1;
+            foreach (var s in students)
+            {
+                int sid = (int)s.StudentId;
+                string code = (string)s.StudentCode;
+                string name = (string)s.FullName;
+
+                var rowData = new object[31];
+                rowData[0] = stt.ToString();
+                rowData[1] = code;
+                rowData[2] = name;
+
+                int presentCount = 0;
+                int absentCount = 0;
+                int totalAttendedSessions = 0;
+
+                for (int i = 1; i <= 24; i++)
+                {
+                    var sch = schedules.FirstOrDefault(x => (int)x.SessionNumber == i);
+                    string? st = null;
+                    if (sch != null && attDict.TryGetValue((sid, (int)sch.ScheduleId), out st))
+                    {
+                        totalAttendedSessions++;
+                        if (st == "Present")
+                        {
+                            rowData[2 + i] = "✓";
+                            presentCount++;
+                        }
+                        else if (st == "Excused")
+                        {
+                            rowData[2 + i] = "P";
+                            absentCount++;
+                        }
+                        else if (st == "Absent")
+                        {
+                            rowData[2 + i] = "K";
+                            absentCount++;
+                        }
+                        else
+                        {
+                            rowData[2 + i] = "-";
+                        }
+                    }
+                    else
+                    {
+                        rowData[2 + i] = "-";
+                    }
+                }
+
+                double rate = totalAttendedSessions > 0 ? (presentCount * 100.0 / totalAttendedSessions) : 100.0;
+                string rateStr = totalAttendedSessions > 0 ? $"{rate:0.0}%" : "--";
+                string eval = totalAttendedSessions == 0 ? "Chưa diễn ra" :
+                              absentCount >= 4 ? $"⚠ Cảnh báo vắng {absentCount} buổi" :
+                              rate >= 80 ? "✓ Đủ ĐK thi" : "✓ Đạt yêu cầu";
+
+                rowData[27] = $"{presentCount} buổi";
+                rowData[28] = $"{absentCount} buổi";
+                rowData[29] = rateStr;
+                rowData[30] = eval;
+
+                dgvMatrix.Rows.Add(rowData);
+                stt++;
+            }
+        }
+        catch
+        {
+            // Fallback gracefully
+        }
     }
 
     private void AddMatrixRow(string stt, string code, string name, string[] pastSessions, int present, int absent, string rate, string eval)
@@ -411,12 +567,10 @@ public partial class ClassAttendanceDialog : Form
         rowData[1] = code;
         rowData[2] = name;
 
-        // B1 -> B8
         for (int i = 0; i < 8; i++)
         {
             rowData[3 + i] = (i < pastSessions.Length) ? pastSessions[i] : "-";
         }
-        // B9 -> B24 (chưa diễn ra)
         for (int i = 8; i < 24; i++)
         {
             rowData[3 + i] = "-";
@@ -471,9 +625,22 @@ public partial class ClassAttendanceDialog : Form
 
         btnSaveAttendance.Click += async (s, e) =>
         {
+            if (_isClassLocked)
+            {
+                MessageBox.Show("Lớp học này đã kết thúc hoặc bị khóa sổ điểm danh! Không thể chỉnh sửa.", "Cảnh báo khóa sổ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (_currentScheduleId <= 0)
             {
                 MessageBox.Show("Vui lòng chọn một buổi học hợp lệ trước khi lưu điểm danh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var service = new AttendanceService();
+            if (await service.IsSessionAttendanceLockedAsync(_currentScheduleId))
+            {
+                MessageBox.Show("Buổi học này đã bị khóa sổ điểm danh! Không thể thực hiện chỉnh sửa.", "Cảnh báo khóa sổ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -510,7 +677,6 @@ public partial class ClassAttendanceDialog : Form
             try
             {
                 btnSaveAttendance.Enabled = false;
-                var service = new AttendanceService();
                 bool ok = await service.SaveAttendanceBatchAsync(_currentScheduleId, records);
 
                 if (ok)
@@ -519,10 +685,11 @@ public partial class ClassAttendanceDialog : Form
                     lblSaveStatus.Visible = true;
                     MessageBox.Show($"Đã lưu kết quả điểm danh cho {records.Count} học viên thành công!", "Lưu điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await LoadSessionsDataAsync();
+                    await LoadMatrixDataAsync();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể lưu điểm danh vào cơ sở dữ liệu. Vui lòng thử lại.", "Lỗi lưu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không thể lưu điểm danh (buổi học hoặc lớp học có thể đã bị khóa sổ).", "Lỗi lưu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
@@ -548,8 +715,11 @@ public partial class ClassAttendanceDialog : Form
 
         string sessionNum = row.Cells["colSessionNum"].Value?.ToString() ?? "Buổi 1";
         string sessionDate = row.Cells["colDate"].Value?.ToString() ?? "";
+        string statusText = row.Cells["colStatus"].Value?.ToString() ?? "";
 
-        _ = LoadStudentCheckDataAsync(scheduleId, sessionNum, sessionDate);
+        bool isSessionLocked = _isClassLocked || statusText.Contains("Đã khóa") || statusText.Contains("🔒");
+
+        _ = LoadStudentCheckDataAsync(scheduleId, sessionNum, sessionDate, isSessionLocked);
 
         pnlSessionsList.Visible = false;
         pnlCheckSession.Visible = true;
