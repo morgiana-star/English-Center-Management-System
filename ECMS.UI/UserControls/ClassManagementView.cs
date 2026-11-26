@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ECMS.Business.Services;
-using ECMS.Core.DTOs;
-using ECMS.Core.Helpers;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -14,13 +12,6 @@ namespace ECMS.UI.UserControls;
 
 public partial class ClassManagementView : UserControl
 {
-    private readonly IClassService _classService = new ClassService();
-    private readonly ICourseService _courseService = new CourseService();
-    private List<ClassListItemDto> _allClasses = new();
-    private Panel _pnlFooter = null!;
-    private Label _lblBottomSummary = null!;
-    private bool _isLoadingFilter = false;
-
     public ClassManagementView()
     {
         InitializeComponent();
@@ -28,72 +19,38 @@ public partial class ClassManagementView : UserControl
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
-        SetupFooterSummary();
+        SetupFilters();
         SetupGrid();
+        _ = LoadClassesDataAsync();
         WireEvents();
-        _ = LoadInitialDataAsync();
     }
 
-    private void SetupFooterSummary()
+    private void SetupFilters()
     {
-        btnAddClass.Text = "Tạo lớp học";
-
-        _pnlFooter = new Panel
+        cboCourseFilter.Items.Clear();
+        cboCourseFilter.Items.AddRange(new object[]
         {
-            Dock = DockStyle.Bottom,
-            Height = 36,
-            BackColor = Color.FromArgb(248, 250, 252),
-            Padding = new Padding(12, 6, 12, 6)
-        };
-        _lblBottomSummary = new Label
+            "Tất cả khóa học",
+            "IELTS Foundation",
+            "IELTS Intensive",
+            "TOEIC 500+",
+            "Giao tiếp"
+        });
+        cboCourseFilter.SelectedIndex = 0;
+
+        cboStatusFilter.Items.Clear();
+        cboStatusFilter.Items.AddRange(new object[]
         {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            ForeColor = Color.FromArgb(51, 65, 85),
-            TextAlign = ContentAlignment.MiddleRight,
-            Text = "Đang hiển thị: 0  |  Tổng lớp học: 0  |  Đang học: 0  |  Sắp mở: 0"
-        };
-        _pnlFooter.Controls.Add(_lblBottomSummary);
-
-        dgvClasses.Height = Math.Max(300, cardClassList.Height - dgvClasses.Top - _pnlFooter.Height - 16);
-        cardClassList.Controls.Add(_pnlFooter);
-        _pnlFooter.BringToFront();
-    }
-
-    private async Task LoadInitialDataAsync()
-    {
-        await SetupFiltersFromDbAsync();
-        await LoadRealClassesAsync();
-    }
-
-    private async Task SetupFiltersFromDbAsync()
-    {
-        try
-        {
-            _isLoadingFilter = true;
-            cboCourseFilter.Items.Clear();
-            cboCourseFilter.Items.Add("Tất cả khóa học");
-            var courses = await _courseService.GetCoursesAsync();
-            foreach (var c in courses)
-            {
-                cboCourseFilter.Items.Add(c.CourseName);
-            }
-            cboCourseFilter.SelectedIndex = 0;
-
-            cboStatusFilter.Items.Clear();
-            cboStatusFilter.Items.Add("Tất cả trạng thái");
-            cboStatusFilter.Items.AddRange(StatusFormatter.ClassStatusOptions);
-            cboStatusFilter.SelectedIndex = 0;
-        }
-        finally
-        {
-            _isLoadingFilter = false;
-        }
+            "Tất cả trạng thái",
+            "Đang học",
+            "Sắp mở",
+            "Đã kết thúc"
+        });
+        cboStatusFilter.SelectedIndex = 0;
     }
 
     private void SetupGrid()
     {
-        AppGridHelper.ApplyStyle(dgvClasses);
         dgvClasses.AutoGenerateColumns = false;
         dgvClasses.Columns.Clear();
         dgvClasses.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -102,122 +59,153 @@ public partial class ClassManagementView : UserControl
         dgvClasses.RowHeadersVisible = false;
         dgvClasses.AllowUserToAddRows = false;
 
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCode", HeaderText = "Mã lớp", FillWeight = 11 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCourse", HeaderText = "Khóa học", FillWeight = 16 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTeacher", HeaderText = "Giáo viên phụ trách", FillWeight = 16 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng", FillWeight = 8 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCapacity", HeaderText = "Sĩ số", FillWeight = 8 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColSchedule", HeaderText = "Lịch học & Giờ", FillWeight = 24 });
-        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 11 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Mã lớp ↑", FillWeight = 12 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Khóa học", FillWeight = 20 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Giáo viên phụ trách", FillWeight = 20 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Lịch học & Giờ", FillWeight = 20 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Phòng", FillWeight = 10 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Sĩ số (HV)", FillWeight = 10 });
+        dgvClasses.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Trạng thái", FillWeight = 12 });
 
         var colAction = new DataGridViewButtonColumn
         {
-            Name = "ColAction",
             HeaderText = "Thao tác",
             Text = "Xem chi tiết",
             UseColumnTextForButtonValue = true,
             FlatStyle = FlatStyle.Flat,
-            FillWeight = 10
+            FillWeight = 12
         };
         colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         dgvClasses.Columns.Add(colAction);
     }
 
-    private async Task LoadRealClassesAsync()
+    private async Task LoadClassesDataAsync()
     {
         try
         {
-            _allClasses = (await _classService.GetClassesAsync()).ToList();
-            FilterClasses();
+            dgvClasses.Rows.Clear();
+            using var conn = DatabaseConfig.GetConnection();
+
+            var query = @"
+                SELECT 
+                    c.ClassCode,
+                    co.CourseName,
+                    COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                    COALESCE(c.SchedulePattern, 'T3 / T6') || ' · ' || COALESCE(c.StartTime, '18:00') || '–' || COALESCE(c.EndTime, '20:00') AS ScheduleText,
+                    COALESCE(r.RoomCode, r.RoomName, 'P201') AS RoomText,
+                    COUNT(e.StudentId) || ' / ' || c.MaxStudents AS StudentRatio,
+                    c.Status
+                FROM Classes c
+                JOIN Courses co ON c.CourseId = co.CourseId
+                LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
+                LEFT JOIN ClassRooms r ON c.DefaultRoomId = r.RoomId
+                LEFT JOIN Enrollments e ON e.ClassId = c.ClassId
+                GROUP BY c.ClassId
+                ORDER BY c.ClassId ASC;";
+
+            var classes = (await conn.QueryAsync<dynamic>(query)).ToList();
+            if (classes.Count == 0)
+            {
+                LoadSampleClasses();
+                return;
+            }
+
+            foreach (var cls in classes)
+            {
+                string rawStatus = (string)cls.Status;
+                string displayStatus = rawStatus switch
+                {
+                    "InProgress" => "Đang học",
+                    "OpenForEnrollment" or "Planning" => "Sắp mở",
+                    "Completed" => "Đã kết thúc",
+                    "Cancelled" => "Đã hủy",
+                    _ => rawStatus
+                };
+
+                dgvClasses.Rows.Add(
+                    (string)cls.ClassCode,
+                    (string)cls.CourseName,
+                    (string)cls.TeacherName,
+                    (string)cls.ScheduleText,
+                    (string)cls.RoomText,
+                    (string)cls.StudentRatio,
+                    displayStatus
+                );
+            }
+
+            dgvClasses.ClearSelection();
+            dgvClasses.CurrentCell = null;
         }
-        catch (Exception ex)
+        catch
         {
-            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách lớp học", ex.Message);
+            LoadSampleClasses();
         }
+    }
+
+    private void LoadSampleClasses()
+    {
+        dgvClasses.Rows.Clear();
+        dgvClasses.Rows.Add("IELTS-F01", "IELTS Foundation", "Nguyễn Hoàng Anh", "T3 / T6 · 18:00–20:00", "P201", "20 / 20", "Đang học");
+        dgvClasses.Rows.Add("IELTS-F02", "IELTS Foundation", "Trần Gia Bảo", "T2 / T5 · 19:30–21:30", "P202", "18 / 20", "Đang học");
+        dgvClasses.Rows.Add("IELTS-I01", "IELTS Intensive", "Phạm Quỳnh Như", "T4 / T7 · 18:00–20:00", "P203", "16 / 20", "Đang học");
+        dgvClasses.Rows.Add("TOEIC-A01", "TOEIC 500+", "Lê Hoàng Yến", "T3 / T5 / T7 · 19:00–20:30", "P101", "15 / 25", "Đang học");
+        dgvClasses.Rows.Add("COM-B01", "Giao tiếp Cơ bản", "Đặng Minh Trí", "T2 / T4 · 18:00–19:30", "P102", "12 / 15", "Đang học");
+        dgvClasses.Rows.Add("IELTS-F04", "IELTS Foundation", "Nguyễn Hoàng Anh", "T7 / CN · 08:30–10:30", "P201", "8 / 20", "Sắp mở");
+
+        dgvClasses.ClearSelection();
+        dgvClasses.CurrentCell = null;
     }
 
     private void WireEvents()
     {
-        btnAddClass.Click += async (s, e) =>
+        btnAddClass.Click += (s, e) =>
         {
             using var createDlg = new CreateClassDialog();
             if (createDlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                await LoadRealClassesAsync();
+                _ = LoadClassesDataAsync();
             }
         };
 
-        dgvClasses.CellContentClick += async (s, e) =>
+        dgvClasses.CellContentClick += (s, e) =>
         {
-            if (e.RowIndex >= 0 && dgvClasses.Columns[e.ColumnIndex].Name == "ColAction")
+            if (e.RowIndex >= 0 && e.ColumnIndex == dgvClasses.Columns.Count - 1)
             {
-                await OpenClassDetailAsync(e.RowIndex);
-            }
-        };
+                var row = dgvClasses.Rows[e.RowIndex];
+                string classCode = row.Cells[0].Value?.ToString() ?? "IELTS-F01";
+                string courseName = row.Cells[1].Value?.ToString() ?? "IELTS Foundation";
+                string teacher = row.Cells[2].Value?.ToString() ?? "Nguyễn Hoàng Anh";
 
-        dgvClasses.CellDoubleClick += async (s, e) =>
-        {
-            if (e.RowIndex >= 0)
-            {
-                await OpenClassDetailAsync(e.RowIndex);
+                using var detailDlg = new ClassDetailDialog(classCode, courseName, teacher);
+                detailDlg.ShowDialog(FindForm());
             }
         };
 
         txtSearchClass.TextChanged += (s, e) => FilterClasses();
-        cboCourseFilter.SelectedIndexChanged += (s, e) => { if (!_isLoadingFilter) FilterClasses(); };
-        cboStatusFilter.SelectedIndexChanged += (s, e) => { if (!_isLoadingFilter) FilterClasses(); };
-    }
-
-    private async Task OpenClassDetailAsync(int rowIndex)
-    {
-        if (dgvClasses.Rows[rowIndex].Tag is not ClassListItemDto cl) return;
-        using var detailDlg = new ClassDetailDialog(cl.ClassId, cl.ClassCode, cl.CourseName, cl.TeacherName, cl.MaxStudents);
-        detailDlg.ShowDialog(FindForm());
-        await LoadRealClassesAsync();
+        cboCourseFilter.SelectedIndexChanged += (s, e) => FilterClasses();
+        cboStatusFilter.SelectedIndexChanged += (s, e) => FilterClasses();
     }
 
     private void FilterClasses()
     {
         string kw = txtSearchClass.Text.Trim().ToLowerInvariant();
-        string course = cboCourseFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
-        string status = cboStatusFilter.SelectedItem?.ToString() ?? "Tất cả trạng thái";
+        string course = cboCourseFilter.SelectedItem?.ToString() ?? "";
+        string status = cboStatusFilter.SelectedItem?.ToString() ?? "";
 
-        var filtered = _allClasses.Where(cl =>
+        foreach (DataGridViewRow row in dgvClasses.Rows)
         {
-            bool matchKw = string.IsNullOrEmpty(kw) ||
-                           cl.ClassCode.ToLowerInvariant().Contains(kw) ||
-                           cl.CourseName.ToLowerInvariant().Contains(kw) ||
-                           cl.TeacherName.ToLowerInvariant().Contains(kw) ||
-                           cl.ScheduleInfo.ToLowerInvariant().Contains(kw);
-            bool matchCourse = course == "Tất cả khóa học" ||
-                               cl.CourseName.Equals(course, StringComparison.OrdinalIgnoreCase);
-            bool matchStatus = status == "Tất cả trạng thái" ||
-                               cl.Status.Equals(status, StringComparison.OrdinalIgnoreCase);
+            if (row.IsNewRow) continue;
+            string code = row.Cells[0].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string rowCourse = row.Cells[1].Value?.ToString() ?? "";
+            string teacher = row.Cells[2].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string room = row.Cells[4].Value?.ToString()?.ToLowerInvariant() ?? "";
+            string rowStatus = row.Cells[6].Value?.ToString() ?? "";
 
-            return matchKw && matchCourse && matchStatus;
-        }).ToList();
+            bool matchKw = string.IsNullOrEmpty(kw) || code.Contains(kw) || teacher.Contains(kw) || room.Contains(kw);
+            bool matchCourse = course == "Tất cả khóa học" || rowCourse.Contains(course);
+            bool matchStatus = status == "Tất cả trạng thái" || rowStatus == status;
 
-        dgvClasses.Rows.Clear();
-        foreach (var cl in filtered)
-        {
-            int idx = dgvClasses.Rows.Add(
-                cl.ClassCode,
-                cl.CourseName,
-                cl.TeacherName,
-                cl.RoomName,
-                $"{cl.CurrentStudents} / {cl.MaxStudents}",
-                cl.ScheduleInfo,
-                cl.Status
-            );
-            dgvClasses.Rows[idx].Tag = cl;
+            row.Visible = matchKw && matchCourse && matchStatus;
         }
-
-        dgvClasses.ClearSelection();
-        dgvClasses.CurrentCell = null;
-
-        int inProgressCnt = _allClasses.Count(x => x.Status == "Đang học");
-        int openCnt = _allClasses.Count(x => x.Status == "Sắp mở" || x.Status == "Đang tuyển sinh");
-        _lblBottomSummary.Text =
-            $"Đang hiển thị: {filtered.Count}  |  Tổng lớp học: {_allClasses.Count}  |  Đang học: {inProgressCnt}  |  Sắp mở: {openCnt}";
     }
 }

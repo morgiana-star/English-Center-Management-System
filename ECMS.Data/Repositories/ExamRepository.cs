@@ -264,4 +264,159 @@ public class ExamRepository : BaseRepository, IExamRepository
                 UpdatedAt = CURRENT_TIMESTAMP;",
             new { ExamId = examId, StudentId = studentId, Score = Math.Clamp(score, 0, 10) }, tran);
     }
+
+    public async Task<IEnumerable<ClassExamLookupDto>> GetClassesLookupAsync()
+    {
+        using var conn = CreateConnection();
+        const string sql = @"
+            SELECT
+                c.ClassId,
+                c.ClassCode,
+                c.ClassName,
+                COALESCE(co.CourseName, 'Khóa học chung') AS CourseName,
+                COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                COALESCE(co.PassingScore, 5.0) AS PassingScore,
+                (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = c.ClassId AND e.Status NOT IN ('Cancelled', 'Dropped')) AS StudentCount
+            FROM Classes c
+            LEFT JOIN Courses co ON c.CourseId = co.CourseId
+            LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
+            ORDER BY c.ClassId ASC;";
+        return await conn.QueryAsync<ClassExamLookupDto>(sql);
+    }
+
+    public async Task<int> CreateExamAsync(CreateExamDto dto)
+    {
+        using var conn = CreateConnection();
+        string normType = dto.Type switch
+        {
+            var t when t.Contains("Giữa", StringComparison.OrdinalIgnoreCase) || t.Contains("Midterm", StringComparison.OrdinalIgnoreCase) => "Midterm",
+            var t when t.Contains("Cuối", StringComparison.OrdinalIgnoreCase) || t.Contains("Final", StringComparison.OrdinalIgnoreCase) => "Final",
+            _ => "Regular"
+        };
+
+        const string sql = @"
+            INSERT INTO Exams (ClassId, ExamName, Type, ExamDate, StartTime, EndTime, WeightPercentage, CreatedAt)
+            VALUES (@ClassId, @ExamName, @Type, @ExamDate, '18:00', '19:30', @WeightPercentage, CURRENT_TIMESTAMP);
+            SELECT last_insert_rowid();";
+        return await conn.ExecuteScalarAsync<int>(sql, new
+        {
+            dto.ClassId,
+            dto.ExamName,
+            Type = normType,
+            ExamDate = string.IsNullOrWhiteSpace(dto.ExamDate) ? DateTime.Today.ToString("yyyy-MM-dd") : dto.ExamDate,
+            dto.WeightPercentage
+        });
+    }
+
+    public async Task<IEnumerable<ClassGradeRowDto>> GetClassGradeBookAsync(int classId)
+    {
+        using var conn = CreateConnection();
+        decimal passingScore = await conn.ExecuteScalarAsync<decimal?>(@"
+            SELECT COALESCE(co.PassingScore, 5.0)
+            FROM Classes c
+            LEFT JOIN Courses co ON c.CourseId = co.CourseId
+            WHERE c.ClassId = @ClassId;", new { ClassId = classId }) ?? 5.0m;
+
+        const string sql = @"
+            SELECT
+                s.StudentId,
+                s.StudentCode,
+                s.FullName,
+                es.ListeningScore,
+                es.ReadingScore,
+                es.WritingScore,
+                es.SpeakingScore,
+                COALESCE(es.OverallScore, es.ScoreValue, e.FinalGPA) AS OverallScore
+            FROM Enrollments e
+            INNER JOIN Students s ON e.StudentId = s.StudentId
+            LEFT JOIN ExamScores es ON es.StudentId = s.StudentId
+                AND es.ExamId = (SELECT ex.ExamId FROM Exams ex WHERE ex.ClassId = e.ClassId ORDER BY ex.ExamId DESC LIMIT 1)
+            WHERE e.ClassId = @ClassId
+              AND e.Status NOT IN ('Cancelled', 'Dropped')
+            ORDER BY s.StudentCode ASC;";
+
+        var rows = (await conn.QueryAsync<ClassGradeRowDto>(sql, new { ClassId = classId })).ToList();
+        foreach (var r in rows)
+        {
+            if (r.OverallScore.HasValue)
+            {
+                r.ListeningScore ??= r.OverallScore;
+                r.ReadingScore ??= r.OverallScore;
+                r.WritingScore ??= r.OverallScore;
+                r.SpeakingScore ??= r.OverallScore;
+                r.ResultText = r.OverallScore.Value >= passingScore
+                    ? $"✓ Đạt (Band {r.OverallScore.Value:0.0})"
+                    : $"✕ Chưa đạt ({r.OverallScore.Value:0.0})";
+            }
+            else
+            {
+                r.ResultText = "--";
+            }
+        }
+        return rows;
+    }
+
+    public async Task SaveClassGradeBookAsync(int classId, List<ClassGradeRowDto> rows)
+    {
+        if (classId <= 0) return;
+        using var conn = CreateConnection();
+        using var tran = conn.BeginTransaction();
+        try
+        {
+            int? examId = await conn.ExecuteScalarAsync<int?>(
+                "SELECT ExamId FROM Exams WHERE ClassId = @ClassId ORDER BY ExamId DESC LIMIT 1;",
+                new { ClassId = classId }, tran);
+
+            if (!examId.HasValue || examId.Value <= 0)
+            {
+                examId = await conn.ExecuteScalarAsync<int>(@"
+                    INSERT INTO Exams (ClassId, ExamName, Type, ExamDate, StartTime, EndTime, WeightPercentage, CreatedAt)
+                    VALUES (@ClassId, 'Kiểm tra đánh giá tổng hợp', 'Final', @Date, '18:00', '19:30', 100.0, CURRENT_TIMESTAMP);
+                    SELECT last_insert_rowid();",
+                    new { ClassId = classId, Date = DateTime.Today.ToString("yyyy-MM-dd") }, tran);
+            }
+
+            foreach (var r in rows)
+            {
+                if (!r.OverallScore.HasValue && !r.ListeningScore.HasValue && !r.ReadingScore.HasValue && !r.WritingScore.HasValue && !r.SpeakingScore.HasValue)
+                    continue;
+
+                decimal overall = r.OverallScore ?? 0m;
+                await conn.ExecuteAsync(@"
+                    INSERT INTO ExamScores (ExamId, StudentId, ListeningScore, ReadingScore, WritingScore, SpeakingScore, OverallScore, ScoreValue, TeacherComments, CreatedAt)
+                    VALUES (@ExamId, @StudentId, @L, @R, @W, @S, @O, @O, @Comment, CURRENT_TIMESTAMP)
+                    ON CONFLICT(ExamId, StudentId) DO UPDATE SET
+                        ListeningScore = excluded.ListeningScore,
+                        ReadingScore = excluded.ReadingScore,
+                        WritingScore = excluded.WritingScore,
+                        SpeakingScore = excluded.SpeakingScore,
+                        OverallScore = excluded.OverallScore,
+                        ScoreValue = excluded.ScoreValue,
+                        TeacherComments = excluded.TeacherComments,
+                        UpdatedAt = CURRENT_TIMESTAMP;",
+                    new
+                    {
+                        ExamId = examId.Value,
+                        r.StudentId,
+                        L = r.ListeningScore,
+                        R = r.ReadingScore,
+                        W = r.WritingScore,
+                        S = r.SpeakingScore,
+                        O = overall,
+                        r.Comment
+                    }, tran);
+
+                await conn.ExecuteAsync(
+                    "UPDATE Enrollments SET FinalGPA = @Gpa, UpdatedAt = CURRENT_TIMESTAMP WHERE ClassId = @ClassId AND StudentId = @StudentId;",
+                    new { Gpa = overall, ClassId = classId, r.StudentId }, tran);
+            }
+
+            tran.Commit();
+        }
+        catch
+        {
+            tran.Rollback();
+            throw;
+        }
+    }
 }

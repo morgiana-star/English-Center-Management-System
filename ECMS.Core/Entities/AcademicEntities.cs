@@ -19,9 +19,11 @@ public class Course : BaseEntity
 public class ClassRoom : BaseEntity
 {
     public int RoomId { get; set; }
+    public string RoomCode { get; set; } = string.Empty;
     public string RoomName { get; set; } = string.Empty;
     public int Floor { get; set; } = 1;
     public int Capacity { get; set; } = 20;
+    public string Status { get; set; } = "Đang sử dụng";
     public bool HasProjector { get; set; } = true;
     public bool IsActive { get; set; } = true;
     public string Equipment { get; set; } = string.Empty;
@@ -40,6 +42,9 @@ public class Class : BaseEntity
     public DateTime EndDate { get; set; }
     public int MaxStudents { get; set; } = 15;
     public ClassStatus Status { get; set; } = ClassStatus.Planning;
+    public string SchedulePattern { get; set; } = "T3,T6";
+    public string StartTime { get; set; } = "18:00";
+    public string EndTime { get; set; } = "20:00";
 }
 
 public class ClassSchedule : BaseEntity

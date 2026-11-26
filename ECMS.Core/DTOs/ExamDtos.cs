@@ -29,7 +29,45 @@ public class ExamListItemDto
     public int TotalStudents { get; set; }
     public int GradedCount { get; set; }
     public string GradedRatio => $"{GradedCount} / {TotalStudents}";
-    public string StatusDisplay => TotalStudents > 0 && GradedCount >= TotalStudents ? "Đã hoàn tất" : (GradedCount > 0 ? "Đang nhập điểm" : "Chưa nhập điểm");
+    public string DateDisplay => ExamDateDisplay;
+    public string WeightDisplay => $"{WeightPercentage:0.#}%";
+    public string GradedRatioDisplay => GradedRatio;
+    public string StatusDisplay => TotalStudents > 0 && GradedCount >= TotalStudents ? "✓ Đã hoàn tất" : (GradedCount > 0 ? "⏳ Đang nhập điểm" : "⏳ Chưa nhập điểm");
+}
+
+public class ClassExamLookupDto
+{
+    public int ClassId { get; set; }
+    public string ClassCode { get; set; } = string.Empty;
+    public string ClassName { get; set; } = string.Empty;
+    public string CourseName { get; set; } = string.Empty;
+    public string TeacherName { get; set; } = string.Empty;
+    public int StudentCount { get; set; }
+    public decimal PassingScore { get; set; } = 5.0m;
+    public string DisplayText => $"{ClassCode} — {CourseName} ({StudentCount} HV)";
+}
+
+public class CreateExamDto
+{
+    public int ClassId { get; set; }
+    public string ExamName { get; set; } = string.Empty;
+    public string Type { get; set; } = "Regular";
+    public string ExamDate { get; set; } = string.Empty;
+    public decimal WeightPercentage { get; set; } = 20m;
+}
+
+public class ClassGradeRowDto
+{
+    public int StudentId { get; set; }
+    public string StudentCode { get; set; } = string.Empty;
+    public string FullName { get; set; } = string.Empty;
+    public decimal? ListeningScore { get; set; }
+    public decimal? ReadingScore { get; set; }
+    public decimal? WritingScore { get; set; }
+    public decimal? SpeakingScore { get; set; }
+    public decimal? OverallScore { get; set; }
+    public string ResultText { get; set; } = string.Empty;
+    public string? Comment { get; set; }
 }
 
 public class CreateExamRequestDto

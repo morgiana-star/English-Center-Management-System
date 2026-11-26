@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ECMS.Business.Services;
-using ECMS.Core.Entities;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
 public partial class RoomManagementDialog : Form
 {
-    private readonly IClassService _classService = new ClassService();
-    private List<ClassRoom> _rooms = new();
+    private List<dynamic> _rooms = new();
 
     public RoomManagementDialog()
     {
@@ -19,9 +20,45 @@ public partial class RoomManagementDialog : Form
         if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
             return;
 
+        SetupGrid();
         SetupFilters();
+        _ = LoadRoomsDataAsync();
         WireEvents();
-        _ = LoadRoomsAsync();
+    }
+
+    private void SetupGrid()
+    {
+        if (!dgvRooms.Columns.Contains("colRoomId"))
+        {
+            dgvRooms.Columns.Insert(0, new DataGridViewTextBoxColumn
+            {
+                Name = "colRoomId",
+                HeaderText = "ID",
+                Visible = false
+            });
+        }
+
+        dgvRooms.CellFormatting += (s, e) =>
+        {
+            if (e.RowIndex >= 0 && dgvRooms.Columns[e.ColumnIndex].Name == colStatus.Name && e.Value != null)
+            {
+                string val = e.Value.ToString() ?? "";
+                if (val.Contains("Đang sử dụng"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52); // Xanh lá
+                    e.CellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+                }
+                else if (val.Contains("Bảo trì"))
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(180, 83, 9); // Cam
+                    e.CellStyle.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+                }
+                else
+                {
+                    e.CellStyle.ForeColor = Color.FromArgb(100, 116, 139); // Xám
+                }
+            }
+        };
     }
 
     private void SetupFilters()
@@ -35,80 +72,129 @@ public partial class RoomManagementDialog : Form
         if (cboCapacityFilter.Items.Count > 0) cboCapacityFilter.SelectedIndex = 0;
     }
 
-    private async Task LoadRoomsAsync()
+    private async Task LoadRoomsDataAsync()
     {
         try
         {
-            string? kw = string.IsNullOrWhiteSpace(txtSearchRoom.Text) ? null : txtSearchRoom.Text.Trim();
-            string? status = cboStatusFilter.SelectedItem?.ToString();
-            string? cap = cboCapacityFilter.SelectedItem?.ToString();
+            using var conn = DatabaseConfig.GetConnection();
+            var sql = @"
+                SELECT RoomId, 
+                       COALESCE(RoomCode, 'P' || RoomId) AS RoomCode, 
+                       RoomName, 
+                       Capacity, 
+                       Floor, 
+                       COALESCE(Equipment, '') AS Equipment, 
+                       COALESCE(Status, CASE WHEN IsActive = 1 THEN 'Đang sử dụng' ELSE 'Ngừng sử dụng' END) AS Status,
+                       IsActive
+                FROM ClassRooms
+                ORDER BY RoomCode ASC;";
 
-            _rooms = new List<ClassRoom>(await _classService.GetRoomsAsync(kw, status, cap));
-            RenderRooms(_rooms);
+            var result = await conn.QueryAsync<dynamic>(sql);
+            _rooms = result.ToList();
+            FilterRooms();
         }
         catch (Exception ex)
         {
-            AppDialog.ShowError(this, "Lỗi tải danh sách phòng học", ex.Message);
+            MessageBox.Show("Lỗi tải danh sách phòng học từ CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    private void RenderRooms(List<ClassRoom> rooms)
+    private void RenderRooms(IEnumerable<dynamic> rooms)
     {
         dgvRooms.Rows.Clear();
         foreach (var r in rooms)
         {
-            string code = $"PH-{r.RoomId:D3}";
-            int idx = dgvRooms.Rows.Add(
-                code,
-                r.RoomName,
-                $"{r.Capacity} chỗ",
-                string.IsNullOrWhiteSpace(r.Equipment) ? "Tiêu chuẩn" : r.Equipment,
-                r.RoomStatus,
-                "Sửa"
-            );
-            dgvRooms.Rows[idx].Tag = r;
+            int roomId = Convert.ToInt32(r.RoomId);
+            string code = (string)r.RoomCode;
+            string name = (string)r.RoomName;
+            int capacity = Convert.ToInt32(r.Capacity);
+            string equipment = (string)r.Equipment;
+            string status = (string)r.Status;
+
+            dgvRooms.Rows.Add(roomId, code, name, $"{capacity} chỗ", equipment, status, "Sửa");
         }
-        dgvRooms.ClearSelection();
-        dgvRooms.CurrentCell = null;
     }
 
     private void WireEvents()
     {
         btnAddRoom.Click += async (s, e) =>
         {
-            using var dlg = new EditRoomDialog(false, 0, "", "", "24", "Đang sử dụng", "Máy chiếu, Bảng từ, Điều hòa");
+            using var dlg = new EditRoomDialog(false, 0, "", "", "20", "Đang sử dụng", "");
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
-                await LoadRoomsAsync();
+                await LoadRoomsDataAsync();
             }
         };
 
-        dgvRooms.CellContentClick += async (s, e) =>
+        dgvRooms.CellContentClick += (s, e) =>
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == colAction.Index)
             {
-                var row = dgvRooms.Rows[e.RowIndex];
-                if (row.Tag is not ClassRoom room) return;
-
-                string code = row.Cells[colCode.Index].Value?.ToString() ?? $"PH-{room.RoomId:D3}";
-                using var dlg = new EditRoomDialog(
-                    true,
-                    room.RoomId,
-                    code,
-                    room.RoomName,
-                    room.Capacity.ToString(),
-                    room.RoomStatus,
-                    room.Equipment);
-
-                if (dlg.ShowDialog(this) == DialogResult.OK)
-                {
-                    await LoadRoomsAsync();
-                }
+                OpenEditRoom(e.RowIndex);
             }
         };
 
-        txtSearchRoom.TextChanged += async (s, e) => await LoadRoomsAsync();
-        cboStatusFilter.SelectedIndexChanged += async (s, e) => await LoadRoomsAsync();
-        cboCapacityFilter.SelectedIndexChanged += async (s, e) => await LoadRoomsAsync();
+        dgvRooms.CellDoubleClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0)
+            {
+                OpenEditRoom(e.RowIndex);
+            }
+        };
+
+        txtSearchRoom.TextChanged += (s, e) => FilterRooms();
+        cboStatusFilter.SelectedIndexChanged += (s, e) => FilterRooms();
+        cboCapacityFilter.SelectedIndexChanged += (s, e) => FilterRooms();
+    }
+
+    private void OpenEditRoom(int rowIndex)
+    {
+        var row = dgvRooms.Rows[rowIndex];
+        int roomId = 0;
+        if (row.Cells["colRoomId"].Value != null)
+        {
+            int.TryParse(row.Cells["colRoomId"].Value?.ToString(), out roomId);
+        }
+
+        string code = row.Cells[colCode.Index].Value?.ToString() ?? "";
+        string name = row.Cells[colName.Index].Value?.ToString() ?? "";
+        string capText = row.Cells[colCapacity.Index].Value?.ToString() ?? "20";
+        string cap = capText.Replace(" chỗ", "").Trim();
+        string equip = row.Cells[colEquipment.Index].Value?.ToString() ?? "";
+        string status = row.Cells[colStatus.Index].Value?.ToString() ?? "Đang sử dụng";
+
+        using var dlg = new EditRoomDialog(true, roomId, code, name, cap, status, equip);
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            _ = LoadRoomsDataAsync();
+        }
+    }
+
+    private void FilterRooms()
+    {
+        string q = txtSearchRoom.Text.Trim().ToLower();
+        string statusFilter = cboStatusFilter.SelectedItem?.ToString() ?? "Tất cả trạng thái";
+        string capacityFilter = cboCapacityFilter.SelectedItem?.ToString() ?? "Tất cả sức chứa";
+
+        var filtered = _rooms.Where(r =>
+        {
+            string code = ((string)r.RoomCode).ToLower();
+            string name = ((string)r.RoomName).ToLower();
+            string equip = ((string)r.Equipment).ToLower();
+            int cap = Convert.ToInt32(r.Capacity);
+            string st = (string)r.Status;
+
+            bool matchQ = string.IsNullOrEmpty(q) || code.Contains(q) || name.Contains(q) || equip.Contains(q);
+            bool matchStatus = statusFilter == "Tất cả trạng thái" || st == statusFilter;
+
+            bool matchCapacity = true;
+            if (capacityFilter == "Dưới 20 chỗ") matchCapacity = cap < 20;
+            else if (capacityFilter == "20 – 30 chỗ") matchCapacity = cap >= 20 && cap <= 30;
+            else if (capacityFilter == "Trên 30 chỗ") matchCapacity = cap > 30;
+
+            return matchQ && matchStatus && matchCapacity;
+        });
+
+        RenderRooms(filtered);
     }
 }

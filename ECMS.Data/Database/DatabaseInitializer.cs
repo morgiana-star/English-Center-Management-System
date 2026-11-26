@@ -265,6 +265,11 @@ public static class DatabaseInitializer
             ScoreId INTEGER PRIMARY KEY AUTOINCREMENT,
             ExamId INTEGER NOT NULL,
             StudentId INTEGER NOT NULL,
+            ListeningScore REAL,
+            ReadingScore REAL,
+            WritingScore REAL,
+            SpeakingScore REAL,
+            OverallScore REAL,
             ScoreValue REAL NOT NULL CHECK(ScoreValue BETWEEN 0 AND 10),
             TeacherComments TEXT,
             CreatedAt TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -407,8 +412,48 @@ public static class DatabaseInitializer
         }
         catch { }
 
+        // Ensure columns RoomCode, Equipment, Status exist in ClassRooms if table existed prior
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN RoomCode TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Equipment TEXT;"); } catch { }
+        try { conn.Execute("ALTER TABLE ClassRooms ADD COLUMN Status TEXT DEFAULT 'Đang sử dụng';"); } catch { }
+
+        // Ensure columns SchedulePattern, StartTime, EndTime exist in Classes if table existed prior
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN SchedulePattern TEXT DEFAULT 'T3,T6';"); } catch { }
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN StartTime TEXT DEFAULT '18:00';"); } catch { }
+        try { conn.Execute("ALTER TABLE Classes ADD COLUMN EndTime TEXT DEFAULT '20:00';"); } catch { }
+
         // 2. Seed default data if database is empty or needs updates
         SeedInitialData(conn);
+
+        // 3. Tự động kiểm tra và làm mới dữ liệu lớp học & sinh viên nếu dữ liệu cũ còn thiếu
+        EnsureFullAcademicSeed(conn);
+    }
+
+    private static void EnsureFullAcademicSeed(SqliteConnection conn)
+    {
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN ListeningScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN ReadingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN WritingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN SpeakingScore REAL;"); } catch { }
+        try { conn.Execute("ALTER TABLE ExamScores ADD COLUMN OverallScore REAL;"); } catch { }
+
+        try
+        {
+            conn.Execute(@"
+                UPDATE ClassRooms SET RoomCode = RoomName WHERE RoomCode IS NULL OR RoomCode = '';
+                UPDATE ClassRooms SET Status = COALESCE(RoomStatus, 'Đang sử dụng') WHERE Status IS NULL OR Status = '';
+                UPDATE Classes SET SchedulePattern = 'T2 / T4 / T6', StartTime = '18:00', EndTime = '20:00' WHERE ClassId IN (1, 4, 5) AND (SchedulePattern IS NULL OR SchedulePattern = '');
+                UPDATE Classes SET SchedulePattern = 'T3 / T5 / T7', StartTime = '14:00', EndTime = '16:00' WHERE ClassId = 2 AND (SchedulePattern IS NULL OR SchedulePattern = '');
+                UPDATE Classes SET SchedulePattern = 'T3 / T5 / T7', StartTime = '08:30', EndTime = '10:30' WHERE ClassId IN (3, 6) AND (SchedulePattern IS NULL OR SchedulePattern = '');
+                UPDATE ExamScores
+                SET ListeningScore = COALESCE(ListeningScore, ScoreValue),
+                    ReadingScore   = COALESCE(ReadingScore, ScoreValue),
+                    WritingScore   = COALESCE(WritingScore, MAX(0, ScoreValue - 0.5)),
+                    SpeakingScore  = COALESCE(SpeakingScore, ScoreValue),
+                    OverallScore   = COALESCE(OverallScore, ScoreValue)
+                WHERE ListeningScore IS NULL OR OverallScore IS NULL;");
+        }
+        catch { }
     }
 
     private static void SeedInitialData(SqliteConnection conn)

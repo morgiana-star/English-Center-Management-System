@@ -13,13 +13,56 @@ public interface IAttendanceService
     Task<bool> SaveAttendanceBatchAsync(int scheduleId, IEnumerable<(int StudentId, AttendanceStatus Status, string? Note)> records);
     Task<int> GetStudentAbsenceCountInClassAsync(int studentId, int classId);
     Task<IEnumerable<dynamic>> GetAbsenceAlertListAsync();
+    Task<bool> IsSessionAttendanceLockedAsync(int scheduleId);
+    Task<bool> IsClassAttendanceLockedAsync(int classId);
 }
 
 public class AttendanceService : IAttendanceService
 {
+    public async Task<bool> IsSessionAttendanceLockedAsync(int scheduleId)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        var lockInfo = await conn.QueryFirstOrDefaultAsync<dynamic>(@"
+            SELECT cs.IsAttendanceLocked, c.Status 
+            FROM ClassSchedules cs 
+            JOIN Classes c ON cs.ClassId = c.ClassId 
+            WHERE cs.ScheduleId = @ScheduleId;", new { ScheduleId = scheduleId });
+
+        if (lockInfo == null) return false;
+        int isLocked = Convert.ToInt32(lockInfo.IsAttendanceLocked);
+        string classStatus = Convert.ToString(lockInfo.Status) ?? "";
+        return isLocked == 1 || classStatus == "Completed" || classStatus == "Cancelled";
+    }
+
+    public async Task<bool> IsClassAttendanceLockedAsync(int classId)
+    {
+        using var conn = DatabaseConfig.CreateOpenConnection();
+        var status = await conn.QueryFirstOrDefaultAsync<string>(@"
+            SELECT Status FROM Classes WHERE ClassId = @ClassId;", new { ClassId = classId });
+        return status == "Completed" || status == "Cancelled";
+    }
+
     public async Task<bool> SaveAttendanceBatchAsync(int scheduleId, IEnumerable<(int StudentId, AttendanceStatus Status, string? Note)> records)
     {
         using var conn = DatabaseConfig.CreateOpenConnection();
+
+        // 1. Kiểm tra trạng thái khóa ở tầng Business Logic: Nếu buổi học hoặc lớp học đã khóa thì từ chối ghi nhận điểm danh
+        var lockInfo = await conn.QueryFirstOrDefaultAsync<dynamic>(@"
+            SELECT cs.IsAttendanceLocked, c.Status 
+            FROM ClassSchedules cs 
+            JOIN Classes c ON cs.ClassId = c.ClassId 
+            WHERE cs.ScheduleId = @ScheduleId;", new { ScheduleId = scheduleId });
+
+        if (lockInfo != null)
+        {
+            int isLocked = Convert.ToInt32(lockInfo.IsAttendanceLocked);
+            string classStatus = Convert.ToString(lockInfo.Status) ?? "";
+            if (isLocked == 1 || classStatus == "Completed" || classStatus == "Cancelled")
+            {
+                return false;
+            }
+        }
+
         using var transaction = conn.BeginTransaction();
 
         try

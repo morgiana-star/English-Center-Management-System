@@ -27,4 +27,19 @@ public class ExamService : IExamService
 
     public Task<(bool Success, string Message)> SaveClassGradeEntriesAsync(int classId, List<StudentGradeEntryDto> entries)
         => _repo.SaveClassGradeEntriesAsync(classId, entries);
+
+    public Task<IEnumerable<ClassExamLookupDto>> GetClassesLookupAsync()
+        => _repo.GetClassesLookupAsync();
+
+    public Task<IEnumerable<ExamListItemDto>> GetExamsAsync()
+        => _repo.GetAllExamsAsync();
+
+    public Task<int> CreateExamAsync(CreateExamDto dto)
+        => _repo.CreateExamAsync(dto);
+
+    public Task<IEnumerable<ClassGradeRowDto>> GetClassGradeBookAsync(int classId)
+        => _repo.GetClassGradeBookAsync(classId);
+
+    public Task SaveClassGradeBookAsync(int classId, List<ClassGradeRowDto> rows)
+        => _repo.SaveClassGradeBookAsync(classId, rows);
 }

@@ -15,16 +15,11 @@ partial class TeacherGradeManagementView
 
     #region Component Designer generated code
 
-    /// <summary>
-    /// Required method for Designer support - do not modify
-    /// the contents of this method with the code editor.
-    /// </summary>
     private void InitializeComponent()
     {
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
         System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-        System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
         pnlHeader = new System.Windows.Forms.Panel();
         btnCreateAssessmentTop = new ECMS.UI.Controls.AppButton();
         btnEnterGradesTop = new ECMS.UI.Controls.AppButton();
@@ -59,8 +54,8 @@ partial class TeacherGradeManagementView
         // 
         // btnCreateAssessmentTop
         // 
-        btnCreateAssessmentTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnCreateAssessmentTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
+        btnCreateAssessmentTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnCreateAssessmentTop.BackColor = System.Drawing.Color.FromArgb(24, 119, 242);
         btnCreateAssessmentTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
         btnCreateAssessmentTop.CornerRadius = 5;
         btnCreateAssessmentTop.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -74,39 +69,39 @@ partial class TeacherGradeManagementView
         btnCreateAssessmentTop.Text = "+ Tạo bài kiểm tra";
         btnCreateAssessmentTop.UseVisualStyleBackColor = false;
         btnCreateAssessmentTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
-        btnCreateAssessmentTop.Visible = false;
         // 
         // btnEnterGradesTop
         // 
-        btnEnterGradesTop.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
-        btnEnterGradesTop.BackColor = System.Drawing.Color.FromArgb(((int)((byte)24)), ((int)((byte)119)), ((int)((byte)242)));
-        btnEnterGradesTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Primary;
+        btnEnterGradesTop.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+        btnEnterGradesTop.BackColor = System.Drawing.Color.White;
+        btnEnterGradesTop.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
         btnEnterGradesTop.CornerRadius = 5;
         btnEnterGradesTop.Cursor = System.Windows.Forms.Cursors.Hand;
         btnEnterGradesTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-        btnEnterGradesTop.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-        btnEnterGradesTop.ForeColor = System.Drawing.Color.White;
-        btnEnterGradesTop.Location = new System.Drawing.Point(965, 18);
+        btnEnterGradesTop.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+        btnEnterGradesTop.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
+        btnEnterGradesTop.Location = new System.Drawing.Point(860, 18);
         btnEnterGradesTop.Name = "btnEnterGradesTop";
-        btnEnterGradesTop.Size = new System.Drawing.Size(170, 36);
+        btnEnterGradesTop.Size = new System.Drawing.Size(115, 36);
         btnEnterGradesTop.TabIndex = 3;
-        btnEnterGradesTop.Text = "Nhập điểm theo lớp";
+        btnEnterGradesTop.Text = "Nhập điểm";
         btnEnterGradesTop.UseVisualStyleBackColor = false;
-        btnEnterGradesTop.Variant = ECMS.UI.Controls.ButtonVariant.Primary;
+        btnEnterGradesTop.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-        lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
+        lblTitle.ForeColor = System.Drawing.Color.FromArgb(33, 37, 41);
         lblTitle.Location = new System.Drawing.Point(22, 16);
         lblTitle.Name = "lblTitle";
-        lblTitle.Size = new System.Drawing.Size(218, 37);
+        lblTitle.Size = new System.Drawing.Size(251, 37);
         lblTitle.TabIndex = 1;
-        lblTitle.Text = "Quản lý điểm số";
+        lblTitle.Text = "Kiểm tra & Điểm số";
         // 
         // pnlBody
         // 
+        pnlBody.AutoScroll = false;
         pnlBody.Controls.Add(cardAssessmentList);
         pnlBody.Controls.Add(pnlFilterBar);
         pnlBody.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -119,7 +114,7 @@ partial class TeacherGradeManagementView
         // cardAssessmentList
         // 
         cardAssessmentList.BackColor = System.Drawing.Color.White;
-        cardAssessmentList.BorderColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        cardAssessmentList.BorderColor = System.Drawing.Color.FromArgb(226, 232, 240);
         cardAssessmentList.BorderWidth = 1;
         cardAssessmentList.Controls.Add(dgvAssessments);
         cardAssessmentList.CornerRadius = 8;
@@ -135,7 +130,7 @@ partial class TeacherGradeManagementView
         dgvAssessments.AllowUserToDeleteRows = false;
         dgvAssessments.AllowUserToResizeColumns = false;
         dgvAssessments.AllowUserToResizeRows = false;
-        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)((byte)250)), ((int)((byte)250)), ((int)((byte)250)));
+        dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(250, 250, 250);
         dgvAssessments.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
         dgvAssessments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
         dgvAssessments.BackgroundColor = System.Drawing.Color.White;
@@ -143,12 +138,12 @@ partial class TeacherGradeManagementView
         dgvAssessments.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
         dgvAssessments.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
         dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
+        dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(248, 250, 252);
         dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
         dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
+        dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(248, 250, 252);
+        dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(100, 116, 139);
         dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
         dgvAssessments.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
         dgvAssessments.ColumnHeadersHeight = 38;
@@ -156,30 +151,23 @@ partial class TeacherGradeManagementView
         dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
         dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
         dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
+        dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(30, 41, 59);
         dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)((byte)239)), ((int)((byte)246)), ((int)((byte)255)));
-        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(239, 246, 255);
+        dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(37, 99, 235);
         dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
         dgvAssessments.DefaultCellStyle = dataGridViewCellStyle3;
         dgvAssessments.Dock = System.Windows.Forms.DockStyle.Fill;
         dgvAssessments.EnableHeadersVisualStyles = false;
-        dgvAssessments.GridColor = System.Drawing.Color.FromArgb(((int)((byte)226)), ((int)((byte)232)), ((int)((byte)240)));
+        dgvAssessments.GridColor = System.Drawing.Color.FromArgb(226, 232, 240);
         dgvAssessments.Location = new System.Drawing.Point(16, 16);
         dgvAssessments.MultiSelect = false;
         dgvAssessments.Name = "dgvAssessments";
         dgvAssessments.ReadOnly = true;
-        dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-        dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-        dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9F);
-        dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-        dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-        dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-        dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-        dgvAssessments.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
         dgvAssessments.RowHeadersVisible = false;
         dgvAssessments.RowHeadersWidth = 51;
         dgvAssessments.RowTemplate.Height = 40;
+        dgvAssessments.ScrollBars = System.Windows.Forms.ScrollBars.Both;
         dgvAssessments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
         dgvAssessments.Size = new System.Drawing.Size(1080, 553);
         dgvAssessments.TabIndex = 0;
@@ -199,7 +187,7 @@ partial class TeacherGradeManagementView
         // 
         // cboClassFilter
         // 
-        cboClassFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        cboClassFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
         cboClassFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboClassFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboClassFilter.FormattingEnabled = true;
@@ -210,7 +198,7 @@ partial class TeacherGradeManagementView
         // 
         // cboTypeFilter
         // 
-        cboTypeFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right));
+        cboTypeFilter.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
         cboTypeFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
         cboTypeFilter.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         cboTypeFilter.FormattingEnabled = true;
@@ -218,7 +206,6 @@ partial class TeacherGradeManagementView
         cboTypeFilter.Name = "cboTypeFilter";
         cboTypeFilter.Size = new System.Drawing.Size(185, 29);
         cboTypeFilter.TabIndex = 2;
-        cboTypeFilter.Visible = false;
         // 
         // txtSearchAssessment
         // 
@@ -233,21 +220,22 @@ partial class TeacherGradeManagementView
         // 
         lblSearch.AutoSize = true;
         lblSearch.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblSearch.ForeColor = System.Drawing.Color.FromArgb(71, 85, 105);
         lblSearch.Location = new System.Drawing.Point(12, 13);
         lblSearch.Name = "lblSearch";
-        lblSearch.Size = new System.Drawing.Size(78, 20);
+        lblSearch.Size = new System.Drawing.Size(87, 20);
         lblSearch.TabIndex = 0;
-        lblSearch.Text = "Tìm kiếm:";
+        lblSearch.Text = "🔍 Tìm kiếm:";
         // 
         // TeacherGradeManagementView
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-        BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
+        BackColor = System.Drawing.Color.FromArgb(245, 247, 250);
         Controls.Add(pnlBody);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);
+        Name = "TeacherGradeManagementView";
         Size = new System.Drawing.Size(1160, 760);
         pnlHeader.ResumeLayout(false);
         pnlHeader.PerformLayout();

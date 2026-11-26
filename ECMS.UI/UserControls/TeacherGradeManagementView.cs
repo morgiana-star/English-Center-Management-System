@@ -11,36 +11,35 @@ using ECMS.UI.Forms;
 
 namespace ECMS.UI.UserControls;
 
-/// <summary>
-/// Phân hệ Điểm số (Quản lý & Nhập điểm trực tiếp theo Lớp học — 100% SQLite)
-/// </summary>
 public partial class TeacherGradeManagementView : UserControl
 {
-    private readonly IClassService _classService = new ClassService();
-    private List<ClassListItemDto> _allClasses = new();
-    private bool _isLoadingFilters;
+    private class AssessmentDisplayItem
+    {
+        public int Stt { get; set; }
+        public int ExamId { get; set; }
+        public int ClassId { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string ClassCode { get; set; } = string.Empty;
+        public string ClassesDisplay { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Date { get; set; } = string.Empty;
+        public string Weight { get; set; } = string.Empty;
+        public string GradedRatio { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
+    }
+
+    private readonly IExamService _examService;
+    private readonly List<AssessmentDisplayItem> _items = new();
+    private List<ClassExamLookupDto> _classList = new();
 
     public TeacherGradeManagementView()
     {
         InitializeComponent();
+        _examService = new ExamService();
 
-        if (DesignMode || System.ComponentModel.LicenseManager.UsageMode == System.ComponentModel.LicenseUsageMode.Designtime)
-            return;
-
-        ConfigureSimplifiedGradeMode();
-        SetupFilters();
         SetupGrid();
+        _ = InitializeViewAsync();
         WireEvents();
-        _ = LoadDataAsync();
-    }
-
-    private void ConfigureSimplifiedGradeMode()
-    {
-        // Bỏ luồng tạo bài kiểm tra & quản lý lịch thi rườm rà; chỉ giữ Nhập điểm trực tiếp theo Lớp
-        btnCreateAssessmentTop.Visible = false;
-        cboTypeFilter.Visible = false;
-        btnEnterGradesTop.Text = "Nhập điểm theo lớp";
-        lblTitle.Text = "Quản lý điểm số";
     }
 
     protected override void OnLoad(EventArgs e)
@@ -70,16 +69,47 @@ public partial class TeacherGradeManagementView : UserControl
         cardAssessmentList.SetBounds(pad, cardY, availWidth, cardHeight);
     }
 
-    private void SetupFilters()
+    private async Task InitializeViewAsync()
     {
-        cboClassFilter.Items.Clear();
-        cboClassFilter.Items.Add("Tất cả khóa học");
-        cboClassFilter.SelectedIndex = 0;
+        await SetupFiltersAsync();
+        await LoadExamsDataAsync();
+    }
+
+    private async Task SetupFiltersAsync()
+    {
+        try
+        {
+            var classes = (await _examService.GetClassesLookupAsync()).ToList();
+            _classList = classes;
+
+            cboClassFilter.Items.Clear();
+            cboClassFilter.Items.Add("Tất cả lớp");
+
+            foreach (var c in classes)
+            {
+                cboClassFilter.Items.Add(c.ClassCode);
+            }
+            cboClassFilter.SelectedIndex = 0;
+
+            cboTypeFilter.Items.Clear();
+            cboTypeFilter.Items.AddRange(new object[]
+            {
+                "Tất cả loại bài thi",
+                "Thường xuyên (TX)",
+                "Giữa khóa (GK)",
+                "Cuối khóa (CK)",
+                "Đầu vào"
+            });
+            cboTypeFilter.SelectedIndex = 0;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Lỗi tải bộ lọc kỳ thi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
     }
 
     private void SetupGrid()
     {
-        AppGridHelper.ApplyStyle(dgvAssessments);
         dgvAssessments.AutoGenerateColumns = false;
         dgvAssessments.Columns.Clear();
         dgvAssessments.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -89,134 +119,262 @@ public partial class TeacherGradeManagementView : UserControl
         dgvAssessments.AllowUserToAddRows = false;
         dgvAssessments.AllowUserToDeleteRows = false;
 
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 7 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Mã lớp", FillWeight = 16 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCourse", HeaderText = "Khóa học", FillWeight = 25 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTeacher", HeaderText = "Giáo viên phụ trách", FillWeight = 22 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng", FillWeight = 12 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColSize", HeaderText = "Sĩ số", FillWeight = 12 });
-
-        var colAction = new DataGridViewButtonColumn
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
         {
-            Name = "ColAction",
+            DataPropertyName = "Stt",
+            HeaderText = "STT",
+            Width = 50,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "Title",
+            HeaderText = "Tên bài kiểm tra",
+            Width = 240
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "ClassesDisplay",
+            HeaderText = "Lớp áp dụng",
+            Width = 180
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "Type",
+            HeaderText = "Loại bài thi",
+            Width = 140
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "Weight",
+            HeaderText = "Trọng số",
+            Width = 90,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9f, FontStyle.Bold) }
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "Date",
+            HeaderText = "Ngày thi",
+            Width = 110,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "GradedRatio",
+            HeaderText = "Tiến độ",
+            Width = 100,
+            DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter }
+        });
+
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn
+        {
+            DataPropertyName = "Status",
+            HeaderText = "Trạng thái",
+            Width = 140
+        });
+
+        var btnActionCol = new DataGridViewButtonColumn
+        {
             HeaderText = "Thao tác",
             Text = "Nhập điểm",
             UseColumnTextForButtonValue = true,
-            FlatStyle = FlatStyle.Flat,
-            FillWeight = 14
+            Width = 110,
+            FlatStyle = FlatStyle.Flat
         };
-        colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
-        dgvAssessments.Columns.Add(colAction);
+        dgvAssessments.Columns.Add(btnActionCol);
+
+        dgvAssessments.CellFormatting += (s, e) =>
+        {
+            if (e.ColumnIndex >= 0 && e.ColumnIndex < dgvAssessments.Columns.Count &&
+                dgvAssessments.Columns[e.ColumnIndex].DataPropertyName == "Status" && e.Value != null)
+            {
+                var val = e.Value.ToString() ?? "";
+                if (val.Contains("✓"))
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
+                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else
+                {
+                    e.CellStyle!.ForeColor = Color.FromArgb(234, 88, 12);
+                }
+            }
+        };
+
+        dgvAssessments.CellContentClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0 && dgvAssessments.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
+            {
+                OpenGradeEntryForRow(e.RowIndex);
+            }
+        };
+
+        dgvAssessments.CellDoubleClick += (s, e) =>
+        {
+            if (e.RowIndex >= 0)
+            {
+                OpenGradeEntryForRow(e.RowIndex);
+            }
+        };
     }
 
-    private async Task LoadDataAsync()
+    private async Task LoadExamsDataAsync()
     {
         try
         {
-            _isLoadingFilters = true;
-            _allClasses = (await _classService.GetClassesAsync())
-                .Where(c => !c.Status.Contains("Sắp mở", StringComparison.OrdinalIgnoreCase) &&
-                            !c.Status.Contains("Planning", StringComparison.OrdinalIgnoreCase) &&
-                            !c.Status.Contains("OpenForEnrollment", StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            var exams = (await _examService.GetExamsAsync()).ToList();
 
-            var courseNames = _allClasses
-                .Select(c => c.CourseName)
-                .Where(n => !string.IsNullOrWhiteSpace(n))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .OrderBy(n => n)
-                .ToList();
-
-            cboClassFilter.Items.Clear();
-            cboClassFilter.Items.Add("Tất cả khóa học");
-            foreach (var cn in courseNames)
+            // Nếu trong CSDL chưa có bài thi nào, tự động tạo mẫu các bài thi chuẩn cho các lớp để người dùng trải nghiệm ngay
+            if (exams.Count == 0 && _classList.Count > 0)
             {
-                cboClassFilter.Items.Add(cn);
-            }
-            cboClassFilter.SelectedIndex = 0;
-            _isLoadingFilters = false;
+                foreach (var cls in _classList.Take(3))
+                {
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Bài kiểm tra thường xuyên số 1",
+                        Type = "Quiz",
+                        ExamDate = DateTime.Today.AddDays(-20).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 20.0m
+                    });
 
-            FilterAndBind();
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Kiểm tra Giữa kỳ (Midterm Test)",
+                        Type = "Midterm",
+                        ExamDate = DateTime.Today.AddDays(-5).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 30.0m
+                    });
+
+                    await _examService.CreateExamAsync(new CreateExamDto
+                    {
+                        ClassId = cls.ClassId,
+                        ExamName = "Kiểm tra Cuối kỳ (Final Exam)",
+                        Type = "Final",
+                        ExamDate = DateTime.Today.AddDays(25).ToString("yyyy-MM-dd"),
+                        WeightPercentage = 50.0m
+                    });
+                }
+
+                exams = (await _examService.GetExamsAsync()).ToList();
+            }
+
+            _items.Clear();
+            int stt = 1;
+            foreach (var ex in exams)
+            {
+                _items.Add(new AssessmentDisplayItem
+                {
+                    Stt = stt++,
+                    ExamId = ex.ExamId,
+                    ClassId = ex.ClassId,
+                    Title = ex.ExamName,
+                    ClassCode = ex.ClassCode,
+                    ClassesDisplay = $"{ex.ClassCode} ({ex.CourseName})",
+                    Type = ex.TypeDisplay,
+                    Date = ex.DateDisplay,
+                    Weight = ex.WeightDisplay,
+                    GradedRatio = ex.GradedRatioDisplay,
+                    Status = ex.StatusDisplay
+                });
+            }
+
+            ApplyFilter();
         }
         catch (Exception ex)
         {
-            _isLoadingFilters = false;
-            AppDialog.ShowError(ParentForm, "Lỗi nạp danh sách lớp học", ex.Message);
+            MessageBox.Show("Lỗi tải danh sách bài kiểm tra từ CSDL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
-    private void FilterAndBind()
+    private void OpenGradeEntryForRow(int rowIndex)
     {
-        string kw = txtSearchAssessment.Text.Trim().ToLowerInvariant();
-        string course = cboClassFilter.SelectedItem?.ToString() ?? "Tất cả khóa học";
-
-        var filtered = _allClasses.Where(c =>
-            (course == "Tất cả khóa học" || c.CourseName.Equals(course, StringComparison.OrdinalIgnoreCase)) &&
-            (string.IsNullOrEmpty(kw) ||
-             c.ClassCode.ToLowerInvariant().Contains(kw) ||
-             c.CourseName.ToLowerInvariant().Contains(kw) ||
-             c.TeacherName.ToLowerInvariant().Contains(kw))).ToList();
-
-        dgvAssessments.Rows.Clear();
-        int stt = 1;
-        foreach (var c in filtered)
+        if (rowIndex >= 0 && rowIndex < dgvAssessments.Rows.Count)
         {
-            int idx = dgvAssessments.Rows.Add(
-                stt++,
-                c.ClassCode,
-                c.CourseName,
-                c.TeacherName,
-                c.RoomName,
-                $"{c.CurrentStudents} / {c.MaxStudents}",
-                "Nhập điểm");
-            dgvAssessments.Rows[idx].Tag = c;
+            if (dgvAssessments.Rows[rowIndex].DataBoundItem is AssessmentDisplayItem item)
+            {
+                using var dlg = new GradeEntryDialog(item.ClassCode);
+                if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
+                {
+                    _ = LoadExamsDataAsync();
+                }
+                return;
+            }
         }
-        dgvAssessments.ClearSelection();
-        dgvAssessments.CurrentCell = null;
+
+        using var fallbackDlg = new GradeEntryDialog("IELTS-F01");
+        if (fallbackDlg.ShowDialog(ParentForm) == DialogResult.OK)
+        {
+            _ = LoadExamsDataAsync();
+        }
     }
 
     private void WireEvents()
     {
-        txtSearchAssessment.TextChanged += (s, e) => FilterAndBind();
-        cboClassFilter.SelectedIndexChanged += (s, e) => { if (!_isLoadingFilters) FilterAndBind(); };
-
-        btnEnterGradesTop.Click += async (s, e) =>
+        btnEnterGradesTop.Click += (s, e) =>
         {
-            string defaultCls = "";
-            if (dgvAssessments.CurrentRow?.Tag is ClassListItemDto sel)
-                defaultCls = sel.ClassCode;
-            using var dlg = new GradeEntryDialog(defaultCls);
-            if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
+            var selectedClass = cboClassFilter.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedClass) || selectedClass == "Tất cả lớp")
             {
-                await LoadDataAsync();
+                selectedClass = _classList.FirstOrDefault()?.ClassCode ?? "IELTS-F01";
+            }
+
+            using var dlg = new GradeEntryDialog(selectedClass);
+            if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
+            {
+                _ = LoadExamsDataAsync();
             }
         };
 
-        dgvAssessments.CellContentClick += async (s, e) =>
+        btnCreateAssessmentTop.Click += async (s, e) =>
         {
-            if (e.RowIndex >= 0 && dgvAssessments.Columns[e.ColumnIndex].Name == "ColAction")
+            var selectedClass = cboClassFilter.SelectedItem?.ToString();
+            if (string.IsNullOrEmpty(selectedClass) || selectedClass == "Tất cả lớp")
             {
-                if (dgvAssessments.Rows[e.RowIndex].Tag is ClassListItemDto cls)
-                {
-                    using var dlg = new GradeEntryDialog(cls.ClassCode);
-                    if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
-                    {
-                        await LoadDataAsync();
-                    }
-                }
+                selectedClass = _classList.FirstOrDefault()?.ClassCode ?? "IELTS-F01";
+            }
+
+            using var dlg = new CreateAssessmentDialog(selectedClass);
+            if (dlg.ShowDialog(ParentForm) == DialogResult.OK)
+            {
+                await LoadExamsDataAsync();
             }
         };
 
-        dgvAssessments.CellDoubleClick += async (s, e) =>
+        txtSearchAssessment.TextChanged += (s, e) => ApplyFilter();
+        cboClassFilter.SelectedIndexChanged += (s, e) => ApplyFilter();
+        cboTypeFilter.SelectedIndexChanged += (s, e) => ApplyFilter();
+    }
+
+    private void ApplyFilter()
+    {
+        var q = txtSearchAssessment.Text?.Trim().ToLowerInvariant() ?? "";
+        var selectedClass = cboClassFilter.SelectedItem?.ToString() ?? "Tất cả lớp";
+        var selectedType = cboTypeFilter.SelectedItem?.ToString() ?? "Tất cả loại bài thi";
+
+        var filtered = _items.Where(i =>
+            (string.IsNullOrEmpty(q) ||
+             i.Title.ToLowerInvariant().Contains(q) ||
+             i.ClassesDisplay.ToLowerInvariant().Contains(q) ||
+             i.Type.ToLowerInvariant().Contains(q)) &&
+            (selectedClass == "Tất cả lớp" || i.ClassCode == selectedClass || i.ClassesDisplay.Contains(selectedClass)) &&
+            (selectedType == "Tất cả loại bài thi" || i.Type.Contains(selectedType.Replace("Tất cả loại bài thi", "")) || selectedType.Contains(i.Type))
+        ).ToList();
+
+        // Cập nhật lại STT sau khi lọc
+        for (int i = 0; i < filtered.Count; i++)
         {
-            if (e.RowIndex >= 0 && dgvAssessments.Rows[e.RowIndex].Tag is ClassListItemDto cls)
-            {
-                using var dlg = new GradeEntryDialog(cls.ClassCode);
-                if (dlg.ShowDialog(FindForm()) == DialogResult.OK)
-                {
-                    await LoadDataAsync();
-                }
-            }
-        };
+            filtered[i].Stt = i + 1;
+        }
+
+        dgvAssessments.DataSource = null;
+        dgvAssessments.DataSource = filtered;
     }
 }
