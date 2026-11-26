@@ -2,9 +2,6 @@ using System;
 
 namespace ECMS.Core.Helpers;
 
-/// <summary>
-/// Chuẩn hóa hiển thị trạng thái và ca học đồng nhất trên toàn bộ hệ thống ECMS
-/// </summary>
 public static class StatusFormatter
 {
     public static readonly string[] StandardShifts =
