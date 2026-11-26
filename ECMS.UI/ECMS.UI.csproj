@@ -21,6 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <EmbeddedResource Include="Assets\ICON\dialog-*.png" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="Controls\" />
     </ItemGroup>
 

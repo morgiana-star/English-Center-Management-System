@@ -22,13 +22,14 @@ partial class AppDialog
     private void InitializeComponent()
     {
         pnlTopStripe = new System.Windows.Forms.Panel();
-        lblIcon = new System.Windows.Forms.Label();
+        picIcon = new System.Windows.Forms.PictureBox();
         lblTitle = new System.Windows.Forms.Label();
         lblMessage = new System.Windows.Forms.Label();
         pnlBottom = new System.Windows.Forms.Panel();
         pnlDivider = new System.Windows.Forms.Panel();
         _btnPrimary = new ECMS.UI.Controls.AppButton();
         _btnSecondary = new ECMS.UI.Controls.AppButton();
+        ((System.ComponentModel.ISupportInitialize)(picIcon)).BeginInit();
         pnlBottom.SuspendLayout();
         SuspendLayout();
         // 
@@ -38,42 +39,43 @@ partial class AppDialog
         pnlTopStripe.Dock = System.Windows.Forms.DockStyle.Top;
         pnlTopStripe.Location = new System.Drawing.Point(0, 0);
         pnlTopStripe.Name = "pnlTopStripe";
-        pnlTopStripe.Size = new System.Drawing.Size(480, 4);
+        pnlTopStripe.Size = new System.Drawing.Size(520, 4);
         pnlTopStripe.TabIndex = 0;
         // 
-        // lblIcon
+        // picIcon
         // 
-        lblIcon.Font = new System.Drawing.Font("Segoe UI", 20F, System.Drawing.FontStyle.Bold);
-        lblIcon.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
-        lblIcon.Location = new System.Drawing.Point(22, 20);
-        lblIcon.Name = "lblIcon";
-        lblIcon.Size = new System.Drawing.Size(42, 42);
-        lblIcon.TabIndex = 1;
-        lblIcon.Text = "✓";
-        lblIcon.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        picIcon.BackColor = System.Drawing.Color.Transparent;
+        picIcon.Location = new System.Drawing.Point(18, 22);
+        picIcon.Name = "picIcon";
+        picIcon.Size = new System.Drawing.Size(104, 104);
+        picIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+        picIcon.TabIndex = 1;
+        picIcon.TabStop = false;
         // 
         // lblTitle
         // 
         lblTitle.AutoSize = true;
         lblTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
         lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
-        lblTitle.Location = new System.Drawing.Point(72, 20);
-        lblTitle.MaximumSize = new System.Drawing.Size(384, 0);
+        lblTitle.Location = new System.Drawing.Point(134, 22);
+        lblTitle.MaximumSize = new System.Drawing.Size(366, 0);
         lblTitle.Name = "lblTitle";
         lblTitle.Padding = new System.Windows.Forms.Padding(0, 0, 0, 4);
         lblTitle.Size = new System.Drawing.Size(119, 32);
         lblTitle.TabIndex = 2;
         lblTitle.Text = "Thành công";
+        lblTitle.UseMnemonic = false;
         // 
         // lblMessage
         // 
         lblMessage.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblMessage.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
-        lblMessage.Location = new System.Drawing.Point(72, 58);
+        lblMessage.Location = new System.Drawing.Point(134, 60);
         lblMessage.Name = "lblMessage";
-        lblMessage.Size = new System.Drawing.Size(384, 92);
+        lblMessage.Size = new System.Drawing.Size(366, 92);
         lblMessage.TabIndex = 3;
         lblMessage.Text = "Nội dung thông báo chi tiết hiển thị tại đây.";
+        lblMessage.UseMnemonic = false;
         // 
         // pnlBottom
         // 
@@ -82,9 +84,9 @@ partial class AppDialog
         pnlBottom.Controls.Add(_btnSecondary);
         pnlBottom.Controls.Add(pnlDivider);
         pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-        pnlBottom.Location = new System.Drawing.Point(0, 166);
+        pnlBottom.Location = new System.Drawing.Point(0, 176);
         pnlBottom.Name = "pnlBottom";
-        pnlBottom.Size = new System.Drawing.Size(480, 60);
+        pnlBottom.Size = new System.Drawing.Size(520, 60);
         pnlBottom.TabIndex = 4;
         // 
         // pnlDivider
@@ -93,7 +95,7 @@ partial class AppDialog
         pnlDivider.Dock = System.Windows.Forms.DockStyle.Top;
         pnlDivider.Location = new System.Drawing.Point(0, 0);
         pnlDivider.Name = "pnlDivider";
-        pnlDivider.Size = new System.Drawing.Size(480, 1);
+        pnlDivider.Size = new System.Drawing.Size(520, 1);
         pnlDivider.TabIndex = 0;
         // 
         // _btnPrimary
@@ -107,7 +109,7 @@ partial class AppDialog
         _btnPrimary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         _btnPrimary.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         _btnPrimary.ForeColor = System.Drawing.Color.White;
-        _btnPrimary.Location = new System.Drawing.Point(330, 12);
+        _btnPrimary.Location = new System.Drawing.Point(370, 12);
         _btnPrimary.Name = "_btnPrimary";
         _btnPrimary.Size = new System.Drawing.Size(130, 36);
         _btnPrimary.TabIndex = 1;
@@ -126,7 +128,7 @@ partial class AppDialog
         _btnSecondary.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         _btnSecondary.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         _btnSecondary.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        _btnSecondary.Location = new System.Drawing.Point(220, 12);
+        _btnSecondary.Location = new System.Drawing.Point(260, 12);
         _btnSecondary.Name = "_btnSecondary";
         _btnSecondary.Size = new System.Drawing.Size(100, 36);
         _btnSecondary.TabIndex = 2;
@@ -139,10 +141,10 @@ partial class AppDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.White;
-        ClientSize = new System.Drawing.Size(480, 226);
+        ClientSize = new System.Drawing.Size(520, 236);
         Controls.Add(lblMessage);
         Controls.Add(lblTitle);
-        Controls.Add(lblIcon);
+        Controls.Add(picIcon);
         Controls.Add(pnlBottom);
         Controls.Add(pnlTopStripe);
         Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -153,6 +155,7 @@ partial class AppDialog
         ShowInTaskbar = false;
         StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
         Text = "Thông báo";
+        ((System.ComponentModel.ISupportInitialize)(picIcon)).EndInit();
         pnlBottom.ResumeLayout(false);
         ResumeLayout(false);
         PerformLayout();
@@ -161,7 +164,7 @@ partial class AppDialog
     #endregion
 
     private System.Windows.Forms.Panel pnlTopStripe;
-    private System.Windows.Forms.Label lblIcon;
+    private System.Windows.Forms.PictureBox picIcon;
     private System.Windows.Forms.Label lblTitle;
     private System.Windows.Forms.Label lblMessage;
     private System.Windows.Forms.Panel pnlBottom;

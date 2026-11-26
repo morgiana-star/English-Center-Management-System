@@ -44,14 +44,7 @@ public partial class AppDialog : Form
         };
 
         pnlTopStripe.BackColor = accentColor;
-        lblIcon.ForeColor = accentColor;
-        lblIcon.Text = type switch
-        {
-            AppDialogType.Success => "✓",
-            AppDialogType.Warning => "!",
-            AppDialogType.Danger => "✕",
-            _ => "ℹ"
-        };
+        picIcon.Image = LoadDialogIcon(type);
 
         // Tự động căn vị trí lblMessage ngay dưới lblTitle để không bao giờ che phần chân chữ tiêu đề (như chữ g, y, p)
         int messageTop = Math.Max(56, lblTitle.Bottom + 4);
@@ -66,7 +59,8 @@ public partial class AppDialog : Form
         int msgHeight = Math.Max(76, measuredMsg.Height + 12);
         lblMessage.Size = new Size(lblMessage.Width, msgHeight);
 
-        int requiredClientHeight = Math.Max(226, messageTop + msgHeight + pnlBottom.Height + 16);
+        int contentBottom = Math.Max(picIcon.Bottom, messageTop + msgHeight);
+        int requiredClientHeight = Math.Max(236, contentBottom + pnlBottom.Height + 18);
         if (ClientSize.Height < requiredClientHeight)
         {
             ClientSize = new Size(ClientSize.Width, requiredClientHeight);
@@ -81,6 +75,40 @@ public partial class AppDialog : Form
 
         AcceptButton = _btnPrimary;
         CancelButton = showSecondary ? _btnSecondary : _btnPrimary;
+    }
+
+    private static Image? LoadDialogIcon(AppDialogType type)
+    {
+        string fileName = type switch
+        {
+            AppDialogType.Success => "dialog-success.png",
+            AppDialogType.Warning => "dialog-warning.png",
+            AppDialogType.Danger => "dialog-error.png",
+            _ => "dialog-info.png"
+        };
+
+        try
+        {
+            var asm = typeof(AppDialog).Assembly;
+            string resourceName = $"ECMS.UI.Assets.ICON.{fileName}";
+            using var stream = asm.GetManifestResourceStream(resourceName);
+            if (stream != null)
+            {
+                using var img = Image.FromStream(stream);
+                return new Bitmap(img);
+            }
+
+            string diskPath = System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "ICON", fileName);
+            if (System.IO.File.Exists(diskPath))
+            {
+                using var fs = new System.IO.FileStream(diskPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = Image.FromStream(fs);
+                return new Bitmap(img);
+            }
+        }
+        catch { }
+
+        return null;
     }
 
     public static DialogResult ShowConfirm(IWin32Window? owner, string title, string message, string confirmText = "Đồng ý", string cancelText = "Hủy", AppDialogType type = AppDialogType.Warning)

@@ -783,9 +783,9 @@ partial class SystemConfigView
         lblAttendanceTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblAttendanceTitle.Location = new System.Drawing.Point(20, 10);
         lblAttendanceTitle.Name = "lblAttendanceTitle";
-        lblAttendanceTitle.Size = new System.Drawing.Size(331, 28);
+        lblAttendanceTitle.Size = new System.Drawing.Size(121, 28);
         lblAttendanceTitle.TabIndex = 0;
-        lblAttendanceTitle.Text = "Tiêu chuẩn chuyên cần & Điều kiện";
+        lblAttendanceTitle.Text = "Chuyên cần";
         // 
         // cardGradingRules
         // 
@@ -963,9 +963,9 @@ partial class SystemConfigView
         lblGradingRulesTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)15)), ((int)((byte)23)), ((int)((byte)42)));
         lblGradingRulesTitle.Location = new System.Drawing.Point(20, 10);
         lblGradingRulesTitle.Name = "lblGradingRulesTitle";
-        lblGradingRulesTitle.Size = new System.Drawing.Size(263, 28);
+        lblGradingRulesTitle.Size = new System.Drawing.Size(174, 28);
         lblGradingRulesTitle.TabIndex = 0;
-        lblGradingRulesTitle.Text = "Quy tắc điểm số & Đánh giá";
+        lblGradingRulesTitle.Text = "Quy tắc đánh giá";
         // 
         // tabBackup
         // 

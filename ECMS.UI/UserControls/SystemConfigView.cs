@@ -570,7 +570,7 @@ public partial class SystemConfigView : UserControl
 
             // bannerCenterSuccess.Visible = true;
             AppDialog.ShowSuccess(ParentForm, "Lưu cấu hình hệ thống",
-                "Toàn bộ cấu hình hệ thống (Thông tin trung tâm, Quy tắc đánh giá & Chuyên cần, Lịch sao lưu) đã được lưu thành công vào CSDL SQLite.");
+                "Toàn bộ cấu hình hệ thống đã được lưu thành công vào CSDL SQLite.");
         }
         catch (Exception ex)
         {
