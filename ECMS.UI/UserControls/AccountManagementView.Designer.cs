@@ -66,6 +66,7 @@ partial class AccountManagementView
         lblSummaryUsername = new System.Windows.Forms.Label();
         lblSummaryRoleBadge = new System.Windows.Forms.Label();
         lblSummaryName = new System.Windows.Forms.Label();
+        btnChangeAvatar = new ECMS.UI.Controls.AppButton();
         lblAvatar = new System.Windows.Forms.Label();
         cardProfile = new ECMS.UI.Controls.AppCard();
         lblProfSub = new System.Windows.Forms.Label();
@@ -588,6 +589,7 @@ partial class AccountManagementView
         cardProfileSummary.Controls.Add(lblSummaryUsername);
         cardProfileSummary.Controls.Add(lblSummaryRoleBadge);
         cardProfileSummary.Controls.Add(lblSummaryName);
+        cardProfileSummary.Controls.Add(btnChangeAvatar);
         cardProfileSummary.Controls.Add(lblAvatar);
         cardProfileSummary.CornerRadius = 6;
         cardProfileSummary.Location = new System.Drawing.Point(16, 16);
@@ -595,6 +597,23 @@ partial class AccountManagementView
         cardProfileSummary.Padding = new System.Windows.Forms.Padding(20);
         cardProfileSummary.Size = new System.Drawing.Size(320, 590);
         cardProfileSummary.TabIndex = 1;
+        // 
+        // btnChangeAvatar
+        // 
+        btnChangeAvatar.BackColor = System.Drawing.Color.White;
+        btnChangeAvatar.ButtonStyle = ECMS.UI.Controls.AppButtonStyle.Secondary;
+        btnChangeAvatar.CornerRadius = 5;
+        btnChangeAvatar.Cursor = System.Windows.Forms.Cursors.Hand;
+        btnChangeAvatar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+        btnChangeAvatar.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+        btnChangeAvatar.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)37)), ((int)((byte)99)), ((int)((byte)235)));
+        btnChangeAvatar.Location = new System.Drawing.Point(85, 420);
+        btnChangeAvatar.Name = "btnChangeAvatar";
+        btnChangeAvatar.Size = new System.Drawing.Size(150, 32);
+        btnChangeAvatar.TabIndex = 11;
+        btnChangeAvatar.Text = "Đổi ảnh đại diện";
+        btnChangeAvatar.UseVisualStyleBackColor = false;
+        btnChangeAvatar.Variant = ECMS.UI.Controls.ButtonVariant.Secondary;
         // 
         // lblSummaryBranch
         // 
@@ -605,7 +624,7 @@ partial class AccountManagementView
         lblSummaryBranch.Name = "lblSummaryBranch";
         lblSummaryBranch.Size = new System.Drawing.Size(193, 20);
         lblSummaryBranch.TabIndex = 10;
-        lblSummaryBranch.Text = "🏢 Chi nhánh: Quận 1, HCM";
+        lblSummaryBranch.Text = "Chi nhánh: Quận 1, HCM";
         // 
         // lblSummaryPerm
         // 
@@ -616,7 +635,7 @@ partial class AccountManagementView
         lblSummaryPerm.Name = "lblSummaryPerm";
         lblSummaryPerm.Size = new System.Drawing.Size(214, 20);
         lblSummaryPerm.TabIndex = 9;
-        lblSummaryPerm.Text = "🛡️ Quyền: Quản trị toàn quyền";
+        lblSummaryPerm.Text = "Quyền: Quản trị toàn quyền";
         // 
         // lblSummaryLastLogin
         // 
@@ -627,7 +646,7 @@ partial class AccountManagementView
         lblSummaryLastLogin.Name = "lblSummaryLastLogin";
         lblSummaryLastLogin.Size = new System.Drawing.Size(229, 20);
         lblSummaryLastLogin.TabIndex = 8;
-        lblSummaryLastLogin.Text = "🕒 Đăng nhập: 16/11/2026 08:30";
+        lblSummaryLastLogin.Text = "Đăng nhập: 16/11/2026 08:30";
         // 
         // lblSummaryCreated
         // 
@@ -638,7 +657,7 @@ partial class AccountManagementView
         lblSummaryCreated.Name = "lblSummaryCreated";
         lblSummaryCreated.Size = new System.Drawing.Size(178, 20);
         lblSummaryCreated.TabIndex = 7;
-        lblSummaryCreated.Text = "📅 Ngày tạo: 01/01/2024";
+        lblSummaryCreated.Text = "Ngày tạo: 01/01/2024";
         // 
         // lblSummaryPhone
         // 
@@ -649,7 +668,7 @@ partial class AccountManagementView
         lblSummaryPhone.Name = "lblSummaryPhone";
         lblSummaryPhone.Size = new System.Drawing.Size(156, 20);
         lblSummaryPhone.TabIndex = 6;
-        lblSummaryPhone.Text = "📞 SĐT: 0912 345 678";
+        lblSummaryPhone.Text = "SĐT: 0912 345 678";
         // 
         // lblSummaryEmail
         // 
@@ -660,7 +679,7 @@ partial class AccountManagementView
         lblSummaryEmail.Name = "lblSummaryEmail";
         lblSummaryEmail.Size = new System.Drawing.Size(238, 20);
         lblSummaryEmail.TabIndex = 5;
-        lblSummaryEmail.Text = "✉️ Email: minhquan@ecms.edu.vn";
+        lblSummaryEmail.Text = "Email: minhquan@ecms.edu.vn";
         // 
         // pnlSummaryDivider
         // 
@@ -1217,6 +1236,7 @@ partial class AccountManagementView
     // Sub-tab 1: Hồ sơ cá nhân
     private ECMS.UI.Controls.AppCard cardProfileSummary;
     private System.Windows.Forms.Label lblAvatar;
+    private ECMS.UI.Controls.AppButton btnChangeAvatar;
     private System.Windows.Forms.Label lblSummaryName;
     private System.Windows.Forms.Label lblSummaryRoleBadge;
     private System.Windows.Forms.Label lblSummaryUsername;

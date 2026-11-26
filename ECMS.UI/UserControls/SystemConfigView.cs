@@ -138,27 +138,32 @@ public partial class SystemConfigView : UserControl
     private void SetupBackupsGrid()
     {
         dgvBackups.Columns.Clear();
-        dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên tệp sao lưu", FillWeight = 28, ReadOnly = true });
-        dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian tạo", FillWeight = 18, ReadOnly = true });
+        dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tên tệp sao lưu", FillWeight = 34, ReadOnly = true });
+        dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Thời gian tạo", FillWeight = 20, ReadOnly = true });
         dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Dung lượng", FillWeight = 14, ReadOnly = true });
         dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Loại sao lưu", FillWeight = 14, ReadOnly = true });
-        dgvBackups.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Tính toàn vẹn", FillWeight = 14, ReadOnly = true });
 
         var colRestore = new DataGridViewButtonColumn
         {
             HeaderText = "Khôi phục",
-            Text = "🔄 Phục hồi",
+            Text = "Phục hồi",
             UseColumnTextForButtonValue = true,
-            FillWeight = 12
+            FlatStyle = FlatStyle.Flat,
+            FillWeight = 10
         };
+        colRestore.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        colRestore.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
 
         var colDelete = new DataGridViewButtonColumn
         {
             HeaderText = "Xóa",
-            Text = "🗑️ Xóa",
+            Text = "Xóa",
             UseColumnTextForButtonValue = true,
-            FillWeight = 10
+            FlatStyle = FlatStyle.Flat,
+            FillWeight = 8
         };
+        colDelete.DefaultCellStyle.ForeColor = Color.FromArgb(220, 38, 38);
+        colDelete.DefaultCellStyle.SelectionForeColor = Color.FromArgb(220, 38, 38);
 
         dgvBackups.Columns.AddRange(colRestore, colDelete);
     }
@@ -174,7 +179,7 @@ public partial class SystemConfigView : UserControl
         dgvBackups.Rows.Clear();
         foreach (var b in backups)
         {
-            int rIdx = dgvBackups.Rows.Add(b.FileName, b.CreatedAtFormatted, b.FileSizeFormatted, b.BackupType, b.IntegrityStatus);
+            int rIdx = dgvBackups.Rows.Add(b.FileName, b.CreatedAtFormatted, b.FileSizeFormatted, b.BackupType);
             dgvBackups.Rows[rIdx].Tag = b.FilePath;
         }
 
@@ -360,8 +365,8 @@ public partial class SystemConfigView : UserControl
                 filePath = Path.Combine(txtBackupDir.Text.Trim(), fileName);
             }
 
-            // Nút Phục hồi (col 5)
-            if (e.ColumnIndex == 5)
+            // Nút Phục hồi (col 4)
+            if (e.ColumnIndex == 4)
             {
                 if (AppDialog.ShowConfirm(ParentForm, "Khôi phục từ bản sao lưu",
                     $"Bạn có chắc chắn muốn khôi phục dữ liệu từ bản sao lưu '{fileName}' không?\nToàn bộ dữ liệu hiện tại sẽ quay về thời điểm này.") == DialogResult.OK)
@@ -386,8 +391,8 @@ public partial class SystemConfigView : UserControl
                     }
                 }
             }
-            // Nút Xóa (col 6)
-            else if (e.ColumnIndex == 6)
+            // Nút Xóa (col 5)
+            else if (e.ColumnIndex == 5)
             {
                 if (AppDialog.ShowConfirm(ParentForm, "Xóa bản sao lưu",
                     $"Bạn có chắc chắn muốn xóa bản sao lưu '{fileName}' khỏi ổ đĩa không?") == DialogResult.OK)
@@ -403,17 +408,6 @@ public partial class SystemConfigView : UserControl
                         AppDialog.ShowError(ParentForm, "Lỗi xóa tệp", res.Message);
                     }
                 }
-            }
-        };
-
-        // Format màu cho dgvBackups
-        dgvBackups.CellFormatting += (s, e) =>
-        {
-            if (e.RowIndex < 0) return;
-            if (e.ColumnIndex == 4 && e.Value != null)
-            {
-                e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52);
-                e.CellStyle.Font = new Font(dgvBackups.Font, FontStyle.Bold);
             }
         };
     }

@@ -245,12 +245,15 @@ partial class MainForm
         btnNavAccounts.TabIndex = 19;
         btnNavAccounts.Text = "Tài khoản & Phân quyền";
         btnNavAccounts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        btnNavAccounts.UseMnemonic = false;
         btnNavAccounts.UseVisualStyleBackColor = true;
         // 
         // lblGroupD
         // 
         lblGroupD.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupD.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
+        lblGroupD.Image = ((System.Drawing.Image)resources.GetObject("lblGroupD.Image"));
+        lblGroupD.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         lblGroupD.Location = new System.Drawing.Point(20, 548);
         lblGroupD.Name = "lblGroupD";
         lblGroupD.Size = new System.Drawing.Size(210, 26);
@@ -273,12 +276,15 @@ partial class MainForm
         btnNavTuition.TabIndex = 14;
         btnNavTuition.Text = "Học phí & Thanh toán";
         btnNavTuition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        btnNavTuition.UseMnemonic = false;
         btnNavTuition.UseVisualStyleBackColor = true;
         // 
         // lblGroupC
         // 
         lblGroupC.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupC.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
+        lblGroupC.Image = ((System.Drawing.Image)resources.GetObject("lblGroupC.Image"));
+        lblGroupC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         lblGroupC.Location = new System.Drawing.Point(20, 472);
         lblGroupC.Name = "lblGroupC";
         lblGroupC.Size = new System.Drawing.Size(210, 26);
@@ -316,8 +322,9 @@ partial class MainForm
         btnNavGrades.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
         btnNavGrades.Size = new System.Drawing.Size(248, 40);
         btnNavGrades.TabIndex = 9;
-        btnNavGrades.Text = "Kiểm tra & Điểm số";
+        btnNavGrades.Text = "Điểm số";
         btnNavGrades.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        btnNavGrades.UseMnemonic = false;
         btnNavGrades.UseVisualStyleBackColor = true;
         // 
         // btnNavAttendance
@@ -352,6 +359,7 @@ partial class MainForm
         btnNavSchedule.TabIndex = 7;
         btnNavSchedule.Text = "Lịch học & Phòng học";
         btnNavSchedule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+        btnNavSchedule.UseMnemonic = false;
         btnNavSchedule.UseVisualStyleBackColor = true;
         // 
         // btnNavClass
@@ -426,6 +434,8 @@ partial class MainForm
         // 
         lblGroupB.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupB.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
+        lblGroupB.Image = ((System.Drawing.Image)resources.GetObject("lblGroupB.Image"));
+        lblGroupB.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         lblGroupB.Location = new System.Drawing.Point(20, 102);
         lblGroupB.Name = "lblGroupB";
         lblGroupB.Size = new System.Drawing.Size(210, 26);
@@ -454,6 +464,8 @@ partial class MainForm
         // 
         lblGroupA.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
         lblGroupA.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)148)), ((int)((byte)163)), ((int)((byte)184)));
+        lblGroupA.Image = ((System.Drawing.Image)resources.GetObject("lblGroupA.Image"));
+        lblGroupA.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
         lblGroupA.Location = new System.Drawing.Point(20, 8);
         lblGroupA.Name = "lblGroupA";
         lblGroupA.Size = new System.Drawing.Size(210, 26);

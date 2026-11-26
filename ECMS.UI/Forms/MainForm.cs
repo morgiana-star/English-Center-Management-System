@@ -15,10 +15,15 @@ public partial class MainForm : Form
     private readonly IRbacService _rbacService = new RbacService();
     private UserControl? _currentView;
     private Button? _activeNavButton;
+    private readonly System.Windows.Forms.Timer _clockTimer = new() { Interval = 15000 };
 
     public MainForm()
     {
         InitializeComponent();
+
+        lblStatusRight.Text = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
+        _clockTimer.Tick += (s, e) => lblStatusRight.Text = DateTime.Now.ToString("HH:mm dd/MM/yyyy");
+        _clockTimer.Start();
 
         // Thêm đường viền mảnh 1px ở runtime để Rider Designer mở được bình thường
         var pnlHeaderBorder = new Panel
@@ -49,6 +54,9 @@ public partial class MainForm : Form
 
         // Gắn sự kiện click cho các nút Header và Sidebar
         WireUpNavigationEvents();
+
+        // Tinh chỉnh icon các mục tiêu đề Sidebar (A, B, C, D) cho sắc nét và cân đối (chỉ gọi 1 lần)
+        FormatSidebarHeaderIcons();
     }
 
     private async void MainForm_Load(object sender, EventArgs e)
@@ -519,6 +527,71 @@ public partial class MainForm : Form
             var login = new LoginForm();
             login.FormClosed += (sender, args) => Close();
             login.Show();
+        }
+    }
+
+    /// <summary>
+    /// Tự động chuẩn hóa kích thước icon về 16x16 pixel sắc nét và căn chỉnh chữ cho 4 danh mục Sidebar (A, B, C, D)
+    /// </summary>
+    private void FormatSidebarHeaderIcons()
+    {
+        var headers = new (Label? lbl, Image? icon, string text)[]
+        {
+            (lblGroupA, lblGroupA?.Image, "A · TỔNG QUAN"),
+            (lblGroupB, lblGroupB?.Image, "B · ĐÀO TẠO"),
+            (lblGroupC, lblGroupC?.Image, "C · TÀI CHÍNH"),
+            (lblGroupD, lblGroupD?.Image, "D · HỆ THỐNG")
+        };
+
+        foreach (var (lbl, icon, text) in headers)
+        {
+            if (lbl == null) continue;
+            var originalIcon = icon;
+            lbl.Text = "";
+            lbl.Image = null;
+            lbl.Paint += (s, e) =>
+            {
+                e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                e.Graphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+                var textColor = Color.FromArgb(100, 116, 139);
+
+                if (originalIcon != null)
+                {
+                    int iconSize = 16;
+                    int iconY = Math.Max(0, (lbl.Height - iconSize) / 2);
+
+                    float r = textColor.R / 255f;
+                    float g = textColor.G / 255f;
+                    float b = textColor.B / 255f;
+
+                    var colorMatrix = new System.Drawing.Imaging.ColorMatrix(new float[][]
+                    {
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 0, 0 },
+                        new float[] { 0, 0, 0, 1, 0 },
+                        new float[] { r, g, b, 0, 1 }
+                    });
+
+                    using var attr = new System.Drawing.Imaging.ImageAttributes();
+                    attr.SetColorMatrix(colorMatrix, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
+
+                    e.Graphics.DrawImage(originalIcon, new Rectangle(0, iconY, iconSize, iconSize),
+                        0, 0, originalIcon.Width, originalIcon.Height, GraphicsUnit.Pixel, attr);
+                }
+
+                using var brush = new SolidBrush(textColor);
+                using var sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Near,
+                    LineAlignment = StringAlignment.Center
+                };
+                var textRect = new Rectangle(24, 0, Math.Max(0, lbl.Width - 24), lbl.Height);
+                e.Graphics.DrawString(text, lbl.Font, brush, textRect, sf);
+            };
+            lbl.Invalidate();
         }
     }
 }

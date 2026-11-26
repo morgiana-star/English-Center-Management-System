@@ -282,7 +282,7 @@ public partial class CertificateRegistryDialog : Form
             }
             else
             {
-                MessageBox.Show("Vui lòng chọn một chứng chỉ từ bảng để xem trước hoặc in.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AppDialog.ShowInfo(this, "Thông báo", "Vui lòng chọn một chứng chỉ từ bảng để xem trước hoặc in.");
             }
         };
     }

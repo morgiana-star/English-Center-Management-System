@@ -119,34 +119,46 @@ public partial class AccountManagementView : UserControl
         var colEdit = new DataGridViewButtonColumn
         {
             HeaderText = "Sửa",
-            Text = "✏️ Sửa",
+            Text = "Sửa",
             UseColumnTextForButtonValue = true,
+            FlatStyle = FlatStyle.Flat,
             FillWeight = 9
         };
+        colEdit.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        colEdit.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
 
         var colReset = new DataGridViewButtonColumn
         {
             HeaderText = "Mật khẩu",
-            Text = "🔑 Đặt lại",
+            Text = "Đặt lại",
             UseColumnTextForButtonValue = true,
+            FlatStyle = FlatStyle.Flat,
             FillWeight = 10
         };
+        colReset.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        colReset.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
 
         var colToggle = new DataGridViewButtonColumn
         {
             HeaderText = "Khóa / Mở",
             Text = "Đổi",
             UseColumnTextForButtonValue = false,
+            FlatStyle = FlatStyle.Flat,
             FillWeight = 10
         };
+        colToggle.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
+        colToggle.DefaultCellStyle.SelectionForeColor = Color.FromArgb(37, 99, 235);
 
         var colDelete = new DataGridViewButtonColumn
         {
             HeaderText = "Xóa",
-            Text = "🗑️ Xóa",
+            Text = "Xóa",
             UseColumnTextForButtonValue = true,
+            FlatStyle = FlatStyle.Flat,
             FillWeight = 9
         };
+        colDelete.DefaultCellStyle.ForeColor = Color.FromArgb(220, 38, 38);
+        colDelete.DefaultCellStyle.SelectionForeColor = Color.FromArgb(220, 38, 38);
 
         dgvAccounts.Columns.AddRange(colUser, colName, colEmail, colPhone, colRole, colCode, colStatus, colEdit, colReset, colToggle, colDelete);
     }
@@ -162,10 +174,10 @@ public partial class AccountManagementView : UserControl
             var telemetry = await _userService.GetTelemetryAsync();
             int admins = _accounts.Count(a => a.RoleCode == "ROLE_ADMIN");
 
-            lblStatTotal.Text = $"👥 Tổng số: {telemetry.TotalUsers} tài khoản";
-            lblStatActive.Text = $"🟢 Đang hoạt động: {telemetry.ActiveUsers}";
-            lblStatLocked.Text = $"🔴 Đã khóa: {telemetry.LockedUsers}";
-            lblStatAdmin.Text = $"🛡️ Quản trị viên: {admins}";
+            lblStatTotal.Text = $"Tổng số: {telemetry.TotalUsers} tài khoản";
+            lblStatActive.Text = $"Đang hoạt động: {telemetry.ActiveUsers}";
+            lblStatLocked.Text = $"Đã khóa: {telemetry.LockedUsers}";
+            lblStatAdmin.Text = $"Quản trị viên: {admins}";
         }
         catch (Exception ex)
         {
@@ -210,10 +222,10 @@ public partial class AccountManagementView : UserControl
                 item.RoleName,
                 item.RoleCode,
                 item.StatusText,
-                "✏️ Sửa",
-                "🔑 Đặt lại",
-                item.IsActive ? "🔒 Khóa" : "🔓 Mở khóa",
-                "🗑️ Xóa"
+                "Sửa",
+                "Đặt lại",
+                item.IsActive ? "Khóa" : "Mở khóa",
+                "Xóa"
             );
             dgvAccounts.Rows[idx].Tag = item;
         }
@@ -308,10 +320,72 @@ public partial class AccountManagementView : UserControl
         lblSummaryName.Text = AppSession.FullName;
         lblSummaryUsername.Text = $"@{AppSession.Username}";
         lblSummaryRoleBadge.Text = AppSession.RoleName;
-        lblSummaryEmail.Text = $"✉️ Email: {(string.IsNullOrWhiteSpace(AppSession.Email) ? "Chưa cập nhật" : AppSession.Email)}";
-        lblSummaryPhone.Text = $"📞 Điện thoại: {(string.IsNullOrWhiteSpace(AppSession.Phone) ? "Chưa cập nhật" : AppSession.Phone)}";
-        lblSummaryCreated.Text = $"📅 Ngày tạo: {AppSession.CreatedDate}";
-        lblSummaryLastLogin.Text = $"🕒 Lần đăng nhập cuối: {AppSession.LastLogin}";
+        lblSummaryEmail.Text = $"Email: {(string.IsNullOrWhiteSpace(AppSession.Email) ? "Chưa cập nhật" : AppSession.Email)}";
+        lblSummaryPhone.Text = $"Điện thoại: {(string.IsNullOrWhiteSpace(AppSession.Phone) ? "Chưa cập nhật" : AppSession.Phone)}";
+        lblSummaryCreated.Text = $"Ngày tạo: {AppSession.CreatedDate}";
+        lblSummaryLastLogin.Text = $"Lần đăng nhập cuối: {AppSession.LastLogin}";
+
+        LoadAvatarImage();
+    }
+
+    private string GetAvatarFilePath()
+    {
+        string dir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "ECMS", "Avatars");
+        System.IO.Directory.CreateDirectory(dir);
+        return System.IO.Path.Combine(dir, $"avatar_user_{AppSession.UserId}.png");
+    }
+
+    private void LoadAvatarImage()
+    {
+        try
+        {
+            string path = GetAvatarFilePath();
+            if (System.IO.File.Exists(path))
+            {
+                using var fs = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = Image.FromStream(fs);
+                lblAvatar.BackgroundImage = new Bitmap(img);
+                lblAvatar.BackgroundImageLayout = ImageLayout.Zoom;
+                lblAvatar.Text = "";
+                return;
+            }
+        }
+        catch
+        {
+        }
+
+        lblAvatar.BackgroundImage = null;
+        var parts = (AppSession.FullName ?? "ECMS").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        lblAvatar.Text = parts.Length >= 2
+            ? $"{parts[0][0]}{parts[^1][0]}".ToUpperInvariant()
+            : (parts.Length == 1 && parts[0].Length > 0 ? parts[0][0].ToString().ToUpperInvariant() : "U");
+    }
+
+    private void ChangeUserAvatar()
+    {
+        using var ofd = new OpenFileDialog
+        {
+            Title = "Chọn ảnh đại diện cá nhân",
+            Filter = "Tệp hình ảnh (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
+        };
+
+        if (ofd.ShowDialog(ParentForm) == DialogResult.OK)
+        {
+            try
+            {
+                using var fs = new System.IO.FileStream(ofd.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+                using var img = Image.FromStream(fs);
+                using var bmp = new Bitmap(img, new Size(256, 256));
+                string dest = GetAvatarFilePath();
+                bmp.Save(dest, System.Drawing.Imaging.ImageFormat.Png);
+                LoadAvatarImage();
+                AppDialog.ShowSuccess(ParentForm, "Đổi ảnh đại diện", "Đã cập nhật ảnh đại diện cá nhân thành công.");
+            }
+            catch (Exception ex)
+            {
+                AppDialog.ShowError(ParentForm, "Lỗi cập nhật ảnh", "Không thể tải tệp ảnh đã chọn: " + ex.Message);
+            }
+        }
     }
 
     private void WireUpEvents()
@@ -416,34 +490,6 @@ public partial class AccountManagementView : UserControl
             }
         };
 
-        dgvAccounts.CellFormatting += (s, e) =>
-        {
-            if (e.RowIndex < 0) return;
-            if (e.ColumnIndex == 6 && e.Value != null)
-            {
-                string text = e.Value.ToString() ?? "";
-                if (text.Contains("Hoạt động"))
-                {
-                    e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52);
-                    e.CellStyle.Font = new Font(dgvAccounts.Font, FontStyle.Bold);
-                }
-                else
-                {
-                    e.CellStyle.ForeColor = Color.FromArgb(220, 38, 38);
-                    e.CellStyle.Font = new Font(dgvAccounts.Font, FontStyle.Bold);
-                }
-            }
-            else if (e.ColumnIndex == 4 && e.Value != null)
-            {
-                string role = e.Value.ToString() ?? "";
-                if (role.Contains("Admin"))
-                {
-                    e.CellStyle.ForeColor = Color.FromArgb(37, 99, 235);
-                    e.CellStyle.Font = new Font(dgvAccounts.Font, FontStyle.Bold);
-                }
-            }
-        };
-
         // 2. Tab 2 Events (Ma trận phân quyền lưu SQLite & áp dụng lên MainForm Sidebar)
         dgvPermissions.CellFormatting += (s, e) =>
         {
@@ -451,30 +497,7 @@ public partial class AccountManagementView : UserControl
             if (e.ColumnIndex == 0)
             {
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-                e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
                 e.CellStyle.Padding = new Padding(12, 0, 0, 0);
-                return;
-            }
-
-            if (e.Value == null) return;
-            string val = e.Value.ToString()?.Trim() ?? "";
-
-            if (val.Contains("Toàn quyền"))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(220, 252, 231);
-                e.CellStyle.ForeColor = Color.FromArgb(22, 101, 52);
-                e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
-            }
-            else if (val.Contains("Chỉ xem"))
-            {
-                e.CellStyle.BackColor = Color.FromArgb(219, 234, 254);
-                e.CellStyle.ForeColor = Color.FromArgb(30, 64, 175);
-                e.CellStyle.Font = new Font(dgvPermissions.Font, FontStyle.Bold);
-            }
-            else
-            {
-                e.CellStyle.BackColor = Color.FromArgb(241, 245, 249);
-                e.CellStyle.ForeColor = Color.FromArgb(148, 163, 184);
             }
         };
 
@@ -542,6 +565,10 @@ public partial class AccountManagementView : UserControl
         };
 
         // 3. Tab 3 Events (Cập nhật hồ sơ cá nhân xuống SQLite & Đổi mật khẩu DB thật)
+        btnChangeAvatar.Click += (s, e) => ChangeUserAvatar();
+        lblAvatar.Cursor = Cursors.Hand;
+        lblAvatar.Click += (s, e) => ChangeUserAvatar();
+
         btnSaveProf.Click += async (s, e) =>
         {
             if (string.IsNullOrWhiteSpace(txtFullName.Text))

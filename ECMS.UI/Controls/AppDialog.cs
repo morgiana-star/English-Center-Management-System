@@ -13,12 +13,13 @@ public enum AppDialogType
 }
 
 /// <summary>
-/// Hộp thoại thông báo / xác nhận chuẩn theo Figma Image 4 (Phản hồi & phòng lỗi).
+/// Hộp thoại thông báo / xác nhận chuẩn hệ thống ECMS (hỗ trợ mở trên WinForms Designer).
 /// </summary>
-public class AppDialog : Form
+public partial class AppDialog : Form
 {
-    private readonly AppButton _btnPrimary;
-    private readonly AppButton _btnSecondary;
+    public AppDialog() : this("Thông báo", "Nội dung thông báo chi tiết hiển thị tại đây.", AppDialogType.Info, "Đóng", "Hủy", false)
+    {
+    }
 
     public AppDialog(
         string title,
@@ -28,17 +29,12 @@ public class AppDialog : Form
         string secondaryButtonText = "Hủy",
         bool showSecondary = true)
     {
-        Text = title;
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
-        MinimizeBox = false;
-        ShowInTaskbar = false;
-        StartPosition = FormStartPosition.CenterParent;
-        ClientSize = new Size(480, 220);
-        BackColor = Color.White;
-        Font = FigmaTheme.Content;
+        InitializeComponent();
 
-        // Top decorative accent / status bar
+        Text = title;
+        lblTitle.Text = title;
+        lblMessage.Text = message;
+
         Color accentColor = type switch
         {
             AppDialogType.Success => FigmaTheme.Success,
@@ -47,92 +43,44 @@ public class AppDialog : Form
             _ => FigmaTheme.Info
         };
 
-        var pnlTopStripe = new Panel
+        pnlTopStripe.BackColor = accentColor;
+        lblIcon.ForeColor = accentColor;
+        lblIcon.Text = type switch
         {
-            Dock = DockStyle.Top,
-            Height = 4,
-            BackColor = accentColor
-        };
-        Controls.Add(pnlTopStripe);
-
-        var lblIcon = new Label
-        {
-            Text = type switch
-            {
-                AppDialogType.Success => "✓",
-                AppDialogType.Warning => "!",
-                AppDialogType.Danger => "✕",
-                _ => "ℹ"
-            },
-            Font = new Font("Segoe UI", 20f, FontStyle.Bold),
-            ForeColor = accentColor,
-            Size = new Size(40, 40),
-            Location = new Point(24, 24),
-            TextAlign = ContentAlignment.TopCenter
-        };
-        Controls.Add(lblIcon);
-
-        var lblTitle = new Label
-        {
-            Text = title,
-            Font = FigmaTheme.Section,
-            ForeColor = FigmaTheme.TextPrimary,
-            Location = new Point(72, 24),
-            Size = new Size(380, 26)
-        };
-        Controls.Add(lblTitle);
-
-        var lblMessage = new Label
-        {
-            Text = message,
-            Font = FigmaTheme.Content,
-            ForeColor = FigmaTheme.TextSecondary,
-            Location = new Point(72, 54),
-            Size = new Size(380, 90)
-        };
-        Controls.Add(lblMessage);
-
-        // Bottom Action Bar
-        var pnlBottom = new Panel
-        {
-            Dock = DockStyle.Bottom,
-            Height = 60,
-            BackColor = Color.FromArgb(248, 250, 252)
+            AppDialogType.Success => "✓",
+            AppDialogType.Warning => "!",
+            AppDialogType.Danger => "✕",
+            _ => "ℹ"
         };
 
-        var pnlDivider = new Panel
-        {
-            Dock = DockStyle.Top,
-            Height = 1,
-            BackColor = FigmaTheme.Border
-        };
-        pnlBottom.Controls.Add(pnlDivider);
+        // Tự động căn vị trí lblMessage ngay dưới lblTitle để không bao giờ che phần chân chữ tiêu đề (như chữ g, y, p)
+        int messageTop = Math.Max(56, lblTitle.Bottom + 4);
+        lblMessage.Location = new Point(lblTitle.Left, messageTop);
 
-        _btnPrimary = new AppButton
-        {
-            Text = primaryButtonText,
-            ButtonStyle = type == AppDialogType.Danger ? AppButtonStyle.Danger : AppButtonStyle.Primary,
-            Size = new Size(130, 36),
-            Location = new Point(330, 12),
-            DialogResult = DialogResult.OK
-        };
-        pnlBottom.Controls.Add(_btnPrimary);
+        Size measuredMsg = TextRenderer.MeasureText(
+            message,
+            lblMessage.Font,
+            new Size(lblMessage.Width, 600),
+            TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl);
 
-        _btnSecondary = new AppButton
+        int msgHeight = Math.Max(76, measuredMsg.Height + 12);
+        lblMessage.Size = new Size(lblMessage.Width, msgHeight);
+
+        int requiredClientHeight = Math.Max(226, messageTop + msgHeight + pnlBottom.Height + 16);
+        if (ClientSize.Height < requiredClientHeight)
         {
-            Text = secondaryButtonText,
-            ButtonStyle = AppButtonStyle.Secondary,
-            Size = new Size(100, 36),
-            Location = new Point(220, 12),
-            Visible = showSecondary,
-            DialogResult = DialogResult.Cancel
-        };
-        pnlBottom.Controls.Add(_btnSecondary);
+            ClientSize = new Size(ClientSize.Width, requiredClientHeight);
+        }
+
+        _btnPrimary.Text = primaryButtonText;
+        _btnPrimary.ButtonStyle = type == AppDialogType.Danger ? AppButtonStyle.Danger : AppButtonStyle.Primary;
+        _btnPrimary.Variant = type == AppDialogType.Danger ? ButtonVariant.Danger : ButtonVariant.Primary;
+
+        _btnSecondary.Text = secondaryButtonText;
+        _btnSecondary.Visible = showSecondary;
 
         AcceptButton = _btnPrimary;
-        CancelButton = _btnSecondary;
-
-        Controls.Add(pnlBottom);
+        CancelButton = showSecondary ? _btnSecondary : _btnPrimary;
     }
 
     public static DialogResult ShowConfirm(IWin32Window? owner, string title, string message, string confirmText = "Đồng ý", string cancelText = "Hủy", AppDialogType type = AppDialogType.Warning)

@@ -92,8 +92,8 @@ public partial class TuitionPaymentView : UserControl
             cboStatusFilter.Items.AddRange(new object[]
             {
                 "Tất cả trạng thái",
-                "Đã tất toán",
-                "Còn nợ học phí"
+                "Đã hoàn tất",
+                "Chưa hoàn tất"
             });
         }
         else if (tabIndex == 1) // Công nợ
@@ -174,24 +174,7 @@ public partial class TuitionPaymentView : UserControl
             }
             else if (gridProfiles.Columns[e.ColumnIndex].DataPropertyName == "PaymentStatus")
             {
-                if (item.PaymentStatus.Contains("✓") || item.PaymentStatus.Contains("Đã đóng đủ"))
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
-                    e.CellStyle!.BackColor = Color.FromArgb(240, 253, 244);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-                else if (item.PaymentStatus.Contains("Chưa đóng") || item.DebtStatus.Contains("Quá hạn"))
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(220, 38, 38);
-                    e.CellStyle!.BackColor = Color.FromArgb(254, 242, 242);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-                else
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(194, 65, 12);
-                    e.CellStyle!.BackColor = Color.FromArgb(255, 247, 237);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
+                e.Value = item.Remaining <= 0 ? "Đã hoàn tất" : "Chưa hoàn tất";
             }
         };
 
@@ -218,11 +201,12 @@ public partial class TuitionPaymentView : UserControl
         {
             Name = "colDebtAction",
             HeaderText = "Thao tác",
-            Text = "💵 Thu tiền",
+            Text = "Thu tiền",
             UseColumnTextForButtonValue = true,
             Width = 110,
             FlatStyle = FlatStyle.Flat
         };
+        btnCollectDebt.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         gridDebtors.Columns.Add(btnCollectDebt);
 
         gridDebtors.CellFormatting += (s, e) =>
@@ -236,27 +220,6 @@ public partial class TuitionPaymentView : UserControl
             else if (colName == "colDebtTotal") e.Value = $"{item.TotalFee:N0} đ";
             else if (colName == "colDebtPaid") e.Value = $"{item.Paid:N0} đ";
             else if (colName == "colDebtRemaining") e.Value = $"{item.Remaining:N0} đ";
-            else if (gridDebtors.Columns[e.ColumnIndex].DataPropertyName == "DebtStatus")
-            {
-                if (item.DebtStatus.Contains("Quá hạn"))
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(220, 38, 38);
-                    e.CellStyle!.BackColor = Color.FromArgb(254, 242, 242);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-                else if (item.DebtStatus.Contains("7 ngày"))
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(194, 65, 12);
-                    e.CellStyle!.BackColor = Color.FromArgb(255, 247, 237);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-                else
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(37, 99, 235);
-                    e.CellStyle!.BackColor = Color.FromArgb(239, 246, 255);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-            }
         };
 
         // 3. Grid Lịch sử thu (Tab 3)
@@ -282,11 +245,12 @@ public partial class TuitionPaymentView : UserControl
         {
             Name = "colHistAction",
             HeaderText = "Thao tác",
-            Text = "🖨️ In phiếu thu",
+            Text = "In phiếu thu",
             UseColumnTextForButtonValue = true,
             Width = 115,
             FlatStyle = FlatStyle.Flat
         };
+        btnPrintReceipt.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         gridHistory.Columns.Add(btnPrintReceipt);
 
         gridHistory.CellFormatting += (s, e) =>
@@ -298,21 +262,6 @@ public partial class TuitionPaymentView : UserControl
             if (gridHistory.Columns[e.ColumnIndex].Name == "colHistAmountVal")
             {
                 e.Value = $"{item.Amount:N0} đ";
-            }
-            else if (gridHistory.Columns[e.ColumnIndex].DataPropertyName == "Method")
-            {
-                if (item.Method.Contains("Chuyển khoản"))
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(37, 99, 235);
-                    e.CellStyle!.BackColor = Color.FromArgb(239, 246, 255);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
-                else
-                {
-                    e.CellStyle!.ForeColor = Color.FromArgb(22, 163, 74);
-                    e.CellStyle!.BackColor = Color.FromArgb(240, 253, 244);
-                    e.CellStyle!.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
-                }
             }
         };
     }
@@ -337,7 +286,7 @@ public partial class TuitionPaymentView : UserControl
                     Paid = p.Paid,
                     Remaining = p.Remaining,
                     DueDate = p.DueDate,
-                    PaymentStatus = p.PaymentStatus,
+                    PaymentStatus = p.Remaining <= 0 ? "Đã hoàn tất" : "Chưa hoàn tất",
                     DebtStatus = p.DebtStatus,
                     PaidInstallmentCount = p.PaidInstallmentCount
                 });
@@ -632,8 +581,8 @@ public partial class TuitionPaymentView : UserControl
                  p.CourseName.ToLowerInvariant().Contains(q)) &&
                 (selectedClass == "Tất cả lớp" || p.ClassName == selectedClass) &&
                 (string.IsNullOrEmpty(selectedStatus) || selectedStatus == "Tất cả trạng thái" ||
-                 (selectedStatus.Contains("Đã tất toán") && p.Remaining == 0) ||
-                 (selectedStatus.Contains("Còn nợ") && p.Remaining > 0))
+                 (selectedStatus.Contains("Đã hoàn tất") && p.Remaining <= 0) ||
+                 (selectedStatus.Contains("Chưa hoàn tất") && p.Remaining > 0))
             ).ToList();
 
             gridProfiles.DataSource = null;

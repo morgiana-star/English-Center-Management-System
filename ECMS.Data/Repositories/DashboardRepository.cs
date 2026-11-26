@@ -605,7 +605,7 @@ public class DashboardRepository : IDashboardRepository
                 cl.ClassName,
                 COALESCE(r.RoomName, 'Chưa xếp') AS RoomName,
                 COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
-                (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = cl.ClassId AND e.Status IN ('Active', 'PendingPayment')) AS CurrentEnrollment,
+                (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = cl.ClassId AND e.Status NOT IN ('Cancelled', 'Dropped')) AS CurrentEnrollment,
                 cl.MaxStudents AS MaxCapacity,
                 cl.Status AS RawStatus
             FROM ClassSchedules cs
@@ -613,6 +613,8 @@ public class DashboardRepository : IDashboardRepository
             LEFT JOIN ClassRooms r ON COALESCE(cs.RoomId, cl.DefaultRoomId) = r.RoomId
             LEFT JOIN Teachers t ON COALESCE(cs.TeacherId, cl.MainTeacherId) = t.TeacherId
             WHERE cs.Date = @Today
+              AND cl.Status = 'InProgress'
+              AND (SELECT COUNT(*) FROM Enrollments e WHERE e.ClassId = cl.ClassId AND e.Status NOT IN ('Cancelled', 'Dropped')) > 0
             ORDER BY cs.StartTime ASC, cl.ClassCode ASC;";
 
         var rows = await conn.QueryAsync<dynamic>(sql, new { Today = todayStr });

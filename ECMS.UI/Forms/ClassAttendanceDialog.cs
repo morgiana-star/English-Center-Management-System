@@ -325,7 +325,7 @@ public partial class ClassAttendanceDialog : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Lỗi tải lịch học từ CSDL: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            AppDialog.ShowWarning(this, "Thông báo", "Lỗi tải lịch học từ CSDL: " + ex.Message);
         }
     }
 
@@ -388,7 +388,7 @@ public partial class ClassAttendanceDialog : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Lỗi tải danh sách học viên: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            AppDialog.ShowWarning(this, "Thông báo", "Lỗi tải danh sách học viên: " + ex.Message);
         }
     }
 
@@ -474,7 +474,7 @@ public partial class ClassAttendanceDialog : Form
         {
             if (_currentScheduleId <= 0)
             {
-                MessageBox.Show("Vui lòng chọn một buổi học hợp lệ trước khi lưu điểm danh.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                AppDialog.ShowWarning(this, "Thông báo", "Vui lòng chọn một buổi học hợp lệ trước khi lưu điểm danh.");
                 return;
             }
 
@@ -518,19 +518,19 @@ public partial class ClassAttendanceDialog : Form
 
                 if (ok)
                 {
-                    lblSaveStatus.Text = "✓ Đã lưu thay đổi";
+                    lblSaveStatus.Text = "Đã lưu thay đổi";
                     lblSaveStatus.Visible = true;
-                    MessageBox.Show($"Đã lưu kết quả điểm danh cho {records.Count} học viên thành công!", "Lưu điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AppDialog.ShowSuccess(this, "Lưu điểm danh", $"Đã lưu kết quả điểm danh cho {records.Count} học viên thành công!");
                     await LoadSessionsDataAsync();
                 }
                 else
                 {
-                    MessageBox.Show("Không thể lưu điểm danh vào cơ sở dữ liệu. Vui lòng thử lại.", "Lỗi lưu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    AppDialog.ShowError(this, "Lỗi lưu dữ liệu", "Không thể lưu điểm danh vào cơ sở dữ liệu. Vui lòng thử lại.");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Lỗi khi lưu điểm danh: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                AppDialog.ShowError(this, "Lỗi", "Lỗi khi lưu điểm danh: " + ex.Message);
             }
             finally
             {

@@ -378,7 +378,7 @@ public partial class DashboardOverviewView : UserControl
             {
                 Name = "ColDelete",
                 HeaderText = "Xóa",
-                Text = "🗑️ Xóa",
+                Text = "Xóa",
                 UseColumnTextForButtonValue = true,
                 FillWeight = 10,
                 FlatStyle = FlatStyle.Flat

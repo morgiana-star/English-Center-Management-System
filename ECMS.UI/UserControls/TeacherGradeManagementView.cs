@@ -89,13 +89,12 @@ public partial class TeacherGradeManagementView : UserControl
         dgvAssessments.AllowUserToAddRows = false;
         dgvAssessments.AllowUserToDeleteRows = false;
 
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 6 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Mã lớp", FillWeight = 14 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCourse", HeaderText = "Khóa học", FillWeight = 22 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTeacher", HeaderText = "Giáo viên phụ trách", FillWeight = 20 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng", FillWeight = 10 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColSize", HeaderText = "Sĩ số", FillWeight = 10 });
-        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStatus", HeaderText = "Trạng thái", FillWeight = 12 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColStt", HeaderText = "STT", FillWeight = 7 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColClass", HeaderText = "Mã lớp", FillWeight = 16 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColCourse", HeaderText = "Khóa học", FillWeight = 25 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColTeacher", HeaderText = "Giáo viên phụ trách", FillWeight = 22 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColRoom", HeaderText = "Phòng", FillWeight = 12 });
+        dgvAssessments.Columns.Add(new DataGridViewTextBoxColumn { Name = "ColSize", HeaderText = "Sĩ số", FillWeight = 12 });
 
         var colAction = new DataGridViewButtonColumn
         {
@@ -104,7 +103,7 @@ public partial class TeacherGradeManagementView : UserControl
             Text = "Nhập điểm",
             UseColumnTextForButtonValue = true,
             FlatStyle = FlatStyle.Flat,
-            FillWeight = 12
+            FillWeight = 14
         };
         colAction.DefaultCellStyle.ForeColor = Color.FromArgb(37, 99, 235);
         dgvAssessments.Columns.Add(colAction);
@@ -115,7 +114,11 @@ public partial class TeacherGradeManagementView : UserControl
         try
         {
             _isLoadingFilters = true;
-            _allClasses = (await _classService.GetClassesAsync()).ToList();
+            _allClasses = (await _classService.GetClassesAsync())
+                .Where(c => !c.Status.Contains("Sắp mở", StringComparison.OrdinalIgnoreCase) &&
+                            !c.Status.Contains("Planning", StringComparison.OrdinalIgnoreCase) &&
+                            !c.Status.Contains("OpenForEnrollment", StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
             var courseNames = _allClasses
                 .Select(c => c.CourseName)
@@ -165,7 +168,7 @@ public partial class TeacherGradeManagementView : UserControl
                 c.TeacherName,
                 c.RoomName,
                 $"{c.CurrentStudents} / {c.MaxStudents}",
-                c.Status);
+                "Nhập điểm");
             dgvAssessments.Rows[idx].Tag = c;
         }
         dgvAssessments.ClearSelection();

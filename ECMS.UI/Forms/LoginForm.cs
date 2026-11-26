@@ -26,8 +26,8 @@ public partial class LoginForm : Form
 
     private async void LoginForm_Load(object sender, EventArgs e)
     {
-        if (txtUsername.Text == "appTextBox1") txtUsername.Text = "";
-        if (txtPassword.Text == "appTextBox2") txtPassword.Text = "";
+        txtUsername.Text = string.Empty;
+        txtPassword.Text = string.Empty;
 
         try
         {

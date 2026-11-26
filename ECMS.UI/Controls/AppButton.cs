@@ -117,9 +117,9 @@ public class AppButton : Button
                     border = FigmaTheme.Border;
                     break;
                 case ButtonVariant.Danger:
-                    bg = _isPressed ? Color.FromArgb(185, 28, 28) : (_isHovered ? Color.FromArgb(220, 38, 38) : FigmaTheme.Danger);
-                    fg = Color.White;
-                    border = Color.Transparent;
+                    bg = _isPressed ? Color.FromArgb(254, 202, 202) : (_isHovered ? Color.FromArgb(254, 226, 226) : Color.FromArgb(254, 242, 242));
+                    fg = Color.FromArgb(220, 38, 38);
+                    border = Color.FromArgb(254, 202, 202);
                     break;
                 case ButtonVariant.Success:
                     bg = _isPressed ? Color.FromArgb(21, 128, 61) : (_isHovered ? Color.FromArgb(22, 163, 74) : FigmaTheme.Success);

@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ECMS.Business.Services;
+using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
 
@@ -202,11 +203,10 @@ public partial class ReceiptPrintPreviewDialog : Form
     private void ExecutePrint()
     {
         string printer = cboPrinter.SelectedItem?.ToString() ?? "Máy in mặc định";
-        MessageBox.Show(
-            $"Đã gửi lệnh in 01 bản phiếu thu {_receiptCode} của học viên {_studentName} ({_amount:N0}đ) tới máy in:\n[{printer}]\n\nTrạng thái in: Đang xử lý cục bộ thành công.",
+        AppDialog.ShowSuccess(
+            this,
             "In phiếu thu thành công",
-            MessageBoxButtons.OK,
-            MessageBoxIcon.Information
+            $"Đã gửi lệnh in 01 bản phiếu thu {_receiptCode} của học viên {_studentName} ({_amount:N0}đ) tới máy in:\n[{printer}]\n\nTrạng thái in: Đang xử lý cục bộ thành công."
         );
         DialogResult = DialogResult.OK;
         Close();

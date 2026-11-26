@@ -24,7 +24,8 @@ public class AppTextBox : UserControl
     {
         if (_innerBox.IsHandleCreated)
         {
-            SendMessage(_innerBox.Handle, EM_SETCUEBANNER, (nint)1, _placeholder);
+            // wParam = 0: Cue banner tự động ẩn ngay khi người dùng click chuột vào ô để gõ phím
+            SendMessage(_innerBox.Handle, EM_SETCUEBANNER, (nint)0, _placeholder);
         }
     }
 
@@ -199,18 +200,6 @@ public class AppTextBox : UserControl
         using (var pen = new Pen(border, borderWidth))
         {
             g.DrawPath(pen, path);
-        }
-
-        if (string.IsNullOrEmpty(_innerBox.Text) && !string.IsNullOrEmpty(_placeholder) && !_isFocused)
-        {
-            var textRect = new Rectangle(10, 8, Width - 20, 20);
-            TextRenderer.DrawText(
-                g,
-                _placeholder,
-                FigmaTheme.FontContent,
-                textRect,
-                FigmaTheme.TextMuted,
-                TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         }
     }
 

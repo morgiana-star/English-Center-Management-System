@@ -213,7 +213,7 @@ public partial class TeacherAttendanceCheckView : UserControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Lỗi nạp danh sách lớp học từ CSDL: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            AppDialog.ShowWarning(FindForm(), "Thông báo", "Lỗi nạp danh sách lớp học từ CSDL: " + ex.Message);
         }
     }
 
