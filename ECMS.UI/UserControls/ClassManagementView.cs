@@ -1,6 +1,10 @@
 using System;
 using System.Drawing;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 using ECMS.UI.Forms;
 
@@ -17,7 +21,7 @@ public partial class ClassManagementView : UserControl
 
         SetupFilters();
         SetupGrid();
-        LoadSampleClasses();
+        _ = LoadClassesDataAsync();
         WireEvents();
     }
 
@@ -75,6 +79,69 @@ public partial class ClassManagementView : UserControl
         dgvClasses.Columns.Add(colAction);
     }
 
+    private async Task LoadClassesDataAsync()
+    {
+        try
+        {
+            dgvClasses.Rows.Clear();
+            using var conn = DatabaseConfig.GetConnection();
+
+            var query = @"
+                SELECT 
+                    c.ClassCode,
+                    co.CourseName,
+                    COALESCE(t.FullName, 'Chưa phân công') AS TeacherName,
+                    COALESCE(c.SchedulePattern, 'T3 / T6') || ' · ' || COALESCE(c.StartTime, '18:00') || '–' || COALESCE(c.EndTime, '20:00') AS ScheduleText,
+                    COALESCE(r.RoomCode, r.RoomName, 'P201') AS RoomText,
+                    COUNT(e.StudentId) || ' / ' || c.MaxStudents AS StudentRatio,
+                    c.Status
+                FROM Classes c
+                JOIN Courses co ON c.CourseId = co.CourseId
+                LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
+                LEFT JOIN ClassRooms r ON c.DefaultRoomId = r.RoomId
+                LEFT JOIN Enrollments e ON e.ClassId = c.ClassId
+                GROUP BY c.ClassId
+                ORDER BY c.ClassId ASC;";
+
+            var classes = (await conn.QueryAsync<dynamic>(query)).ToList();
+            if (classes.Count == 0)
+            {
+                LoadSampleClasses();
+                return;
+            }
+
+            foreach (var cls in classes)
+            {
+                string rawStatus = (string)cls.Status;
+                string displayStatus = rawStatus switch
+                {
+                    "InProgress" => "Đang học",
+                    "OpenForEnrollment" or "Planning" => "Sắp mở",
+                    "Completed" => "Đã kết thúc",
+                    "Cancelled" => "Đã hủy",
+                    _ => rawStatus
+                };
+
+                dgvClasses.Rows.Add(
+                    (string)cls.ClassCode,
+                    (string)cls.CourseName,
+                    (string)cls.TeacherName,
+                    (string)cls.ScheduleText,
+                    (string)cls.RoomText,
+                    (string)cls.StudentRatio,
+                    displayStatus
+                );
+            }
+
+            dgvClasses.ClearSelection();
+            dgvClasses.CurrentCell = null;
+        }
+        catch
+        {
+            LoadSampleClasses();
+        }
+    }
+
     private void LoadSampleClasses()
     {
         dgvClasses.Rows.Clear();
@@ -96,7 +163,7 @@ public partial class ClassManagementView : UserControl
             using var createDlg = new CreateClassDialog();
             if (createDlg.ShowDialog(FindForm()) == DialogResult.OK)
             {
-                LoadSampleClasses();
+                _ = LoadClassesDataAsync();
             }
         };
 

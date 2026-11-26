@@ -1,6 +1,9 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using Dapper;
+using ECMS.Data.Database;
 using ECMS.UI.Controls;
 
 namespace ECMS.UI.Forms;
@@ -112,7 +115,6 @@ public partial class ClassDetailDialog : Form
 
     private void LoadStudentsTab()
     {
-        lblStudentListTitle.Text = "DANH SÁCH HỌC VIÊN TRONG LỚP (18/20)";
         dgvClassStudents.DataSource = null;
         dgvClassStudents.Columns.Clear();
         dgvClassStudents.AutoGenerateColumns = false;
@@ -142,12 +144,49 @@ public partial class ClassDetailDialog : Form
         };
         dgvClassStudents.Columns.Add(actionCol);
 
+        try
+        {
+            using var conn = DatabaseConfig.GetConnection();
+            var classInfo = conn.QueryFirstOrDefault<dynamic>(@"
+                SELECT ClassId, MaxStudents FROM Classes WHERE ClassCode = @ClassCode;", new { ClassCode = _classCode });
+
+            if (classInfo != null)
+            {
+                int classId = (int)classInfo.ClassId;
+                int maxStudents = (int)classInfo.MaxStudents;
+
+                var students = conn.Query<dynamic>(@"
+                    SELECT s.StudentCode, s.FullName, s.Phone, s.Status
+                    FROM Enrollments e
+                    JOIN Students s ON e.StudentId = s.StudentId
+                    WHERE e.ClassId = @ClassId
+                    ORDER BY s.StudentCode ASC;", new { ClassId = classId }).ToList();
+
+                lblStudentListTitle.Text = $"DANH SÁCH HỌC VIÊN TRONG LỚP ({students.Count}/{maxStudents})";
+
+                int stt = 1;
+                foreach (var st in students)
+                {
+                    string code = (string)st.StudentCode;
+                    string name = (string)st.FullName;
+                    string phone = (string?)st.Phone ?? "0912 345 678";
+                    dgvClassStudents.Rows.Add(stt.ToString(), code, name, phone, "Đang học", "100% (24/24)", "Đã hoàn thành", "Xem hồ sơ");
+                    stt++;
+                }
+
+                if (students.Count > 0)
+                {
+                    RefreshGridDisplay();
+                    return;
+                }
+            }
+        }
+        catch { }
+
+        // Fallback sample
+        lblStudentListTitle.Text = "DANH SÁCH HỌC VIÊN TRONG LỚP (20/20)";
         dgvClassStudents.Rows.Add("1", "HV-0241", "Nguyễn Minh Anh", "0908 123 456", "Đang học", "87,5% (21/24)", "Còn nợ 1.900.000đ", "Xem hồ sơ");
         dgvClassStudents.Rows.Add("2", "HV-0237", "Lê Hoàng Nam", "0912 345 678", "Đang học", "91,7% (22/24)", "Đã hoàn thành", "Xem hồ sơ");
-        dgvClassStudents.Rows.Add("3", "HV-0238", "Phạm Khánh Linh", "0933 456 789", "Đang học", "100% (24/24)", "Đã hoàn thành", "Xem hồ sơ");
-        dgvClassStudents.Rows.Add("4", "HV-0240", "Vũ Quang Huy", "0988 567 890", "Đang học", "100% (24/24)", "Còn nợ 800.000đ", "Xem hồ sơ");
-        dgvClassStudents.Rows.Add("5", "HV-0242", "Đặng Thị Thảo", "0977 890 123", "Bảo lưu", "50,0% (12/24)", "Đã hoàn thành", "Xem hồ sơ");
-
         RefreshGridDisplay();
     }
 
