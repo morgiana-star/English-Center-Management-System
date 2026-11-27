@@ -582,7 +582,7 @@ partial class StudentDetailDialog
         lblGradeFinal.AutoSize = true;
         lblGradeFinal.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblGradeFinal.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblGradeFinal.Location = new System.Drawing.Point(10, 165);
+        lblGradeFinal.Location = new System.Drawing.Point(10, 140);
         lblGradeFinal.Name = "lblGradeFinal";
         lblGradeFinal.Size = new System.Drawing.Size(196, 21);
         lblGradeFinal.TabIndex = 4;
@@ -593,7 +593,7 @@ partial class StudentDetailDialog
         lblGradeMid.AutoSize = true;
         lblGradeMid.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         lblGradeMid.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblGradeMid.Location = new System.Drawing.Point(10, 125);
+        lblGradeMid.Location = new System.Drawing.Point(10, 95);
         lblGradeMid.Name = "lblGradeMid";
         lblGradeMid.Size = new System.Drawing.Size(196, 21);
         lblGradeMid.TabIndex = 3;
@@ -603,7 +603,7 @@ partial class StudentDetailDialog
         // 
         lblGradeRegular.AutoSize = true;
         lblGradeRegular.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        lblGradeRegular.Location = new System.Drawing.Point(10, 85);
+        lblGradeRegular.Location = new System.Drawing.Point(10, 50);
         lblGradeRegular.Name = "lblGradeRegular";
         lblGradeRegular.Size = new System.Drawing.Size(169, 21);
         lblGradeRegular.TabIndex = 2;
@@ -618,6 +618,7 @@ partial class StudentDetailDialog
         lblGradeEntry.Size = new System.Drawing.Size(127, 21);
         lblGradeEntry.TabIndex = 1;
         lblGradeEntry.Text = "Đầu vào: 4.0 / 10";
+        lblGradeEntry.Visible = false;
         // 
         // lblColGradesTitle
         // 

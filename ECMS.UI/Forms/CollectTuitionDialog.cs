@@ -121,8 +121,36 @@ public partial class CollectTuitionDialog : Form
         lblTotalVal.Text = $"{_effectiveTotalFee:N0} đ";
         txtNote.Text = $"Thu học phí - {StudentName} ({StudentCode}) - Lớp {ClassName}";
         lblDiscountInfo.Text = "";
+        lblDiscountInfo.Visible = false;
 
+        ApplyHarmoniousTheme();
         ApplyInstallmentSelection();
+    }
+
+    private void ApplyHarmoniousTheme()
+    {
+        lblSectionStudent.Text = "1. THÔNG TIN HỌC VIÊN";
+
+        Color cardBg = Color.FromArgb(248, 250, 252);
+        Color cardBorder = Color.FromArgb(226, 232, 240);
+        Color titleColor = Color.FromArgb(100, 116, 139);
+        Color valColor = Color.FromArgb(30, 41, 59);
+
+        foreach (var card in new[] { cardTotal, cardPaid, cardRemaining })
+        {
+            card.BackColor = cardBg;
+            card.BorderColor = cardBorder;
+        }
+        foreach (var lblT in new[] { lblTotalTitle, lblPaidTitle, lblRemainingTitle })
+        {
+            lblT.ForeColor = titleColor;
+        }
+        foreach (var lblV in new[] { lblTotalVal, lblPaidVal, lblRemainingVal })
+        {
+            lblV.ForeColor = valColor;
+        }
+
+        txtAmount.ForeColor = Color.FromArgb(37, 99, 235);
     }
 
     private void ApplyInstallmentSelection()

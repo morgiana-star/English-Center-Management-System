@@ -84,6 +84,17 @@ public partial class StudentEnrollmentWizardDialog : Form
         cboShiftFilter.Width = 230;
         cboAvailabilityFilter.Visible = false;
 
+        lblSubtitle.Visible = false;
+        lblSelectCourseTitle.Text = "Chọn khóa học (*):";
+        pnlBottomFeeSummary.BackColor = Color.Transparent;
+        pnlBottomFeeSummary.BorderStyle = BorderStyle.None;
+        pnlBottomFeeSummary.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+        pnlBottomFeeSummary.Location = new Point(cboCourse.Right + 24, cboCourse.Top);
+        pnlBottomFeeSummary.Size = new Size(340, cboCourse.Height);
+        pnlBottomFeeSummary.Padding = new Padding(0);
+        lblBottomTuitionFee.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+        lblBottomTuitionFee.TextAlign = ContentAlignment.MiddleLeft;
+
         SetupClassesGrid();
     }
 
@@ -189,6 +200,9 @@ public partial class StudentEnrollmentWizardDialog : Form
     private void UpdateBottomFeeLabel()
     {
         lblBottomTuitionFee.Text = $"Tổng học phí: {_courseFee:N0} VNĐ";
+        lblBottomTuitionFee.Refresh();
+        pnlBottomFeeSummary.Refresh();
+        cboCourse.Refresh();
     }
 
     private void WireEvents()
@@ -474,14 +488,14 @@ public partial class StudentEnrollmentWizardDialog : Form
 
         if (step == 1)
         {
-            lblTitle.Text = "Đăng ký nhập học & Xếp lớp mới";
-            lblSubtitle.Text = "Bước 1 / 2: Điền đầy đủ thông tin cá nhân và người liên hệ của học viên (trừ Ghi chú)";
+            lblTitle.Text = "Đăng ký học";
+            lblSubtitle.Visible = false;
             btnNext.Text = "Tiếp tục";
         }
         else
         {
-            lblTitle.Text = "Chọn Khóa học & Lớp học";
-            lblSubtitle.Text = "Bước 2 / 2: Chọn chương trình đào tạo và lớp học đang mở tuyển sinh";
+            lblTitle.Text = "Chọn lớp học";
+            lblSubtitle.Visible = false;
             btnNext.Text = "Thu phí";
         }
     }

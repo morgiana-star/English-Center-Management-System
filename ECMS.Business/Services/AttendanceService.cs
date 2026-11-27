@@ -44,6 +44,25 @@ public class AttendanceService : IAttendanceService
                 }, transaction);
             }
 
+            int? classId = await conn.ExecuteScalarAsync<int?>(
+                "SELECT ClassId FROM ClassSchedules WHERE ScheduleId = @ScheduleId;",
+                new { ScheduleId = scheduleId }, transaction);
+
+            if (classId.HasValue && classId.Value > 0)
+            {
+                await conn.ExecuteAsync(@"
+                    UPDATE Enrollments
+                    SET AttendanceRate = COALESCE((
+                        SELECT ROUND(CAST(SUM(CASE WHEN ar.Status IN ('Present', 'Late') THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*), 1)
+                        FROM AttendanceRecords ar
+                        INNER JOIN ClassSchedules cs ON ar.ScheduleId = cs.ScheduleId
+                        WHERE ar.StudentId = Enrollments.StudentId AND cs.ClassId = Enrollments.ClassId
+                        HAVING COUNT(*) > 0
+                    ), AttendanceRate)
+                    WHERE ClassId = @ClassId;",
+                    new { ClassId = classId.Value }, transaction);
+            }
+
             transaction.Commit();
             return true;
         }

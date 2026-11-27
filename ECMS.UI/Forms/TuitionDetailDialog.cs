@@ -72,8 +72,10 @@ public partial class TuitionDetailDialog : Form
             ? Color.FromArgb(22, 163, 74)
             : Color.FromArgb(220, 38, 38);
 
-        // Bỏ nút Thu học phí trong hộp thoại Xem chi tiết (thu phí thực hiện ở Tab Công nợ)
+        // Bỏ nút Thu học phí và nút Đóng ở đáy trong hộp thoại Xem chi tiết (đóng bằng nút X góc trên)
         btnCollectNow.Visible = false;
+        btnCancel.Visible = false;
+        pnlFooter.Visible = false;
     }
 
     private void SetupGrid()

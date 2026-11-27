@@ -138,6 +138,7 @@ public class ScheduleRepository : BaseRepository, IScheduleRepository
             LEFT JOIN Teachers t ON c.MainTeacherId = t.TeacherId
             LEFT JOIN ClassRooms r ON c.DefaultRoomId = r.RoomId
             WHERE c.Status IN ('Planning', 'OpenForEnrollment', 'InProgress')
+              AND NOT EXISTS (SELECT 1 FROM ClassSchedules cs WHERE cs.ClassId = c.ClassId)
             ORDER BY c.ClassId DESC;";
 
         var rows = (await conn.QueryAsync<dynamic>(sql)).ToList();

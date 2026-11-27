@@ -117,7 +117,16 @@ public class ClassRepository : IClassRepository
         using var conn = DatabaseConfig.CreateOpenConnection();
         string sql = @"
             INSERT INTO Classes (ClassCode, ClassName, CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status)
-            VALUES (@ClassCode, @ClassName, @CourseId, @MainTeacherId, @DefaultRoomId, @StartDate, @EndDate, @MaxStudents, @Status);";
+            VALUES (@ClassCode, @ClassName, @CourseId, @MainTeacherId, @DefaultRoomId, @StartDate, @EndDate, @MaxStudents, @Status)
+            ON CONFLICT(ClassCode) DO UPDATE SET
+                ClassName = excluded.ClassName,
+                CourseId = excluded.CourseId,
+                MainTeacherId = excluded.MainTeacherId,
+                DefaultRoomId = excluded.DefaultRoomId,
+                StartDate = excluded.StartDate,
+                EndDate = excluded.EndDate,
+                MaxStudents = excluded.MaxStudents,
+                Status = excluded.Status;";
 
         int rows = await conn.ExecuteAsync(sql, new
         {
@@ -310,12 +319,9 @@ public class ClassRepository : IClassRepository
             double? mid = r.MidtermVal != null ? Convert.ToDouble(r.MidtermVal) : null;
             double? fin = r.FinalVal != null ? Convert.ToDouble(r.FinalVal) : null;
 
-            var available = new List<double>();
-            if (reg.HasValue) available.Add(reg.Value);
-            if (mid.HasValue) available.Add(mid.Value);
-            if (fin.HasValue) available.Add(fin.Value);
-
-            string avgStr = available.Count > 0 ? $"{available.Average():0.0}" : "-";
+            string avgStr = (reg.HasValue && mid.HasValue && fin.HasValue)
+                ? $"{Math.Round(reg.Value * 0.2 + mid.Value * 0.3 + fin.Value * 0.5, 1):0.0}"
+                : "-";
 
             list.Add(new ClassGradeItemDto
             {

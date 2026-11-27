@@ -95,7 +95,7 @@ partial class AddTeacherDialog
         pnlContent.Location = new System.Drawing.Point(0, 68);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new System.Windows.Forms.Padding(24, 16, 24, 24);
-        pnlContent.Size = new System.Drawing.Size(860, 772);
+        pnlContent.Size = new System.Drawing.Size(860, 480);
         pnlContent.TabIndex = 1;
         // 
         // cardTeacherInfo
@@ -129,7 +129,7 @@ partial class AddTeacherDialog
         cardTeacherInfo.Location = new System.Drawing.Point(24, 16);
         cardTeacherInfo.Name = "cardTeacherInfo";
         cardTeacherInfo.Padding = new System.Windows.Forms.Padding(20);
-        cardTeacherInfo.Size = new System.Drawing.Size(812, 730);
+        cardTeacherInfo.Size = new System.Drawing.Size(812, 430);
         cardTeacherInfo.TabIndex = 0;
         // 
         // btnSave
@@ -142,7 +142,7 @@ partial class AddTeacherDialog
         btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSave.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSave.ForeColor = System.Drawing.Color.White;
-        btnSave.Location = new System.Drawing.Point(650, 665);
+        btnSave.Location = new System.Drawing.Point(650, 365);
         btnSave.Name = "btnSave";
         btnSave.Size = new System.Drawing.Size(140, 42);
         btnSave.TabIndex = 19;
@@ -160,7 +160,7 @@ partial class AddTeacherDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)30)), ((int)((byte)41)), ((int)((byte)59)));
-        btnCancel.Location = new System.Drawing.Point(500, 665);
+        btnCancel.Location = new System.Drawing.Point(500, 365);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(140, 42);
         btnCancel.TabIndex = 18;
@@ -191,6 +191,7 @@ partial class AddTeacherDialog
         pnlScheduleBox.Padding = new System.Windows.Forms.Padding(16);
         pnlScheduleBox.Size = new System.Drawing.Size(774, 254);
         pnlScheduleBox.TabIndex = 17;
+        pnlScheduleBox.Visible = false;
         // 
         // chkSun
         // 
@@ -565,7 +566,7 @@ partial class AddTeacherDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)248)), ((int)((byte)250)), ((int)((byte)252)));
-        ClientSize = new System.Drawing.Size(860, 840);
+        ClientSize = new System.Drawing.Size(860, 548);
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);

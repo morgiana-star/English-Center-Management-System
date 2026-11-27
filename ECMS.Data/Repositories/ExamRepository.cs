@@ -223,24 +223,50 @@ public class ExamRepository : BaseRepository, IExamRepository
                     regExamId ??= await EnsureExamIdAsync("Regular", "Kiểm tra thường xuyên", 20);
                     await UpsertScoreAsync(conn, tran, regExamId.Value, item.StudentId, item.RegularScore.Value);
                 }
+                else
+                {
+                    await conn.ExecuteAsync(
+                        "DELETE FROM ExamScores WHERE StudentId = @StudentId AND ExamId IN (SELECT ExamId FROM Exams WHERE ClassId = @ClassId AND Type = 'Regular');",
+                        new { item.StudentId, ClassId = classId }, tran);
+                }
+
                 if (item.MidtermScore.HasValue)
                 {
                     midExamId ??= await EnsureExamIdAsync("Midterm", "Kiểm tra giữa khóa", 30);
                     await UpsertScoreAsync(conn, tran, midExamId.Value, item.StudentId, item.MidtermScore.Value);
                 }
+                else
+                {
+                    await conn.ExecuteAsync(
+                        "DELETE FROM ExamScores WHERE StudentId = @StudentId AND ExamId IN (SELECT ExamId FROM Exams WHERE ClassId = @ClassId AND Type = 'Midterm');",
+                        new { item.StudentId, ClassId = classId }, tran);
+                }
+
                 if (item.FinalScore.HasValue)
                 {
                     finExamId ??= await EnsureExamIdAsync("Final", "Thi cuối khóa", 50);
                     await UpsertScoreAsync(conn, tran, finExamId.Value, item.StudentId, item.FinalScore.Value);
                 }
+                else
+                {
+                    await conn.ExecuteAsync(
+                        "DELETE FROM ExamScores WHERE StudentId = @StudentId AND ExamId IN (SELECT ExamId FROM Exams WHERE ClassId = @ClassId AND Type = 'Final');",
+                        new { item.StudentId, ClassId = classId }, tran);
+                }
 
-                // Cập nhật FinalGPA nếu có đủ 3 cột điểm
+                // Cập nhật FinalGPA chỉ khi có đủ cả 3 cột điểm (nếu thiếu thì đặt NULL)
                 if (item.RegularScore.HasValue && item.MidtermScore.HasValue && item.FinalScore.HasValue)
                 {
                     double gpa = Math.Round(item.RegularScore.Value * 0.2 + item.MidtermScore.Value * 0.3 + item.FinalScore.Value * 0.5, 2);
                     await conn.ExecuteAsync(
                         "UPDATE Enrollments SET FinalGPA = @Gpa, UpdatedAt = CURRENT_TIMESTAMP WHERE ClassId = @ClassId AND StudentId = @StudentId;",
                         new { Gpa = gpa, ClassId = classId, item.StudentId }, tran);
+                }
+                else
+                {
+                    await conn.ExecuteAsync(
+                        "UPDATE Enrollments SET FinalGPA = NULL, UpdatedAt = CURRENT_TIMESTAMP WHERE ClassId = @ClassId AND StudentId = @StudentId;",
+                        new { ClassId = classId, item.StudentId }, tran);
                 }
             }
 

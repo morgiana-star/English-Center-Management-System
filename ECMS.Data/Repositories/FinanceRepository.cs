@@ -105,7 +105,8 @@ public class FinanceRepository : IFinanceRepository
         string paymentMethod, 
         string note, 
         int cashierId,
-        decimal extraDiscount = 0)
+        decimal extraDiscount = 0,
+        string? preferredReceiptCode = null)
     {
         using var conn = DatabaseConfig.CreateOpenConnection();
         using var trans = conn.BeginTransaction();
@@ -154,8 +155,10 @@ public class FinanceRepository : IFinanceRepository
                 curDiscount = (decimal)anyInv.DiscountAmount;
             }
 
-            // 2. Sinh mã phiếu thu chuẩn ISO PT-yyMMdd-xxx
-            string receiptCode = $"PT-{DateTime.Now:yyMMdd}-{new Random().Next(100, 999)}";
+            // 2. Sử dụng đúng mã phiếu thu đã hiển thị trên hộp thoại Lập phiếu thu (hoặc tự sinh nếu chưa có)
+            string receiptCode = !string.IsNullOrWhiteSpace(preferredReceiptCode)
+                ? preferredReceiptCode.Trim()
+                : $"PT-{DateTime.Now:yyMMdd}-{new Random().Next(100, 999)}";
             string normalizedMethod = paymentMethod switch
             {
                 var m when m.Contains("Tiền mặt", StringComparison.OrdinalIgnoreCase) => "Tiền mặt",

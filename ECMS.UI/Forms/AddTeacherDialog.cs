@@ -138,12 +138,13 @@ public partial class AddTeacherDialog : Form
 
         btnSave.Click += async (s, e) =>
         {
-            string availableDays = CollectAvailableDays();
+            string availableDays = _editingTeacher?.AvailableDays ?? "";
             if (string.IsNullOrWhiteSpace(availableDays))
-            {
-                AppDialog.ShowWarning(this, "Thiếu lịch rảnh", "Vui lòng chọn ít nhất 1 ngày có thể giảng dạy.");
-                return;
-            }
+                availableDays = "T2, T3, T4, T5, T6, T7, CN";
+
+            string preferredShifts = _editingTeacher?.PreferredShifts ?? "";
+            if (string.IsNullOrWhiteSpace(preferredShifts))
+                preferredShifts = "Ca Sáng (08:00 - 12:00), Ca Chiều (13:30 - 17:30), Ca Tối (18:00 - 21:00)";
 
             var dto = new SaveTeacherDto
             {
@@ -157,7 +158,7 @@ public partial class AddTeacherDialog : Form
                     : (cboSpecialty.SelectedItem?.ToString() ?? StatusFormatter.TeacherSpecialties[0]),
                 Certificate = txtCert.Text.Trim(),
                 Notes = txtBio.Text.Trim(),
-                PreferredShifts = CollectPreferredShifts(),
+                PreferredShifts = preferredShifts,
                 AvailableDays = availableDays,
                 IsActive = cboStatus.SelectedIndex == 0
             };

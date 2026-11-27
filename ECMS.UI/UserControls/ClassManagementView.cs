@@ -127,7 +127,23 @@ public partial class ClassManagementView : UserControl
     {
         try
         {
-            _allClasses = (await _classService.GetClassesAsync()).ToList();
+            bool isTeacher = string.Equals(AppSession.RoleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase);
+            if (isTeacher)
+            {
+                btnAddClass.Visible = false;
+            }
+
+            var list = (await _classService.GetClassesAsync()).ToList();
+            if (isTeacher && !string.IsNullOrWhiteSpace(AppSession.FullName))
+            {
+                string tName = AppSession.FullName.Trim();
+                list = list.Where(c =>
+                    !string.IsNullOrWhiteSpace(c.TeacherName) &&
+                    (c.TeacherName.Contains(tName, StringComparison.OrdinalIgnoreCase) ||
+                     tName.Contains(c.TeacherName, StringComparison.OrdinalIgnoreCase))).ToList();
+            }
+
+            _allClasses = list;
             FilterClasses();
         }
         catch (Exception ex)

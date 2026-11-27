@@ -83,7 +83,7 @@ partial class CreateClassDialog
         pnlContent.Location = new System.Drawing.Point(0, 75);
         pnlContent.Name = "pnlContent";
         pnlContent.Padding = new System.Windows.Forms.Padding(24);
-        pnlContent.Size = new System.Drawing.Size(860, 605);
+        pnlContent.Size = new System.Drawing.Size(860, 525);
         pnlContent.TabIndex = 1;
         // 
         // cardClassInfo
@@ -119,7 +119,7 @@ partial class CreateClassDialog
         cardClassInfo.Location = new System.Drawing.Point(24, 24);
         cardClassInfo.Name = "cardClassInfo";
         cardClassInfo.Padding = new System.Windows.Forms.Padding(24);
-        cardClassInfo.Size = new System.Drawing.Size(805, 530);
+        cardClassInfo.Size = new System.Drawing.Size(805, 450);
         cardClassInfo.TabIndex = 0;
         // 
         // btnSaveDraft
@@ -132,7 +132,7 @@ partial class CreateClassDialog
         btnSaveDraft.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnSaveDraft.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
         btnSaveDraft.ForeColor = System.Drawing.Color.White;
-        btnSaveDraft.Location = new System.Drawing.Point(651, 465);
+        btnSaveDraft.Location = new System.Drawing.Point(651, 385);
         btnSaveDraft.Name = "btnSaveDraft";
         btnSaveDraft.Size = new System.Drawing.Size(130, 36);
         btnSaveDraft.TabIndex = 22;
@@ -150,7 +150,7 @@ partial class CreateClassDialog
         btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnCancel.Font = new System.Drawing.Font("Segoe UI", 9.5F);
         btnCancel.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnCancel.Location = new System.Drawing.Point(555, 465);
+        btnCancel.Location = new System.Drawing.Point(555, 385);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new System.Drawing.Size(90, 36);
         btnCancel.TabIndex = 21;
@@ -165,7 +165,7 @@ partial class CreateClassDialog
         cboStatus.CornerRadius = 5;
         cboStatus.DataSource = null;
         cboStatus.DisplayMember = "";
-        cboStatus.Location = new System.Drawing.Point(415, 385);
+        cboStatus.Location = new System.Drawing.Point(415, 305);
         cboStatus.Name = "cboStatus";
         cboStatus.SelectedIndex = -1;
         cboStatus.SelectedItem = null;
@@ -180,7 +180,7 @@ partial class CreateClassDialog
         lblStatus.AutoSize = true;
         lblStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblStatus.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblStatus.Location = new System.Drawing.Point(415, 365);
+        lblStatus.Location = new System.Drawing.Point(415, 285);
         lblStatus.Name = "lblStatus";
         lblStatus.Size = new System.Drawing.Size(80, 20);
         lblStatus.TabIndex = 19;
@@ -192,7 +192,7 @@ partial class CreateClassDialog
         cboRoom.CornerRadius = 5;
         cboRoom.DataSource = null;
         cboRoom.DisplayMember = "";
-        cboRoom.Location = new System.Drawing.Point(24, 385);
+        cboRoom.Location = new System.Drawing.Point(24, 305);
         cboRoom.Name = "cboRoom";
         cboRoom.SelectedIndex = -1;
         cboRoom.SelectedItem = null;
@@ -206,7 +206,7 @@ partial class CreateClassDialog
         lblRoom.AutoSize = true;
         lblRoom.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         lblRoom.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)73)), ((int)((byte)80)), ((int)((byte)87)));
-        lblRoom.Location = new System.Drawing.Point(24, 365);
+        lblRoom.Location = new System.Drawing.Point(24, 285);
         lblRoom.Name = "lblRoom";
         lblRoom.Size = new System.Drawing.Size(150, 20);
         lblRoom.TabIndex = 17;
@@ -227,6 +227,7 @@ partial class CreateClassDialog
         cboTimeSlot.Size = new System.Drawing.Size(366, 35);
         cboTimeSlot.TabIndex = 16;
         cboTimeSlot.ValueMember = "";
+        cboTimeSlot.Visible = false;
         // 
         // lblTimeSlot
         // 
@@ -239,6 +240,7 @@ partial class CreateClassDialog
         lblTimeSlot.Size = new System.Drawing.Size(92, 20);
         lblTimeSlot.TabIndex = 15;
         lblTimeSlot.Text = "Khung giờ *";
+        lblTimeSlot.Visible = false;
         // 
         // cboDaysOfWeek
         // 
@@ -254,6 +256,7 @@ partial class CreateClassDialog
         cboDaysOfWeek.Size = new System.Drawing.Size(365, 35);
         cboDaysOfWeek.TabIndex = 14;
         cboDaysOfWeek.ValueMember = "";
+        cboDaysOfWeek.Visible = false;
         // 
         // lblDaysOfWeek
         // 
@@ -265,6 +268,7 @@ partial class CreateClassDialog
         lblDaysOfWeek.Size = new System.Drawing.Size(86, 20);
         lblDaysOfWeek.TabIndex = 13;
         lblDaysOfWeek.Text = "Ngày học *";
+        lblDaysOfWeek.Visible = false;
         // 
         // cboTeacher
         // 
@@ -432,7 +436,7 @@ partial class CreateClassDialog
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
         AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         BackColor = System.Drawing.Color.FromArgb(((int)((byte)245)), ((int)((byte)247)), ((int)((byte)250)));
-        ClientSize = new System.Drawing.Size(860, 680);
+        ClientSize = new System.Drawing.Size(860, 600);
         Controls.Add(pnlContent);
         Controls.Add(pnlHeader);
         Font = new System.Drawing.Font("Segoe UI", 9F);

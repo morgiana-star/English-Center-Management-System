@@ -286,9 +286,9 @@ public class StudentService : IStudentService
 
         var sampleRows = new List<object[]>
         {
-            new object[] { 1, "Trần Văn An", "15/06/2006", "Nam", "0901234567", "an.tran@gmail.com", "123 Lê Lợi, Q.1", "Trần Văn Hùng", "0912345678", "Bố" },
-            new object[] { 2, "Nguyễn Thị Mai", "20/09/2005", "Nữ", "0902345678", "mai.nguyen@gmail.com", "456 Nguyễn Huệ, Q.1", "Lê Thị Thảo", "0918765432", "Mẹ" },
-            new object[] { 3, "Lê Hoàng Long", "10/02/2007", "Nam", "0903456789", "long.le@gmail.com", "789 CMT8, Q.3", "Lê Văn Tuấn", "0919876543", "Bố" }
+            new object[] { 1, "Võ Trường Giang", "20/05/2004", "Nam", "0936383363", "giang.vo@gmail.com", "KTX Khu B, ĐH Nông Lâm", "Võ Văn Tài", "0936554477", "Bố" },
+            new object[] { 2, "Trương Hải An", "07/01/2004", "Nam", "0936112233", "haian.truong@gmail.com", "Linh Trung, Thủ Đức", "Trương Minh Hải", "0936889900", "Bố" },
+            new object[] { 3, "Nguyễn Trương Bá Thiện", "15/08/2004", "Nam", "0936445566", "bathien.nguyen@gmail.com", "Linh Xuân, Thủ Đức", "Nguyễn Văn Bá", "0936778899", "Bố" }
         };
 
         for (int r = 0; r < sampleRows.Count; r++)

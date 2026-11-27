@@ -25,10 +25,14 @@ public class CertificateRepository : ICertificateRepository
                 s.FullName,
                 co.CourseName,
                 cl.ClassCode AS ClassName,
-                COALESCE(e.FinalGPA, 7.5) AS FinalGPA,
-                COALESCE(e.AttendanceRate, 90.0) AS AttendanceRate,
+                cl.Status AS ClassStatus,
+                e.FinalGPA,
+                e.AttendanceRate,
+                (SELECT es.ScoreValue FROM ExamScores es INNER JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = s.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Regular' ORDER BY ex.ExamId DESC LIMIT 1) AS RegularVal,
+                (SELECT es.ScoreValue FROM ExamScores es INNER JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = s.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Midterm' ORDER BY ex.ExamId DESC LIMIT 1) AS MidtermVal,
+                (SELECT es.ScoreValue FROM ExamScores es INNER JOIN Exams ex ON es.ExamId = ex.ExamId WHERE es.StudentId = s.StudentId AND ex.ClassId = e.ClassId AND ex.Type = 'Final' ORDER BY ex.ExamId DESC LIMIT 1) AS FinalVal,
                 COALESCE(i.BalanceDue, 0) AS BalanceDue,
-                COALESCE(co.PassingScore, 5.0) AS PassingScore
+                COALESCE(co.PassingScore, 6.5) AS PassingScore
             FROM Enrollments e
             INNER JOIN Students s ON e.StudentId = s.StudentId
             INNER JOIN Classes cl ON e.ClassId = cl.ClassId
@@ -50,13 +54,32 @@ public class CertificateRepository : ICertificateRepository
         var result = new List<EligibleStudentDto>();
         foreach (var r in rawList)
         {
-            decimal gpa = Convert.ToDecimal(r.FinalGPA);
-            decimal att = Convert.ToDecimal(r.AttendanceRate);
-            decimal debt = Convert.ToDecimal(r.BalanceDue);
-            decimal passingScore = Convert.ToDecimal(r.PassingScore);
+            bool hasAll3 = r.RegularVal != null && r.MidtermVal != null && r.FinalVal != null;
+            bool isCompletedClass = string.Equals((string?)r.ClassStatus, "Completed", StringComparison.OrdinalIgnoreCase);
 
-            string rank = gpa >= 8.5m ? "Xuất sắc" : (gpa >= 8.0m ? "Giỏi" : (gpa >= 6.5m ? "Khá" : "Trung bình"));
-            bool isEligible = gpa >= 6.5m && att >= 80m && debt <= 0;
+            decimal? computedGpa = null;
+            if (hasAll3)
+            {
+                decimal reg = Convert.ToDecimal(r.RegularVal);
+                decimal mid = Convert.ToDecimal(r.MidtermVal);
+                decimal fin = Convert.ToDecimal(r.FinalVal);
+                computedGpa = Math.Round(reg * 0.2m + mid * 0.3m + fin * 0.5m, 1);
+            }
+            else if (isCompletedClass && r.FinalGPA != null)
+            {
+                computedGpa = Convert.ToDecimal(r.FinalGPA);
+            }
+
+            decimal gpa = computedGpa ?? 0m;
+            bool hasAtt = r.AttendanceRate != null;
+            decimal att = hasAtt ? Convert.ToDecimal(r.AttendanceRate) : 0m;
+            decimal debt = Convert.ToDecimal(r.BalanceDue);
+
+            string rank = !computedGpa.HasValue
+                ? "Chưa có điểm"
+                : (gpa >= 8.5m ? "Xuất sắc" : (gpa >= 8.0m ? "Giỏi" : (gpa >= 6.5m ? "Khá" : "Trung bình")));
+
+            bool isEligible = computedGpa.HasValue && gpa >= 6.5m && hasAtt && att >= 80m && debt <= 0;
             string statusText = isEligible ? "Đủ điều kiện" : "Chưa đủ điều kiện";
 
             result.Add(new EligibleStudentDto
@@ -73,8 +96,8 @@ public class CertificateRepository : ICertificateRepository
                 IsEligible = isEligible,
                 StatusText = statusText,
                 GradeRank = rank,
-                ScoreText = $"{gpa:0.0}",
-                AttendanceText = $"{att:0.0}%",
+                ScoreText = computedGpa.HasValue ? $"{gpa:0.0}" : "Chưa có",
+                AttendanceText = hasAtt ? $"{att:0.0}%" : "Chưa có",
                 TuitionText = debt <= 0 ? "Đã hoàn tất" : $"Nợ {debt:N0}đ"
             });
         }

@@ -109,10 +109,11 @@ public partial class TeacherAttendanceCheckView : UserControl
             dgvAttendanceClasses.Rows.Clear();
 
             int? teacherId = SessionManager.CurrentUser?.TeacherId;
-            string roleCode = SessionManager.CurrentUser?.RoleCode ?? "";
+            string roleCode = AppSession.RoleCode ?? SessionManager.CurrentUser?.RoleCode ?? "";
+            string currentTeacherName = (AppSession.FullName ?? "").Trim();
 
             // Nếu là Admin / Quản lý / Giáo vụ thì cho xem tất cả lớp, còn Giáo viên chỉ xem lớp mình phụ trách
-            bool filterByTeacher = roleCode == "ROLE_TEA" || teacherId.HasValue;
+            bool filterByTeacher = string.Equals(roleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase);
 
             using var conn = DatabaseConfig.GetConnection();
 
@@ -134,21 +135,18 @@ public partial class TeacherAttendanceCheckView : UserControl
                 LEFT JOIN ClassRooms r ON c.DefaultRoomId = r.RoomId
                 LEFT JOIN ClassSchedules cs ON cs.ClassId = c.ClassId
                 LEFT JOIN Enrollments e ON e.ClassId = c.ClassId
-                WHERE (@FilterByTeacher = 0 OR c.MainTeacherId = @TeacherId)
+                WHERE (@FilterByTeacher = 0
+                       OR (@TeacherId > 0 AND c.MainTeacherId = @TeacherId)
+                       OR (@TeacherName != '' AND LOWER(TRIM(COALESCE(t.FullName, ''))) = LOWER(TRIM(@TeacherName))))
                 GROUP BY c.ClassId
                 ORDER BY c.ClassId DESC;";
 
             var classes = (await conn.QueryAsync<dynamic>(query, new 
             { 
                 FilterByTeacher = filterByTeacher ? 1 : 0, 
-                TeacherId = teacherId ?? 1 
+                TeacherId = teacherId ?? 0,
+                TeacherName = currentTeacherName
             })).ToList();
-
-            // Nếu CSDL chưa có lớp nào cho GV, thử lấy tất cả lớp để không bị rỗng giao diện
-            if (classes.Count == 0 && filterByTeacher)
-            {
-                classes = (await conn.QueryAsync<dynamic>(query, new { FilterByTeacher = 0, TeacherId = 0 })).ToList();
-            }
 
             int stt = 1;
             foreach (var cls in classes)

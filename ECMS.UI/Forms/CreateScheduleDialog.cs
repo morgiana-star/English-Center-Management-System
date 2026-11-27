@@ -52,16 +52,17 @@ public partial class CreateScheduleDialog : Form
             Text = "Ngày bắt đầu:",
             AutoSize = true,
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            Location = new Point(16, 14)
+            Location = new Point(16, 15)
         };
         _dtpStartDate = new DateTimePicker
         {
             Format = DateTimePickerFormat.Custom,
             CustomFormat = "dd/MM/yyyy",
             Font = new Font("Segoe UI", 9.5F),
-            Location = new Point(115, 10),
-            Size = new Size(135, 29),
-            Value = DateTime.Today
+            Location = new Point(132, 10),
+            Size = new Size(140, 29),
+            Value = DateTime.Today,
+            Enabled = false
         };
 
         var lblTime = new Label
@@ -69,13 +70,13 @@ public partial class CreateScheduleDialog : Form
             Text = "Khung giờ:",
             AutoSize = true,
             Font = new Font("Segoe UI", 9F, FontStyle.Bold),
-            Location = new Point(270, 14)
+            Location = new Point(295, 15)
         };
         _cboTimeSlot = new ComboBox
         {
             DropDownStyle = ComboBoxStyle.DropDownList,
             Font = new Font("Segoe UI", 9.5F),
-            Location = new Point(352, 10),
+            Location = new Point(385, 10),
             Size = new Size(210, 29)
         };
         _cboTimeSlot.Items.AddRange(new object[]
@@ -112,7 +113,7 @@ public partial class CreateScheduleDialog : Form
                 Tag = dayValues[i],
                 AutoSize = true,
                 Font = new Font("Segoe UI", 9F),
-                Location = new Point(115 + i * 70, 52),
+                Location = new Point(132 + i * 70, 52),
                 Checked = (i == 0 || i == 2 || i == 4) // T2, T4, T6 mặc định
             };
             _pnlConfig.Controls.Add(_chkDays[i]);

@@ -8,9 +8,6 @@ namespace ECMS.UI;
 
 static class Program
 {
-    /// <summary>
-    ///  The main entry point for the application.
-    /// </summary>
     [STAThread]
     static void Main()
     {
@@ -18,13 +15,18 @@ static class Program
         try
         {
             DatabaseInitializer.Initialize();
+            string sampleExcelPath = @"E:\ECMS\DanhSachHocVien_Import.xlsx";
+            if (System.IO.Directory.Exists(@"E:\ECMS") && !System.IO.File.Exists(sampleExcelPath))
+            {
+                var bytes = new ECMS.Business.Services.StudentService().GenerateStudentImportTemplate();
+                System.IO.File.WriteAllBytes(sampleExcelPath, bytes);
+            }
         }
         catch (Exception ex)
         {
             AppDialog.ShowError(null, "Lỗi hệ thống", $"Lỗi khởi tạo cơ sở dữ liệu SQLite: {ex.Message}");
         }
 
-        // 2. Chạy ứng dụng từ MainForm
         Application.Run(new LoginForm());
     }
 }

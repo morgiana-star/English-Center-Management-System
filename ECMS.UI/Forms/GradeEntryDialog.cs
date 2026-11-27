@@ -41,7 +41,17 @@ public partial class GradeEntryDialog : Form
     {
         try
         {
-            _classes = (await _classService.GetClassesAsync()).ToList();
+            var list = (await _classService.GetClassesAsync()).ToList();
+            bool isTeacher = string.Equals(AppSession.RoleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase);
+            if (isTeacher && !string.IsNullOrWhiteSpace(AppSession.FullName))
+            {
+                string tName = AppSession.FullName.Trim();
+                list = list.Where(c =>
+                    !string.IsNullOrWhiteSpace(c.TeacherName) &&
+                    (c.TeacherName.Contains(tName, StringComparison.OrdinalIgnoreCase) ||
+                     tName.Contains(c.TeacherName, StringComparison.OrdinalIgnoreCase))).ToList();
+            }
+            _classes = list;
             cboClass.Items.Clear();
             foreach (var c in _classes)
             {
@@ -84,7 +94,7 @@ public partial class GradeEntryDialog : Form
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colRegular",
-            HeaderText = "Thường xuyên (TX - 20%)",
+            HeaderText = "Thường xuyên (20%)",
             MinimumWidth = 130,
             FillWeight = 14F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
@@ -93,7 +103,7 @@ public partial class GradeEntryDialog : Form
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colMidterm",
-            HeaderText = "Giữa khóa (GK - 30%)",
+            HeaderText = "Giữa khóa (30%)",
             MinimumWidth = 130,
             FillWeight = 14F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
@@ -102,7 +112,7 @@ public partial class GradeEntryDialog : Form
         dgvStudentGrades.Columns.Add(new DataGridViewTextBoxColumn
         {
             Name = "colFinal",
-            HeaderText = "Cuối khóa (CK - 50%)",
+            HeaderText = "Cuối khóa (50%)",
             MinimumWidth = 130,
             FillWeight = 14F,
             DefaultCellStyle = new DataGridViewCellStyle { Alignment = DataGridViewContentAlignment.MiddleCenter, Font = new Font("Segoe UI", 9.5F, FontStyle.Bold) }
@@ -134,6 +144,13 @@ public partial class GradeEntryDialog : Form
         _currentClassId = classId;
         _currentClass = classCode;
         Text = $"Nhập bảng điểm lớp {classCode} - ECMS";
+        lblTitle.Text = $"Sổ điểm lớp học · {classCode}";
+        var clsInfo = _classes.FirstOrDefault(x => x.ClassId == classId);
+        if (clsInfo != null)
+        {
+            lblSub.Text = $"Khóa học: {clsInfo.CourseName} | Giáo viên: {clsInfo.TeacherName} | Phòng: {clsInfo.RoomName}";
+        }
+        btnClose.Visible = false;
 
         try
         {
@@ -213,12 +230,55 @@ public partial class GradeEntryDialog : Form
             string colName = dgvStudentGrades.Columns[e.ColumnIndex].Name;
             if (colName == "colRegular" || colName == "colMidterm" || colName == "colFinal")
             {
-                var cell = dgvStudentGrades.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var row = dgvStudentGrades.Rows[e.RowIndex];
+                var cell = row.Cells[e.ColumnIndex];
                 string? raw = cell.Value?.ToString();
-                if (!string.IsNullOrWhiteSpace(raw) && !TryParseScore(raw, out _))
+                if (!string.IsNullOrWhiteSpace(raw))
                 {
-                    AppDialog.ShowWarning(this, "Điểm không hợp lệ", "Điểm phải nằm trong khoảng từ 0.0 đến 10.0.");
-                    cell.Value = "";
+                    if (!TryParseScore(raw, out _))
+                    {
+                        AppDialog.ShowWarning(this, "Điểm không hợp lệ", "Điểm phải nằm trong khoảng từ 0.0 đến 10.0.");
+                        _isCalculating = true;
+                        cell.Value = "";
+                        _isCalculating = false;
+                        RecalculateRow(e.RowIndex);
+                        return;
+                    }
+
+                    bool hasReg = TryParseScore(row.Cells["colRegular"].Value?.ToString(), out _);
+                    bool hasMid = TryParseScore(row.Cells["colMidterm"].Value?.ToString(), out _);
+
+                    if (colName == "colMidterm" && !hasReg)
+                    {
+                        AppDialog.ShowWarning(this, "Chưa nhập điểm Thường xuyên",
+                            "Vui lòng nhập điểm Thường xuyên (TX) trước khi nhập điểm Giữa khóa (GK).");
+                        _isCalculating = true;
+                        cell.Value = "";
+                        _isCalculating = false;
+                    }
+                    else if (colName == "colFinal" && (!hasReg || !hasMid))
+                    {
+                        AppDialog.ShowWarning(this, "Chưa đủ điểm thành phần trước",
+                            "Vui lòng nhập đủ điểm Thường xuyên (TX) và Giữa khóa (GK) trước khi nhập điểm Cuối khóa (CK).");
+                        _isCalculating = true;
+                        cell.Value = "";
+                        _isCalculating = false;
+                    }
+                }
+                else
+                {
+                    // Nếu xóa cột Thường xuyên thì tự động xóa Giữa khóa & Cuối khóa; nếu xóa Giữa khóa thì tự xóa Cuối khóa
+                    _isCalculating = true;
+                    if (colName == "colRegular")
+                    {
+                        row.Cells["colMidterm"].Value = "";
+                        row.Cells["colFinal"].Value = "";
+                    }
+                    else if (colName == "colMidterm")
+                    {
+                        row.Cells["colFinal"].Value = "";
+                    }
+                    _isCalculating = false;
                 }
                 RecalculateRow(e.RowIndex);
             }

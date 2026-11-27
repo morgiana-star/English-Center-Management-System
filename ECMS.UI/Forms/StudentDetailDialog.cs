@@ -192,7 +192,7 @@ public partial class StudentDetailDialog : Form
         lblAttLate.Text = $"Đi muộn: {d.LateCount}";
         lblAttAbsent.Text = $"Vắng: {d.AbsentCount}";
 
-        lblGradeEntry.Text = $"Đầu vào: {d.EntranceScore}";
+        lblGradeEntry.Visible = false;
         lblGradeRegular.Text = $"Thường xuyên: {d.RegularScore}";
         lblGradeMid.Text = $"Giữa khóa: {d.MidtermScore}";
         lblGradeFinal.Text = $"Cuối khóa: {d.FinalScore}";

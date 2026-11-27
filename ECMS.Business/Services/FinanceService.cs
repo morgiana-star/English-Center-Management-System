@@ -31,7 +31,8 @@ public class FinanceService : IFinanceService
         string paymentMethod, 
         string note, 
         int cashierId,
-        decimal extraDiscount = 0)
+        decimal extraDiscount = 0,
+        string? preferredReceiptCode = null)
     {
         if (string.IsNullOrWhiteSpace(studentCode))
             return (false, "Vui lòng chọn học viên cần thu phí.", string.Empty);
@@ -42,6 +43,6 @@ public class FinanceService : IFinanceService
         if (string.IsNullOrWhiteSpace(paymentMethod))
             paymentMethod = "Chuyển khoản";
 
-        return await _repo.ProcessPaymentAsync(studentCode, amount, paymentMethod, note, cashierId, extraDiscount);
+        return await _repo.ProcessPaymentAsync(studentCode, amount, paymentMethod, note, cashierId, extraDiscount, preferredReceiptCode);
     }
 }

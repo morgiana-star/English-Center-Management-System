@@ -263,8 +263,8 @@ partial class CollectTuitionDialog
         // 
         lblDiscountTitle.AutoSize = true;
         lblDiscountTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)100)), ((int)((byte)116)), ((int)((byte)139)));
-        lblDiscountTitle.Location = new System.Drawing.Point(312, 77);
+        lblDiscountTitle.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)71)), ((int)((byte)85)), ((int)((byte)105)));
+        lblDiscountTitle.Location = new System.Drawing.Point(330, 77);
         lblDiscountTitle.Name = "lblDiscountTitle";
         lblDiscountTitle.Size = new System.Drawing.Size(91, 20);
         lblDiscountTitle.TabIndex = 17;
@@ -274,10 +274,10 @@ partial class CollectTuitionDialog
         // 
         txtDiscountCode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         txtDiscountCode.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-        txtDiscountCode.Location = new System.Drawing.Point(405, 73);
+        txtDiscountCode.Location = new System.Drawing.Point(432, 73);
         txtDiscountCode.Name = "txtDiscountCode";
         txtDiscountCode.PlaceholderText = "VD: HVCU10";
-        txtDiscountCode.Size = new System.Drawing.Size(150, 29);
+        txtDiscountCode.Size = new System.Drawing.Size(255, 29);
         txtDiscountCode.TabIndex = 18;
         // 
         // btnApplyDiscount
@@ -289,9 +289,9 @@ partial class CollectTuitionDialog
         btnApplyDiscount.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
         btnApplyDiscount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
         btnApplyDiscount.ForeColor = System.Drawing.Color.FromArgb(((int)((byte)33)), ((int)((byte)37)), ((int)((byte)41)));
-        btnApplyDiscount.Location = new System.Drawing.Point(562, 72);
+        btnApplyDiscount.Location = new System.Drawing.Point(697, 72);
         btnApplyDiscount.Name = "btnApplyDiscount";
-        btnApplyDiscount.Size = new System.Drawing.Size(86, 30);
+        btnApplyDiscount.Size = new System.Drawing.Size(98, 30);
         btnApplyDiscount.TabIndex = 19;
         btnApplyDiscount.Text = "Áp dụng";
         btnApplyDiscount.UseVisualStyleBackColor = false;
@@ -306,6 +306,7 @@ partial class CollectTuitionDialog
         lblDiscountInfo.Name = "lblDiscountInfo";
         lblDiscountInfo.Size = new System.Drawing.Size(0, 19);
         lblDiscountInfo.TabIndex = 20;
+        lblDiscountInfo.Visible = false;
         // 
         // lblAmountWords
         // 
@@ -592,7 +593,7 @@ partial class CollectTuitionDialog
         lblSectionStudent.Name = "lblSectionStudent";
         lblSectionStudent.Size = new System.Drawing.Size(299, 23);
         lblSectionStudent.TabIndex = 0;
-        lblSectionStudent.Text = "1. THÔNG TIN HỌC VIÊN & CÔNG NỢ";
+        lblSectionStudent.Text = "1. THÔNG TIN HỌC VIÊN";
         // 
         // pnlFooter
         // 

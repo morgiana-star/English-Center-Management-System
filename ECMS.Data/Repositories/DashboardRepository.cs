@@ -56,7 +56,7 @@ public class DashboardRepository : IDashboardRepository
         decimal currentMonthRevenue = await conn.ExecuteScalarAsync<decimal>(@"
             SELECT COALESCE(SUM(PaidAmount), 0) 
             FROM Payments 
-            WHERE Status = 'Valid' AND strftime('%Y-%m', PaymentDate) = @currentYm;", new { currentYm });
+            WHERE Status = 'Valid';");
 
         decimal outstandingDebt = await conn.ExecuteScalarAsync<decimal>(@"
             SELECT COALESCE(SUM(BalanceDue), 0) 

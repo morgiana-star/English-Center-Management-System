@@ -496,8 +496,8 @@ public partial class TuitionPaymentView : UserControl
             string method = dialog.PaymentMethod;
             string note = string.IsNullOrEmpty(dialog.ContentNote) ? $"Thu học phí - {targetName} ({targetCode}) - Lớp {targetClass}" : dialog.ContentNote;
 
-            var result = await _financeService.CollectTuitionAsync(targetCode, paidAmt, method, note, AppSession.UserId, dialog.DiscountAmount);
-            string finalReceiptCode = !string.IsNullOrEmpty(result.ReceiptCode) ? result.ReceiptCode : dialog.ReceiptCode;
+            var result = await _financeService.CollectTuitionAsync(targetCode, paidAmt, method, note, AppSession.UserId, dialog.DiscountAmount, dialog.ReceiptCode);
+            string finalReceiptCode = !string.IsNullOrEmpty(dialog.ReceiptCode) ? dialog.ReceiptCode : result.ReceiptCode;
             decimal remainingAfterPay = Math.Max(0m, item.Remaining - dialog.DiscountAmount - paidAmt);
 
             LoadRealTuitionDataAsync();

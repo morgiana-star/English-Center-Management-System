@@ -789,7 +789,7 @@ partial class StudentEnrollmentWizardDialog
         lblSelectCourseTitle.Name = "lblSelectCourseTitle";
         lblSelectCourseTitle.Size = new System.Drawing.Size(227, 25);
         lblSelectCourseTitle.TabIndex = 0;
-        lblSelectCourseTitle.Text = "Chương trình đào tạo (*):";
+        lblSelectCourseTitle.Text = "Chọn khóa học (*):";
         // 
         // pnlStep3
         // 

@@ -143,22 +143,40 @@ public class UserRepository : BaseRepository, IUserRepository
 
             if (role != null && role.RoleCode == "ROLE_TEA")
             {
-                int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
-                string teacherCode = $"GV-{(teacherCount + 1):D3}";
+                string cleanName = dto.FullName.Trim();
+                string cleanPhone = dto.Phone?.Trim() ?? string.Empty;
 
-                string insTeacherSql = @"
-                    INSERT INTO Teachers (TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive)
-                    VALUES (@Code, @FullName, 'IELTS & Tiếng Anh Giao tiếp', @Phone, @Email, 300000, 0, @IsActive);
-                    SELECT last_insert_rowid();";
+                int? existingTeacherId = await conn.ExecuteScalarAsync<int?>(@"
+                    SELECT TeacherId FROM Teachers
+                    WHERE LOWER(TRIM(FullName)) = LOWER(TRIM(@FullName))
+                       OR (@Phone != '' AND TRIM(Phone) = TRIM(@Phone))
+                    ORDER BY TeacherId ASC LIMIT 1;",
+                    new { FullName = cleanName, Phone = cleanPhone },
+                    transaction: trans);
 
-                teacherId = (int)await conn.ExecuteScalarAsync<long>(insTeacherSql, new
+                if (existingTeacherId.HasValue && existingTeacherId.Value > 0)
                 {
-                    Code = teacherCode,
-                    FullName = dto.FullName.Trim(),
-                    Phone = dto.Phone?.Trim() ?? string.Empty,
-                    Email = dto.Email?.Trim(),
-                    IsActive = dto.IsActive ? 1 : 0
-                }, transaction: trans);
+                    teacherId = existingTeacherId.Value;
+                }
+                else
+                {
+                    int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
+                    string teacherCode = $"GV-{(teacherCount + 1):D3}";
+
+                    string insTeacherSql = @"
+                        INSERT INTO Teachers (TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive)
+                        VALUES (@Code, @FullName, 'IELTS & Tiếng Anh Giao tiếp', @Phone, @Email, 300000, 0, @IsActive);
+                        SELECT last_insert_rowid();";
+
+                    teacherId = (int)await conn.ExecuteScalarAsync<long>(insTeacherSql, new
+                    {
+                        Code = teacherCode,
+                        FullName = cleanName,
+                        Phone = cleanPhone,
+                        Email = dto.Email?.Trim(),
+                        IsActive = dto.IsActive ? 1 : 0
+                    }, transaction: trans);
+                }
             }
             else
             {

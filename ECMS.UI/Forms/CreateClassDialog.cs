@@ -68,6 +68,7 @@ public partial class CreateClassDialog : Form
             btnSaveDraft.Text = "Lưu thay đổi";
             txtClassCode.Text = string.IsNullOrEmpty(_initialClassCode) ? "IELTS-F01" : _initialClassCode;
             txtClassCode.ReadOnly = true;
+            LoadExistingClassData(txtClassCode.Text);
         }
         else
         {
@@ -79,14 +80,65 @@ public partial class CreateClassDialog : Form
         }
     }
 
+    private void LoadExistingClassData(string code)
+    {
+        try
+        {
+            using var conn = DatabaseConfig.CreateOpenConnection();
+            var cls = conn.QueryFirstOrDefault<dynamic>(
+                "SELECT CourseId, MainTeacherId, DefaultRoomId, StartDate, EndDate, MaxStudents, Status FROM Classes WHERE UPPER(TRIM(ClassCode)) = UPPER(TRIM(@Code)) LIMIT 1;",
+                new { Code = code });
+            if (cls == null) return;
+
+            int courseId = (int)(cls.CourseId ?? 1);
+            for (int i = 0; i < cboCourse.Items.Count; i++)
+            {
+                if (cboCourse.Items[i] is CourseComboItem ci && ci.CourseId == courseId)
+                {
+                    cboCourse.SelectedIndex = i;
+                    break;
+                }
+            }
+
+            int teacherId = (int)(cls.MainTeacherId ?? 1);
+            for (int i = 0; i < cboTeacher.Items.Count; i++)
+            {
+                if (cboTeacher.Items[i] is TeacherComboItem ti && ti.TeacherId == teacherId)
+                {
+                    cboTeacher.SelectedIndex = i;
+                    break;
+                }
+            }
+
+            int roomId = (int)(cls.DefaultRoomId ?? 1);
+            for (int i = 0; i < cboRoom.Items.Count; i++)
+            {
+                if (cboRoom.Items[i] is RoomComboItem ri && ri.RoomId == roomId)
+                {
+                    cboRoom.SelectedIndex = i;
+                    break;
+                }
+            }
+
+            if (DateTime.TryParse((string?)cls.StartDate, out var sDt)) dtpStartDate.Value = sDt;
+            if (DateTime.TryParse((string?)cls.EndDate, out var eDt)) dtpEndDate.Value = eDt;
+            txtCapacity.Text = ((int)(cls.MaxStudents ?? 20)).ToString();
+
+            string statusDisp = StatusFormatter.FormatClassStatus((string?)cls.Status);
+            int stIdx = cboStatus.FindStringExact(statusDisp);
+            if (stIdx >= 0) cboStatus.SelectedIndex = stIdx;
+        }
+        catch { }
+    }
+
     private void SetupDropdowns()
     {
-        // 1. Nạp Khóa học từ CSDL SQLite
+        // 1. Nạp Khóa học từ CSDL SQLite (sắp xếp mới nhất lên đầu để khóa học vừa tạo hiển thị đầu tiên)
         cboCourse.Items.Clear();
         try
         {
             using var conn = DatabaseConfig.CreateOpenConnection();
-            var courses = conn.Query<CourseComboItem>("SELECT CourseId, CourseName FROM Courses WHERE IsActive = 1 ORDER BY CourseId;");
+            var courses = conn.Query<CourseComboItem>("SELECT CourseId, CourseName FROM Courses WHERE IsActive = 1 ORDER BY CourseId DESC;");
             foreach (var c in courses)
             {
                 cboCourse.Items.Add(c);
@@ -102,12 +154,12 @@ public partial class CreateClassDialog : Form
         }
         cboCourse.SelectedIndex = 0;
 
-        // 2. Nạp Giảng viên từ CSDL SQLite
+        // 2. Nạp Giảng viên từ CSDL SQLite (sắp xếp mới nhất lên đầu để giáo viên vừa tạo hiển thị đầu tiên)
         cboTeacher.Items.Clear();
         try
         {
             using var conn = DatabaseConfig.CreateOpenConnection();
-            var teachers = conn.Query<TeacherComboItem>("SELECT TeacherId, FullName AS TeacherName FROM Teachers WHERE IsActive = 1 ORDER BY TeacherId;");
+            var teachers = conn.Query<TeacherComboItem>("SELECT TeacherId, FullName AS TeacherName FROM Teachers WHERE IsActive = 1 ORDER BY TeacherId DESC;");
             foreach (var t in teachers)
             {
                 cboTeacher.Items.Add(t);
@@ -247,10 +299,31 @@ public partial class CreateClassDialog : Form
                 return;
             }
 
-            int selectedCourseId = (cboCourse.SelectedItem as CourseComboItem)?.CourseId ?? 1;
-            int selectedTeacherId = (cboTeacher.SelectedItem as TeacherComboItem)?.TeacherId ?? 1;
+            var courseItem = cboCourse.SelectedItem as CourseComboItem;
+            if (courseItem == null && !string.IsNullOrWhiteSpace(cboCourse.Text))
+            {
+                string typedCourse = cboCourse.Text.Trim();
+                courseItem = cboCourse.Items.OfType<CourseComboItem>()
+                    .FirstOrDefault(x => string.Equals(x.CourseName, typedCourse, StringComparison.OrdinalIgnoreCase))
+                    ?? cboCourse.Items.OfType<CourseComboItem>()
+                        .FirstOrDefault(x => x.CourseName.Contains(typedCourse, StringComparison.OrdinalIgnoreCase));
+            }
+
+            var teacherItem = cboTeacher.SelectedItem as TeacherComboItem;
+            if (teacherItem == null && !string.IsNullOrWhiteSpace(cboTeacher.Text))
+            {
+                string typedTeacher = cboTeacher.Text.Trim();
+                teacherItem = cboTeacher.Items.OfType<TeacherComboItem>()
+                    .FirstOrDefault(x => string.Equals(x.TeacherName, typedTeacher, StringComparison.OrdinalIgnoreCase))
+                    ?? cboTeacher.Items.OfType<TeacherComboItem>()
+                        .FirstOrDefault(x => x.TeacherName.Contains(typedTeacher, StringComparison.OrdinalIgnoreCase));
+            }
+
+            int selectedCourseId = courseItem?.CourseId ?? 1;
+            int selectedTeacherId = teacherItem?.TeacherId ?? 1;
             int selectedRoomId = selectedRoom?.RoomId ?? 1;
-            string courseName = (cboCourse.SelectedItem as CourseComboItem)?.CourseName ?? cboCourse.SelectedItem?.ToString() ?? "IELTS";
+            string courseName = courseItem?.CourseName ?? cboCourse.Text.Trim();
+            if (string.IsNullOrWhiteSpace(courseName)) courseName = "IELTS";
 
             string dbStatusStr = StatusFormatter.ToDbClassStatus(cboStatus.SelectedItem?.ToString());
             var parsedStatus = Enum.TryParse<ClassStatus>(dbStatusStr, out var stVal)

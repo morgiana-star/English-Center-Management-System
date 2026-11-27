@@ -86,7 +86,7 @@ public partial class DashboardOverviewView : UserControl
             _lblKpi2Value.Text = kpi.ActiveStudents.ToString();
             _lblKpi3Value.Text = kpi.ActiveClasses.ToString();
             _lblKpi4Value.Text = kpi.ActiveTeachers.ToString();
-            _lblKpi5Title.Text = $"DOANH THU T{DateTime.Today.Month}";
+            _lblKpi5Title.Text = "TỔNG THU";
             _lblKpi5Value.Text = kpi.CurrentMonthRevenueFormatted;
             _lblKpi6Value.Text = kpi.TotalOutstandingDebtFormatted;
             _lblAttPercent.Text = $"{kpi.AverageAttendanceRate:0.0}%";
@@ -107,7 +107,7 @@ public partial class DashboardOverviewView : UserControl
             // 4. Nạp Bảng Chuyên cần theo nhóm lớp
             var ratios = (await _dashboardService.GetCourseAttendanceRatiosAsync()).ToList();
             _dgvRatio.Columns.Clear();
-            _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Nhóm lớp ↑", FillWeight = 46 });
+            _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Nhóm lớp", FillWeight = 46 });
             _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Số lớp", FillWeight = 24 });
             _dgvRatio.Columns.Add(new DataGridViewTextBoxColumn { HeaderText = "Học viên", FillWeight = 30 });
             _dgvRatio.Rows.Clear();

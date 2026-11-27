@@ -243,7 +243,7 @@ partial class MainForm
         btnNavAccounts.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
         btnNavAccounts.Size = new System.Drawing.Size(248, 40);
         btnNavAccounts.TabIndex = 19;
-        btnNavAccounts.Text = "Tài khoản & Phân quyền";
+        btnNavAccounts.Text = "Tài khoản và Phân quyền";
         btnNavAccounts.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         btnNavAccounts.UseMnemonic = false;
         btnNavAccounts.UseVisualStyleBackColor = true;
@@ -274,7 +274,7 @@ partial class MainForm
         btnNavTuition.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
         btnNavTuition.Size = new System.Drawing.Size(248, 40);
         btnNavTuition.TabIndex = 14;
-        btnNavTuition.Text = "Học phí & Thanh toán";
+        btnNavTuition.Text = "Học phí và Thanh toán";
         btnNavTuition.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         btnNavTuition.UseMnemonic = false;
         btnNavTuition.UseVisualStyleBackColor = true;
@@ -357,7 +357,7 @@ partial class MainForm
         btnNavSchedule.Padding = new System.Windows.Forms.Padding(36, 0, 0, 0);
         btnNavSchedule.Size = new System.Drawing.Size(248, 40);
         btnNavSchedule.TabIndex = 7;
-        btnNavSchedule.Text = "Lịch học & Phòng học";
+        btnNavSchedule.Text = "Lịch học và Phòng học";
         btnNavSchedule.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         btnNavSchedule.UseMnemonic = false;
         btnNavSchedule.UseVisualStyleBackColor = true;

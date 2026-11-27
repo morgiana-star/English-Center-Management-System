@@ -114,11 +114,23 @@ public partial class TeacherGradeManagementView : UserControl
         try
         {
             _isLoadingFilters = true;
-            _allClasses = (await _classService.GetClassesAsync())
+            var list = (await _classService.GetClassesAsync())
                 .Where(c => !c.Status.Contains("Sắp mở", StringComparison.OrdinalIgnoreCase) &&
                             !c.Status.Contains("Planning", StringComparison.OrdinalIgnoreCase) &&
                             !c.Status.Contains("OpenForEnrollment", StringComparison.OrdinalIgnoreCase))
                 .ToList();
+
+            bool isTeacher = string.Equals(AppSession.RoleCode, "ROLE_TEA", StringComparison.OrdinalIgnoreCase);
+            if (isTeacher && !string.IsNullOrWhiteSpace(AppSession.FullName))
+            {
+                string tName = AppSession.FullName.Trim();
+                list = list.Where(c =>
+                    !string.IsNullOrWhiteSpace(c.TeacherName) &&
+                    (c.TeacherName.Contains(tName, StringComparison.OrdinalIgnoreCase) ||
+                     tName.Contains(c.TeacherName, StringComparison.OrdinalIgnoreCase))).ToList();
+            }
+
+            _allClasses = list;
 
             var courseNames = _allClasses
                 .Select(c => c.CourseName)
