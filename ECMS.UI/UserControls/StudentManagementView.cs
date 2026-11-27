@@ -15,7 +15,7 @@ using ECMS.UI.Forms;
 namespace ECMS.UI.UserControls;
 
 /// <summary>
-/// UserControl Quản lý học viên (100% Dữ liệu thật SQLite)
+/// UserControl Quản lý học viên
 /// </summary>
 public partial class StudentManagementView : UserControl
 {

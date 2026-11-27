@@ -15,12 +15,6 @@ static class Program
         try
         {
             DatabaseInitializer.Initialize();
-            string sampleExcelPath = @"E:\ECMS\DanhSachHocVien_Import.xlsx";
-            if (System.IO.Directory.Exists(@"E:\ECMS") && !System.IO.File.Exists(sampleExcelPath))
-            {
-                var bytes = new ECMS.Business.Services.StudentService().GenerateStudentImportTemplate();
-                System.IO.File.WriteAllBytes(sampleExcelPath, bytes);
-            }
         }
         catch (Exception ex)
         {

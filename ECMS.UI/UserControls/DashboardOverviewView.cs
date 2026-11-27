@@ -15,7 +15,7 @@ using ECMS.UI.Forms;
 namespace ECMS.UI.UserControls;
 
 /// <summary>
-/// Màn hình Tổng quan điều hành trung tâm (Dashboard Overview) - 100% dữ liệu SQLite
+/// Màn hình Tổng quan điều hành trung tâm (Dashboard Overview)
 /// </summary>
 public partial class DashboardOverviewView : UserControl
 {

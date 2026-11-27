@@ -160,8 +160,24 @@ public class UserRepository : BaseRepository, IUserRepository
                 }
                 else
                 {
-                    int teacherCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Teachers;", transaction: trans);
-                    string teacherCode = $"GV-{(teacherCount + 1):D3}";
+                    var existingTeacherCodes = await conn.QueryAsync<string>(
+                        "SELECT TeacherCode FROM Teachers;", transaction: trans);
+                    int maxTeacherNum = 0;
+                    var teacherCodeSet = new HashSet<string>(existingTeacherCodes, StringComparer.OrdinalIgnoreCase);
+                    foreach (var tc in teacherCodeSet)
+                    {
+                        if (!string.IsNullOrWhiteSpace(tc) && tc.Contains('-') &&
+                            int.TryParse(tc.Substring(tc.LastIndexOf('-') + 1), out int n) && n > maxTeacherNum)
+                        {
+                            maxTeacherNum = n;
+                        }
+                    }
+                    string teacherCode;
+                    do
+                    {
+                        maxTeacherNum++;
+                        teacherCode = $"GV-{maxTeacherNum:D3}";
+                    } while (teacherCodeSet.Contains(teacherCode));
 
                     string insTeacherSql = @"
                         INSERT INTO Teachers (TeacherCode, FullName, Specialization, Phone, Email, HourlyRate, IsNativeSpeaker, IsActive)
@@ -180,8 +196,24 @@ public class UserRepository : BaseRepository, IUserRepository
             }
             else
             {
-                int empCount = await conn.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Employees;", transaction: trans);
-                string empCode = $"NV-{(empCount + 1):D3}";
+                var existingEmpCodes = await conn.QueryAsync<string>(
+                    "SELECT EmployeeCode FROM Employees;", transaction: trans);
+                int maxEmpNum = 0;
+                var empCodeSet = new HashSet<string>(existingEmpCodes, StringComparer.OrdinalIgnoreCase);
+                foreach (var ec in empCodeSet)
+                {
+                    if (!string.IsNullOrWhiteSpace(ec) && ec.Contains('-') &&
+                        int.TryParse(ec.Substring(ec.LastIndexOf('-') + 1), out int n) && n > maxEmpNum)
+                    {
+                        maxEmpNum = n;
+                    }
+                }
+                string empCode;
+                do
+                {
+                    maxEmpNum++;
+                    empCode = $"NV-{maxEmpNum:D4}";
+                } while (empCodeSet.Contains(empCode));
 
                 string dept = role?.RoleCode switch
                 {

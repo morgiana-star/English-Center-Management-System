@@ -12,7 +12,7 @@ using ECMS.UI.Forms;
 namespace ECMS.UI.UserControls;
 
 /// <summary>
-/// Phân hệ Điểm số (Quản lý & Nhập điểm trực tiếp theo Lớp học — 100% SQLite)
+/// Phân hệ Điểm số
 /// </summary>
 public partial class TeacherGradeManagementView : UserControl
 {
